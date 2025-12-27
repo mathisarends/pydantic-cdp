@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal
 
 if TYPE_CHECKING:
     from pydantic_cpd.client import CDPClient
@@ -19,22 +19,37 @@ from .commands import (
     UpdateRegistrationParams,
 )
 
+from .types import (
+    RegistrationID,
+)
+
+
 class ServiceWorkerClient:
     def __init__(self, client: CDPClient) -> None:
         self._client = client
 
     async def deliver_push_message(
-        self, params: DeliverPushMessageParams, session_id: str | None = None
+        self,
+        *,
+        origin: str,
+        registration_id: RegistrationID,
+        data: str,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = DeliverPushMessageParams(
+            origin=origin, registrationId=registration_id, data=data
+        )
+
         result = await self._client.send_raw(
             method="ServiceWorker.deliverPushMessage",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def disable(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="ServiceWorker.disable",
@@ -44,27 +59,50 @@ class ServiceWorkerClient:
         return result
 
     async def dispatch_sync_event(
-        self, params: DispatchSyncEventParams, session_id: str | None = None
+        self,
+        *,
+        origin: str,
+        registration_id: RegistrationID,
+        tag: str,
+        last_chance: bool,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = DispatchSyncEventParams(
+            origin=origin,
+            registrationId=registration_id,
+            tag=tag,
+            lastChance=last_chance,
+        )
+
         result = await self._client.send_raw(
             method="ServiceWorker.dispatchSyncEvent",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def dispatch_periodic_sync_event(
-        self, params: DispatchPeriodicSyncEventParams, session_id: str | None = None
+        self,
+        *,
+        origin: str,
+        registration_id: RegistrationID,
+        tag: str,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = DispatchPeriodicSyncEventParams(
+            origin=origin, registrationId=registration_id, tag=tag
+        )
+
         result = await self._client.send_raw(
             method="ServiceWorker.dispatchPeriodicSyncEvent",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def enable(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="ServiceWorker.enable",
@@ -74,37 +112,55 @@ class ServiceWorkerClient:
         return result
 
     async def set_force_update_on_page_load(
-        self, params: SetForceUpdateOnPageLoadParams, session_id: str | None = None
+        self,
+        *,
+        force_update_on_page_load: bool,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = SetForceUpdateOnPageLoadParams(
+            forceUpdateOnPageLoad=force_update_on_page_load
+        )
+
         result = await self._client.send_raw(
             method="ServiceWorker.setForceUpdateOnPageLoad",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def skip_waiting(
-        self, params: SkipWaitingParams, session_id: str | None = None
+        self,
+        *,
+        scope_u_r_l: str,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = SkipWaitingParams(scopeURL=scope_u_r_l)
+
         result = await self._client.send_raw(
             method="ServiceWorker.skipWaiting",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def start_worker(
-        self, params: StartWorkerParams, session_id: str | None = None
+        self,
+        *,
+        scope_u_r_l: str,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = StartWorkerParams(scopeURL=scope_u_r_l)
+
         result = await self._client.send_raw(
             method="ServiceWorker.startWorker",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def stop_all_workers(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="ServiceWorker.stopAllWorkers",
@@ -114,31 +170,46 @@ class ServiceWorkerClient:
         return result
 
     async def stop_worker(
-        self, params: StopWorkerParams, session_id: str | None = None
+        self,
+        *,
+        version_id: str,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = StopWorkerParams(versionId=version_id)
+
         result = await self._client.send_raw(
             method="ServiceWorker.stopWorker",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def unregister(
-        self, params: UnregisterParams, session_id: str | None = None
+        self,
+        *,
+        scope_u_r_l: str,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = UnregisterParams(scopeURL=scope_u_r_l)
+
         result = await self._client.send_raw(
             method="ServiceWorker.unregister",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def update_registration(
-        self, params: UpdateRegistrationParams, session_id: str | None = None
+        self,
+        *,
+        scope_u_r_l: str,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = UpdateRegistrationParams(scopeURL=scope_u_r_l)
+
         result = await self._client.send_raw(
             method="ServiceWorker.updateRegistration",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result

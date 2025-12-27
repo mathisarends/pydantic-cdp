@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal
 
 if TYPE_CHECKING:
     from pydantic_cpd.client import CDPClient
@@ -11,12 +11,14 @@ from .commands import (
     SetDeviceOrientationOverrideParams,
 )
 
+
 class DeviceOrientationClient:
     def __init__(self, client: CDPClient) -> None:
         self._client = client
 
     async def clear_device_orientation_override(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="DeviceOrientation.clearDeviceOrientationOverride",
@@ -26,11 +28,18 @@ class DeviceOrientationClient:
         return result
 
     async def set_device_orientation_override(
-        self, params: SetDeviceOrientationOverrideParams, session_id: str | None = None
+        self,
+        *,
+        alpha: float,
+        beta: float,
+        gamma: float,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = SetDeviceOrientationOverrideParams(alpha=alpha, beta=beta, gamma=gamma)
+
         result = await self._client.send_raw(
             method="DeviceOrientation.setDeviceOrientationOverride",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result

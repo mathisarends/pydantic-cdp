@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal
 
 if TYPE_CHECKING:
     from pydantic_cpd.client import CDPClient
@@ -14,12 +14,14 @@ from .commands import (
     GetProcessInfoResult,
 )
 
+
 class SystemInfoClient:
     def __init__(self, client: CDPClient) -> None:
         self._client = client
 
     async def get_info(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> GetInfoResult:
         result = await self._client.send_raw(
             method="SystemInfo.getInfo",
@@ -29,17 +31,23 @@ class SystemInfoClient:
         return GetInfoResult.model_validate(result)
 
     async def get_feature_state(
-        self, params: GetFeatureStateParams, session_id: str | None = None
+        self,
+        *,
+        feature_state: str,
+        session_id: str | None = None,
     ) -> GetFeatureStateResult:
+        params = GetFeatureStateParams(featureState=feature_state)
+
         result = await self._client.send_raw(
             method="SystemInfo.getFeatureState",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return GetFeatureStateResult.model_validate(result)
 
     async def get_process_info(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> GetProcessInfoResult:
         result = await self._client.send_raw(
             method="SystemInfo.getProcessInfo",

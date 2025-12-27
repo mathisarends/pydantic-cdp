@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal
 
 if TYPE_CHECKING:
     from pydantic_cpd.client import CDPClient
@@ -16,12 +16,14 @@ from .commands import (
     TakePreciseCoverageResult,
 )
 
+
 class ProfilerClient:
     def __init__(self, client: CDPClient) -> None:
         self._client = client
 
     async def disable(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="Profiler.disable",
@@ -31,7 +33,8 @@ class ProfilerClient:
         return result
 
     async def enable(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="Profiler.enable",
@@ -41,7 +44,8 @@ class ProfilerClient:
         return result
 
     async def get_best_effort_coverage(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> GetBestEffortCoverageResult:
         result = await self._client.send_raw(
             method="Profiler.getBestEffortCoverage",
@@ -51,17 +55,23 @@ class ProfilerClient:
         return GetBestEffortCoverageResult.model_validate(result)
 
     async def set_sampling_interval(
-        self, params: SetSamplingIntervalParams, session_id: str | None = None
+        self,
+        *,
+        interval: int,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = SetSamplingIntervalParams(interval=interval)
+
         result = await self._client.send_raw(
             method="Profiler.setSamplingInterval",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def start(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="Profiler.start",
@@ -71,17 +81,29 @@ class ProfilerClient:
         return result
 
     async def start_precise_coverage(
-        self, params: StartPreciseCoverageParams | None = None, session_id: str | None = None
+        self,
+        *,
+        call_count: bool | None = None,
+        detailed: bool | None = None,
+        allow_triggered_updates: bool | None = None,
+        session_id: str | None = None,
     ) -> StartPreciseCoverageResult:
+        params = StartPreciseCoverageParams(
+            callCount=call_count,
+            detailed=detailed,
+            allowTriggeredUpdates=allow_triggered_updates,
+        )
+
         result = await self._client.send_raw(
             method="Profiler.startPreciseCoverage",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return StartPreciseCoverageResult.model_validate(result)
 
     async def stop(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> StopResult:
         result = await self._client.send_raw(
             method="Profiler.stop",
@@ -91,7 +113,8 @@ class ProfilerClient:
         return StopResult.model_validate(result)
 
     async def stop_precise_coverage(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="Profiler.stopPreciseCoverage",
@@ -101,7 +124,8 @@ class ProfilerClient:
         return result
 
     async def take_precise_coverage(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> TakePreciseCoverageResult:
         result = await self._client.send_raw(
             method="Profiler.takePreciseCoverage",

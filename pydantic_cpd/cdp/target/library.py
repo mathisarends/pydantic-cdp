@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal
 
 if TYPE_CHECKING:
     from pydantic_cpd.client import CDPClient
@@ -37,32 +37,53 @@ from .commands import (
     SetRemoteLocationsParams,
 )
 
+from .types import (
+    RemoteLocation,
+    SessionID,
+    TargetFilter,
+    TargetID,
+    WindowState,
+)
+
+
 class TargetClient:
     def __init__(self, client: CDPClient) -> None:
         self._client = client
 
     async def activate_target(
-        self, params: ActivateTargetParams, session_id: str | None = None
+        self,
+        *,
+        target_id: TargetID,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = ActivateTargetParams(targetId=target_id)
+
         result = await self._client.send_raw(
             method="Target.activateTarget",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def attach_to_target(
-        self, params: AttachToTargetParams, session_id: str | None = None
+        self,
+        *,
+        target_id: TargetID,
+        flatten: bool | None = None,
+        session_id: str | None = None,
     ) -> AttachToTargetResult:
+        params = AttachToTargetParams(targetId=target_id, flatten=flatten)
+
         result = await self._client.send_raw(
             method="Target.attachToTarget",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return AttachToTargetResult.model_validate(result)
 
     async def attach_to_browser_target(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> AttachToBrowserTargetResult:
         result = await self._client.send_raw(
             method="Target.attachToBrowserTarget",
@@ -72,37 +93,67 @@ class TargetClient:
         return AttachToBrowserTargetResult.model_validate(result)
 
     async def close_target(
-        self, params: CloseTargetParams, session_id: str | None = None
+        self,
+        *,
+        target_id: TargetID,
+        session_id: str | None = None,
     ) -> CloseTargetResult:
+        params = CloseTargetParams(targetId=target_id)
+
         result = await self._client.send_raw(
             method="Target.closeTarget",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return CloseTargetResult.model_validate(result)
 
     async def expose_dev_tools_protocol(
-        self, params: ExposeDevToolsProtocolParams, session_id: str | None = None
+        self,
+        *,
+        target_id: TargetID,
+        binding_name: str | None = None,
+        inherit_permissions: bool | None = None,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = ExposeDevToolsProtocolParams(
+            targetId=target_id,
+            bindingName=binding_name,
+            inheritPermissions=inherit_permissions,
+        )
+
         result = await self._client.send_raw(
             method="Target.exposeDevToolsProtocol",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def create_browser_context(
-        self, params: CreateBrowserContextParams | None = None, session_id: str | None = None
+        self,
+        *,
+        dispose_on_detach: bool | None = None,
+        proxy_server: str | None = None,
+        proxy_bypass_list: str | None = None,
+        origins_with_universal_network_access: list[str] | None = None,
+        session_id: str | None = None,
     ) -> CreateBrowserContextResult:
+        params = CreateBrowserContextParams(
+            disposeOnDetach=dispose_on_detach,
+            proxyServer=proxy_server,
+            proxyBypassList=proxy_bypass_list,
+            originsWithUniversalNetworkAccess=origins_with_universal_network_access,
+        )
+
         result = await self._client.send_raw(
             method="Target.createBrowserContext",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return CreateBrowserContextResult.model_validate(result)
 
     async def get_browser_contexts(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> GetBrowserContextsResult:
         result = await self._client.send_raw(
             method="Target.getBrowserContexts",
@@ -112,121 +163,230 @@ class TargetClient:
         return GetBrowserContextsResult.model_validate(result)
 
     async def create_target(
-        self, params: CreateTargetParams, session_id: str | None = None
+        self,
+        *,
+        url: str,
+        left: int | None = None,
+        top: int | None = None,
+        width: int | None = None,
+        height: int | None = None,
+        window_state: WindowState | None = None,
+        browser_context_id: Browser.BrowserContextID | None = None,
+        enable_begin_frame_control: bool | None = None,
+        new_window: bool | None = None,
+        background: bool | None = None,
+        for_tab: bool | None = None,
+        hidden: bool | None = None,
+        session_id: str | None = None,
     ) -> CreateTargetResult:
+        params = CreateTargetParams(
+            url=url,
+            left=left,
+            top=top,
+            width=width,
+            height=height,
+            windowState=window_state,
+            browserContextId=browser_context_id,
+            enableBeginFrameControl=enable_begin_frame_control,
+            newWindow=new_window,
+            background=background,
+            forTab=for_tab,
+            hidden=hidden,
+        )
+
         result = await self._client.send_raw(
             method="Target.createTarget",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return CreateTargetResult.model_validate(result)
 
     async def detach_from_target(
-        self, params: DetachFromTargetParams | None = None, session_id: str | None = None
+        self,
+        *,
+        detach_from_target_session_id: SessionID | None = None,
+        target_id: TargetID | None = None,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = DetachFromTargetParams(
+            sessionId=detach_from_target_session_id, targetId=target_id
+        )
+
         result = await self._client.send_raw(
             method="Target.detachFromTarget",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def dispose_browser_context(
-        self, params: DisposeBrowserContextParams, session_id: str | None = None
+        self,
+        *,
+        browser_context_id: Browser.BrowserContextID,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = DisposeBrowserContextParams(browserContextId=browser_context_id)
+
         result = await self._client.send_raw(
             method="Target.disposeBrowserContext",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def get_target_info(
-        self, params: GetTargetInfoParams | None = None, session_id: str | None = None
+        self,
+        *,
+        target_id: TargetID | None = None,
+        session_id: str | None = None,
     ) -> GetTargetInfoResult:
+        params = GetTargetInfoParams(targetId=target_id)
+
         result = await self._client.send_raw(
             method="Target.getTargetInfo",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return GetTargetInfoResult.model_validate(result)
 
     async def get_targets(
-        self, params: GetTargetsParams | None = None, session_id: str | None = None
+        self,
+        *,
+        filter: TargetFilter | None = None,
+        session_id: str | None = None,
     ) -> GetTargetsResult:
+        params = GetTargetsParams(filter=filter)
+
         result = await self._client.send_raw(
             method="Target.getTargets",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return GetTargetsResult.model_validate(result)
 
     async def send_message_to_target(
-        self, params: SendMessageToTargetParams, session_id: str | None = None
+        self,
+        *,
+        message: str,
+        send_message_to_target_session_id: SessionID | None = None,
+        target_id: TargetID | None = None,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = SendMessageToTargetParams(
+            message=message,
+            sessionId=send_message_to_target_session_id,
+            targetId=target_id,
+        )
+
         result = await self._client.send_raw(
             method="Target.sendMessageToTarget",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def set_auto_attach(
-        self, params: SetAutoAttachParams, session_id: str | None = None
+        self,
+        *,
+        auto_attach: bool,
+        wait_for_debugger_on_start: bool,
+        flatten: bool | None = None,
+        filter: TargetFilter | None = None,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = SetAutoAttachParams(
+            autoAttach=auto_attach,
+            waitForDebuggerOnStart=wait_for_debugger_on_start,
+            flatten=flatten,
+            filter=filter,
+        )
+
         result = await self._client.send_raw(
             method="Target.setAutoAttach",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def auto_attach_related(
-        self, params: AutoAttachRelatedParams, session_id: str | None = None
+        self,
+        *,
+        target_id: TargetID,
+        wait_for_debugger_on_start: bool,
+        filter: TargetFilter | None = None,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = AutoAttachRelatedParams(
+            targetId=target_id,
+            waitForDebuggerOnStart=wait_for_debugger_on_start,
+            filter=filter,
+        )
+
         result = await self._client.send_raw(
             method="Target.autoAttachRelated",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def set_discover_targets(
-        self, params: SetDiscoverTargetsParams, session_id: str | None = None
+        self,
+        *,
+        discover: bool,
+        filter: TargetFilter | None = None,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = SetDiscoverTargetsParams(discover=discover, filter=filter)
+
         result = await self._client.send_raw(
             method="Target.setDiscoverTargets",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def set_remote_locations(
-        self, params: SetRemoteLocationsParams, session_id: str | None = None
+        self,
+        *,
+        locations: list[RemoteLocation],
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = SetRemoteLocationsParams(locations=locations)
+
         result = await self._client.send_raw(
             method="Target.setRemoteLocations",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def get_dev_tools_target(
-        self, params: GetDevToolsTargetParams, session_id: str | None = None
+        self,
+        *,
+        target_id: TargetID,
+        session_id: str | None = None,
     ) -> GetDevToolsTargetResult:
+        params = GetDevToolsTargetParams(targetId=target_id)
+
         result = await self._client.send_raw(
             method="Target.getDevToolsTarget",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return GetDevToolsTargetResult.model_validate(result)
 
     async def open_dev_tools(
-        self, params: OpenDevToolsParams, session_id: str | None = None
+        self,
+        *,
+        target_id: TargetID,
+        panel_id: str | None = None,
+        session_id: str | None = None,
     ) -> OpenDevToolsResult:
+        params = OpenDevToolsParams(targetId=target_id, panelId=panel_id)
+
         result = await self._client.send_raw(
             method="Target.openDevTools",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return OpenDevToolsResult.model_validate(result)

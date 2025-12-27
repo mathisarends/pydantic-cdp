@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal
 
 if TYPE_CHECKING:
     from pydantic_cpd.client import CDPClient
@@ -16,12 +16,22 @@ from .commands import (
     StartParams,
 )
 
+from .types import (
+    MemoryDumpLevelOfDetail,
+    StreamCompression,
+    StreamFormat,
+    TraceConfig,
+    TracingBackend,
+)
+
+
 class TracingClient:
     def __init__(self, client: CDPClient) -> None:
         self._client = client
 
     async def end(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="Tracing.end",
@@ -31,7 +41,8 @@ class TracingClient:
         return result
 
     async def get_categories(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> GetCategoriesResult:
         result = await self._client.send_raw(
             method="Tracing.getCategories",
@@ -41,7 +52,8 @@ class TracingClient:
         return GetCategoriesResult.model_validate(result)
 
     async def get_track_event_descriptor(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> GetTrackEventDescriptorResult:
         result = await self._client.send_raw(
             method="Tracing.getTrackEventDescriptor",
@@ -51,31 +63,67 @@ class TracingClient:
         return GetTrackEventDescriptorResult.model_validate(result)
 
     async def record_clock_sync_marker(
-        self, params: RecordClockSyncMarkerParams, session_id: str | None = None
+        self,
+        *,
+        sync_id: str,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = RecordClockSyncMarkerParams(syncId=sync_id)
+
         result = await self._client.send_raw(
             method="Tracing.recordClockSyncMarker",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def request_memory_dump(
-        self, params: RequestMemoryDumpParams | None = None, session_id: str | None = None
+        self,
+        *,
+        deterministic: bool | None = None,
+        level_of_detail: MemoryDumpLevelOfDetail | None = None,
+        session_id: str | None = None,
     ) -> RequestMemoryDumpResult:
+        params = RequestMemoryDumpParams(
+            deterministic=deterministic, levelOfDetail=level_of_detail
+        )
+
         result = await self._client.send_raw(
             method="Tracing.requestMemoryDump",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return RequestMemoryDumpResult.model_validate(result)
 
     async def start(
-        self, params: StartParams | None = None, session_id: str | None = None
+        self,
+        *,
+        categories: str | None = None,
+        options: str | None = None,
+        buffer_usage_reporting_interval: float | None = None,
+        transfer_mode: Literal["ReportEvents", "ReturnAsStream"] | None = None,
+        stream_format: StreamFormat | None = None,
+        stream_compression: StreamCompression | None = None,
+        trace_config: TraceConfig | None = None,
+        perfetto_config: str | None = None,
+        tracing_backend: TracingBackend | None = None,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = StartParams(
+            categories=categories,
+            options=options,
+            bufferUsageReportingInterval=buffer_usage_reporting_interval,
+            transferMode=transfer_mode,
+            streamFormat=stream_format,
+            streamCompression=stream_compression,
+            traceConfig=trace_config,
+            perfettoConfig=perfetto_config,
+            tracingBackend=tracing_backend,
+        )
+
         result = await self._client.send_raw(
             method="Tracing.start",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result

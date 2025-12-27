@@ -1,3 +1,4 @@
+import subprocess
 from pathlib import Path
 
 from pydantic_cpd.generator.generators import (
@@ -28,7 +29,10 @@ class DomainGenerator:
         self._generate_base_file()
         self._generate_init_file(domains)
 
-        print("\n✅ Domain generation complete!")
+        print("\n✨ Formatting generated code with Ruff...")
+        self._format_with_ruff()
+
+        print("\n✅ Generation complete!")
 
     def _prepare_output_dir(self) -> None:
         if CDP_DIR.exists():
@@ -102,6 +106,30 @@ class CDPModel(BaseModel):
 
         (CDP_DIR / "__init__.py").write_text("\n".join(lines))
         print("  ✓ __init__.py")
+
+    def _format_with_ruff(self) -> None:
+        """Format all generated Python files with Ruff"""
+        try:
+            # Ruff format auf das ganze CDP-Verzeichnis
+            result = subprocess.run(
+                ["ruff", "format", str(CDP_DIR)],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+
+            if result.returncode == 0:
+                print("  ✓ Code formatted successfully")
+            else:
+                print("  ⚠️  Ruff formatting had warnings:")
+                if result.stderr:
+                    print(f"     {result.stderr}")
+
+        except FileNotFoundError:
+            print("  ⚠️  Ruff not found - skipping formatting")
+            print("     Install with: uv add --dev ruff")
+        except Exception as e:
+            print(f"  ⚠️  Error during formatting: {e}")
 
 
 def generate_all_domains(domains: list[Domain]) -> None:

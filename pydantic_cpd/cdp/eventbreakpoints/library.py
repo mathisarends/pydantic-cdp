@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal
 
 if TYPE_CHECKING:
     from pydantic_cpd.client import CDPClient
@@ -12,32 +12,44 @@ from .commands import (
     SetInstrumentationBreakpointParams,
 )
 
+
 class EventBreakpointsClient:
     def __init__(self, client: CDPClient) -> None:
         self._client = client
 
     async def set_instrumentation_breakpoint(
-        self, params: SetInstrumentationBreakpointParams, session_id: str | None = None
+        self,
+        *,
+        event_name: str,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = SetInstrumentationBreakpointParams(eventName=event_name)
+
         result = await self._client.send_raw(
             method="EventBreakpoints.setInstrumentationBreakpoint",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def remove_instrumentation_breakpoint(
-        self, params: RemoveInstrumentationBreakpointParams, session_id: str | None = None
+        self,
+        *,
+        event_name: str,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = RemoveInstrumentationBreakpointParams(eventName=event_name)
+
         result = await self._client.send_raw(
             method="EventBreakpoints.removeInstrumentationBreakpoint",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def disable(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="EventBreakpoints.disable",

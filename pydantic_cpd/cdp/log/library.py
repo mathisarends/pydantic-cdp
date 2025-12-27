@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal
 
 if TYPE_CHECKING:
     from pydantic_cpd.client import CDPClient
@@ -11,12 +11,18 @@ from .commands import (
     StartViolationsReportParams,
 )
 
+from .types import (
+    ViolationSetting,
+)
+
+
 class LogClient:
     def __init__(self, client: CDPClient) -> None:
         self._client = client
 
     async def clear(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="Log.clear",
@@ -26,7 +32,8 @@ class LogClient:
         return result
 
     async def disable(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="Log.disable",
@@ -36,7 +43,8 @@ class LogClient:
         return result
 
     async def enable(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="Log.enable",
@@ -46,17 +54,23 @@ class LogClient:
         return result
 
     async def start_violations_report(
-        self, params: StartViolationsReportParams, session_id: str | None = None
+        self,
+        *,
+        config: list[ViolationSetting],
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = StartViolationsReportParams(config=config)
+
         result = await self._client.send_raw(
             method="Log.startViolationsReport",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def stop_violations_report(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="Log.stopViolationsReport",

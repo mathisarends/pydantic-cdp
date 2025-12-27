@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal
 
 if TYPE_CHECKING:
     from pydantic_cpd.client import CDPClient
@@ -15,22 +15,29 @@ from .commands import (
     StopCastingParams,
 )
 
+
 class CastClient:
     def __init__(self, client: CDPClient) -> None:
         self._client = client
 
     async def enable(
-        self, params: EnableParams | None = None, session_id: str | None = None
+        self,
+        *,
+        presentation_url: str | None = None,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = EnableParams(presentationUrl=presentation_url)
+
         result = await self._client.send_raw(
             method="Cast.enable",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def disable(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="Cast.disable",
@@ -40,41 +47,61 @@ class CastClient:
         return result
 
     async def set_sink_to_use(
-        self, params: SetSinkToUseParams, session_id: str | None = None
+        self,
+        *,
+        sink_name: str,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = SetSinkToUseParams(sinkName=sink_name)
+
         result = await self._client.send_raw(
             method="Cast.setSinkToUse",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def start_desktop_mirroring(
-        self, params: StartDesktopMirroringParams, session_id: str | None = None
+        self,
+        *,
+        sink_name: str,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = StartDesktopMirroringParams(sinkName=sink_name)
+
         result = await self._client.send_raw(
             method="Cast.startDesktopMirroring",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def start_tab_mirroring(
-        self, params: StartTabMirroringParams, session_id: str | None = None
+        self,
+        *,
+        sink_name: str,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = StartTabMirroringParams(sinkName=sink_name)
+
         result = await self._client.send_raw(
             method="Cast.startTabMirroring",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def stop_casting(
-        self, params: StopCastingParams, session_id: str | None = None
+        self,
+        *,
+        sink_name: str,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = StopCastingParams(sinkName=sink_name)
+
         result = await self._client.send_raw(
             method="Cast.stopCasting",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal
 
 if TYPE_CHECKING:
     from pydantic_cpd.client import CDPClient
@@ -13,12 +13,18 @@ from .commands import (
     SetOverrideCertificateErrorsParams,
 )
 
+from .types import (
+    CertificateErrorAction,
+)
+
+
 class SecurityClient:
     def __init__(self, client: CDPClient) -> None:
         self._client = client
 
     async def disable(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="Security.disable",
@@ -28,7 +34,8 @@ class SecurityClient:
         return result
 
     async def enable(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="Security.enable",
@@ -38,31 +45,47 @@ class SecurityClient:
         return result
 
     async def set_ignore_certificate_errors(
-        self, params: SetIgnoreCertificateErrorsParams, session_id: str | None = None
+        self,
+        *,
+        ignore: bool,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = SetIgnoreCertificateErrorsParams(ignore=ignore)
+
         result = await self._client.send_raw(
             method="Security.setIgnoreCertificateErrors",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def handle_certificate_error(
-        self, params: HandleCertificateErrorParams, session_id: str | None = None
+        self,
+        *,
+        event_id: int,
+        action: CertificateErrorAction,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = HandleCertificateErrorParams(eventId=event_id, action=action)
+
         result = await self._client.send_raw(
             method="Security.handleCertificateError",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def set_override_certificate_errors(
-        self, params: SetOverrideCertificateErrorsParams, session_id: str | None = None
+        self,
+        *,
+        override: bool,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = SetOverrideCertificateErrorsParams(override=override)
+
         result = await self._client.send_raw(
             method="Security.setOverrideCertificateErrors",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result

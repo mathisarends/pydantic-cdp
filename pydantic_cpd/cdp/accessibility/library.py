@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal
 
 if TYPE_CHECKING:
     from pydantic_cpd.client import CDPClient
@@ -22,12 +22,18 @@ from .commands import (
     QueryAXTreeResult,
 )
 
+from .types import (
+    AXNodeId,
+)
+
+
 class AccessibilityClient:
     def __init__(self, client: CDPClient) -> None:
         self._client = client
 
     async def disable(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="Accessibility.disable",
@@ -37,7 +43,8 @@ class AccessibilityClient:
         return result
 
     async def enable(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="Accessibility.enable",
@@ -47,61 +54,115 @@ class AccessibilityClient:
         return result
 
     async def get_partial_a_x_tree(
-        self, params: GetPartialAXTreeParams | None = None, session_id: str | None = None
+        self,
+        *,
+        node_id: DOM.NodeId | None = None,
+        backend_node_id: DOM.BackendNodeId | None = None,
+        object_id: Runtime.RemoteObjectId | None = None,
+        fetch_relatives: bool | None = None,
+        session_id: str | None = None,
     ) -> GetPartialAXTreeResult:
+        params = GetPartialAXTreeParams(
+            nodeId=node_id,
+            backendNodeId=backend_node_id,
+            objectId=object_id,
+            fetchRelatives=fetch_relatives,
+        )
+
         result = await self._client.send_raw(
             method="Accessibility.getPartialAXTree",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return GetPartialAXTreeResult.model_validate(result)
 
     async def get_full_a_x_tree(
-        self, params: GetFullAXTreeParams | None = None, session_id: str | None = None
+        self,
+        *,
+        depth: int | None = None,
+        frame_id: Page.FrameId | None = None,
+        session_id: str | None = None,
     ) -> GetFullAXTreeResult:
+        params = GetFullAXTreeParams(depth=depth, frameId=frame_id)
+
         result = await self._client.send_raw(
             method="Accessibility.getFullAXTree",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return GetFullAXTreeResult.model_validate(result)
 
     async def get_root_a_x_node(
-        self, params: GetRootAXNodeParams | None = None, session_id: str | None = None
+        self,
+        *,
+        frame_id: Page.FrameId | None = None,
+        session_id: str | None = None,
     ) -> GetRootAXNodeResult:
+        params = GetRootAXNodeParams(frameId=frame_id)
+
         result = await self._client.send_raw(
             method="Accessibility.getRootAXNode",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return GetRootAXNodeResult.model_validate(result)
 
     async def get_a_x_node_and_ancestors(
-        self, params: GetAXNodeAndAncestorsParams | None = None, session_id: str | None = None
+        self,
+        *,
+        node_id: DOM.NodeId | None = None,
+        backend_node_id: DOM.BackendNodeId | None = None,
+        object_id: Runtime.RemoteObjectId | None = None,
+        session_id: str | None = None,
     ) -> GetAXNodeAndAncestorsResult:
+        params = GetAXNodeAndAncestorsParams(
+            nodeId=node_id, backendNodeId=backend_node_id, objectId=object_id
+        )
+
         result = await self._client.send_raw(
             method="Accessibility.getAXNodeAndAncestors",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return GetAXNodeAndAncestorsResult.model_validate(result)
 
     async def get_child_a_x_nodes(
-        self, params: GetChildAXNodesParams, session_id: str | None = None
+        self,
+        *,
+        id: AXNodeId,
+        frame_id: Page.FrameId | None = None,
+        session_id: str | None = None,
     ) -> GetChildAXNodesResult:
+        params = GetChildAXNodesParams(id=id, frameId=frame_id)
+
         result = await self._client.send_raw(
             method="Accessibility.getChildAXNodes",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return GetChildAXNodesResult.model_validate(result)
 
     async def query_a_x_tree(
-        self, params: QueryAXTreeParams | None = None, session_id: str | None = None
+        self,
+        *,
+        node_id: DOM.NodeId | None = None,
+        backend_node_id: DOM.BackendNodeId | None = None,
+        object_id: Runtime.RemoteObjectId | None = None,
+        accessible_name: str | None = None,
+        role: str | None = None,
+        session_id: str | None = None,
     ) -> QueryAXTreeResult:
+        params = QueryAXTreeParams(
+            nodeId=node_id,
+            backendNodeId=backend_node_id,
+            objectId=object_id,
+            accessibleName=accessible_name,
+            role=role,
+        )
+
         result = await self._client.send_raw(
             method="Accessibility.queryAXTree",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return QueryAXTreeResult.model_validate(result)

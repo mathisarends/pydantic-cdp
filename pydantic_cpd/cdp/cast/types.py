@@ -2,6 +2,7 @@
 
 from pydantic_cpd.cdp.base import CDPModel
 
+
 class Sink(CDPModel):
     name: str
     id: str

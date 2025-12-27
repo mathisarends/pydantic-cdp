@@ -8,8 +8,17 @@ Configuration for memory dump. Used only when "memory-infra" category is enabled
 """
 MemoryDumpConfig = dict[str, Any]
 
+
 class TraceConfig(CDPModel):
-    record_mode: Literal["recordUntilFull", "recordContinuously", "recordAsMuchAsPossible", "echoToConsole"] | None = None
+    record_mode: (
+        Literal[
+            "recordUntilFull",
+            "recordContinuously",
+            "recordAsMuchAsPossible",
+            "echoToConsole",
+        ]
+        | None
+    ) = None
     trace_buffer_size_in_kb: float | None = None
     enable_sampling: bool | None = None
     enable_systrace: bool | None = None
@@ -18,6 +27,7 @@ class TraceConfig(CDPModel):
     excluded_categories: list[str] | None = None
     synthetic_delays: list[str] | None = None
     memory_dump_config: MemoryDumpConfig | None = None
+
 
 """
 Data format of a trace. Can be either the legacy JSON format or the protocol buffer

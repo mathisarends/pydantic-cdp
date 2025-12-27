@@ -43,19 +43,23 @@ Enum of AudioParam::AutomationRate from the spec
 """
 AutomationRate = Literal["a-rate", "k-rate"]
 
+
 class ContextRealtimeData(CDPModel):
     """
     Fields in AudioContext that change in real-time.
     """
+
     current_time: float
     render_capacity: float
     callback_interval_mean: float
     callback_interval_variance: float
 
+
 class BaseAudioContext(CDPModel):
     """
     Protocol object for BaseAudioContext
     """
+
     context_id: GraphObjectId
     context_type: ContextType
     context_state: ContextState
@@ -64,17 +68,21 @@ class BaseAudioContext(CDPModel):
     max_output_channel_count: float
     sample_rate: float
 
+
 class AudioListener(CDPModel):
     """
     Protocol object for AudioListener
     """
+
     listener_id: GraphObjectId
     context_id: GraphObjectId
+
 
 class AudioNode(CDPModel):
     """
     Protocol object for AudioNode
     """
+
     node_id: GraphObjectId
     context_id: GraphObjectId
     node_type: NodeType
@@ -84,10 +92,12 @@ class AudioNode(CDPModel):
     channel_count_mode: ChannelCountMode
     channel_interpretation: ChannelInterpretation
 
+
 class AudioParam(CDPModel):
     """
     Protocol object for AudioParam
     """
+
     param_id: GraphObjectId
     node_id: GraphObjectId
     context_id: GraphObjectId

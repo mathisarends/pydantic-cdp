@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal
 
 if TYPE_CHECKING:
     from pydantic_cpd.client import CDPClient
@@ -15,36 +15,58 @@ from .commands import (
     ResolveBlobResult,
 )
 
+from .types import (
+    StreamHandle,
+)
+
+
 class IOClient:
     def __init__(self, client: CDPClient) -> None:
         self._client = client
 
     async def close(
-        self, params: CloseParams, session_id: str | None = None
+        self,
+        *,
+        handle: StreamHandle,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = CloseParams(handle=handle)
+
         result = await self._client.send_raw(
             method="IO.close",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def read(
-        self, params: ReadParams, session_id: str | None = None
+        self,
+        *,
+        handle: StreamHandle,
+        offset: int | None = None,
+        size: int | None = None,
+        session_id: str | None = None,
     ) -> ReadResult:
+        params = ReadParams(handle=handle, offset=offset, size=size)
+
         result = await self._client.send_raw(
             method="IO.read",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return ReadResult.model_validate(result)
 
     async def resolve_blob(
-        self, params: ResolveBlobParams, session_id: str | None = None
+        self,
+        *,
+        object_id: Runtime.RemoteObjectId,
+        session_id: str | None = None,
     ) -> ResolveBlobResult:
+        params = ResolveBlobParams(objectId=object_id)
+
         result = await self._client.send_raw(
             method="IO.resolveBlob",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return ResolveBlobResult.model_validate(result)

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal
 
 if TYPE_CHECKING:
     from pydantic_cpd.client import CDPClient
@@ -12,26 +12,37 @@ from .commands import (
     UnbindParams,
 )
 
+
 class TetheringClient:
     def __init__(self, client: CDPClient) -> None:
         self._client = client
 
     async def bind(
-        self, params: BindParams, session_id: str | None = None
+        self,
+        *,
+        port: int,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = BindParams(port=port)
+
         result = await self._client.send_raw(
             method="Tethering.bind",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def unbind(
-        self, params: UnbindParams, session_id: str | None = None
+        self,
+        *,
+        port: int,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = UnbindParams(port=port)
+
         result = await self._client.send_raw(
             method="Tethering.unbind",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result

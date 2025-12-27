@@ -4,15 +4,19 @@ from pydantic_cpd.cdp.base import CDPModel
 
 from .types import *
 
+
 class GetBestEffortCoverageResult(CDPModel):
     result: list[ScriptCoverage]
+
 
 class SetSamplingIntervalParams(CDPModel):
     """
     Changes CPU profiler sampling interval. Must be called before CPU profiles
     recording started.
     """
+
     interval: int
+
 
 class StartPreciseCoverageParams(CDPModel):
     """
@@ -20,15 +24,19 @@ class StartPreciseCoverageParams(CDPModel):
     precise code coverage may be incomplete. Enabling prevents running optimized code
     and resets execution counters.
     """
+
     call_count: bool | None = None
     detailed: bool | None = None
     allow_triggered_updates: bool | None = None
 
+
 class StartPreciseCoverageResult(CDPModel):
     timestamp: float
 
+
 class StopResult(CDPModel):
     profile: Profile
+
 
 class TakePreciseCoverageResult(CDPModel):
     result: list[ScriptCoverage]

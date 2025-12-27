@@ -7,29 +7,35 @@ from .types import *
 
 from pydantic_cpd.cdp import storage
 
+
 class ClearObjectStoreParams(CDPModel):
     """
     Clears all entries from an object store.
     """
+
     security_origin: str | None = None
     storage_key: str | None = None
     storage_bucket: storage.StorageBucket | None = None
     database_name: str
     object_store_name: str
 
+
 class DeleteDatabaseParams(CDPModel):
     """
     Deletes a database.
     """
+
     security_origin: str | None = None
     storage_key: str | None = None
     storage_bucket: storage.StorageBucket | None = None
     database_name: str
 
+
 class DeleteObjectStoreEntriesParams(CDPModel):
     """
     Delete a range of entries from an object store
     """
+
     security_origin: str | None = None
     storage_key: str | None = None
     storage_bucket: storage.StorageBucket | None = None
@@ -37,10 +43,12 @@ class DeleteObjectStoreEntriesParams(CDPModel):
     object_store_name: str
     key_range: KeyRange
 
+
 class RequestDataParams(CDPModel):
     """
     Requests data from object store or index.
     """
+
     security_origin: str | None = None
     storage_key: str | None = None
     storage_bucket: storage.StorageBucket | None = None
@@ -51,43 +59,53 @@ class RequestDataParams(CDPModel):
     page_size: int
     key_range: KeyRange | None = None
 
+
 class RequestDataResult(CDPModel):
     object_store_data_entries: list[DataEntry]
     has_more: bool
+
 
 class GetMetadataParams(CDPModel):
     """
     Gets metadata of an object store.
     """
+
     security_origin: str | None = None
     storage_key: str | None = None
     storage_bucket: storage.StorageBucket | None = None
     database_name: str
     object_store_name: str
 
+
 class GetMetadataResult(CDPModel):
     entries_count: float
     key_generator_value: float
+
 
 class RequestDatabaseParams(CDPModel):
     """
     Requests database with given name in given frame.
     """
+
     security_origin: str | None = None
     storage_key: str | None = None
     storage_bucket: storage.StorageBucket | None = None
     database_name: str
 
+
 class RequestDatabaseResult(CDPModel):
     database_with_object_stores: DatabaseWithObjectStores
+
 
 class RequestDatabaseNamesParams(CDPModel):
     """
     Requests database names for given security origin.
     """
+
     security_origin: str | None = None
     storage_key: str | None = None
     storage_bucket: storage.StorageBucket | None = None
+
 
 class RequestDatabaseNamesResult(CDPModel):
     database_names: list[str]

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal
 
 if TYPE_CHECKING:
     from pydantic_cpd.client import CDPClient
@@ -14,22 +14,34 @@ from .commands import (
     GetEncodedResponseResult,
 )
 
+
 class AuditsClient:
     def __init__(self, client: CDPClient) -> None:
         self._client = client
 
     async def get_encoded_response(
-        self, params: GetEncodedResponseParams, session_id: str | None = None
+        self,
+        *,
+        request_id: Network.RequestId,
+        encoding: Literal["webp", "jpeg", "png"],
+        quality: float | None = None,
+        size_only: bool | None = None,
+        session_id: str | None = None,
     ) -> GetEncodedResponseResult:
+        params = GetEncodedResponseParams(
+            requestId=request_id, encoding=encoding, quality=quality, sizeOnly=size_only
+        )
+
         result = await self._client.send_raw(
             method="Audits.getEncodedResponse",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return GetEncodedResponseResult.model_validate(result)
 
     async def disable(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="Audits.disable",
@@ -39,7 +51,8 @@ class AuditsClient:
         return result
 
     async def enable(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="Audits.enable",
@@ -49,17 +62,23 @@ class AuditsClient:
         return result
 
     async def check_contrast(
-        self, params: CheckContrastParams | None = None, session_id: str | None = None
+        self,
+        *,
+        report_a_a_a: bool | None = None,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = CheckContrastParams(reportAAA=report_a_a_a)
+
         result = await self._client.send_raw(
             method="Audits.checkContrast",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def check_forms_issues(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> CheckFormsIssuesResult:
         result = await self._client.send_raw(
             method="Audits.checkFormsIssues",

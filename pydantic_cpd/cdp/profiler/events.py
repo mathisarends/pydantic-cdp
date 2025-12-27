@@ -8,19 +8,23 @@ from .types import *
 if TYPE_CHECKING:
     from pydantic_cpd.cdp import debugger
 
+
 class ConsoleProfileFinishedEvent(CDPModel):
     id: str
     location: debugger.Location
     profile: Profile
     title: str | None = None
 
+
 class ConsoleProfileStartedEvent(CDPModel):
     """
     Sent when new profile recording is started using console.profile() call.
     """
+
     id: str
     location: debugger.Location
     title: str | None = None
+
 
 class PreciseCoverageDeltaUpdateEvent(CDPModel):
     """
@@ -29,6 +33,7 @@ class PreciseCoverageDeltaUpdateEvent(CDPModel):
     coverage has been started. This event can be trigged by the embedder to, for
     example, trigger collection of coverage data immediately at a certain point in time.
     """
+
     timestamp: float
     occasion: str
     result: list[ScriptCoverage]

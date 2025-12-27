@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal
 
 if TYPE_CHECKING:
     from pydantic_cpd.client import CDPClient
@@ -55,22 +55,40 @@ from .commands import (
     StepOverParams,
 )
 
+from .types import (
+    BreakpointId,
+    CallFrameId,
+    Location,
+    LocationRange,
+    ScriptPosition,
+)
+
+
 class DebuggerClient:
     def __init__(self, client: CDPClient) -> None:
         self._client = client
 
     async def continue_to_location(
-        self, params: ContinueToLocationParams, session_id: str | None = None
+        self,
+        *,
+        location: Location,
+        target_call_frames: Literal["any", "current"] | None = None,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = ContinueToLocationParams(
+            location=location, targetCallFrames=target_call_frames
+        )
+
         result = await self._client.send_raw(
             method="Debugger.continueToLocation",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def disable(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="Debugger.disable",
@@ -80,87 +98,150 @@ class DebuggerClient:
         return result
 
     async def enable(
-        self, params: EnableParams | None = None, session_id: str | None = None
+        self,
+        *,
+        max_scripts_cache_size: float | None = None,
+        session_id: str | None = None,
     ) -> EnableResult:
+        params = EnableParams(maxScriptsCacheSize=max_scripts_cache_size)
+
         result = await self._client.send_raw(
             method="Debugger.enable",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return EnableResult.model_validate(result)
 
     async def evaluate_on_call_frame(
-        self, params: EvaluateOnCallFrameParams, session_id: str | None = None
+        self,
+        *,
+        call_frame_id: CallFrameId,
+        expression: str,
+        object_group: str | None = None,
+        include_command_line_a_p_i: bool | None = None,
+        silent: bool | None = None,
+        return_by_value: bool | None = None,
+        generate_preview: bool | None = None,
+        throw_on_side_effect: bool | None = None,
+        timeout: Runtime.TimeDelta | None = None,
+        session_id: str | None = None,
     ) -> EvaluateOnCallFrameResult:
+        params = EvaluateOnCallFrameParams(
+            callFrameId=call_frame_id,
+            expression=expression,
+            objectGroup=object_group,
+            includeCommandLineAPI=include_command_line_a_p_i,
+            silent=silent,
+            returnByValue=return_by_value,
+            generatePreview=generate_preview,
+            throwOnSideEffect=throw_on_side_effect,
+            timeout=timeout,
+        )
+
         result = await self._client.send_raw(
             method="Debugger.evaluateOnCallFrame",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return EvaluateOnCallFrameResult.model_validate(result)
 
     async def get_possible_breakpoints(
-        self, params: GetPossibleBreakpointsParams, session_id: str | None = None
+        self,
+        *,
+        start: Location,
+        end: Location | None = None,
+        restrict_to_function: bool | None = None,
+        session_id: str | None = None,
     ) -> GetPossibleBreakpointsResult:
+        params = GetPossibleBreakpointsParams(
+            start=start, end=end, restrictToFunction=restrict_to_function
+        )
+
         result = await self._client.send_raw(
             method="Debugger.getPossibleBreakpoints",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return GetPossibleBreakpointsResult.model_validate(result)
 
     async def get_script_source(
-        self, params: GetScriptSourceParams, session_id: str | None = None
+        self,
+        *,
+        script_id: Runtime.ScriptId,
+        session_id: str | None = None,
     ) -> GetScriptSourceResult:
+        params = GetScriptSourceParams(scriptId=script_id)
+
         result = await self._client.send_raw(
             method="Debugger.getScriptSource",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return GetScriptSourceResult.model_validate(result)
 
     async def disassemble_wasm_module(
-        self, params: DisassembleWasmModuleParams, session_id: str | None = None
+        self,
+        *,
+        script_id: Runtime.ScriptId,
+        session_id: str | None = None,
     ) -> DisassembleWasmModuleResult:
+        params = DisassembleWasmModuleParams(scriptId=script_id)
+
         result = await self._client.send_raw(
             method="Debugger.disassembleWasmModule",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return DisassembleWasmModuleResult.model_validate(result)
 
     async def next_wasm_disassembly_chunk(
-        self, params: NextWasmDisassemblyChunkParams, session_id: str | None = None
+        self,
+        *,
+        stream_id: str,
+        session_id: str | None = None,
     ) -> NextWasmDisassemblyChunkResult:
+        params = NextWasmDisassemblyChunkParams(streamId=stream_id)
+
         result = await self._client.send_raw(
             method="Debugger.nextWasmDisassemblyChunk",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return NextWasmDisassemblyChunkResult.model_validate(result)
 
     async def get_wasm_bytecode(
-        self, params: GetWasmBytecodeParams, session_id: str | None = None
+        self,
+        *,
+        script_id: Runtime.ScriptId,
+        session_id: str | None = None,
     ) -> GetWasmBytecodeResult:
+        params = GetWasmBytecodeParams(scriptId=script_id)
+
         result = await self._client.send_raw(
             method="Debugger.getWasmBytecode",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return GetWasmBytecodeResult.model_validate(result)
 
     async def get_stack_trace(
-        self, params: GetStackTraceParams, session_id: str | None = None
+        self,
+        *,
+        stack_trace_id: Runtime.StackTraceId,
+        session_id: str | None = None,
     ) -> GetStackTraceResult:
+        params = GetStackTraceParams(stackTraceId=stack_trace_id)
+
         result = await self._client.send_raw(
             method="Debugger.getStackTrace",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return GetStackTraceResult.model_validate(result)
 
     async def pause(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="Debugger.pause",
@@ -170,207 +251,358 @@ class DebuggerClient:
         return result
 
     async def pause_on_async_call(
-        self, params: PauseOnAsyncCallParams, session_id: str | None = None
+        self,
+        *,
+        parent_stack_trace_id: Runtime.StackTraceId,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = PauseOnAsyncCallParams(parentStackTraceId=parent_stack_trace_id)
+
         result = await self._client.send_raw(
             method="Debugger.pauseOnAsyncCall",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def remove_breakpoint(
-        self, params: RemoveBreakpointParams, session_id: str | None = None
+        self,
+        *,
+        breakpoint_id: BreakpointId,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = RemoveBreakpointParams(breakpointId=breakpoint_id)
+
         result = await self._client.send_raw(
             method="Debugger.removeBreakpoint",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def restart_frame(
-        self, params: RestartFrameParams, session_id: str | None = None
+        self,
+        *,
+        call_frame_id: CallFrameId,
+        mode: Literal["StepInto"] | None = None,
+        session_id: str | None = None,
     ) -> RestartFrameResult:
+        params = RestartFrameParams(callFrameId=call_frame_id, mode=mode)
+
         result = await self._client.send_raw(
             method="Debugger.restartFrame",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return RestartFrameResult.model_validate(result)
 
     async def resume(
-        self, params: ResumeParams | None = None, session_id: str | None = None
+        self,
+        *,
+        terminate_on_resume: bool | None = None,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = ResumeParams(terminateOnResume=terminate_on_resume)
+
         result = await self._client.send_raw(
             method="Debugger.resume",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def search_in_content(
-        self, params: SearchInContentParams, session_id: str | None = None
+        self,
+        *,
+        script_id: Runtime.ScriptId,
+        query: str,
+        case_sensitive: bool | None = None,
+        is_regex: bool | None = None,
+        session_id: str | None = None,
     ) -> SearchInContentResult:
+        params = SearchInContentParams(
+            scriptId=script_id,
+            query=query,
+            caseSensitive=case_sensitive,
+            isRegex=is_regex,
+        )
+
         result = await self._client.send_raw(
             method="Debugger.searchInContent",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return SearchInContentResult.model_validate(result)
 
     async def set_async_call_stack_depth(
-        self, params: SetAsyncCallStackDepthParams, session_id: str | None = None
+        self,
+        *,
+        max_depth: int,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = SetAsyncCallStackDepthParams(maxDepth=max_depth)
+
         result = await self._client.send_raw(
             method="Debugger.setAsyncCallStackDepth",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def set_blackbox_execution_contexts(
-        self, params: SetBlackboxExecutionContextsParams, session_id: str | None = None
+        self,
+        *,
+        unique_ids: list[str],
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = SetBlackboxExecutionContextsParams(uniqueIds=unique_ids)
+
         result = await self._client.send_raw(
             method="Debugger.setBlackboxExecutionContexts",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def set_blackbox_patterns(
-        self, params: SetBlackboxPatternsParams, session_id: str | None = None
+        self,
+        *,
+        patterns: list[str],
+        skip_anonymous: bool | None = None,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = SetBlackboxPatternsParams(
+            patterns=patterns, skipAnonymous=skip_anonymous
+        )
+
         result = await self._client.send_raw(
             method="Debugger.setBlackboxPatterns",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def set_blackboxed_ranges(
-        self, params: SetBlackboxedRangesParams, session_id: str | None = None
+        self,
+        *,
+        script_id: Runtime.ScriptId,
+        positions: list[ScriptPosition],
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = SetBlackboxedRangesParams(scriptId=script_id, positions=positions)
+
         result = await self._client.send_raw(
             method="Debugger.setBlackboxedRanges",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def set_breakpoint(
-        self, params: SetBreakpointParams, session_id: str | None = None
+        self,
+        *,
+        location: Location,
+        condition: str | None = None,
+        session_id: str | None = None,
     ) -> SetBreakpointResult:
+        params = SetBreakpointParams(location=location, condition=condition)
+
         result = await self._client.send_raw(
             method="Debugger.setBreakpoint",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return SetBreakpointResult.model_validate(result)
 
     async def set_instrumentation_breakpoint(
-        self, params: SetInstrumentationBreakpointParams, session_id: str | None = None
+        self,
+        *,
+        instrumentation: Literal[
+            "beforeScriptExecution", "beforeScriptWithSourceMapExecution"
+        ],
+        session_id: str | None = None,
     ) -> SetInstrumentationBreakpointResult:
+        params = SetInstrumentationBreakpointParams(instrumentation=instrumentation)
+
         result = await self._client.send_raw(
             method="Debugger.setInstrumentationBreakpoint",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return SetInstrumentationBreakpointResult.model_validate(result)
 
     async def set_breakpoint_by_url(
-        self, params: SetBreakpointByUrlParams, session_id: str | None = None
+        self,
+        *,
+        line_number: int,
+        url: str | None = None,
+        url_regex: str | None = None,
+        script_hash: str | None = None,
+        column_number: int | None = None,
+        condition: str | None = None,
+        session_id: str | None = None,
     ) -> SetBreakpointByUrlResult:
+        params = SetBreakpointByUrlParams(
+            lineNumber=line_number,
+            url=url,
+            urlRegex=url_regex,
+            scriptHash=script_hash,
+            columnNumber=column_number,
+            condition=condition,
+        )
+
         result = await self._client.send_raw(
             method="Debugger.setBreakpointByUrl",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return SetBreakpointByUrlResult.model_validate(result)
 
     async def set_breakpoint_on_function_call(
-        self, params: SetBreakpointOnFunctionCallParams, session_id: str | None = None
+        self,
+        *,
+        object_id: Runtime.RemoteObjectId,
+        condition: str | None = None,
+        session_id: str | None = None,
     ) -> SetBreakpointOnFunctionCallResult:
+        params = SetBreakpointOnFunctionCallParams(
+            objectId=object_id, condition=condition
+        )
+
         result = await self._client.send_raw(
             method="Debugger.setBreakpointOnFunctionCall",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return SetBreakpointOnFunctionCallResult.model_validate(result)
 
     async def set_breakpoints_active(
-        self, params: SetBreakpointsActiveParams, session_id: str | None = None
+        self,
+        *,
+        active: bool,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = SetBreakpointsActiveParams(active=active)
+
         result = await self._client.send_raw(
             method="Debugger.setBreakpointsActive",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def set_pause_on_exceptions(
-        self, params: SetPauseOnExceptionsParams, session_id: str | None = None
+        self,
+        *,
+        state: Literal["none", "caught", "uncaught", "all"],
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = SetPauseOnExceptionsParams(state=state)
+
         result = await self._client.send_raw(
             method="Debugger.setPauseOnExceptions",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def set_return_value(
-        self, params: SetReturnValueParams, session_id: str | None = None
+        self,
+        *,
+        new_value: Runtime.CallArgument,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = SetReturnValueParams(newValue=new_value)
+
         result = await self._client.send_raw(
             method="Debugger.setReturnValue",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def set_script_source(
-        self, params: SetScriptSourceParams, session_id: str | None = None
+        self,
+        *,
+        script_id: Runtime.ScriptId,
+        script_source: str,
+        dry_run: bool | None = None,
+        allow_top_frame_editing: bool | None = None,
+        session_id: str | None = None,
     ) -> SetScriptSourceResult:
+        params = SetScriptSourceParams(
+            scriptId=script_id,
+            scriptSource=script_source,
+            dryRun=dry_run,
+            allowTopFrameEditing=allow_top_frame_editing,
+        )
+
         result = await self._client.send_raw(
             method="Debugger.setScriptSource",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return SetScriptSourceResult.model_validate(result)
 
     async def set_skip_all_pauses(
-        self, params: SetSkipAllPausesParams, session_id: str | None = None
+        self,
+        *,
+        skip: bool,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = SetSkipAllPausesParams(skip=skip)
+
         result = await self._client.send_raw(
             method="Debugger.setSkipAllPauses",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def set_variable_value(
-        self, params: SetVariableValueParams, session_id: str | None = None
+        self,
+        *,
+        scope_number: int,
+        variable_name: str,
+        new_value: Runtime.CallArgument,
+        call_frame_id: CallFrameId,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = SetVariableValueParams(
+            scopeNumber=scope_number,
+            variableName=variable_name,
+            newValue=new_value,
+            callFrameId=call_frame_id,
+        )
+
         result = await self._client.send_raw(
             method="Debugger.setVariableValue",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def step_into(
-        self, params: StepIntoParams | None = None, session_id: str | None = None
+        self,
+        *,
+        break_on_async_call: bool | None = None,
+        skip_list: list[LocationRange] | None = None,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = StepIntoParams(
+            breakOnAsyncCall=break_on_async_call, skipList=skip_list
+        )
+
         result = await self._client.send_raw(
             method="Debugger.stepInto",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def step_out(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="Debugger.stepOut",
@@ -380,11 +612,16 @@ class DebuggerClient:
         return result
 
     async def step_over(
-        self, params: StepOverParams | None = None, session_id: str | None = None
+        self,
+        *,
+        skip_list: list[LocationRange] | None = None,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = StepOverParams(skipList=skip_list)
+
         result = await self._client.send_raw(
             method="Debugger.stepOver",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result

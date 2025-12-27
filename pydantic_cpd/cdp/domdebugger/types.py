@@ -16,10 +16,12 @@ CSP Violation type.
 """
 CSPViolationType = Literal["trustedtype-sink-violation", "trustedtype-policy-violation"]
 
+
 class EventListener(CDPModel):
     """
     Object event listener.
     """
+
     type: str
     use_capture: bool
     passive: bool

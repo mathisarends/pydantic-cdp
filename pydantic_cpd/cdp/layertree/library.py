@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal
 
 if TYPE_CHECKING:
     from pydantic_cpd.client import CDPClient
@@ -23,22 +23,35 @@ from .commands import (
     SnapshotCommandLogResult,
 )
 
+from .types import (
+    LayerId,
+    PictureTile,
+    SnapshotId,
+)
+
+
 class LayerTreeClient:
     def __init__(self, client: CDPClient) -> None:
         self._client = client
 
     async def compositing_reasons(
-        self, params: CompositingReasonsParams, session_id: str | None = None
+        self,
+        *,
+        layer_id: LayerId,
+        session_id: str | None = None,
     ) -> CompositingReasonsResult:
+        params = CompositingReasonsParams(layerId=layer_id)
+
         result = await self._client.send_raw(
             method="LayerTree.compositingReasons",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return CompositingReasonsResult.model_validate(result)
 
     async def disable(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="LayerTree.disable",
@@ -48,7 +61,8 @@ class LayerTreeClient:
         return result
 
     async def enable(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="LayerTree.enable",
@@ -58,61 +72,104 @@ class LayerTreeClient:
         return result
 
     async def load_snapshot(
-        self, params: LoadSnapshotParams, session_id: str | None = None
+        self,
+        *,
+        tiles: list[PictureTile],
+        session_id: str | None = None,
     ) -> LoadSnapshotResult:
+        params = LoadSnapshotParams(tiles=tiles)
+
         result = await self._client.send_raw(
             method="LayerTree.loadSnapshot",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return LoadSnapshotResult.model_validate(result)
 
     async def make_snapshot(
-        self, params: MakeSnapshotParams, session_id: str | None = None
+        self,
+        *,
+        layer_id: LayerId,
+        session_id: str | None = None,
     ) -> MakeSnapshotResult:
+        params = MakeSnapshotParams(layerId=layer_id)
+
         result = await self._client.send_raw(
             method="LayerTree.makeSnapshot",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return MakeSnapshotResult.model_validate(result)
 
     async def profile_snapshot(
-        self, params: ProfileSnapshotParams, session_id: str | None = None
+        self,
+        *,
+        snapshot_id: SnapshotId,
+        min_repeat_count: int | None = None,
+        min_duration: float | None = None,
+        clip_rect: DOM.Rect | None = None,
+        session_id: str | None = None,
     ) -> ProfileSnapshotResult:
+        params = ProfileSnapshotParams(
+            snapshotId=snapshot_id,
+            minRepeatCount=min_repeat_count,
+            minDuration=min_duration,
+            clipRect=clip_rect,
+        )
+
         result = await self._client.send_raw(
             method="LayerTree.profileSnapshot",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return ProfileSnapshotResult.model_validate(result)
 
     async def release_snapshot(
-        self, params: ReleaseSnapshotParams, session_id: str | None = None
+        self,
+        *,
+        snapshot_id: SnapshotId,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = ReleaseSnapshotParams(snapshotId=snapshot_id)
+
         result = await self._client.send_raw(
             method="LayerTree.releaseSnapshot",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def replay_snapshot(
-        self, params: ReplaySnapshotParams, session_id: str | None = None
+        self,
+        *,
+        snapshot_id: SnapshotId,
+        from_step: int | None = None,
+        to_step: int | None = None,
+        scale: float | None = None,
+        session_id: str | None = None,
     ) -> ReplaySnapshotResult:
+        params = ReplaySnapshotParams(
+            snapshotId=snapshot_id, fromStep=from_step, toStep=to_step, scale=scale
+        )
+
         result = await self._client.send_raw(
             method="LayerTree.replaySnapshot",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return ReplaySnapshotResult.model_validate(result)
 
     async def snapshot_command_log(
-        self, params: SnapshotCommandLogParams, session_id: str | None = None
+        self,
+        *,
+        snapshot_id: SnapshotId,
+        session_id: str | None = None,
     ) -> SnapshotCommandLogResult:
+        params = SnapshotCommandLogParams(snapshotId=snapshot_id)
+
         result = await self._client.send_raw(
             method="LayerTree.snapshotCommandLog",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return SnapshotCommandLogResult.model_validate(result)

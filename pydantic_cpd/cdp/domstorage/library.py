@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal
 
 if TYPE_CHECKING:
     from pydantic_cpd.client import CDPClient
@@ -15,22 +15,33 @@ from .commands import (
     SetDOMStorageItemParams,
 )
 
+from .types import (
+    StorageId,
+)
+
+
 class DOMStorageClient:
     def __init__(self, client: CDPClient) -> None:
         self._client = client
 
     async def clear(
-        self, params: ClearParams, session_id: str | None = None
+        self,
+        *,
+        storage_id: StorageId,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = ClearParams(storageId=storage_id)
+
         result = await self._client.send_raw(
             method="DOMStorage.clear",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def disable(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="DOMStorage.disable",
@@ -40,7 +51,8 @@ class DOMStorageClient:
         return result
 
     async def enable(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="DOMStorage.enable",
@@ -50,31 +62,49 @@ class DOMStorageClient:
         return result
 
     async def get_d_o_m_storage_items(
-        self, params: GetDOMStorageItemsParams, session_id: str | None = None
+        self,
+        *,
+        storage_id: StorageId,
+        session_id: str | None = None,
     ) -> GetDOMStorageItemsResult:
+        params = GetDOMStorageItemsParams(storageId=storage_id)
+
         result = await self._client.send_raw(
             method="DOMStorage.getDOMStorageItems",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return GetDOMStorageItemsResult.model_validate(result)
 
     async def remove_d_o_m_storage_item(
-        self, params: RemoveDOMStorageItemParams, session_id: str | None = None
+        self,
+        *,
+        storage_id: StorageId,
+        key: str,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = RemoveDOMStorageItemParams(storageId=storage_id, key=key)
+
         result = await self._client.send_raw(
             method="DOMStorage.removeDOMStorageItem",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def set_d_o_m_storage_item(
-        self, params: SetDOMStorageItemParams, session_id: str | None = None
+        self,
+        *,
+        storage_id: StorageId,
+        key: str,
+        value: str,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = SetDOMStorageItemParams(storageId=storage_id, key=key, value=value)
+
         result = await self._client.send_raw(
             method="DOMStorage.setDOMStorageItem",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result

@@ -4,6 +4,7 @@ from pydantic_cpd.cdp.base import CDPModel
 
 from .types import *
 
+
 class GetSnapshotParams(CDPModel):
     """
     Returns a document snapshot, including the full DOM tree of the root node
@@ -11,15 +12,18 @@ class GetSnapshotParams(CDPModel):
     as well as layout and white-listed computed style information for the nodes. Shadow
     DOM in the returned DOM tree is flattened.
     """
+
     computed_style_whitelist: list[str]
     include_event_listeners: bool | None = None
     include_paint_order: bool | None = None
     include_user_agent_shadow_tree: bool | None = None
 
+
 class GetSnapshotResult(CDPModel):
     dom_nodes: list[DOMNode]
     layout_tree_nodes: list[LayoutTreeNode]
     computed_styles: list[ComputedStyle]
+
 
 class CaptureSnapshotParams(CDPModel):
     """
@@ -28,11 +32,13 @@ class CaptureSnapshotParams(CDPModel):
     as well as layout and white-listed computed style information for the nodes. Shadow
     DOM in the returned DOM tree is flattened.
     """
+
     computed_styles: list[str]
     include_paint_order: bool | None = None
     include_d_o_m_rects: bool | None = None
     include_blended_background_colors: bool | None = None
     include_text_color_opacities: bool | None = None
+
 
 class CaptureSnapshotResult(CDPModel):
     documents: list[DocumentSnapshot]

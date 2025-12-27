@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal
 
 if TYPE_CHECKING:
     from pydantic_cpd.client import CDPClient
@@ -86,52 +86,104 @@ from .commands import (
     SetOuterHTMLParams,
 )
 
+from .types import (
+    BackendNodeId,
+    CSSComputedStyleProperty,
+    LogicalAxes,
+    NodeId,
+    PhysicalAxes,
+    Rect,
+)
+
+
 class DOMClient:
     def __init__(self, client: CDPClient) -> None:
         self._client = client
 
     async def collect_class_names_from_subtree(
-        self, params: CollectClassNamesFromSubtreeParams, session_id: str | None = None
+        self,
+        *,
+        node_id: NodeId,
+        session_id: str | None = None,
     ) -> CollectClassNamesFromSubtreeResult:
+        params = CollectClassNamesFromSubtreeParams(nodeId=node_id)
+
         result = await self._client.send_raw(
             method="DOM.collectClassNamesFromSubtree",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return CollectClassNamesFromSubtreeResult.model_validate(result)
 
     async def copy_to(
-        self, params: CopyToParams, session_id: str | None = None
+        self,
+        *,
+        node_id: NodeId,
+        target_node_id: NodeId,
+        insert_before_node_id: NodeId | None = None,
+        session_id: str | None = None,
     ) -> CopyToResult:
+        params = CopyToParams(
+            nodeId=node_id,
+            targetNodeId=target_node_id,
+            insertBeforeNodeId=insert_before_node_id,
+        )
+
         result = await self._client.send_raw(
             method="DOM.copyTo",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return CopyToResult.model_validate(result)
 
     async def describe_node(
-        self, params: DescribeNodeParams | None = None, session_id: str | None = None
+        self,
+        *,
+        node_id: NodeId | None = None,
+        backend_node_id: BackendNodeId | None = None,
+        object_id: Runtime.RemoteObjectId | None = None,
+        depth: int | None = None,
+        pierce: bool | None = None,
+        session_id: str | None = None,
     ) -> DescribeNodeResult:
+        params = DescribeNodeParams(
+            nodeId=node_id,
+            backendNodeId=backend_node_id,
+            objectId=object_id,
+            depth=depth,
+            pierce=pierce,
+        )
+
         result = await self._client.send_raw(
             method="DOM.describeNode",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return DescribeNodeResult.model_validate(result)
 
     async def scroll_into_view_if_needed(
-        self, params: ScrollIntoViewIfNeededParams | None = None, session_id: str | None = None
+        self,
+        *,
+        node_id: NodeId | None = None,
+        backend_node_id: BackendNodeId | None = None,
+        object_id: Runtime.RemoteObjectId | None = None,
+        rect: Rect | None = None,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = ScrollIntoViewIfNeededParams(
+            nodeId=node_id, backendNodeId=backend_node_id, objectId=object_id, rect=rect
+        )
+
         result = await self._client.send_raw(
             method="DOM.scrollIntoViewIfNeeded",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def disable(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="DOM.disable",
@@ -141,137 +193,241 @@ class DOMClient:
         return result
 
     async def discard_search_results(
-        self, params: DiscardSearchResultsParams, session_id: str | None = None
+        self,
+        *,
+        search_id: str,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = DiscardSearchResultsParams(searchId=search_id)
+
         result = await self._client.send_raw(
             method="DOM.discardSearchResults",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def enable(
-        self, params: EnableParams | None = None, session_id: str | None = None
+        self,
+        *,
+        include_whitespace: Literal["none", "all"] | None = None,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = EnableParams(includeWhitespace=include_whitespace)
+
         result = await self._client.send_raw(
             method="DOM.enable",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def focus(
-        self, params: FocusParams | None = None, session_id: str | None = None
+        self,
+        *,
+        node_id: NodeId | None = None,
+        backend_node_id: BackendNodeId | None = None,
+        object_id: Runtime.RemoteObjectId | None = None,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = FocusParams(
+            nodeId=node_id, backendNodeId=backend_node_id, objectId=object_id
+        )
+
         result = await self._client.send_raw(
             method="DOM.focus",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def get_attributes(
-        self, params: GetAttributesParams, session_id: str | None = None
+        self,
+        *,
+        node_id: NodeId,
+        session_id: str | None = None,
     ) -> GetAttributesResult:
+        params = GetAttributesParams(nodeId=node_id)
+
         result = await self._client.send_raw(
             method="DOM.getAttributes",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return GetAttributesResult.model_validate(result)
 
     async def get_box_model(
-        self, params: GetBoxModelParams | None = None, session_id: str | None = None
+        self,
+        *,
+        node_id: NodeId | None = None,
+        backend_node_id: BackendNodeId | None = None,
+        object_id: Runtime.RemoteObjectId | None = None,
+        session_id: str | None = None,
     ) -> GetBoxModelResult:
+        params = GetBoxModelParams(
+            nodeId=node_id, backendNodeId=backend_node_id, objectId=object_id
+        )
+
         result = await self._client.send_raw(
             method="DOM.getBoxModel",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return GetBoxModelResult.model_validate(result)
 
     async def get_content_quads(
-        self, params: GetContentQuadsParams | None = None, session_id: str | None = None
+        self,
+        *,
+        node_id: NodeId | None = None,
+        backend_node_id: BackendNodeId | None = None,
+        object_id: Runtime.RemoteObjectId | None = None,
+        session_id: str | None = None,
     ) -> GetContentQuadsResult:
+        params = GetContentQuadsParams(
+            nodeId=node_id, backendNodeId=backend_node_id, objectId=object_id
+        )
+
         result = await self._client.send_raw(
             method="DOM.getContentQuads",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return GetContentQuadsResult.model_validate(result)
 
     async def get_document(
-        self, params: GetDocumentParams | None = None, session_id: str | None = None
+        self,
+        *,
+        depth: int | None = None,
+        pierce: bool | None = None,
+        session_id: str | None = None,
     ) -> GetDocumentResult:
+        params = GetDocumentParams(depth=depth, pierce=pierce)
+
         result = await self._client.send_raw(
             method="DOM.getDocument",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return GetDocumentResult.model_validate(result)
 
     async def get_flattened_document(
-        self, params: GetFlattenedDocumentParams | None = None, session_id: str | None = None
+        self,
+        *,
+        depth: int | None = None,
+        pierce: bool | None = None,
+        session_id: str | None = None,
     ) -> GetFlattenedDocumentResult:
+        params = GetFlattenedDocumentParams(depth=depth, pierce=pierce)
+
         result = await self._client.send_raw(
             method="DOM.getFlattenedDocument",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return GetFlattenedDocumentResult.model_validate(result)
 
     async def get_nodes_for_subtree_by_style(
-        self, params: GetNodesForSubtreeByStyleParams, session_id: str | None = None
+        self,
+        *,
+        node_id: NodeId,
+        computed_styles: list[CSSComputedStyleProperty],
+        pierce: bool | None = None,
+        session_id: str | None = None,
     ) -> GetNodesForSubtreeByStyleResult:
+        params = GetNodesForSubtreeByStyleParams(
+            nodeId=node_id, computedStyles=computed_styles, pierce=pierce
+        )
+
         result = await self._client.send_raw(
             method="DOM.getNodesForSubtreeByStyle",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return GetNodesForSubtreeByStyleResult.model_validate(result)
 
     async def get_node_for_location(
-        self, params: GetNodeForLocationParams, session_id: str | None = None
+        self,
+        *,
+        x: int,
+        y: int,
+        include_user_agent_shadow_d_o_m: bool | None = None,
+        ignore_pointer_events_none: bool | None = None,
+        session_id: str | None = None,
     ) -> GetNodeForLocationResult:
+        params = GetNodeForLocationParams(
+            x=x,
+            y=y,
+            includeUserAgentShadowDOM=include_user_agent_shadow_d_o_m,
+            ignorePointerEventsNone=ignore_pointer_events_none,
+        )
+
         result = await self._client.send_raw(
             method="DOM.getNodeForLocation",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return GetNodeForLocationResult.model_validate(result)
 
     async def get_outer_h_t_m_l(
-        self, params: GetOuterHTMLParams | None = None, session_id: str | None = None
+        self,
+        *,
+        node_id: NodeId | None = None,
+        backend_node_id: BackendNodeId | None = None,
+        object_id: Runtime.RemoteObjectId | None = None,
+        include_shadow_d_o_m: bool | None = None,
+        session_id: str | None = None,
     ) -> GetOuterHTMLResult:
+        params = GetOuterHTMLParams(
+            nodeId=node_id,
+            backendNodeId=backend_node_id,
+            objectId=object_id,
+            includeShadowDOM=include_shadow_d_o_m,
+        )
+
         result = await self._client.send_raw(
             method="DOM.getOuterHTML",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return GetOuterHTMLResult.model_validate(result)
 
     async def get_relayout_boundary(
-        self, params: GetRelayoutBoundaryParams, session_id: str | None = None
+        self,
+        *,
+        node_id: NodeId,
+        session_id: str | None = None,
     ) -> GetRelayoutBoundaryResult:
+        params = GetRelayoutBoundaryParams(nodeId=node_id)
+
         result = await self._client.send_raw(
             method="DOM.getRelayoutBoundary",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return GetRelayoutBoundaryResult.model_validate(result)
 
     async def get_search_results(
-        self, params: GetSearchResultsParams, session_id: str | None = None
+        self,
+        *,
+        search_id: str,
+        from_index: int,
+        to_index: int,
+        session_id: str | None = None,
     ) -> GetSearchResultsResult:
+        params = GetSearchResultsParams(
+            searchId=search_id, fromIndex=from_index, toIndex=to_index
+        )
+
         result = await self._client.send_raw(
             method="DOM.getSearchResults",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return GetSearchResultsResult.model_validate(result)
 
     async def hide_highlight(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="DOM.hideHighlight",
@@ -281,7 +437,8 @@ class DOMClient:
         return result
 
     async def highlight_node(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="DOM.highlightNode",
@@ -291,7 +448,8 @@ class DOMClient:
         return result
 
     async def highlight_rect(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="DOM.highlightRect",
@@ -301,7 +459,8 @@ class DOMClient:
         return result
 
     async def mark_undoable_state(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="DOM.markUndoableState",
@@ -311,67 +470,109 @@ class DOMClient:
         return result
 
     async def move_to(
-        self, params: MoveToParams, session_id: str | None = None
+        self,
+        *,
+        node_id: NodeId,
+        target_node_id: NodeId,
+        insert_before_node_id: NodeId | None = None,
+        session_id: str | None = None,
     ) -> MoveToResult:
+        params = MoveToParams(
+            nodeId=node_id,
+            targetNodeId=target_node_id,
+            insertBeforeNodeId=insert_before_node_id,
+        )
+
         result = await self._client.send_raw(
             method="DOM.moveTo",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return MoveToResult.model_validate(result)
 
     async def perform_search(
-        self, params: PerformSearchParams, session_id: str | None = None
+        self,
+        *,
+        query: str,
+        include_user_agent_shadow_d_o_m: bool | None = None,
+        session_id: str | None = None,
     ) -> PerformSearchResult:
+        params = PerformSearchParams(
+            query=query, includeUserAgentShadowDOM=include_user_agent_shadow_d_o_m
+        )
+
         result = await self._client.send_raw(
             method="DOM.performSearch",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return PerformSearchResult.model_validate(result)
 
     async def push_node_by_path_to_frontend(
-        self, params: PushNodeByPathToFrontendParams, session_id: str | None = None
+        self,
+        *,
+        path: str,
+        session_id: str | None = None,
     ) -> PushNodeByPathToFrontendResult:
+        params = PushNodeByPathToFrontendParams(path=path)
+
         result = await self._client.send_raw(
             method="DOM.pushNodeByPathToFrontend",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return PushNodeByPathToFrontendResult.model_validate(result)
 
     async def push_nodes_by_backend_ids_to_frontend(
-        self, params: PushNodesByBackendIdsToFrontendParams, session_id: str | None = None
+        self,
+        *,
+        backend_node_ids: list[BackendNodeId],
+        session_id: str | None = None,
     ) -> PushNodesByBackendIdsToFrontendResult:
+        params = PushNodesByBackendIdsToFrontendParams(backendNodeIds=backend_node_ids)
+
         result = await self._client.send_raw(
             method="DOM.pushNodesByBackendIdsToFrontend",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return PushNodesByBackendIdsToFrontendResult.model_validate(result)
 
     async def query_selector(
-        self, params: QuerySelectorParams, session_id: str | None = None
+        self,
+        *,
+        node_id: NodeId,
+        selector: str,
+        session_id: str | None = None,
     ) -> QuerySelectorResult:
+        params = QuerySelectorParams(nodeId=node_id, selector=selector)
+
         result = await self._client.send_raw(
             method="DOM.querySelector",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return QuerySelectorResult.model_validate(result)
 
     async def query_selector_all(
-        self, params: QuerySelectorAllParams, session_id: str | None = None
+        self,
+        *,
+        node_id: NodeId,
+        selector: str,
+        session_id: str | None = None,
     ) -> QuerySelectorAllResult:
+        params = QuerySelectorAllParams(nodeId=node_id, selector=selector)
+
         result = await self._client.send_raw(
             method="DOM.querySelectorAll",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return QuerySelectorAllResult.model_validate(result)
 
     async def get_top_layer_elements(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> GetTopLayerElementsResult:
         result = await self._client.send_raw(
             method="DOM.getTopLayerElements",
@@ -381,17 +582,24 @@ class DOMClient:
         return GetTopLayerElementsResult.model_validate(result)
 
     async def get_element_by_relation(
-        self, params: GetElementByRelationParams, session_id: str | None = None
+        self,
+        *,
+        node_id: NodeId,
+        relation: Literal["PopoverTarget", "InterestTarget", "CommandFor"],
+        session_id: str | None = None,
     ) -> GetElementByRelationResult:
+        params = GetElementByRelationParams(nodeId=node_id, relation=relation)
+
         result = await self._client.send_raw(
             method="DOM.getElementByRelation",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return GetElementByRelationResult.model_validate(result)
 
     async def redo(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="DOM.redo",
@@ -401,117 +609,196 @@ class DOMClient:
         return result
 
     async def remove_attribute(
-        self, params: RemoveAttributeParams, session_id: str | None = None
+        self,
+        *,
+        node_id: NodeId,
+        name: str,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = RemoveAttributeParams(nodeId=node_id, name=name)
+
         result = await self._client.send_raw(
             method="DOM.removeAttribute",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def remove_node(
-        self, params: RemoveNodeParams, session_id: str | None = None
+        self,
+        *,
+        node_id: NodeId,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = RemoveNodeParams(nodeId=node_id)
+
         result = await self._client.send_raw(
             method="DOM.removeNode",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def request_child_nodes(
-        self, params: RequestChildNodesParams, session_id: str | None = None
+        self,
+        *,
+        node_id: NodeId,
+        depth: int | None = None,
+        pierce: bool | None = None,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = RequestChildNodesParams(nodeId=node_id, depth=depth, pierce=pierce)
+
         result = await self._client.send_raw(
             method="DOM.requestChildNodes",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def request_node(
-        self, params: RequestNodeParams, session_id: str | None = None
+        self,
+        *,
+        object_id: Runtime.RemoteObjectId,
+        session_id: str | None = None,
     ) -> RequestNodeResult:
+        params = RequestNodeParams(objectId=object_id)
+
         result = await self._client.send_raw(
             method="DOM.requestNode",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return RequestNodeResult.model_validate(result)
 
     async def resolve_node(
-        self, params: ResolveNodeParams | None = None, session_id: str | None = None
+        self,
+        *,
+        node_id: NodeId | None = None,
+        backend_node_id: DOM.BackendNodeId | None = None,
+        object_group: str | None = None,
+        execution_context_id: Runtime.ExecutionContextId | None = None,
+        session_id: str | None = None,
     ) -> ResolveNodeResult:
+        params = ResolveNodeParams(
+            nodeId=node_id,
+            backendNodeId=backend_node_id,
+            objectGroup=object_group,
+            executionContextId=execution_context_id,
+        )
+
         result = await self._client.send_raw(
             method="DOM.resolveNode",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return ResolveNodeResult.model_validate(result)
 
     async def set_attribute_value(
-        self, params: SetAttributeValueParams, session_id: str | None = None
+        self,
+        *,
+        node_id: NodeId,
+        name: str,
+        value: str,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = SetAttributeValueParams(nodeId=node_id, name=name, value=value)
+
         result = await self._client.send_raw(
             method="DOM.setAttributeValue",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def set_attributes_as_text(
-        self, params: SetAttributesAsTextParams, session_id: str | None = None
+        self,
+        *,
+        node_id: NodeId,
+        text: str,
+        name: str | None = None,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = SetAttributesAsTextParams(nodeId=node_id, text=text, name=name)
+
         result = await self._client.send_raw(
             method="DOM.setAttributesAsText",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def set_file_input_files(
-        self, params: SetFileInputFilesParams, session_id: str | None = None
+        self,
+        *,
+        files: list[str],
+        node_id: NodeId | None = None,
+        backend_node_id: BackendNodeId | None = None,
+        object_id: Runtime.RemoteObjectId | None = None,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = SetFileInputFilesParams(
+            files=files,
+            nodeId=node_id,
+            backendNodeId=backend_node_id,
+            objectId=object_id,
+        )
+
         result = await self._client.send_raw(
             method="DOM.setFileInputFiles",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def set_node_stack_traces_enabled(
-        self, params: SetNodeStackTracesEnabledParams, session_id: str | None = None
+        self,
+        *,
+        enable: bool,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = SetNodeStackTracesEnabledParams(enable=enable)
+
         result = await self._client.send_raw(
             method="DOM.setNodeStackTracesEnabled",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def get_node_stack_traces(
-        self, params: GetNodeStackTracesParams, session_id: str | None = None
+        self,
+        *,
+        node_id: NodeId,
+        session_id: str | None = None,
     ) -> GetNodeStackTracesResult:
+        params = GetNodeStackTracesParams(nodeId=node_id)
+
         result = await self._client.send_raw(
             method="DOM.getNodeStackTraces",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return GetNodeStackTracesResult.model_validate(result)
 
     async def get_file_info(
-        self, params: GetFileInfoParams, session_id: str | None = None
+        self,
+        *,
+        object_id: Runtime.RemoteObjectId,
+        session_id: str | None = None,
     ) -> GetFileInfoResult:
+        params = GetFileInfoParams(objectId=object_id)
+
         result = await self._client.send_raw(
             method="DOM.getFileInfo",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return GetFileInfoResult.model_validate(result)
 
     async def get_detached_dom_nodes(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> GetDetachedDomNodesResult:
         result = await self._client.send_raw(
             method="DOM.getDetachedDomNodes",
@@ -521,47 +808,71 @@ class DOMClient:
         return GetDetachedDomNodesResult.model_validate(result)
 
     async def set_inspected_node(
-        self, params: SetInspectedNodeParams, session_id: str | None = None
+        self,
+        *,
+        node_id: NodeId,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = SetInspectedNodeParams(nodeId=node_id)
+
         result = await self._client.send_raw(
             method="DOM.setInspectedNode",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def set_node_name(
-        self, params: SetNodeNameParams, session_id: str | None = None
+        self,
+        *,
+        node_id: NodeId,
+        name: str,
+        session_id: str | None = None,
     ) -> SetNodeNameResult:
+        params = SetNodeNameParams(nodeId=node_id, name=name)
+
         result = await self._client.send_raw(
             method="DOM.setNodeName",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return SetNodeNameResult.model_validate(result)
 
     async def set_node_value(
-        self, params: SetNodeValueParams, session_id: str | None = None
+        self,
+        *,
+        node_id: NodeId,
+        value: str,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = SetNodeValueParams(nodeId=node_id, value=value)
+
         result = await self._client.send_raw(
             method="DOM.setNodeValue",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def set_outer_h_t_m_l(
-        self, params: SetOuterHTMLParams, session_id: str | None = None
+        self,
+        *,
+        node_id: NodeId,
+        outer_h_t_m_l: str,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = SetOuterHTMLParams(nodeId=node_id, outerHTML=outer_h_t_m_l)
+
         result = await self._client.send_raw(
             method="DOM.setOuterHTML",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def undo(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="DOM.undo",
@@ -571,51 +882,92 @@ class DOMClient:
         return result
 
     async def get_frame_owner(
-        self, params: GetFrameOwnerParams, session_id: str | None = None
+        self,
+        *,
+        frame_id: Page.FrameId,
+        session_id: str | None = None,
     ) -> GetFrameOwnerResult:
+        params = GetFrameOwnerParams(frameId=frame_id)
+
         result = await self._client.send_raw(
             method="DOM.getFrameOwner",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return GetFrameOwnerResult.model_validate(result)
 
     async def get_container_for_node(
-        self, params: GetContainerForNodeParams, session_id: str | None = None
+        self,
+        *,
+        node_id: NodeId,
+        container_name: str | None = None,
+        physical_axes: PhysicalAxes | None = None,
+        logical_axes: LogicalAxes | None = None,
+        queries_scroll_state: bool | None = None,
+        queries_anchored: bool | None = None,
+        session_id: str | None = None,
     ) -> GetContainerForNodeResult:
+        params = GetContainerForNodeParams(
+            nodeId=node_id,
+            containerName=container_name,
+            physicalAxes=physical_axes,
+            logicalAxes=logical_axes,
+            queriesScrollState=queries_scroll_state,
+            queriesAnchored=queries_anchored,
+        )
+
         result = await self._client.send_raw(
             method="DOM.getContainerForNode",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return GetContainerForNodeResult.model_validate(result)
 
     async def get_querying_descendants_for_container(
-        self, params: GetQueryingDescendantsForContainerParams, session_id: str | None = None
+        self,
+        *,
+        node_id: NodeId,
+        session_id: str | None = None,
     ) -> GetQueryingDescendantsForContainerResult:
+        params = GetQueryingDescendantsForContainerParams(nodeId=node_id)
+
         result = await self._client.send_raw(
             method="DOM.getQueryingDescendantsForContainer",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return GetQueryingDescendantsForContainerResult.model_validate(result)
 
     async def get_anchor_element(
-        self, params: GetAnchorElementParams, session_id: str | None = None
+        self,
+        *,
+        node_id: NodeId,
+        anchor_specifier: str | None = None,
+        session_id: str | None = None,
     ) -> GetAnchorElementResult:
+        params = GetAnchorElementParams(
+            nodeId=node_id, anchorSpecifier=anchor_specifier
+        )
+
         result = await self._client.send_raw(
             method="DOM.getAnchorElement",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return GetAnchorElementResult.model_validate(result)
 
     async def force_show_popover(
-        self, params: ForceShowPopoverParams, session_id: str | None = None
+        self,
+        *,
+        node_id: NodeId,
+        enable: bool,
+        session_id: str | None = None,
     ) -> ForceShowPopoverResult:
+        params = ForceShowPopoverParams(nodeId=node_id, enable=enable)
+
         result = await self._client.send_raw(
             method="DOM.forceShowPopover",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return ForceShowPopoverResult.model_validate(result)

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal
 
 if TYPE_CHECKING:
     from pydantic_cpd.client import CDPClient
@@ -20,12 +20,21 @@ from .commands import (
     TakeResponseBodyAsStreamResult,
 )
 
+from .types import (
+    AuthChallengeResponse,
+    HeaderEntry,
+    RequestId,
+    RequestPattern,
+)
+
+
 class FetchClient:
     def __init__(self, client: CDPClient) -> None:
         self._client = client
 
     async def disable(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="Fetch.disable",
@@ -35,81 +44,162 @@ class FetchClient:
         return result
 
     async def enable(
-        self, params: EnableParams | None = None, session_id: str | None = None
+        self,
+        *,
+        patterns: list[RequestPattern] | None = None,
+        handle_auth_requests: bool | None = None,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = EnableParams(
+            patterns=patterns, handleAuthRequests=handle_auth_requests
+        )
+
         result = await self._client.send_raw(
             method="Fetch.enable",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def fail_request(
-        self, params: FailRequestParams, session_id: str | None = None
+        self,
+        *,
+        request_id: RequestId,
+        error_reason: Network.ErrorReason,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = FailRequestParams(requestId=request_id, errorReason=error_reason)
+
         result = await self._client.send_raw(
             method="Fetch.failRequest",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def fulfill_request(
-        self, params: FulfillRequestParams, session_id: str | None = None
+        self,
+        *,
+        request_id: RequestId,
+        response_code: int,
+        response_headers: list[HeaderEntry] | None = None,
+        binary_response_headers: str | None = None,
+        body: str | None = None,
+        response_phrase: str | None = None,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = FulfillRequestParams(
+            requestId=request_id,
+            responseCode=response_code,
+            responseHeaders=response_headers,
+            binaryResponseHeaders=binary_response_headers,
+            body=body,
+            responsePhrase=response_phrase,
+        )
+
         result = await self._client.send_raw(
             method="Fetch.fulfillRequest",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def continue_request(
-        self, params: ContinueRequestParams, session_id: str | None = None
+        self,
+        *,
+        request_id: RequestId,
+        url: str | None = None,
+        method: str | None = None,
+        post_data: str | None = None,
+        headers: list[HeaderEntry] | None = None,
+        intercept_response: bool | None = None,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = ContinueRequestParams(
+            requestId=request_id,
+            url=url,
+            method=method,
+            postData=post_data,
+            headers=headers,
+            interceptResponse=intercept_response,
+        )
+
         result = await self._client.send_raw(
             method="Fetch.continueRequest",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def continue_with_auth(
-        self, params: ContinueWithAuthParams, session_id: str | None = None
+        self,
+        *,
+        request_id: RequestId,
+        auth_challenge_response: AuthChallengeResponse,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = ContinueWithAuthParams(
+            requestId=request_id, authChallengeResponse=auth_challenge_response
+        )
+
         result = await self._client.send_raw(
             method="Fetch.continueWithAuth",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def continue_response(
-        self, params: ContinueResponseParams, session_id: str | None = None
+        self,
+        *,
+        request_id: RequestId,
+        response_code: int | None = None,
+        response_phrase: str | None = None,
+        response_headers: list[HeaderEntry] | None = None,
+        binary_response_headers: str | None = None,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = ContinueResponseParams(
+            requestId=request_id,
+            responseCode=response_code,
+            responsePhrase=response_phrase,
+            responseHeaders=response_headers,
+            binaryResponseHeaders=binary_response_headers,
+        )
+
         result = await self._client.send_raw(
             method="Fetch.continueResponse",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def get_response_body(
-        self, params: GetResponseBodyParams, session_id: str | None = None
+        self,
+        *,
+        request_id: RequestId,
+        session_id: str | None = None,
     ) -> GetResponseBodyResult:
+        params = GetResponseBodyParams(requestId=request_id)
+
         result = await self._client.send_raw(
             method="Fetch.getResponseBody",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return GetResponseBodyResult.model_validate(result)
 
     async def take_response_body_as_stream(
-        self, params: TakeResponseBodyAsStreamParams, session_id: str | None = None
+        self,
+        *,
+        request_id: RequestId,
+        session_id: str | None = None,
     ) -> TakeResponseBodyAsStreamResult:
+        params = TakeResponseBodyAsStreamParams(requestId=request_id)
+
         result = await self._client.send_raw(
             method="Fetch.takeResponseBodyAsStream",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return TakeResponseBodyAsStreamResult.model_validate(result)

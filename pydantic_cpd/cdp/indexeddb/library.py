@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal
 
 if TYPE_CHECKING:
     from pydantic_cpd.client import CDPClient
@@ -21,42 +21,93 @@ from .commands import (
     RequestDatabaseResult,
 )
 
+from .types import (
+    KeyRange,
+)
+
+
 class IndexedDBClient:
     def __init__(self, client: CDPClient) -> None:
         self._client = client
 
     async def clear_object_store(
-        self, params: ClearObjectStoreParams, session_id: str | None = None
+        self,
+        *,
+        security_origin: str | None = None,
+        storage_key: str | None = None,
+        storage_bucket: Storage.StorageBucket | None = None,
+        database_name: str,
+        object_store_name: str,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = ClearObjectStoreParams(
+            securityOrigin=security_origin,
+            storageKey=storage_key,
+            storageBucket=storage_bucket,
+            databaseName=database_name,
+            objectStoreName=object_store_name,
+        )
+
         result = await self._client.send_raw(
             method="IndexedDB.clearObjectStore",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def delete_database(
-        self, params: DeleteDatabaseParams, session_id: str | None = None
+        self,
+        *,
+        security_origin: str | None = None,
+        storage_key: str | None = None,
+        storage_bucket: Storage.StorageBucket | None = None,
+        database_name: str,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = DeleteDatabaseParams(
+            securityOrigin=security_origin,
+            storageKey=storage_key,
+            storageBucket=storage_bucket,
+            databaseName=database_name,
+        )
+
         result = await self._client.send_raw(
             method="IndexedDB.deleteDatabase",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def delete_object_store_entries(
-        self, params: DeleteObjectStoreEntriesParams, session_id: str | None = None
+        self,
+        *,
+        security_origin: str | None = None,
+        storage_key: str | None = None,
+        storage_bucket: Storage.StorageBucket | None = None,
+        database_name: str,
+        object_store_name: str,
+        key_range: KeyRange,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
+        params = DeleteObjectStoreEntriesParams(
+            securityOrigin=security_origin,
+            storageKey=storage_key,
+            storageBucket=storage_bucket,
+            databaseName=database_name,
+            objectStoreName=object_store_name,
+            keyRange=key_range,
+        )
+
         result = await self._client.send_raw(
             method="IndexedDB.deleteObjectStoreEntries",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
 
     async def disable(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="IndexedDB.disable",
@@ -66,7 +117,8 @@ class IndexedDBClient:
         return result
 
     async def enable(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="IndexedDB.enable",
@@ -76,41 +128,103 @@ class IndexedDBClient:
         return result
 
     async def request_data(
-        self, params: RequestDataParams, session_id: str | None = None
+        self,
+        *,
+        security_origin: str | None = None,
+        storage_key: str | None = None,
+        storage_bucket: Storage.StorageBucket | None = None,
+        database_name: str,
+        object_store_name: str,
+        index_name: str | None = None,
+        skip_count: int,
+        page_size: int,
+        key_range: KeyRange | None = None,
+        session_id: str | None = None,
     ) -> RequestDataResult:
+        params = RequestDataParams(
+            securityOrigin=security_origin,
+            storageKey=storage_key,
+            storageBucket=storage_bucket,
+            databaseName=database_name,
+            objectStoreName=object_store_name,
+            indexName=index_name,
+            skipCount=skip_count,
+            pageSize=page_size,
+            keyRange=key_range,
+        )
+
         result = await self._client.send_raw(
             method="IndexedDB.requestData",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return RequestDataResult.model_validate(result)
 
     async def get_metadata(
-        self, params: GetMetadataParams, session_id: str | None = None
+        self,
+        *,
+        security_origin: str | None = None,
+        storage_key: str | None = None,
+        storage_bucket: Storage.StorageBucket | None = None,
+        database_name: str,
+        object_store_name: str,
+        session_id: str | None = None,
     ) -> GetMetadataResult:
+        params = GetMetadataParams(
+            securityOrigin=security_origin,
+            storageKey=storage_key,
+            storageBucket=storage_bucket,
+            databaseName=database_name,
+            objectStoreName=object_store_name,
+        )
+
         result = await self._client.send_raw(
             method="IndexedDB.getMetadata",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return GetMetadataResult.model_validate(result)
 
     async def request_database(
-        self, params: RequestDatabaseParams, session_id: str | None = None
+        self,
+        *,
+        security_origin: str | None = None,
+        storage_key: str | None = None,
+        storage_bucket: Storage.StorageBucket | None = None,
+        database_name: str,
+        session_id: str | None = None,
     ) -> RequestDatabaseResult:
+        params = RequestDatabaseParams(
+            securityOrigin=security_origin,
+            storageKey=storage_key,
+            storageBucket=storage_bucket,
+            databaseName=database_name,
+        )
+
         result = await self._client.send_raw(
             method="IndexedDB.requestDatabase",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return RequestDatabaseResult.model_validate(result)
 
     async def request_database_names(
-        self, params: RequestDatabaseNamesParams | None = None, session_id: str | None = None
+        self,
+        *,
+        security_origin: str | None = None,
+        storage_key: str | None = None,
+        storage_bucket: Storage.StorageBucket | None = None,
+        session_id: str | None = None,
     ) -> RequestDatabaseNamesResult:
+        params = RequestDatabaseNamesParams(
+            securityOrigin=security_origin,
+            storageKey=storage_key,
+            storageBucket=storage_bucket,
+        )
+
         result = await self._client.send_raw(
             method="IndexedDB.requestDatabaseNames",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return RequestDatabaseNamesResult.model_validate(result)

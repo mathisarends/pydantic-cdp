@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal
 
 if TYPE_CHECKING:
     from pydantic_cpd.client import CDPClient
@@ -12,12 +12,18 @@ from .commands import (
     GetRealtimeDataResult,
 )
 
+from .types import (
+    GraphObjectId,
+)
+
+
 class WebAudioClient:
     def __init__(self, client: CDPClient) -> None:
         self._client = client
 
     async def enable(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="WebAudio.enable",
@@ -27,7 +33,8 @@ class WebAudioClient:
         return result
 
     async def disable(
-        self, session_id: str | None = None
+        self,
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         result = await self._client.send_raw(
             method="WebAudio.disable",
@@ -37,11 +44,16 @@ class WebAudioClient:
         return result
 
     async def get_realtime_data(
-        self, params: GetRealtimeDataParams, session_id: str | None = None
+        self,
+        *,
+        context_id: GraphObjectId,
+        session_id: str | None = None,
     ) -> GetRealtimeDataResult:
+        params = GetRealtimeDataParams(contextId=context_id)
+
         result = await self._client.send_raw(
             method="WebAudio.getRealtimeData",
-            params=params.to_cdp_params() if params else None,
+            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return GetRealtimeDataResult.model_validate(result)

@@ -8,10 +8,12 @@ from .types import *
 if TYPE_CHECKING:
     from pydantic_cpd.cdp import io
 
+
 class BufferUsageEvent(CDPModel):
     percent_full: float | None = None
     event_count: float | None = None
     value: float | None = None
+
 
 class DataCollectedEvent(CDPModel):
     """
@@ -19,13 +21,16 @@ class DataCollectedEvent(CDPModel):
     events will be sent as a sequence of dataCollected events followed by
     tracingComplete event.
     """
+
     value: list[dict[str, Any]]
+
 
 class TracingCompleteEvent(CDPModel):
     """
     Signals that tracing is stopped and there is no trace buffers pending flush, all
     data were delivered via dataCollected events.
     """
+
     data_loss_occurred: bool
     stream: io.StreamHandle | None = None
     trace_format: StreamFormat | None = None

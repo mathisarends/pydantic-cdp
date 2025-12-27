@@ -5,11 +5,14 @@ from pydantic_cpd.cdp.base import CDPModel
 
 from .types import *
 
+
 class EnableParams(CDPModel):
     """
     Enable collecting and reporting metrics.
     """
+
     time_domain: Literal["timeTicks", "threadTicks"] | None = None
+
 
 class SetTimeDomainParams(CDPModel):
     """
@@ -17,7 +20,9 @@ class SetTimeDomainParams(CDPModel):
     this must be called before enabling metrics collection. Calling this method while
     metrics collection is enabled returns an error.
     """
+
     time_domain: Literal["timeTicks", "threadTicks"]
+
 
 class GetMetricsResult(CDPModel):
     metrics: list[Metric]
