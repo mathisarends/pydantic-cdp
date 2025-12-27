@@ -1,23 +1,23 @@
 import asyncio
+
 from pydantic_cpd.generator.downloader import download_specs
 from pydantic_cpd.generator.parser import filter_domains
-from pydantic_cpd.generator.writer import generate_all_domains
+from pydantic_cpd.generator.generator import generate_all_domains
 
 
 async def main() -> None:
-    print("🚀 Starting CDP Pydantic Generator\n")
+    print("🚀 CDP Pydantic Generator\n")
 
     specs = await download_specs()
+    print(f"✓ CDP Version: {specs.version_string}")
+    print(f"✓ Total domains: {len(specs.all_domains)}")
 
-    print(f"\n📊 CDP Version: {specs.version_string}")
-    print(f"📊 Total domains available: {len(specs.all_domains)}")
-
-    print("\n🔍 Filtering domains...")
+    # Filter domains
     domains = filter_domains(specs)
-    print(f"✅ Selected {len(domains)} domains for generation")
+    print(f"✓ Selected: {len(domains)} domains")
 
+    # Generate code
     generate_all_domains(domains)
-
     print("\n✅ Generation complete!")
 
 

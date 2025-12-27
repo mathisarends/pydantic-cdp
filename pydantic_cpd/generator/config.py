@@ -57,11 +57,57 @@ class CDPDomain(StrEnum):
 
 
 DOMAINS_TO_GENERATE: set[CDPDomain] = {
-    CDPDomain.PAGE,  # Navigation, Screenshots, Lifecycle
-    CDPDomain.DOM,  # DOM manipulation
-    CDPDomain.INPUT,  # Mouse, Keyboard, Touch
-    CDPDomain.NETWORK,  # Request monitoring
-    CDPDomain.TARGET,  # Tab/Page management
-    CDPDomain.RUNTIME,  # JavaScript execution
-    CDPDomain.CONSOLE,  # Console API
+    # Core Navigation & Page
+    CDPDomain.PAGE,
+    CDPDomain.DOM,
+    CDPDomain.INPUT,
+    CDPDomain.NETWORK,
+    CDPDomain.TARGET,
+    CDPDomain.RUNTIME,
+    CDPDomain.CONSOLE,
+    # Debugging & Profiling
+    CDPDomain.DEBUGGER,
+    CDPDomain.PROFILER,
+    CDPDomain.HEAP_PROFILER,
+    CDPDomain.PERFORMANCE,
+    # Rendering & Styling
+    CDPDomain.CSS,
+    CDPDomain.OVERLAY,
+    CDPDomain.ANIMATION,
+    CDPDomain.LAYER_TREE,
+    # Storage
+    CDPDomain.STORAGE,
+    CDPDomain.DATABASE,
+    CDPDomain.INDEXED_DB,
+    CDPDomain.CACHE_STORAGE,
+    CDPDomain.DOM_STORAGE,
+    CDPDomain.APPLICATION_CACHE,
+    # Web APIs & Services
+    CDPDomain.FETCH,
+    CDPDomain.WEB_AUDIO,
+    CDPDomain.WEB_AUTHN,
+    CDPDomain.MEDIA,
+    CDPDomain.SERVICE_WORKER,
+    CDPDomain.BACKGROUND_SERVICE,
+    # Device Emulation
+    CDPDomain.EMULATION,
+    CDPDomain.DEVICE_ORIENTATION,
+    # Browser & System
+    CDPDomain.BROWSER,
+    CDPDomain.SYSTEM_INFO,
+    CDPDomain.SECURITY,
+    CDPDomain.LOG,
+    CDPDomain.TETHERING,
+    # Testing & Analysis
+    CDPDomain.ACCESSIBILITY,
+    CDPDomain.AUDITS,
+    # Advanced Features
+    CDPDomain.TRACING,
+    CDPDomain.SCHEMA,
+    CDPDomain.CAST,
+    CDPDomain.DOM_SNAPSHOT,
+    CDPDomain.DOM_DEBUGGER,
+    CDPDomain.EVENT_BREAKPOINTS,
+    CDPDomain.IO,
+    CDPDomain.MEMORY,
 }

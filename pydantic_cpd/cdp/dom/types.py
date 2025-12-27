@@ -1,0 +1,186 @@
+"""Generated from CDP specification"""
+# Domain: DOM
+# This domain exposes DOM read/write operations. Each DOM Node is represented with its
+# mirror object that has an `id`. This `id` can be used to get additional information
+# on the Node, resolve it into the JavaScript object wrapper, etc. It is important that
+# client receives DOM events only for the nodes that are known to the client. Backend
+# keeps track of the nodes that were sent to the client and never sends the same node
+# twice. It is client's responsibility to collect information about the nodes that were
+# sent to the client. Note that `iframe` owner elements will return corresponding
+# document elements as their child nodes.
+
+from typing import Any, Literal
+from pydantic_cpd.cdp.base import CDPModel
+
+# Unique DOM node identifier.
+NodeId = int
+
+# Unique DOM node identifier used to reference a node that may not have been pushed to
+# the front-end.
+BackendNodeId = int
+
+# Unique identifier for a CSS stylesheet.
+StyleSheetId = str
+
+
+class BackendNode(CDPModel):
+    """Backend node with a friendly name."""
+
+    node_type: int
+    node_name: str
+    backend_node_id: BackendNodeId
+
+
+# Pseudo element type.
+PseudoType = Literal[
+    "first-line",
+    "first-letter",
+    "checkmark",
+    "before",
+    "after",
+    "picker-icon",
+    "interest-hint",
+    "marker",
+    "backdrop",
+    "column",
+    "selection",
+    "search-text",
+    "target-text",
+    "spelling-error",
+    "grammar-error",
+    "highlight",
+    "first-line-inherited",
+    "scroll-marker",
+    "scroll-marker-group",
+    "scroll-button",
+    "scrollbar",
+    "scrollbar-thumb",
+    "scrollbar-button",
+    "scrollbar-track",
+    "scrollbar-track-piece",
+    "scrollbar-corner",
+    "resizer",
+    "input-list-button",
+    "view-transition",
+    "view-transition-group",
+    "view-transition-image-pair",
+    "view-transition-group-children",
+    "view-transition-old",
+    "view-transition-new",
+    "placeholder",
+    "file-selector-button",
+    "details-content",
+    "picker",
+    "permission-icon",
+    "overscroll-area-parent",
+]
+
+# Shadow root type.
+ShadowRootType = Literal["user-agent", "open", "closed"]
+
+# Document compatibility mode.
+CompatibilityMode = Literal["QuirksMode", "LimitedQuirksMode", "NoQuirksMode"]
+
+# ContainerSelector physical axes
+PhysicalAxes = Literal["Horizontal", "Vertical", "Both"]
+
+# ContainerSelector logical axes
+LogicalAxes = Literal["Inline", "Block", "Both"]
+
+# Physical scroll orientation
+ScrollOrientation = Literal["horizontal", "vertical"]
+
+
+class Node(CDPModel):
+    """DOM interaction is implemented in terms of mirror objects that represent the actual DOM nodes.
+    DOMNode is a base node mirror type."""
+
+    node_id: NodeId
+    parent_id: NodeId | None = None
+    backend_node_id: BackendNodeId
+    node_type: int
+    node_name: str
+    local_name: str
+    node_value: str
+    child_node_count: int | None = None
+    children: list[Node] | None = None
+    attributes: list[str] | None = None
+    document_u_r_l: str | None = None
+    base_u_r_l: str | None = None
+    public_id: str | None = None
+    system_id: str | None = None
+    internal_subset: str | None = None
+    xml_version: str | None = None
+    name: str | None = None
+    value: str | None = None
+    pseudo_type: PseudoType | None = None
+    pseudo_identifier: str | None = None
+    shadow_root_type: ShadowRootType | None = None
+    frame_id: page.FrameId | None = None
+    content_document: Node | None = None
+    shadow_roots: list[Node] | None = None
+    template_content: Node | None = None
+    pseudo_elements: list[Node] | None = None
+    imported_document: Node | None = None
+    distributed_nodes: list[BackendNode] | None = None
+    is_s_v_g: bool | None = None
+    compatibility_mode: CompatibilityMode | None = None
+    assigned_slot: BackendNode | None = None
+    is_scrollable: bool | None = None
+    affected_by_starting_styles: bool | None = None
+    adopted_style_sheets: list[StyleSheetId] | None = None
+
+
+class DetachedElementInfo(CDPModel):
+    """A structure to hold the top-level node of a detached tree and an array of its retained descendants."""
+
+    tree_node: Node
+    retained_node_ids: list[NodeId]
+
+
+class RGBA(CDPModel):
+    """A structure holding an RGBA color."""
+
+    r: int
+    g: int
+    b: int
+    a: float | None = None
+
+
+# An array of quad vertices, x immediately followed by y for each point, points
+# clock-wise.
+Quad = list[Any]
+
+
+class BoxModel(CDPModel):
+    """Box model."""
+
+    content: Quad
+    padding: Quad
+    border: Quad
+    margin: Quad
+    width: int
+    height: int
+    shape_outside: ShapeOutsideInfo | None = None
+
+
+class ShapeOutsideInfo(CDPModel):
+    """CSS Shape Outside details."""
+
+    bounds: Quad
+    shape: list[Any]
+    margin_shape: list[Any]
+
+
+class Rect(CDPModel):
+    """Rectangle."""
+
+    x: float
+    y: float
+    width: float
+    height: float
+
+
+class CSSComputedStyleProperty(CDPModel):
+    name: str
+    value: str

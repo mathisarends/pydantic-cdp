@@ -1,0 +1,35 @@
+"""Generated from CDP specification"""
+# Domain: BackgroundService
+# Defines events for background web platform features.
+
+from typing import Literal
+from pydantic_cpd.cdp.base import CDPModel
+
+# The Background Service that will be associated with the commands/events. Every
+# Background Service operates independently, but they share the same API.
+ServiceName = Literal[
+    "backgroundFetch",
+    "backgroundSync",
+    "pushMessaging",
+    "notifications",
+    "paymentHandler",
+    "periodicBackgroundSync",
+]
+
+
+class EventMetadata(CDPModel):
+    """A key-value pair for additional event information to pass along."""
+
+    key: str
+    value: str
+
+
+class BackgroundServiceEvent(CDPModel):
+    timestamp: network.TimeSinceEpoch
+    origin: str
+    service_worker_registration_id: serviceworker.RegistrationID
+    service: ServiceName
+    event_name: str
+    instance_id: str
+    event_metadata: list[EventMetadata]
+    storage_key: str

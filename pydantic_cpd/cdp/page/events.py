@@ -1,0 +1,243 @@
+"""Generated event models from CDP specification"""
+# Domain: Page Events
+
+from typing import Literal
+from pydantic_cpd.cdp.base import CDPModel
+
+from .types import *
+
+from pydantic_cpd.cdp import dom
+from pydantic_cpd.cdp import network
+from pydantic_cpd.cdp import runtime
+
+
+class DomcontenteventfiredEvent(CDPModel):
+    timestamp: network.MonotonicTime
+
+
+class FilechooseropenedEvent(CDPModel):
+    """Emitted only when `page.interceptFileChooser` is enabled."""
+
+    frame_id: FrameId
+    mode: Literal["selectSingle", "selectMultiple"]
+    backend_node_id: dom.BackendNodeId | None = None
+
+
+class FrameattachedEvent(CDPModel):
+    """Fired when frame has been attached to its parent."""
+
+    frame_id: FrameId
+    parent_frame_id: FrameId
+    stack: runtime.StackTrace | None = None
+
+
+class FrameclearedschedulednavigationEvent(CDPModel):
+    """Fired when frame no longer has a scheduled navigation."""
+
+    frame_id: FrameId
+
+
+class FramedetachedEvent(CDPModel):
+    """Fired when frame has been detached from its parent."""
+
+    frame_id: FrameId
+    reason: Literal["remove", "swap"]
+
+
+class FramesubtreewillbedetachedEvent(CDPModel):
+    """Fired before frame subtree is detached. Emitted before any frame of the
+    subtree is actually detached."""
+
+    frame_id: FrameId
+
+
+class FramenavigatedEvent(CDPModel):
+    """Fired once navigation of the frame has completed. Frame is now associated with the new loader."""
+
+    frame: Frame
+    type: NavigationType
+
+
+class DocumentopenedEvent(CDPModel):
+    """Fired when opening document to write to."""
+
+    frame: Frame
+
+
+class FrameresizedEvent(CDPModel):
+    pass
+
+
+class FramestartednavigatingEvent(CDPModel):
+    """Fired when a navigation starts. This event is fired for both
+    renderer-initiated and browser-initiated navigations. For renderer-initiated
+    navigations, the event is fired after `frameRequestedNavigation`.
+    Navigation may still be cancelled after the event is issued. Multiple events
+    can be fired for a single navigation, for example, when a same-document
+    navigation becomes a cross-document navigation (such as in the case of a
+    frameset)."""
+
+    frame_id: FrameId
+    url: str
+    loader_id: network.LoaderId
+    navigation_type: Literal[
+        "reload",
+        "reloadBypassingCache",
+        "restore",
+        "restoreWithPost",
+        "historySameDocument",
+        "historyDifferentDocument",
+        "sameDocument",
+        "differentDocument",
+    ]
+
+
+class FramerequestednavigationEvent(CDPModel):
+    """Fired when a renderer-initiated navigation is requested.
+    Navigation may still be cancelled after the event is issued."""
+
+    frame_id: FrameId
+    reason: ClientNavigationReason
+    url: str
+    disposition: ClientNavigationDisposition
+
+
+class FrameschedulednavigationEvent(CDPModel):
+    """Fired when frame schedules a potential navigation."""
+
+    frame_id: FrameId
+    delay: float
+    reason: ClientNavigationReason
+    url: str
+
+
+class FramestartedloadingEvent(CDPModel):
+    """Fired when frame has started loading."""
+
+    frame_id: FrameId
+
+
+class FramestoppedloadingEvent(CDPModel):
+    """Fired when frame has stopped loading."""
+
+    frame_id: FrameId
+
+
+class DownloadwillbeginEvent(CDPModel):
+    """Fired when page is about to start a download.
+    Deprecated. Use Browser.downloadWillBegin instead."""
+
+    frame_id: FrameId
+    guid: str
+    url: str
+    suggested_filename: str
+
+
+class DownloadprogressEvent(CDPModel):
+    """Fired when download makes progress. Last call has |done| == true.
+    Deprecated. Use Browser.downloadProgress instead."""
+
+    guid: str
+    total_bytes: float
+    received_bytes: float
+    state: Literal["inProgress", "completed", "canceled"]
+
+
+class InterstitialhiddenEvent(CDPModel):
+    """Fired when interstitial page was hidden"""
+
+    pass
+
+
+class InterstitialshownEvent(CDPModel):
+    """Fired when interstitial page was shown"""
+
+    pass
+
+
+class JavascriptdialogclosedEvent(CDPModel):
+    """Fired when a JavaScript initiated dialog (alert, confirm, prompt, or onbeforeunload) has been
+    closed."""
+
+    frame_id: FrameId
+    result: bool
+    user_input: str
+
+
+class JavascriptdialogopeningEvent(CDPModel):
+    """Fired when a JavaScript initiated dialog (alert, confirm, prompt, or onbeforeunload) is about to
+    open."""
+
+    url: str
+    frame_id: FrameId
+    message: str
+    type: DialogType
+    has_browser_handler: bool
+    default_prompt: str | None = None
+
+
+class LifecycleeventEvent(CDPModel):
+    """Fired for lifecycle events (navigation, load, paint, etc) in the current
+    target (including local frames)."""
+
+    frame_id: FrameId
+    loader_id: network.LoaderId
+    name: str
+    timestamp: network.MonotonicTime
+
+
+class BackforwardcachenotusedEvent(CDPModel):
+    """Fired for failed bfcache history navigations if BackForwardCache feature is enabled. Do
+    not assume any ordering with the Page.frameNavigated event. This event is fired only for
+    main-frame history navigation where the document changes (non-same-document navigations),
+    when bfcache navigation fails."""
+
+    loader_id: network.LoaderId
+    frame_id: FrameId
+    not_restored_explanations: list[BackForwardCacheNotRestoredExplanation]
+    not_restored_explanations_tree: (
+        BackForwardCacheNotRestoredExplanationTree | None
+    ) = None
+
+
+class LoadeventfiredEvent(CDPModel):
+    timestamp: network.MonotonicTime
+
+
+class NavigatedwithindocumentEvent(CDPModel):
+    """Fired when same-document navigation happens, e.g. due to history API usage or anchor navigation."""
+
+    frame_id: FrameId
+    url: str
+    navigation_type: Literal["fragment", "historyApi", "other"]
+
+
+class ScreencastframeEvent(CDPModel):
+    """Compressed image data requested by the `startScreencast`."""
+
+    data: str
+    metadata: ScreencastFrameMetadata
+    session_id: int
+
+
+class ScreencastvisibilitychangedEvent(CDPModel):
+    """Fired when the page with currently enabled screencast was shown or hidden `."""
+
+    visible: bool
+
+
+class WindowopenEvent(CDPModel):
+    """Fired when a new window is going to be opened, via window.open(), link click, form submission,
+    etc."""
+
+    url: str
+    window_name: str
+    window_features: list[str]
+    user_gesture: bool
+
+
+class CompilationcacheproducedEvent(CDPModel):
+    """Issued for every compilation cache generated."""
+
+    url: str
+    data: str
