@@ -1,13 +1,16 @@
 """Generated from CDP specification"""
-# Domain: Audits
-# Audits domain allows investigation of page violations and possible improvements.
 
-from typing import Any, Literal
+from typing import Literal, TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
+
+if TYPE_CHECKING:
+    from pydantic_cpd.cdp import dom, network, page, runtime
 
 
 class AffectedCookie(CDPModel):
-    """Information about a cookie that is affected by an inspector issue."""
+    """
+    Information about a cookie that is affected by an inspector issue.
+    """
 
     name: str
     path: str
@@ -15,14 +18,18 @@ class AffectedCookie(CDPModel):
 
 
 class AffectedRequest(CDPModel):
-    """Information about a request that is affected by an inspector issue."""
+    """
+    Information about a request that is affected by an inspector issue.
+    """
 
     request_id: network.RequestId | None = None
     url: str
 
 
 class AffectedFrame(CDPModel):
-    """Information about the frame affected by an inspector issue."""
+    """
+    Information about the frame affected by an inspector issue.
+    """
 
     frame_id: page.FrameId
 
@@ -60,21 +67,27 @@ CookieWarningReason = Literal[
 
 CookieOperation = Literal["SetCookie", "ReadCookie"]
 
-# Represents the category of insight that a cookie issue falls under.
+"""
+Represents the category of insight that a cookie issue falls under.
+"""
 InsightType = Literal["GitHubResource", "GracePeriod", "Heuristics"]
 
 
 class CookieIssueInsight(CDPModel):
-    """Information about the suggested solution to a cookie issue."""
+    """
+    Information about the suggested solution to a cookie issue.
+    """
 
     type: InsightType
     table_entry_url: str | None = None
 
 
 class CookieIssueDetails(CDPModel):
-    """This information is currently necessary, as the front-end has a difficult
-    time finding a specific cookie. With this, we can convey specific error
-    information without the cookie."""
+    """
+    This information is currently necessary, as the front-end has a difficult time
+    finding a specific cookie. With this, we can convey specific error information
+    without the cookie.
+    """
 
     cookie: AffectedCookie | None = None
     raw_cookie_line: str | None = None
@@ -133,8 +146,10 @@ class MixedContentIssueDetails(CDPModel):
     frame: AffectedFrame | None = None
 
 
-# Enum indicating the reason a response has been blocked. These reasons are refinements
-# of the net error BLOCKED_BY_RESPONSE.
+"""
+Enum indicating the reason a response has been blocked. These reasons are refinements
+of the net error BLOCKED_BY_RESPONSE.
+"""
 BlockedByResponseReason = Literal[
     "CoepFrameResourceNeedsCoepHeader",
     "CoopSandboxedIFrameCannotNavigateToCoopPage",
@@ -148,9 +163,11 @@ BlockedByResponseReason = Literal[
 
 
 class BlockedByResponseIssueDetails(CDPModel):
-    """Details for a request that has been blocked with the BLOCKED_BY_RESPONSE
-    code. Currently only used for COEP/COOP, but may be extended to include
-    some CSP errors in the future."""
+    """
+    Details for a request that has been blocked with the BLOCKED_BY_RESPONSE code.
+    Currently only used for COEP/COOP, but may be extended to include some CSP errors in
+    the future.
+    """
 
     request: AffectedRequest
     parent_frame: AffectedFrame | None = None
@@ -201,8 +218,10 @@ SharedArrayBufferIssueType = Literal["TransferIssue", "CreationIssue"]
 
 
 class SharedArrayBufferIssueDetails(CDPModel):
-    """Details for a issue arising from an SAB being instantiated in, or
-    transferred to a context that is not cross-origin isolated."""
+    """
+    Details for a issue arising from an SAB being instantiated in, or transferred to a
+    context that is not cross-origin isolated.
+    """
 
     source_code_location: SourceCodeLocation
     is_warning: bool
@@ -220,8 +239,10 @@ class LowTextContrastIssueDetails(CDPModel):
 
 
 class CorsIssueDetails(CDPModel):
-    """Details for a CORS related issue, e.g. a warning or error related to
-    CORS RFC1918 enforcement."""
+    """
+    Details for a CORS related issue, e.g. a warning or error related to CORS RFC1918
+    enforcement.
+    """
 
     cors_error_status: network.CorsErrorStatus
     is_warning: bool
@@ -317,8 +338,10 @@ UnencodedDigestError = Literal[
 
 
 class AttributionReportingIssueDetails(CDPModel):
-    """Details for issues around "Attribution Reporting API" usage.
-    Explainer: https://github.com/WICG/attribution-reporting-api"""
+    """
+    Details for issues around "Attribution Reporting API" usage. Explainer:
+    https://github.com/WICG/attribution-reporting-api
+    """
 
     violation_type: AttributionReportingIssueType
     request: AffectedRequest | None = None
@@ -327,8 +350,10 @@ class AttributionReportingIssueDetails(CDPModel):
 
 
 class QuirksModeIssueDetails(CDPModel):
-    """Details for issues about documents in Quirks Mode
-    or Limited Quirks Mode that affects page layouting."""
+    """
+    Details for issues about documents in Quirks Mode or Limited Quirks Mode that
+    affects page layouting.
+    """
 
     is_limited_quirks_mode: bool
     document_node_id: dom.BackendNodeId
@@ -379,7 +404,9 @@ GenericIssueErrorType = Literal[
 
 
 class GenericIssueDetails(CDPModel):
-    """Depending on the concrete errorType, different properties are set."""
+    """
+    Depending on the concrete errorType, different properties are set.
+    """
 
     error_type: GenericIssueErrorType
     frame_id: page.FrameId | None = None
@@ -389,8 +416,10 @@ class GenericIssueDetails(CDPModel):
 
 
 class DeprecationIssueDetails(CDPModel):
-    """This issue tracks information needed to print a deprecation message.
-    https://source.chromium.org/chromium/chromium/src/+/main:third_party/blink/renderer/core/frame/third_party/blink/renderer/core/frame/deprecation/README.md"""
+    """
+    This issue tracks information needed to print a deprecation message.
+    https://source.chromium.org/chromium/chromium/src/+/main:third_party/blink/renderer/core/frame/third_party/blink/renderer/core/frame/deprecation/README.md
+    """
 
     affected_frame: AffectedFrame | None = None
     source_code_location: SourceCodeLocation
@@ -398,21 +427,25 @@ class DeprecationIssueDetails(CDPModel):
 
 
 class BounceTrackingIssueDetails(CDPModel):
-    """This issue warns about sites in the redirect chain of a finished navigation
-    that may be flagged as trackers and have their state cleared if they don't
-    receive a user interaction. Note that in this context 'site' means eTLD+1.
-    For example, if the URL `https://example.test:80/bounce` was in the
-    redirect chain, the site reported would be `example.test`."""
+    """
+    This issue warns about sites in the redirect chain of a finished navigation that
+    may be flagged as trackers and have their state cleared if they don't receive a user
+    interaction. Note that in this context 'site' means eTLD+1. For example, if the URL
+    `https://example.test:80/bounce` was in the redirect chain, the site reported would
+    be `example.test`.
+    """
 
     tracking_sites: list[str]
 
 
 class CookieDeprecationMetadataIssueDetails(CDPModel):
-    """This issue warns about third-party sites that are accessing cookies on the
-    current page, and have been permitted due to having a global metadata grant.
-    Note that in this context 'site' means eTLD+1. For example, if the URL
-    `https://example.test:80/web_page` was accessing cookies, the site reported
-    would be `example.test`."""
+    """
+    This issue warns about third-party sites that are accessing cookies on the current
+    page, and have been permitted due to having a global metadata grant. Note that in
+    this context 'site' means eTLD+1. For example, if the URL
+    `https://example.test:80/web_page` was accessing cookies, the site reported would be
+    `example.test`.
+    """
 
     allowed_sites: list[str]
     opt_out_percentage: float
@@ -427,10 +460,12 @@ class FederatedAuthRequestIssueDetails(CDPModel):
     federated_auth_request_issue_reason: FederatedAuthRequestIssueReason
 
 
-# Represents the failure reason when a federated authentication reason fails. Should be
-# updated alongside RequestIdTokenStatus in
-# third_party/blink/public/mojom/devtools/inspector_issue.mojom to include all cases
-# except for success.
+"""
+Represents the failure reason when a federated authentication reason fails. Should be
+updated alongside RequestIdTokenStatus in
+third_party/blink/public/mojom/devtools/inspector_issue.mojom to include all cases
+except for success.
+"""
 FederatedAuthRequestIssueReason = Literal[
     "ShouldEmbargo",
     "TooManyRequests",
@@ -489,9 +524,11 @@ class FederatedAuthUserInfoRequestIssueDetails(CDPModel):
     )
 
 
-# Represents the failure reason when a getUserInfo() call fails. Should be updated
-# alongside FederatedAuthUserInfoRequestResult in
-# third_party/blink/public/mojom/devtools/inspector_issue.mojom.
+"""
+Represents the failure reason when a getUserInfo() call fails. Should be updated
+alongside FederatedAuthUserInfoRequestResult in
+third_party/blink/public/mojom/devtools/inspector_issue.mojom.
+"""
 FederatedAuthUserInfoRequestIssueReason = Literal[
     "NotSameOrigin",
     "NotIframe",
@@ -506,8 +543,10 @@ FederatedAuthUserInfoRequestIssueReason = Literal[
 
 
 class ClientHintIssueDetails(CDPModel):
-    """This issue tracks client hints related issues. It's used to deprecate old
-    features, encourage the use of new ones, and provide general guidance."""
+    """
+    This issue tracks client hints related issues. It's used to deprecate old features,
+    encourage the use of new ones, and provide general guidance.
+    """
 
     source_code_location: SourceCodeLocation
     client_hint_issue_reason: ClientHintIssueReason
@@ -540,7 +579,9 @@ ElementAccessibilityIssueReason = Literal[
 
 
 class ElementAccessibilityIssueDetails(CDPModel):
-    """This issue warns about errors in the select or summary element content model."""
+    """
+    This issue warns about errors in the select or summary element content model.
+    """
 
     node_id: dom.BackendNodeId
     element_accessibility_issue_reason: ElementAccessibilityIssueReason
@@ -551,7 +592,9 @@ StyleSheetLoadingIssueReason = Literal["LateImportRule", "RequestFailed"]
 
 
 class StylesheetLoadingIssueDetails(CDPModel):
-    """This issue warns when a referenced stylesheet couldn't be loaded."""
+    """
+    This issue warns when a referenced stylesheet couldn't be loaded.
+    """
 
     source_code_location: SourceCodeLocation
     style_sheet_loading_issue_reason: StyleSheetLoadingIssueReason
@@ -564,8 +607,10 @@ PropertyRuleIssueReason = Literal[
 
 
 class PropertyRuleIssueDetails(CDPModel):
-    """This issue warns about errors in property rules that lead to property
-    registrations being ignored."""
+    """
+    This issue warns about errors in property rules that lead to property registrations
+    being ignored.
+    """
 
     source_code_location: SourceCodeLocation
     property_rule_issue_reason: PropertyRuleIssueReason
@@ -578,8 +623,10 @@ UserReidentificationIssueType = Literal[
 
 
 class UserReidentificationIssueDetails(CDPModel):
-    """This issue warns about uses of APIs that may be considered misuse to
-    re-identify users."""
+    """
+    This issue warns about uses of APIs that may be considered misuse to re-identify
+    users.
+    """
 
     type: UserReidentificationIssueType
     request: AffectedRequest | None = None
@@ -612,7 +659,9 @@ PermissionElementIssueType = Literal[
 
 
 class PermissionElementIssueDetails(CDPModel):
-    """This issue warns about improper usage of the <permission> element."""
+    """
+    This issue warns about improper usage of the <permission> element.
+    """
 
     issue_type: PermissionElementIssueType
     type: str | None = None
@@ -624,9 +673,10 @@ class PermissionElementIssueDetails(CDPModel):
     disable_reason: str | None = None
 
 
-# A unique identifier for the type of issue. Each type may use one of the optional
-# fields in InspectorIssueDetails to convey more specific information about the kind of
-# issue.
+"""
+A unique identifier for the type of issue. Each type may use one of the optional fields
+in InspectorIssueDetails to convey more specific information about the kind of issue.
+"""
 InspectorIssueCode = Literal[
     "CookieIssue",
     "MixedContentIssue",
@@ -659,9 +709,11 @@ InspectorIssueCode = Literal[
 
 
 class InspectorIssueDetails(CDPModel):
-    """This struct holds a list of optional fields with additional information
-    specific to the kind of issue. When adding a new issue code, please also
-    add a new optional field to this type."""
+    """
+    This struct holds a list of optional fields with additional information specific to
+    the kind of issue. When adding a new issue code, please also add a new optional
+    field to this type.
+    """
 
     cookie_issue_details: CookieIssueDetails | None = None
     mixed_content_issue_details: MixedContentIssueDetails | None = None
@@ -698,13 +750,17 @@ class InspectorIssueDetails(CDPModel):
     permission_element_issue_details: PermissionElementIssueDetails | None = None
 
 
-# A unique id for a DevTools inspector issue. Allows other entities (e.g. exceptions,
-# CDP message, console messages, etc.) to reference an issue.
+"""
+A unique id for a DevTools inspector issue. Allows other entities (e.g. exceptions, CDP
+message, console messages, etc.) to reference an issue.
+"""
 IssueId = str
 
 
 class InspectorIssue(CDPModel):
-    """An inspector issue reported from the back-end."""
+    """
+    An inspector issue reported from the back-end.
+    """
 
     code: InspectorIssueCode
     details: InspectorIssueDetails

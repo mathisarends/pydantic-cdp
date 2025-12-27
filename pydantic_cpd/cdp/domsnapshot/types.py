@@ -1,14 +1,16 @@
 """Generated from CDP specification"""
-# Domain: DOMSnapshot
-# This domain facilitates obtaining document snapshots with DOM, layout, and style
-# information.
 
-from typing import Any, Literal
+from typing import Any, TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
+
+if TYPE_CHECKING:
+    from pydantic_cpd.cdp import dom, domdebugger, page
 
 
 class DOMNode(CDPModel):
-    """A Node in the DOM tree."""
+    """
+    A Node in the DOM tree.
+    """
 
     node_type: int
     node_name: str
@@ -33,7 +35,7 @@ class DOMNode(CDPModel):
     pseudo_type: dom.PseudoType | None = None
     shadow_root_type: dom.ShadowRootType | None = None
     is_clickable: bool | None = None
-    event_listeners: list[DOMDebugger.EventListener] | None = None
+    event_listeners: list[domdebugger.EventListener] | None = None
     current_source_u_r_l: str | None = None
     origin_u_r_l: str | None = None
     scroll_offset_x: float | None = None
@@ -41,8 +43,10 @@ class DOMNode(CDPModel):
 
 
 class InlineTextBox(CDPModel):
-    """Details of post layout rendered text positions. The exact layout should not be regarded as
-    stable and may change between versions."""
+    """
+    Details of post layout rendered text positions. The exact layout should not be
+    regarded as stable and may change between versions.
+    """
 
     bounding_box: dom.Rect
     start_character_index: int
@@ -50,7 +54,9 @@ class InlineTextBox(CDPModel):
 
 
 class LayoutTreeNode(CDPModel):
-    """Details of an element in the DOM tree with a LayoutObject."""
+    """
+    Details of an element in the DOM tree with a LayoutObject.
+    """
 
     dom_node_index: int
     bounding_box: dom.Rect
@@ -62,27 +68,37 @@ class LayoutTreeNode(CDPModel):
 
 
 class ComputedStyle(CDPModel):
-    """A subset of the full ComputedStyle as defined by the request whitelist."""
+    """
+    A subset of the full ComputedStyle as defined by the request whitelist.
+    """
 
     properties: list[NameValue]
 
 
 class NameValue(CDPModel):
-    """A name/value pair."""
+    """
+    A name/value pair.
+    """
 
     name: str
     value: str
 
 
-# Index of the string in the strings table.
+"""
+Index of the string in the strings table.
+"""
 StringIndex = int
 
-# Index of the string in the strings table.
+"""
+Index of the string in the strings table.
+"""
 ArrayOfStrings = list[Any]
 
 
 class RareStringData(CDPModel):
-    """Data that is only present on rare nodes."""
+    """
+    Data that is only present on rare nodes.
+    """
 
     index: list[int]
     value: list[StringIndex]
@@ -101,7 +117,9 @@ Rectangle = list[Any]
 
 
 class DocumentSnapshot(CDPModel):
-    """Document snapshot."""
+    """
+    Document snapshot.
+    """
 
     document_u_r_l: StringIndex
     title: StringIndex
@@ -121,14 +139,16 @@ class DocumentSnapshot(CDPModel):
 
 
 class NodeTreeSnapshot(CDPModel):
-    """Table containing nodes."""
+    """
+    Table containing nodes.
+    """
 
     parent_index: list[int] | None = None
     node_type: list[int] | None = None
     shadow_root_type: RareStringData | None = None
     node_name: list[StringIndex] | None = None
     node_value: list[StringIndex] | None = None
-    backend_node_id: list[DOM.BackendNodeId] | None = None
+    backend_node_id: list[dom.BackendNodeId] | None = None
     attributes: list[ArrayOfStrings] | None = None
     text_value: RareStringData | None = None
     input_value: RareStringData | None = None
@@ -143,7 +163,9 @@ class NodeTreeSnapshot(CDPModel):
 
 
 class LayoutTreeSnapshot(CDPModel):
-    """Table of details of an element in the DOM tree with a LayoutObject."""
+    """
+    Table of details of an element in the DOM tree with a LayoutObject.
+    """
 
     node_index: list[int]
     styles: list[ArrayOfStrings]
@@ -159,8 +181,10 @@ class LayoutTreeSnapshot(CDPModel):
 
 
 class TextBoxSnapshot(CDPModel):
-    """Table of details of the post layout rendered text positions. The exact layout should not be regarded as
-    stable and may change between versions."""
+    """
+    Table of details of the post layout rendered text positions. The exact layout
+    should not be regarded as stable and may change between versions.
+    """
 
     layout_index: list[int]
     bounds: list[Rectangle]

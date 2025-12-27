@@ -1,14 +1,14 @@
 """Generated command models from CDP specification"""
-# Domain: Runtime Commands
 
-from typing import Any, Literal
 from pydantic_cpd.cdp.base import CDPModel
 
 from .types import *
 
 
 class AwaitPromiseParams(CDPModel):
-    """Add handler to promise with given promise object id."""
+    """
+    Add handler to promise with given promise object id.
+    """
 
     promise_object_id: RemoteObjectId
     return_by_value: bool | None = None
@@ -21,8 +21,10 @@ class AwaitPromiseResult(CDPModel):
 
 
 class CallFunctionOnParams(CDPModel):
-    """Calls function with given declaration on the given object. Object group of the result is
-    inherited from the target object."""
+    """
+    Calls function with given declaration on the given object. Object group of the
+    result is inherited from the target object.
+    """
 
     function_declaration: str
     object_id: RemoteObjectId | None = None
@@ -45,7 +47,9 @@ class CallFunctionOnResult(CDPModel):
 
 
 class CompileScriptParams(CDPModel):
-    """Compiles expression."""
+    """
+    Compiles expression.
+    """
 
     expression: str
     source_u_r_l: str
@@ -59,7 +63,9 @@ class CompileScriptResult(CDPModel):
 
 
 class EvaluateParams(CDPModel):
-    """Evaluates expression on global object."""
+    """
+    Evaluates expression on global object.
+    """
 
     expression: str
     object_group: str | None = None
@@ -96,8 +102,10 @@ class GetHeapUsageResult(CDPModel):
 
 
 class GetPropertiesParams(CDPModel):
-    """Returns properties of a given object. Object group of the result is inherited from the target
-    object."""
+    """
+    Returns properties of a given object. Object group of the result is inherited from
+    the target object.
+    """
 
     object_id: RemoteObjectId
     own_properties: bool | None = None
@@ -114,7 +122,9 @@ class GetPropertiesResult(CDPModel):
 
 
 class GlobalLexicalScopeNamesParams(CDPModel):
-    """Returns all let, const and class variables from global scope."""
+    """
+    Returns all let, const and class variables from global scope.
+    """
 
     execution_context_id: ExecutionContextId | None = None
 
@@ -133,19 +143,25 @@ class QueryObjectsResult(CDPModel):
 
 
 class ReleaseObjectParams(CDPModel):
-    """Releases remote object with given id."""
+    """
+    Releases remote object with given id.
+    """
 
     object_id: RemoteObjectId
 
 
 class ReleaseObjectGroupParams(CDPModel):
-    """Releases all remote objects that belong to a given group."""
+    """
+    Releases all remote objects that belong to a given group.
+    """
 
     object_group: str
 
 
 class RunScriptParams(CDPModel):
-    """Runs script with given id in a given context."""
+    """
+    Runs script with given id in a given context.
+    """
 
     script_id: ScriptId
     execution_context_id: ExecutionContextId | None = None
@@ -163,7 +179,9 @@ class RunScriptResult(CDPModel):
 
 
 class SetAsyncCallStackDepthParams(CDPModel):
-    """Enables or disables async call stacks tracking."""
+    """
+    Enables or disables async call stacks tracking.
+    """
 
     max_depth: int
 
@@ -177,12 +195,13 @@ class SetMaxCallStackSizeToCaptureParams(CDPModel):
 
 
 class AddBindingParams(CDPModel):
-    """If executionContextId is empty, adds binding with the given name on the
-    global objects of all inspected contexts, including those created later,
-    bindings survive reloads.
-    Binding function takes exactly one argument, this argument should be string,
-    in case of any other input, function throws an exception.
-    Each binding function call produces Runtime.bindingCalled notification."""
+    """
+    If executionContextId is empty, adds binding with the given name on the global
+    objects of all inspected contexts, including those created later, bindings survive
+    reloads. Binding function takes exactly one argument, this argument should be
+    string, in case of any other input, function throws an exception. Each binding
+    function call produces Runtime.bindingCalled notification.
+    """
 
     name: str
     execution_context_id: ExecutionContextId | None = None
@@ -190,18 +209,21 @@ class AddBindingParams(CDPModel):
 
 
 class RemoveBindingParams(CDPModel):
-    """This method does not remove binding function from global object but
-    unsubscribes current runtime agent from Runtime.bindingCalled notifications."""
+    """
+    This method does not remove binding function from global object but unsubscribes
+    current runtime agent from Runtime.bindingCalled notifications.
+    """
 
     name: str
 
 
 class GetExceptionDetailsParams(CDPModel):
-    """This method tries to lookup and populate exception details for a
-    JavaScript Error object.
-    Note that the stackTrace portion of the resulting exceptionDetails will
-    only be populated if the Runtime domain was enabled at the time when the
-    Error was thrown."""
+    """
+    This method tries to lookup and populate exception details for a JavaScript Error
+    object. Note that the stackTrace portion of the resulting exceptionDetails will only
+    be populated if the Runtime domain was enabled at the time when the Error was
+    thrown.
+    """
 
     error_object_id: RemoteObjectId
 

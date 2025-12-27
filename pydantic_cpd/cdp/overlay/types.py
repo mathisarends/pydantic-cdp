@@ -1,21 +1,25 @@
 """Generated from CDP specification"""
-# Domain: Overlay
-# This domain provides various functionality related to drawing atop the inspected
-# page.
 
-from typing import Any, Literal
+from typing import Literal, TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
+
+if TYPE_CHECKING:
+    from pydantic_cpd.cdp import dom
 
 
 class SourceOrderConfig(CDPModel):
-    """Configuration data for drawing the source order of an elements children."""
+    """
+    Configuration data for drawing the source order of an elements children.
+    """
 
     parent_outline_color: dom.RGBA
     child_outline_color: dom.RGBA
 
 
 class GridHighlightConfig(CDPModel):
-    """Configuration data for the highlighting of Grid elements."""
+    """
+    Configuration data for the highlighting of Grid elements.
+    """
 
     show_grid_extension_lines: bool | None = None
     show_positive_line_numbers: bool | None = None
@@ -40,7 +44,9 @@ class GridHighlightConfig(CDPModel):
 
 
 class FlexContainerHighlightConfig(CDPModel):
-    """Configuration data for the highlighting of Flex container elements."""
+    """
+    Configuration data for the highlighting of Flex container elements.
+    """
 
     container_border: LineStyle | None = None
     line_separator: LineStyle | None = None
@@ -53,7 +59,9 @@ class FlexContainerHighlightConfig(CDPModel):
 
 
 class FlexItemHighlightConfig(CDPModel):
-    """Configuration data for the highlighting of Flex item elements."""
+    """
+    Configuration data for the highlighting of Flex item elements.
+    """
 
     base_size_box: BoxStyle | None = None
     base_size_border: LineStyle | None = None
@@ -61,14 +69,18 @@ class FlexItemHighlightConfig(CDPModel):
 
 
 class LineStyle(CDPModel):
-    """Style information for drawing a line."""
+    """
+    Style information for drawing a line.
+    """
 
     color: dom.RGBA | None = None
     pattern: Literal["dashed", "dotted"] | None = None
 
 
 class BoxStyle(CDPModel):
-    """Style information for drawing a box."""
+    """
+    Style information for drawing a box.
+    """
 
     fill_color: dom.RGBA | None = None
     hatch_color: dom.RGBA | None = None
@@ -78,7 +90,9 @@ ContrastAlgorithm = Literal["aa", "aaa", "apca"]
 
 
 class HighlightConfig(CDPModel):
-    """Configuration data for the highlighting of page elements."""
+    """
+    Configuration data for the highlighting of page elements.
+    """
 
     show_info: bool | None = None
     show_styles: bool | None = None
@@ -107,7 +121,9 @@ ColorFormat = Literal["rgb", "hsl", "hwb", "hex"]
 
 
 class GridNodeHighlightConfig(CDPModel):
-    """Configurations for Persistent Grid Highlight"""
+    """
+    Configurations for Persistent Grid Highlight
+    """
 
     grid_highlight_config: GridHighlightConfig
     node_id: dom.NodeId
@@ -131,7 +147,9 @@ class ScrollSnapHighlightConfig(CDPModel):
 
 
 class HingeConfig(CDPModel):
-    """Configuration for dual screen hinge"""
+    """
+    Configuration for dual screen hinge
+    """
 
     rect: dom.Rect
     content_color: dom.RGBA | None = None
@@ -139,7 +157,9 @@ class HingeConfig(CDPModel):
 
 
 class WindowControlsOverlayConfig(CDPModel):
-    """Configuration for Window Controls Overlay"""
+    """
+    Configuration for Window Controls Overlay
+    """
 
     show_c_s_s: bool
     selected_platform: str

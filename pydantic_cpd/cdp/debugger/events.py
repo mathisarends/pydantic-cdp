@@ -1,25 +1,29 @@
 """Generated event models from CDP specification"""
-# Domain: Debugger Events
 
-from typing import Any, Literal
+from typing import Any, Literal, TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
 
 from .types import *
 
-from pydantic_cpd.cdp import debugger
-from pydantic_cpd.cdp import runtime
+if TYPE_CHECKING:
+    from pydantic_cpd.cdp import debugger, runtime
 
 
-class BreakpointresolvedEvent(CDPModel):
-    """Fired when breakpoint is resolved to an actual script and location.
-    Deprecated in favor of `resolvedBreakpoints` in the `scriptParsed` event."""
+class BreakpointResolvedEvent(CDPModel):
+    """
+    Fired when breakpoint is resolved to an actual script and location. Deprecated in
+    favor of `resolvedBreakpoints` in the `scriptParsed` event.
+    """
 
     breakpoint_id: BreakpointId
     location: Location
 
 
 class PausedEvent(CDPModel):
-    """Fired when the virtual machine stopped on breakpoint or exception or any other stop criteria."""
+    """
+    Fired when the virtual machine stopped on breakpoint or exception or any other stop
+    criteria.
+    """
 
     call_frames: list[CallFrame]
     reason: Literal[
@@ -45,13 +49,17 @@ class PausedEvent(CDPModel):
 
 
 class ResumedEvent(CDPModel):
-    """Fired when the virtual machine resumed execution."""
+    """
+    Fired when the virtual machine resumed execution.
+    """
 
     pass
 
 
-class ScriptfailedtoparseEvent(CDPModel):
-    """Fired when virtual machine fails to parse the script."""
+class ScriptFailedToParseEvent(CDPModel):
+    """
+    Fired when virtual machine fails to parse the script.
+    """
 
     script_id: runtime.ScriptId
     url: str
@@ -73,9 +81,11 @@ class ScriptfailedtoparseEvent(CDPModel):
     embedder_name: str | None = None
 
 
-class ScriptparsedEvent(CDPModel):
-    """Fired when virtual machine parses script. This event is also fired for all known and uncollected
-    scripts upon enabling debugger."""
+class ScriptParsedEvent(CDPModel):
+    """
+    Fired when virtual machine parses script. This event is also fired for all known
+    and uncollected scripts upon enabling debugger.
+    """
 
     script_id: runtime.ScriptId
     url: str
@@ -95,6 +105,6 @@ class ScriptparsedEvent(CDPModel):
     stack_trace: runtime.StackTrace | None = None
     code_offset: int | None = None
     script_language: debugger.ScriptLanguage | None = None
-    debug_symbols: list[Debugger.DebugSymbols] | None = None
+    debug_symbols: list[debugger.DebugSymbols] | None = None
     embedder_name: str | None = None
     resolved_breakpoints: list[ResolvedBreakpoint] | None = None

@@ -1,10 +1,11 @@
 """Generated from CDP specification"""
-# Domain: Tracing
 
 from typing import Any, Literal
 from pydantic_cpd.cdp.base import CDPModel
 
-# Configuration for memory dump. Used only when "memory-infra" category is enabled.
+"""
+Configuration for memory dump. Used only when "memory-infra" category is enabled.
+"""
 MemoryDumpConfig = dict[str, Any]
 
 
@@ -28,20 +29,28 @@ class TraceConfig(CDPModel):
     memory_dump_config: MemoryDumpConfig | None = None
 
 
-# Data format of a trace. Can be either the legacy JSON format or the protocol buffer
-# format. Note that the JSON format will be deprecated soon.
+"""
+Data format of a trace. Can be either the legacy JSON format or the protocol buffer
+format. Note that the JSON format will be deprecated soon.
+"""
 StreamFormat = Literal["json", "proto"]
 
-# Compression type to use for traces returned via streams.
+"""
+Compression type to use for traces returned via streams.
+"""
 StreamCompression = Literal["none", "gzip"]
 
-# Details exposed when memory request explicitly declared. Keep consistent with
-# memory_dump_request_args.h and memory_instrumentation.mojom
+"""
+Details exposed when memory request explicitly declared. Keep consistent with
+memory_dump_request_args.h and memory_instrumentation.mojom
+"""
 MemoryDumpLevelOfDetail = Literal["background", "light", "detailed"]
 
-# Backend type to use for tracing. `chrome` uses the Chrome-integrated tracing service
-# and is supported on all platforms. `system` is only supported on Chrome OS and uses
-# the Perfetto system tracing service. `auto` chooses `system` when the perfettoConfig
-# provided to Tracing.start specifies at least one non-Chrome data source; otherwise
-# uses `chrome`.
+"""
+Backend type to use for tracing. `chrome` uses the Chrome-integrated tracing service
+and is supported on all platforms. `system` is only supported on Chrome OS and uses the
+Perfetto system tracing service. `auto` chooses `system` when the perfettoConfig
+provided to Tracing.start specifies at least one non-Chrome data source; otherwise uses
+`chrome`.
+"""
 TracingBackend = Literal["auto", "chrome", "system"]

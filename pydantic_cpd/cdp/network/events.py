@@ -1,16 +1,18 @@
 """Generated event models from CDP specification"""
-# Domain: Network Events
 
-from typing import Any, Literal
+from typing import Literal, TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
 
 from .types import *
 
-from pydantic_cpd.cdp import page
+if TYPE_CHECKING:
+    from pydantic_cpd.cdp import page
 
 
-class DatareceivedEvent(CDPModel):
-    """Fired when data chunk was received over the network."""
+class DataReceivedEvent(CDPModel):
+    """
+    Fired when data chunk was received over the network.
+    """
 
     request_id: RequestId
     timestamp: MonotonicTime
@@ -19,8 +21,10 @@ class DatareceivedEvent(CDPModel):
     data: str | None = None
 
 
-class EventsourcemessagereceivedEvent(CDPModel):
-    """Fired when EventSource message is received."""
+class EventSourceMessageReceivedEvent(CDPModel):
+    """
+    Fired when EventSource message is received.
+    """
 
     request_id: RequestId
     timestamp: MonotonicTime
@@ -29,8 +33,10 @@ class EventsourcemessagereceivedEvent(CDPModel):
     data: str
 
 
-class LoadingfailedEvent(CDPModel):
-    """Fired when HTTP request has failed to load."""
+class LoadingFailedEvent(CDPModel):
+    """
+    Fired when HTTP request has failed to load.
+    """
 
     request_id: RequestId
     timestamp: MonotonicTime
@@ -41,18 +47,21 @@ class LoadingfailedEvent(CDPModel):
     cors_error_status: CorsErrorStatus | None = None
 
 
-class LoadingfinishedEvent(CDPModel):
-    """Fired when HTTP request has finished loading."""
+class LoadingFinishedEvent(CDPModel):
+    """
+    Fired when HTTP request has finished loading.
+    """
 
     request_id: RequestId
     timestamp: MonotonicTime
     encoded_data_length: float
 
 
-class RequestinterceptedEvent(CDPModel):
-    """Details of an intercepted HTTP request, which must be either allowed, blocked, modified or
-    mocked.
-    Deprecated, use Fetch.requestPaused instead."""
+class RequestInterceptedEvent(CDPModel):
+    """
+    Details of an intercepted HTTP request, which must be either allowed, blocked,
+    modified or mocked. Deprecated, use Fetch.requestPaused instead.
+    """
 
     interception_id: InterceptionId
     request: Request
@@ -68,14 +77,18 @@ class RequestinterceptedEvent(CDPModel):
     request_id: RequestId | None = None
 
 
-class RequestservedfromcacheEvent(CDPModel):
-    """Fired if request ended up loading from cache."""
+class RequestServedFromCacheEvent(CDPModel):
+    """
+    Fired if request ended up loading from cache.
+    """
 
     request_id: RequestId
 
 
-class RequestwillbesentEvent(CDPModel):
-    """Fired when page is about to send HTTP request."""
+class RequestWillBeSentEvent(CDPModel):
+    """
+    Fired when page is about to send HTTP request.
+    """
 
     request_id: RequestId
     loader_id: LoaderId
@@ -92,23 +105,29 @@ class RequestwillbesentEvent(CDPModel):
     render_blocking_behavior: RenderBlockingBehavior | None = None
 
 
-class ResourcechangedpriorityEvent(CDPModel):
-    """Fired when resource loading priority is changed"""
+class ResourceChangedPriorityEvent(CDPModel):
+    """
+    Fired when resource loading priority is changed
+    """
 
     request_id: RequestId
     new_priority: ResourcePriority
     timestamp: MonotonicTime
 
 
-class SignedexchangereceivedEvent(CDPModel):
-    """Fired when a signed exchange was received over the network"""
+class SignedExchangeReceivedEvent(CDPModel):
+    """
+    Fired when a signed exchange was received over the network
+    """
 
     request_id: RequestId
     info: SignedExchangeInfo
 
 
-class ResponsereceivedEvent(CDPModel):
-    """Fired when HTTP response is available."""
+class ResponseReceivedEvent(CDPModel):
+    """
+    Fired when HTTP response is available.
+    """
 
     request_id: RequestId
     loader_id: LoaderId
@@ -119,55 +138,69 @@ class ResponsereceivedEvent(CDPModel):
     frame_id: page.FrameId | None = None
 
 
-class WebsocketclosedEvent(CDPModel):
-    """Fired when WebSocket is closed."""
+class WebSocketClosedEvent(CDPModel):
+    """
+    Fired when WebSocket is closed.
+    """
 
     request_id: RequestId
     timestamp: MonotonicTime
 
 
-class WebsocketcreatedEvent(CDPModel):
-    """Fired upon WebSocket creation."""
+class WebSocketCreatedEvent(CDPModel):
+    """
+    Fired upon WebSocket creation.
+    """
 
     request_id: RequestId
     url: str
     initiator: Initiator | None = None
 
 
-class WebsocketframeerrorEvent(CDPModel):
-    """Fired when WebSocket message error occurs."""
+class WebSocketFrameErrorEvent(CDPModel):
+    """
+    Fired when WebSocket message error occurs.
+    """
 
     request_id: RequestId
     timestamp: MonotonicTime
     error_message: str
 
 
-class WebsocketframereceivedEvent(CDPModel):
-    """Fired when WebSocket message is received."""
+class WebSocketFrameReceivedEvent(CDPModel):
+    """
+    Fired when WebSocket message is received.
+    """
 
     request_id: RequestId
     timestamp: MonotonicTime
     response: WebSocketFrame
 
 
-class WebsocketframesentEvent(CDPModel):
-    """Fired when WebSocket message is sent."""
+class WebSocketFrameSentEvent(CDPModel):
+    """
+    Fired when WebSocket message is sent.
+    """
 
     request_id: RequestId
     timestamp: MonotonicTime
     response: WebSocketFrame
 
 
-class WebsockethandshakeresponsereceivedEvent(CDPModel):
-    """Fired when WebSocket handshake response becomes available."""
+class WebSocketHandshakeResponseReceivedEvent(CDPModel):
+    """
+    Fired when WebSocket handshake response becomes available.
+    """
 
     request_id: RequestId
     timestamp: MonotonicTime
     response: WebSocketResponse
 
 
-class WebsocketwillsendhandshakerequestEvent(CDPModel):
-    """Fired when WebSocket is about to initiate handshake."""
+class WebSocketWillSendHandshakeRequestEvent(CDPModel):
+    """
+    Fired when WebSocket is about to initiate handshake.
+    """
 
     request_id: RequestId
     timestamp: MonotonicTime
@@ -175,8 +208,10 @@ class WebsocketwillsendhandshakerequestEvent(CDPModel):
     request: WebSocketRequest
 
 
-class WebtransportcreatedEvent(CDPModel):
-    """Fired upon WebTransport creation."""
+class WebTransportCreatedEvent(CDPModel):
+    """
+    Fired upon WebTransport creation.
+    """
 
     transport_id: RequestId
     url: str
@@ -184,22 +219,28 @@ class WebtransportcreatedEvent(CDPModel):
     initiator: Initiator | None = None
 
 
-class WebtransportconnectionestablishedEvent(CDPModel):
-    """Fired when WebTransport handshake is finished."""
+class WebTransportConnectionEstablishedEvent(CDPModel):
+    """
+    Fired when WebTransport handshake is finished.
+    """
 
     transport_id: RequestId
     timestamp: MonotonicTime
 
 
-class WebtransportclosedEvent(CDPModel):
-    """Fired when WebTransport is disposed."""
+class WebTransportClosedEvent(CDPModel):
+    """
+    Fired when WebTransport is disposed.
+    """
 
     transport_id: RequestId
     timestamp: MonotonicTime
 
 
-class DirecttcpsocketcreatedEvent(CDPModel):
-    """Fired upon direct_socket.TCPSocket creation."""
+class DirectTCPSocketCreatedEvent(CDPModel):
+    """
+    Fired upon direct_socket.TCPSocket creation.
+    """
 
     identifier: RequestId
     remote_addr: str
@@ -209,8 +250,10 @@ class DirecttcpsocketcreatedEvent(CDPModel):
     initiator: Initiator | None = None
 
 
-class DirecttcpsocketopenedEvent(CDPModel):
-    """Fired when direct_socket.TCPSocket connection is opened."""
+class DirectTCPSocketOpenedEvent(CDPModel):
+    """
+    Fired when direct_socket.TCPSocket connection is opened.
+    """
 
     identifier: RequestId
     remote_addr: str
@@ -220,49 +263,59 @@ class DirecttcpsocketopenedEvent(CDPModel):
     local_port: int | None = None
 
 
-class DirecttcpsocketabortedEvent(CDPModel):
-    """Fired when direct_socket.TCPSocket is aborted."""
+class DirectTCPSocketAbortedEvent(CDPModel):
+    """
+    Fired when direct_socket.TCPSocket is aborted.
+    """
 
     identifier: RequestId
     error_message: str
     timestamp: MonotonicTime
 
 
-class DirecttcpsocketclosedEvent(CDPModel):
-    """Fired when direct_socket.TCPSocket is closed."""
+class DirectTCPSocketClosedEvent(CDPModel):
+    """
+    Fired when direct_socket.TCPSocket is closed.
+    """
 
     identifier: RequestId
     timestamp: MonotonicTime
 
 
-class DirecttcpsocketchunksentEvent(CDPModel):
-    """Fired when data is sent to tcp direct socket stream."""
+class DirectTCPSocketChunkSentEvent(CDPModel):
+    """
+    Fired when data is sent to tcp direct socket stream.
+    """
 
     identifier: RequestId
     data: str
     timestamp: MonotonicTime
 
 
-class DirecttcpsocketchunkreceivedEvent(CDPModel):
-    """Fired when data is received from tcp direct socket stream."""
+class DirectTCPSocketChunkReceivedEvent(CDPModel):
+    """
+    Fired when data is received from tcp direct socket stream.
+    """
 
     identifier: RequestId
     data: str
     timestamp: MonotonicTime
 
 
-class DirectudpsocketjoinedmulticastgroupEvent(CDPModel):
+class DirectUDPSocketJoinedMulticastGroupEvent(CDPModel):
     identifier: RequestId
     i_p_address: str
 
 
-class DirectudpsocketleftmulticastgroupEvent(CDPModel):
+class DirectUDPSocketLeftMulticastGroupEvent(CDPModel):
     identifier: RequestId
     i_p_address: str
 
 
-class DirectudpsocketcreatedEvent(CDPModel):
-    """Fired upon direct_socket.UDPSocket creation."""
+class DirectUDPSocketCreatedEvent(CDPModel):
+    """
+    Fired upon direct_socket.UDPSocket creation.
+    """
 
     identifier: RequestId
     options: DirectUDPSocketOptions
@@ -270,8 +323,10 @@ class DirectudpsocketcreatedEvent(CDPModel):
     initiator: Initiator | None = None
 
 
-class DirectudpsocketopenedEvent(CDPModel):
-    """Fired when direct_socket.UDPSocket connection is opened."""
+class DirectUDPSocketOpenedEvent(CDPModel):
+    """
+    Fired when direct_socket.UDPSocket connection is opened.
+    """
 
     identifier: RequestId
     local_addr: str
@@ -281,42 +336,53 @@ class DirectudpsocketopenedEvent(CDPModel):
     remote_port: int | None = None
 
 
-class DirectudpsocketabortedEvent(CDPModel):
-    """Fired when direct_socket.UDPSocket is aborted."""
+class DirectUDPSocketAbortedEvent(CDPModel):
+    """
+    Fired when direct_socket.UDPSocket is aborted.
+    """
 
     identifier: RequestId
     error_message: str
     timestamp: MonotonicTime
 
 
-class DirectudpsocketclosedEvent(CDPModel):
-    """Fired when direct_socket.UDPSocket is closed."""
+class DirectUDPSocketClosedEvent(CDPModel):
+    """
+    Fired when direct_socket.UDPSocket is closed.
+    """
 
     identifier: RequestId
     timestamp: MonotonicTime
 
 
-class DirectudpsocketchunksentEvent(CDPModel):
-    """Fired when message is sent to udp direct socket stream."""
-
-    identifier: RequestId
-    message: DirectUDPMessage
-    timestamp: MonotonicTime
-
-
-class DirectudpsocketchunkreceivedEvent(CDPModel):
-    """Fired when message is received from udp direct socket stream."""
+class DirectUDPSocketChunkSentEvent(CDPModel):
+    """
+    Fired when message is sent to udp direct socket stream.
+    """
 
     identifier: RequestId
     message: DirectUDPMessage
     timestamp: MonotonicTime
 
 
-class RequestwillbesentextrainfoEvent(CDPModel):
-    """Fired when additional information about a requestWillBeSent event is available from the
-    network stack. Not every requestWillBeSent event will have an additional
-    requestWillBeSentExtraInfo fired for it, and there is no guarantee whether requestWillBeSent
-    or requestWillBeSentExtraInfo will be fired first for the same request."""
+class DirectUDPSocketChunkReceivedEvent(CDPModel):
+    """
+    Fired when message is received from udp direct socket stream.
+    """
+
+    identifier: RequestId
+    message: DirectUDPMessage
+    timestamp: MonotonicTime
+
+
+class RequestWillBeSentExtraInfoEvent(CDPModel):
+    """
+    Fired when additional information about a requestWillBeSent event is available from
+    the network stack. Not every requestWillBeSent event will have an additional
+    requestWillBeSentExtraInfo fired for it, and there is no guarantee whether
+    requestWillBeSent or requestWillBeSentExtraInfo will be fired first for the same
+    request.
+    """
 
     request_id: RequestId
     associated_cookies: list[AssociatedCookie]
@@ -327,10 +393,13 @@ class RequestwillbesentextrainfoEvent(CDPModel):
     applied_network_conditions_id: str | None = None
 
 
-class ResponsereceivedextrainfoEvent(CDPModel):
-    """Fired when additional information about a responseReceived event is available from the network
-    stack. Not every responseReceived event will have an additional responseReceivedExtraInfo for
-    it, and responseReceivedExtraInfo may be fired before or after responseReceived."""
+class ResponseReceivedExtraInfoEvent(CDPModel):
+    """
+    Fired when additional information about a responseReceived event is available from
+    the network stack. Not every responseReceived event will have an additional
+    responseReceivedExtraInfo for it, and responseReceivedExtraInfo may be fired before
+    or after responseReceived.
+    """
 
     request_id: RequestId
     blocked_cookies: list[BlockedSetCookieWithReason]
@@ -343,20 +412,23 @@ class ResponsereceivedextrainfoEvent(CDPModel):
     exempted_cookies: list[ExemptedSetCookieWithReason] | None = None
 
 
-class ResponsereceivedearlyhintsEvent(CDPModel):
-    """Fired when 103 Early Hints headers is received in addition to the common response.
-    Not every responseReceived event will have an responseReceivedEarlyHints fired.
-    Only one responseReceivedEarlyHints may be fired for eached responseReceived event."""
+class ResponseReceivedEarlyHintsEvent(CDPModel):
+    """
+    Fired when 103 Early Hints headers is received in addition to the common response.
+    Not every responseReceived event will have an responseReceivedEarlyHints fired. Only
+    one responseReceivedEarlyHints may be fired for eached responseReceived event.
+    """
 
     request_id: RequestId
     headers: Headers
 
 
-class TrusttokenoperationdoneEvent(CDPModel):
-    """Fired exactly once for each Trust Token operation. Depending on
-    the type of the operation and whether the operation succeeded or
-    failed, the event is fired before the corresponding request was sent
-    or after the response was received."""
+class TrustTokenOperationDoneEvent(CDPModel):
+    """
+    Fired exactly once for each Trust Token operation. Depending on the type of the
+    operation and whether the operation succeeded or failed, the event is fired before
+    the corresponding request was sent or after the response was received.
+    """
 
     status: Literal[
         "Ok",
@@ -380,23 +452,27 @@ class TrusttokenoperationdoneEvent(CDPModel):
     issued_token_count: int | None = None
 
 
-class PolicyupdatedEvent(CDPModel):
-    """Fired once security policy has been updated."""
+class PolicyUpdatedEvent(CDPModel):
+    """
+    Fired once security policy has been updated.
+    """
 
     pass
 
 
-class ReportingapireportaddedEvent(CDPModel):
-    """Is sent whenever a new report is added.
-    And after 'enableReportingApi' for all existing reports."""
+class ReportingApiReportAddedEvent(CDPModel):
+    """
+    Is sent whenever a new report is added. And after 'enableReportingApi' for all
+    existing reports.
+    """
 
     report: ReportingApiReport
 
 
-class ReportingapireportupdatedEvent(CDPModel):
+class ReportingApiReportUpdatedEvent(CDPModel):
     report: ReportingApiReport
 
 
-class ReportingapiendpointschangedfororiginEvent(CDPModel):
+class ReportingApiEndpointsChangedForOriginEvent(CDPModel):
     origin: str
     endpoints: list[ReportingApiEndpoint]

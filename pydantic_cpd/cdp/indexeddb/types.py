@@ -1,12 +1,16 @@
 """Generated from CDP specification"""
-# Domain: IndexedDB
 
-from typing import Any, Literal
+from typing import Literal, TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
+
+if TYPE_CHECKING:
+    from pydantic_cpd.cdp import runtime
 
 
 class DatabaseWithObjectStores(CDPModel):
-    """Database with an array of object stores."""
+    """
+    Database with an array of object stores.
+    """
 
     name: str
     version: float
@@ -14,7 +18,9 @@ class DatabaseWithObjectStores(CDPModel):
 
 
 class ObjectStore(CDPModel):
-    """Object store."""
+    """
+    Object store.
+    """
 
     name: str
     key_path: KeyPath
@@ -23,7 +29,9 @@ class ObjectStore(CDPModel):
 
 
 class ObjectStoreIndex(CDPModel):
-    """Object store index."""
+    """
+    Object store index.
+    """
 
     name: str
     key_path: KeyPath
@@ -32,7 +40,9 @@ class ObjectStoreIndex(CDPModel):
 
 
 class Key(CDPModel):
-    """Key."""
+    """
+    Key.
+    """
 
     type: Literal["number", "string", "date", "array"]
     number: float | None = None
@@ -42,7 +52,9 @@ class Key(CDPModel):
 
 
 class KeyRange(CDPModel):
-    """Key range."""
+    """
+    Key range.
+    """
 
     lower: Key | None = None
     upper: Key | None = None
@@ -51,7 +63,9 @@ class KeyRange(CDPModel):
 
 
 class DataEntry(CDPModel):
-    """Data entry."""
+    """
+    Data entry.
+    """
 
     key: runtime.RemoteObject
     primary_key: runtime.RemoteObject
@@ -59,7 +73,9 @@ class DataEntry(CDPModel):
 
 
 class KeyPath(CDPModel):
-    """Key path."""
+    """
+    Key path.
+    """
 
     type: Literal["null", "string", "array"]
     string: str | None = None

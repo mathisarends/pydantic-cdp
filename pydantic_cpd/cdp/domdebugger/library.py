@@ -1,5 +1,4 @@
 """Generated client library from CDP specification"""
-# Domain: DOMDebugger Client
 
 from __future__ import annotations
 
@@ -24,8 +23,11 @@ from .commands import (
 
 
 class DOMDebuggerClient:
-    """DOM debugging allows setting breakpoints on particular DOM operations and events. JavaScript
-    execution will stop on these operations as if there was a regular breakpoint set."""
+    """
+    DOM debugging allows setting breakpoints on particular DOM operations and events.
+    JavaScript execution will stop on these operations as if there was a regular
+    breakpoint set.
+    """
 
     def __init__(self, client: CDPClient) -> None:
         self._client = client
@@ -33,7 +35,6 @@ class DOMDebuggerClient:
     async def get_event_listeners(
         self, params: GetEventListenersParams, session_id: str | None = None
     ) -> GetEventListenersResult:
-        """Returns event listeners of the given object."""
         result = await self._client.send_raw(
             method="DOMDebugger.getEventListeners",
             params=params.to_cdp_params() if params else None,
@@ -44,7 +45,6 @@ class DOMDebuggerClient:
     async def remove_d_o_m_breakpoint(
         self, params: RemoveDOMBreakpointParams, session_id: str | None = None
     ) -> dict[str, Any]:
-        """Removes DOM breakpoint that was set using `setDOMBreakpoint`."""
         result = await self._client.send_raw(
             method="DOMDebugger.removeDOMBreakpoint",
             params=params.to_cdp_params() if params else None,
@@ -55,7 +55,6 @@ class DOMDebuggerClient:
     async def remove_event_listener_breakpoint(
         self, params: RemoveEventListenerBreakpointParams, session_id: str | None = None
     ) -> dict[str, Any]:
-        """Removes breakpoint on particular DOM event."""
         result = await self._client.send_raw(
             method="DOMDebugger.removeEventListenerBreakpoint",
             params=params.to_cdp_params() if params else None,
@@ -68,7 +67,6 @@ class DOMDebuggerClient:
         params: RemoveInstrumentationBreakpointParams,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        """Removes breakpoint on particular native event."""
         result = await self._client.send_raw(
             method="DOMDebugger.removeInstrumentationBreakpoint",
             params=params.to_cdp_params() if params else None,
@@ -79,7 +77,6 @@ class DOMDebuggerClient:
     async def remove_x_h_r_breakpoint(
         self, params: RemoveXHRBreakpointParams, session_id: str | None = None
     ) -> dict[str, Any]:
-        """Removes breakpoint from XMLHttpRequest."""
         result = await self._client.send_raw(
             method="DOMDebugger.removeXHRBreakpoint",
             params=params.to_cdp_params() if params else None,
@@ -90,7 +87,6 @@ class DOMDebuggerClient:
     async def set_break_on_c_s_p_violation(
         self, params: SetBreakOnCSPViolationParams, session_id: str | None = None
     ) -> dict[str, Any]:
-        """Sets breakpoint on particular CSP violations."""
         result = await self._client.send_raw(
             method="DOMDebugger.setBreakOnCSPViolation",
             params=params.to_cdp_params() if params else None,
@@ -101,7 +97,6 @@ class DOMDebuggerClient:
     async def set_d_o_m_breakpoint(
         self, params: SetDOMBreakpointParams, session_id: str | None = None
     ) -> dict[str, Any]:
-        """Sets breakpoint on particular operation with DOM."""
         result = await self._client.send_raw(
             method="DOMDebugger.setDOMBreakpoint",
             params=params.to_cdp_params() if params else None,
@@ -112,7 +107,6 @@ class DOMDebuggerClient:
     async def set_event_listener_breakpoint(
         self, params: SetEventListenerBreakpointParams, session_id: str | None = None
     ) -> dict[str, Any]:
-        """Sets breakpoint on particular DOM event."""
         result = await self._client.send_raw(
             method="DOMDebugger.setEventListenerBreakpoint",
             params=params.to_cdp_params() if params else None,
@@ -123,7 +117,6 @@ class DOMDebuggerClient:
     async def set_instrumentation_breakpoint(
         self, params: SetInstrumentationBreakpointParams, session_id: str | None = None
     ) -> dict[str, Any]:
-        """Sets breakpoint on particular native event."""
         result = await self._client.send_raw(
             method="DOMDebugger.setInstrumentationBreakpoint",
             params=params.to_cdp_params() if params else None,
@@ -134,7 +127,6 @@ class DOMDebuggerClient:
     async def set_x_h_r_breakpoint(
         self, params: SetXHRBreakpointParams, session_id: str | None = None
     ) -> dict[str, Any]:
-        """Sets breakpoint on XMLHttpRequest."""
         result = await self._client.send_raw(
             method="DOMDebugger.setXHRBreakpoint",
             params=params.to_cdp_params() if params else None,

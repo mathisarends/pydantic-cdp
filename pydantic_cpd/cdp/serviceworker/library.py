@@ -1,5 +1,4 @@
 """Generated client library from CDP specification"""
-# Domain: ServiceWorker Client
 
 from __future__ import annotations
 
@@ -22,7 +21,9 @@ from .commands import (
 
 
 class ServiceWorkerClient:
-    """CDP ServiceWorker domain client."""
+    """
+    CDP ServiceWorker domain client.
+    """
 
     def __init__(self, client: CDPClient) -> None:
         self._client = client

@@ -1,39 +1,53 @@
 """Generated from CDP specification"""
-# Domain: WebAudio
-# This domain allows inspection of Web Audio API.
-# https://webaudio.github.io/web-audio-api/
 
-from typing import Any, Literal
+from typing import Literal
 from pydantic_cpd.cdp.base import CDPModel
 
-# An unique ID for a graph object (AudioContext, AudioNode, AudioParam) in Web Audio
-# API
+"""
+An unique ID for a graph object (AudioContext, AudioNode, AudioParam) in Web Audio API
+"""
 GraphObjectId = str
 
-# Enum of BaseAudioContext types
+"""
+Enum of BaseAudioContext types
+"""
 ContextType = Literal["realtime", "offline"]
 
-# Enum of AudioContextState from the spec
+"""
+Enum of AudioContextState from the spec
+"""
 ContextState = Literal["suspended", "running", "closed", "interrupted"]
 
-# Enum of AudioNode types
+"""
+Enum of AudioNode types
+"""
 NodeType = str
 
-# Enum of AudioNode::ChannelCountMode from the spec
+"""
+Enum of AudioNode::ChannelCountMode from the spec
+"""
 ChannelCountMode = Literal["clamped-max", "explicit", "max"]
 
-# Enum of AudioNode::ChannelInterpretation from the spec
+"""
+Enum of AudioNode::ChannelInterpretation from the spec
+"""
 ChannelInterpretation = Literal["discrete", "speakers"]
 
-# Enum of AudioParam types
+"""
+Enum of AudioParam types
+"""
 ParamType = str
 
-# Enum of AudioParam::AutomationRate from the spec
+"""
+Enum of AudioParam::AutomationRate from the spec
+"""
 AutomationRate = Literal["a-rate", "k-rate"]
 
 
 class ContextRealtimeData(CDPModel):
-    """Fields in AudioContext that change in real-time."""
+    """
+    Fields in AudioContext that change in real-time.
+    """
 
     current_time: float
     render_capacity: float
@@ -42,7 +56,9 @@ class ContextRealtimeData(CDPModel):
 
 
 class BaseAudioContext(CDPModel):
-    """Protocol object for BaseAudioContext"""
+    """
+    Protocol object for BaseAudioContext
+    """
 
     context_id: GraphObjectId
     context_type: ContextType
@@ -54,14 +70,18 @@ class BaseAudioContext(CDPModel):
 
 
 class AudioListener(CDPModel):
-    """Protocol object for AudioListener"""
+    """
+    Protocol object for AudioListener
+    """
 
     listener_id: GraphObjectId
     context_id: GraphObjectId
 
 
 class AudioNode(CDPModel):
-    """Protocol object for AudioNode"""
+    """
+    Protocol object for AudioNode
+    """
 
     node_id: GraphObjectId
     context_id: GraphObjectId
@@ -74,7 +94,9 @@ class AudioNode(CDPModel):
 
 
 class AudioParam(CDPModel):
-    """Protocol object for AudioParam"""
+    """
+    Protocol object for AudioParam
+    """
 
     param_id: GraphObjectId
     node_id: GraphObjectId

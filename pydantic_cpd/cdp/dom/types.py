@@ -1,37 +1,41 @@
 """Generated from CDP specification"""
-# Domain: DOM
-# This domain exposes DOM read/write operations. Each DOM Node is represented with its
-# mirror object that has an `id`. This `id` can be used to get additional information
-# on the Node, resolve it into the JavaScript object wrapper, etc. It is important that
-# client receives DOM events only for the nodes that are known to the client. Backend
-# keeps track of the nodes that were sent to the client and never sends the same node
-# twice. It is client's responsibility to collect information about the nodes that were
-# sent to the client. Note that `iframe` owner elements will return corresponding
-# document elements as their child nodes.
 
-from typing import Any, Literal
+from typing import Any, Literal, TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
 
-# Unique DOM node identifier.
+if TYPE_CHECKING:
+    from pydantic_cpd.cdp import page
+
+"""
+Unique DOM node identifier.
+"""
 NodeId = int
 
-# Unique DOM node identifier used to reference a node that may not have been pushed to
-# the front-end.
+"""
+Unique DOM node identifier used to reference a node that may not have been pushed to
+the front-end.
+"""
 BackendNodeId = int
 
-# Unique identifier for a CSS stylesheet.
+"""
+Unique identifier for a CSS stylesheet.
+"""
 StyleSheetId = str
 
 
 class BackendNode(CDPModel):
-    """Backend node with a friendly name."""
+    """
+    Backend node with a friendly name.
+    """
 
     node_type: int
     node_name: str
     backend_node_id: BackendNodeId
 
 
-# Pseudo element type.
+"""
+Pseudo element type.
+"""
 PseudoType = Literal[
     "first-line",
     "first-letter",
@@ -75,25 +79,37 @@ PseudoType = Literal[
     "overscroll-area-parent",
 ]
 
-# Shadow root type.
+"""
+Shadow root type.
+"""
 ShadowRootType = Literal["user-agent", "open", "closed"]
 
-# Document compatibility mode.
+"""
+Document compatibility mode.
+"""
 CompatibilityMode = Literal["QuirksMode", "LimitedQuirksMode", "NoQuirksMode"]
 
-# ContainerSelector physical axes
+"""
+ContainerSelector physical axes
+"""
 PhysicalAxes = Literal["Horizontal", "Vertical", "Both"]
 
-# ContainerSelector logical axes
+"""
+ContainerSelector logical axes
+"""
 LogicalAxes = Literal["Inline", "Block", "Both"]
 
-# Physical scroll orientation
+"""
+Physical scroll orientation
+"""
 ScrollOrientation = Literal["horizontal", "vertical"]
 
 
 class Node(CDPModel):
-    """DOM interaction is implemented in terms of mirror objects that represent the actual DOM nodes.
-    DOMNode is a base node mirror type."""
+    """
+    DOM interaction is implemented in terms of mirror objects that represent the actual
+    DOM nodes. DOMNode is a base node mirror type.
+    """
 
     node_id: NodeId
     parent_id: NodeId | None = None
@@ -132,14 +148,19 @@ class Node(CDPModel):
 
 
 class DetachedElementInfo(CDPModel):
-    """A structure to hold the top-level node of a detached tree and an array of its retained descendants."""
+    """
+    A structure to hold the top-level node of a detached tree and an array of its
+    retained descendants.
+    """
 
     tree_node: Node
     retained_node_ids: list[NodeId]
 
 
 class RGBA(CDPModel):
-    """A structure holding an RGBA color."""
+    """
+    A structure holding an RGBA color.
+    """
 
     r: int
     g: int
@@ -147,13 +168,17 @@ class RGBA(CDPModel):
     a: float | None = None
 
 
-# An array of quad vertices, x immediately followed by y for each point, points
-# clock-wise.
+"""
+An array of quad vertices, x immediately followed by y for each point, points
+clock-wise.
+"""
 Quad = list[Any]
 
 
 class BoxModel(CDPModel):
-    """Box model."""
+    """
+    Box model.
+    """
 
     content: Quad
     padding: Quad
@@ -165,7 +190,9 @@ class BoxModel(CDPModel):
 
 
 class ShapeOutsideInfo(CDPModel):
-    """CSS Shape Outside details."""
+    """
+    CSS Shape Outside details.
+    """
 
     bounds: Quad
     shape: list[Any]
@@ -173,7 +200,9 @@ class ShapeOutsideInfo(CDPModel):
 
 
 class Rect(CDPModel):
-    """Rectangle."""
+    """
+    Rectangle.
+    """
 
     x: float
     y: float

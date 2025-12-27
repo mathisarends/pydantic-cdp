@@ -1,7 +1,6 @@
 """Generated command models from CDP specification"""
-# Domain: Emulation Commands
 
-from typing import Any, Literal
+from typing import Literal, TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
 
 from .types import *
@@ -16,41 +15,54 @@ class CanEmulateResult(CDPModel):
 
 
 class SetFocusEmulationEnabledParams(CDPModel):
-    """Enables or disables simulating a focused and active page."""
+    """
+    Enables or disables simulating a focused and active page.
+    """
 
     enabled: bool
 
 
 class SetAutoDarkModeOverrideParams(CDPModel):
-    """Automatically render all web contents using a dark theme."""
+    """
+    Automatically render all web contents using a dark theme.
+    """
 
     enabled: bool | None = None
 
 
 class SetCPUThrottlingRateParams(CDPModel):
-    """Enables CPU throttling to emulate slow CPUs."""
+    """
+    Enables CPU throttling to emulate slow CPUs.
+    """
 
     rate: float
 
 
 class SetDefaultBackgroundColorOverrideParams(CDPModel):
-    """Sets or clears an override of the default background color of the frame. This override is used
-    if the content does not specify one."""
+    """
+    Sets or clears an override of the default background color of the frame. This
+    override is used if the content does not specify one.
+    """
 
     color: dom.RGBA | None = None
 
 
 class SetSafeAreaInsetsOverrideParams(CDPModel):
-    """Overrides the values for env(safe-area-inset-*) and env(safe-area-max-inset-*). Unset values will cause the
-    respective variables to be undefined, even if previously overridden."""
+    """
+    Overrides the values for env(safe-area-inset-*) and env(safe-area-max-inset-*).
+    Unset values will cause the respective variables to be undefined, even if previously
+    overridden.
+    """
 
     insets: SafeAreaInsets
 
 
 class SetDeviceMetricsOverrideParams(CDPModel):
-    """Overrides the values of device screen dimensions (window.screen.width, window.screen.height,
-    window.innerWidth, window.innerHeight, and "device-width"/"device-height"-related CSS media
-    query results)."""
+    """
+    Overrides the values of device screen dimensions (window.screen.width,
+    window.screen.height, window.innerWidth, window.innerHeight, and
+    "device-width"/"device-height"-related CSS media query results).
+    """
 
     width: int
     height: int
@@ -69,15 +81,19 @@ class SetDeviceMetricsOverrideParams(CDPModel):
 
 
 class SetDevicePostureOverrideParams(CDPModel):
-    """Start reporting the given posture value to the Device Posture API.
-    This override can also be set in setDeviceMetricsOverride()."""
+    """
+    Start reporting the given posture value to the Device Posture API. This override
+    can also be set in setDeviceMetricsOverride().
+    """
 
     posture: DevicePosture
 
 
 class SetDisplayFeaturesOverrideParams(CDPModel):
-    """Start using the given display features to pupulate the Viewport Segments API.
-    This override can also be set in setDeviceMetricsOverride()."""
+    """
+    Start using the given display features to pupulate the Viewport Segments API. This
+    override can also be set in setDeviceMetricsOverride().
+    """
 
     features: list[DisplayFeature]
 
@@ -96,14 +112,18 @@ class SetEmitTouchEventsForMouseParams(CDPModel):
 
 
 class SetEmulatedMediaParams(CDPModel):
-    """Emulates the given media type or media feature for CSS media queries."""
+    """
+    Emulates the given media type or media feature for CSS media queries.
+    """
 
     media: str | None = None
     features: list[MediaFeature] | None = None
 
 
 class SetEmulatedVisionDeficiencyParams(CDPModel):
-    """Emulates the given vision deficiency."""
+    """
+    Emulates the given vision deficiency.
+    """
 
     type: Literal[
         "none",
@@ -117,14 +137,18 @@ class SetEmulatedVisionDeficiencyParams(CDPModel):
 
 
 class SetEmulatedOSTextScaleParams(CDPModel):
-    """Emulates the given OS text scale."""
+    """
+    Emulates the given OS text scale.
+    """
 
     scale: float | None = None
 
 
 class SetGeolocationOverrideParams(CDPModel):
-    """Overrides the Geolocation Position or Error. Omitting latitude, longitude or
-    accuracy emulates position unavailable."""
+    """
+    Overrides the Geolocation Position or Error. Omitting latitude, longitude or
+    accuracy emulates position unavailable.
+    """
 
     latitude: float | None = None
     longitude: float | None = None
@@ -144,11 +168,13 @@ class GetOverriddenSensorInformationResult(CDPModel):
 
 
 class SetSensorOverrideEnabledParams(CDPModel):
-    """Overrides a platform sensor of a given type. If |enabled| is true, calls to
-    Sensor.start() will use a virtual sensor as backend rather than fetching
-    data from a real hardware sensor. Otherwise, existing virtual
-    sensor-backend Sensor objects will fire an error event and new calls to
-    Sensor.start() will attempt to use a real sensor instead."""
+    """
+    Overrides a platform sensor of a given type. If |enabled| is true, calls to
+    Sensor.start() will use a virtual sensor as backend rather than fetching data from a
+    real hardware sensor. Otherwise, existing virtual sensor-backend Sensor objects will
+    fire an error event and new calls to Sensor.start() will attempt to use a real
+    sensor instead.
+    """
 
     enabled: bool
     type: SensorType
@@ -156,18 +182,22 @@ class SetSensorOverrideEnabledParams(CDPModel):
 
 
 class SetSensorOverrideReadingsParams(CDPModel):
-    """Updates the sensor readings reported by a sensor type previously overridden
-    by setSensorOverrideEnabled."""
+    """
+    Updates the sensor readings reported by a sensor type previously overridden by
+    setSensorOverrideEnabled.
+    """
 
     type: SensorType
     reading: SensorReading
 
 
 class SetPressureSourceOverrideEnabledParams(CDPModel):
-    """Overrides a pressure source of a given type, as used by the Compute
-    Pressure API, so that updates to PressureObserver.observe() are provided
-    via setPressureStateOverride instead of being retrieved from
-    platform-provided telemetry data."""
+    """
+    Overrides a pressure source of a given type, as used by the Compute Pressure API,
+    so that updates to PressureObserver.observe() are provided via
+    setPressureStateOverride instead of being retrieved from platform-provided telemetry
+    data.
+    """
 
     enabled: bool
     source: PressureSource
@@ -175,19 +205,23 @@ class SetPressureSourceOverrideEnabledParams(CDPModel):
 
 
 class SetPressureStateOverrideParams(CDPModel):
-    """TODO: OBSOLETE: To remove when setPressureDataOverride is merged.
-    Provides a given pressure state that will be processed and eventually be
-    delivered to PressureObserver users. |source| must have been previously
-    overridden by setPressureSourceOverrideEnabled."""
+    """
+    TODO: OBSOLETE: To remove when setPressureDataOverride is merged. Provides a given
+    pressure state that will be processed and eventually be delivered to
+    PressureObserver users. |source| must have been previously overridden by
+    setPressureSourceOverrideEnabled.
+    """
 
     source: PressureSource
     state: PressureState
 
 
 class SetPressureDataOverrideParams(CDPModel):
-    """Provides a given pressure data set that will be processed and eventually be
-    delivered to PressureObserver users. |source| must have been previously
-    overridden by setPressureSourceOverrideEnabled."""
+    """
+    Provides a given pressure data set that will be processed and eventually be
+    delivered to PressureObserver users. |source| must have been previously overridden
+    by setPressureSourceOverrideEnabled.
+    """
 
     source: PressureSource
     state: PressureState
@@ -195,40 +229,53 @@ class SetPressureDataOverrideParams(CDPModel):
 
 
 class SetIdleOverrideParams(CDPModel):
-    """Overrides the Idle state."""
+    """
+    Overrides the Idle state.
+    """
 
     is_user_active: bool
     is_screen_unlocked: bool
 
 
 class SetNavigatorOverridesParams(CDPModel):
-    """Overrides value returned by the javascript navigator object."""
+    """
+    Overrides value returned by the javascript navigator object.
+    """
 
     platform: str
 
 
 class SetPageScaleFactorParams(CDPModel):
-    """Sets a specified page scale factor."""
+    """
+    Sets a specified page scale factor.
+    """
 
     page_scale_factor: float
 
 
 class SetScriptExecutionDisabledParams(CDPModel):
-    """Switches script execution in the page."""
+    """
+    Switches script execution in the page.
+    """
 
     value: bool
 
 
 class SetTouchEmulationEnabledParams(CDPModel):
-    """Enables touch on platforms which do not support them."""
+    """
+    Enables touch on platforms which do not support them.
+    """
 
     enabled: bool
     max_touch_points: int | None = None
 
 
 class SetVirtualTimePolicyParams(CDPModel):
-    """Turns on virtual time for all frames (replacing real-time with a synthetic time source) and sets
-    the current virtual time policy.  Note this supersedes any previous time budget."""
+    """
+    Turns on virtual time for all frames (replacing real-time with a synthetic time
+    source) and sets the current virtual time policy. Note this supersedes any previous
+    time budget.
+    """
 
     policy: VirtualTimePolicy
     budget: float | None = None
@@ -241,21 +288,27 @@ class SetVirtualTimePolicyResult(CDPModel):
 
 
 class SetLocaleOverrideParams(CDPModel):
-    """Overrides default host system locale with the specified one."""
+    """
+    Overrides default host system locale with the specified one.
+    """
 
     locale: str | None = None
 
 
 class SetTimezoneOverrideParams(CDPModel):
-    """Overrides default host system timezone with the specified one."""
+    """
+    Overrides default host system timezone with the specified one.
+    """
 
     timezone_id: str
 
 
 class SetVisibleSizeParams(CDPModel):
-    """Resizes the frame/viewport of the page. Note that this does not affect the frame's container
-    (e.g. browser window). Can be used to produce screenshots of the specified size. Not supported
-    on Android."""
+    """
+    Resizes the frame/viewport of the page. Note that this does not affect the frame's
+    container (e.g. browser window). Can be used to produce screenshots of the specified
+    size. Not supported on Android.
+    """
 
     width: int
     height: int
@@ -266,7 +319,9 @@ class SetDisabledImageTypesParams(CDPModel):
 
 
 class SetDataSaverOverrideParams(CDPModel):
-    """Override the value of navigator.connection.saveData"""
+    """
+    Override the value of navigator.connection.saveData
+    """
 
     data_saver_enabled: bool | None = None
 
@@ -276,8 +331,10 @@ class SetHardwareConcurrencyOverrideParams(CDPModel):
 
 
 class SetUserAgentOverrideParams(CDPModel):
-    """Allows overriding user agent with the given string.
-    `userAgentMetadata` must be set for Client Hint headers to be sent."""
+    """
+    Allows overriding user agent with the given string. `userAgentMetadata` must be set
+    for Client Hint headers to be sent.
+    """
 
     user_agent: str
     accept_language: str | None = None
@@ -286,14 +343,19 @@ class SetUserAgentOverrideParams(CDPModel):
 
 
 class SetAutomationOverrideParams(CDPModel):
-    """Allows overriding the automation flag."""
+    """
+    Allows overriding the automation flag.
+    """
 
     enabled: bool
 
 
 class SetSmallViewportHeightDifferenceOverrideParams(CDPModel):
-    """Allows overriding the difference between the small and large viewport sizes, which determine the
-    value of the `svh` and `lvh` unit, respectively. Only supported for top-level frames."""
+    """
+    Allows overriding the difference between the small and large viewport sizes, which
+    determine the value of the `svh` and `lvh` unit, respectively. Only supported for
+    top-level frames.
+    """
 
     difference: int
 
@@ -303,7 +365,9 @@ class GetScreenInfosResult(CDPModel):
 
 
 class AddScreenParams(CDPModel):
-    """Add a new screen to the device. Only supported in headless mode."""
+    """
+    Add a new screen to the device. Only supported in headless mode.
+    """
 
     left: int
     top: int
@@ -322,6 +386,8 @@ class AddScreenResult(CDPModel):
 
 
 class RemoveScreenParams(CDPModel):
-    """Remove screen from the device. Only supported in headless mode."""
+    """
+    Remove screen from the device. Only supported in headless mode.
+    """
 
     screen_id: ScreenId

@@ -1,7 +1,6 @@
 """Generated command models from CDP specification"""
-# Domain: IndexedDB Commands
 
-from typing import Any, Literal
+from typing import TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
 
 from .types import *
@@ -10,7 +9,9 @@ from pydantic_cpd.cdp import storage
 
 
 class ClearObjectStoreParams(CDPModel):
-    """Clears all entries from an object store."""
+    """
+    Clears all entries from an object store.
+    """
 
     security_origin: str | None = None
     storage_key: str | None = None
@@ -20,7 +21,9 @@ class ClearObjectStoreParams(CDPModel):
 
 
 class DeleteDatabaseParams(CDPModel):
-    """Deletes a database."""
+    """
+    Deletes a database.
+    """
 
     security_origin: str | None = None
     storage_key: str | None = None
@@ -29,7 +32,9 @@ class DeleteDatabaseParams(CDPModel):
 
 
 class DeleteObjectStoreEntriesParams(CDPModel):
-    """Delete a range of entries from an object store"""
+    """
+    Delete a range of entries from an object store
+    """
 
     security_origin: str | None = None
     storage_key: str | None = None
@@ -40,7 +45,9 @@ class DeleteObjectStoreEntriesParams(CDPModel):
 
 
 class RequestDataParams(CDPModel):
-    """Requests data from object store or index."""
+    """
+    Requests data from object store or index.
+    """
 
     security_origin: str | None = None
     storage_key: str | None = None
@@ -59,7 +66,9 @@ class RequestDataResult(CDPModel):
 
 
 class GetMetadataParams(CDPModel):
-    """Gets metadata of an object store."""
+    """
+    Gets metadata of an object store.
+    """
 
     security_origin: str | None = None
     storage_key: str | None = None
@@ -74,7 +83,9 @@ class GetMetadataResult(CDPModel):
 
 
 class RequestDatabaseParams(CDPModel):
-    """Requests database with given name in given frame."""
+    """
+    Requests database with given name in given frame.
+    """
 
     security_origin: str | None = None
     storage_key: str | None = None
@@ -87,7 +98,9 @@ class RequestDatabaseResult(CDPModel):
 
 
 class RequestDatabaseNamesParams(CDPModel):
-    """Requests database names for given security origin."""
+    """
+    Requests database names for given security origin.
+    """
 
     security_origin: str | None = None
     storage_key: str | None = None

@@ -1,19 +1,17 @@
 """Generated event models from CDP specification"""
-# Domain: ServiceWorker Events
 
-from typing import Any, Literal
 from pydantic_cpd.cdp.base import CDPModel
 
 from .types import *
 
 
-class WorkererrorreportedEvent(CDPModel):
+class WorkerErrorReportedEvent(CDPModel):
     error_message: ServiceWorkerErrorMessage
 
 
-class WorkerregistrationupdatedEvent(CDPModel):
+class WorkerRegistrationUpdatedEvent(CDPModel):
     registrations: list[ServiceWorkerRegistration]
 
 
-class WorkerversionupdatedEvent(CDPModel):
+class WorkerVersionUpdatedEvent(CDPModel):
     versions: list[ServiceWorkerVersion]

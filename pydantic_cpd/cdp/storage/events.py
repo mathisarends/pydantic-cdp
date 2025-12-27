@@ -1,18 +1,18 @@
 """Generated event models from CDP specification"""
-# Domain: Storage Events
 
-from typing import Any, Literal
+from typing import Any, TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
 
 from .types import *
 
-from pydantic_cpd.cdp import network
-from pydantic_cpd.cdp import page
-from pydantic_cpd.cdp import target
+if TYPE_CHECKING:
+    from pydantic_cpd.cdp import network, page, target
 
 
-class CachestoragecontentupdatedEvent(CDPModel):
-    """A cache's contents have been modified."""
+class CacheStorageContentUpdatedEvent(CDPModel):
+    """
+    A cache's contents have been modified.
+    """
 
     origin: str
     storage_key: str
@@ -20,16 +20,20 @@ class CachestoragecontentupdatedEvent(CDPModel):
     cache_name: str
 
 
-class CachestoragelistupdatedEvent(CDPModel):
-    """A cache has been added/deleted."""
+class CacheStorageListUpdatedEvent(CDPModel):
+    """
+    A cache has been added/deleted.
+    """
 
     origin: str
     storage_key: str
     bucket_id: str
 
 
-class IndexeddbcontentupdatedEvent(CDPModel):
-    """The origin's IndexedDB object store has been modified."""
+class IndexedDBContentUpdatedEvent(CDPModel):
+    """
+    The origin's IndexedDB object store has been modified.
+    """
 
     origin: str
     storage_key: str
@@ -38,17 +42,21 @@ class IndexeddbcontentupdatedEvent(CDPModel):
     object_store_name: str
 
 
-class IndexeddblistupdatedEvent(CDPModel):
-    """The origin's IndexedDB database list has been modified."""
+class IndexedDBListUpdatedEvent(CDPModel):
+    """
+    The origin's IndexedDB database list has been modified.
+    """
 
     origin: str
     storage_key: str
     bucket_id: str
 
 
-class InterestgroupaccessedEvent(CDPModel):
-    """One of the interest groups was accessed. Note that these events are global
-    to all targets sharing an interest group store."""
+class InterestGroupAccessedEvent(CDPModel):
+    """
+    One of the interest groups was accessed. Note that these events are global to all
+    targets sharing an interest group store.
+    """
 
     access_time: network.TimeSinceEpoch
     type: InterestGroupAccessType
@@ -60,9 +68,11 @@ class InterestgroupaccessedEvent(CDPModel):
     unique_auction_id: InterestGroupAuctionId | None = None
 
 
-class InterestgroupauctioneventoccurredEvent(CDPModel):
-    """An auction involving interest groups is taking place. These events are
-    target-specific."""
+class InterestGroupAuctionEventOccurredEvent(CDPModel):
+    """
+    An auction involving interest groups is taking place. These events are
+    target-specific.
+    """
 
     event_time: network.TimeSinceEpoch
     type: InterestGroupAuctionEventType
@@ -71,20 +81,23 @@ class InterestgroupauctioneventoccurredEvent(CDPModel):
     auction_config: dict[str, Any] | None = None
 
 
-class InterestgroupauctionnetworkrequestcreatedEvent(CDPModel):
-    """Specifies which auctions a particular network fetch may be related to, and
-    in what role. Note that it is not ordered with respect to
-    Network.requestWillBeSent (but will happen before loadingFinished
-    loadingFailed)."""
+class InterestGroupAuctionNetworkRequestCreatedEvent(CDPModel):
+    """
+    Specifies which auctions a particular network fetch may be related to, and in what
+    role. Note that it is not ordered with respect to Network.requestWillBeSent (but
+    will happen before loadingFinished loadingFailed).
+    """
 
     type: InterestGroupAuctionFetchType
     request_id: network.RequestId
     auctions: list[InterestGroupAuctionId]
 
 
-class SharedstorageaccessedEvent(CDPModel):
-    """Shared storage was accessed by the associated page.
-    The following parameters are included in all events."""
+class SharedStorageAccessedEvent(CDPModel):
+    """
+    Shared storage was accessed by the associated page. The following parameters are
+    included in all events.
+    """
 
     access_time: network.TimeSinceEpoch
     scope: SharedStorageAccessScope
@@ -95,9 +108,11 @@ class SharedstorageaccessedEvent(CDPModel):
     params: SharedStorageAccessParams
 
 
-class SharedstorageworkletoperationexecutionfinishedEvent(CDPModel):
-    """A shared storage run or selectURL operation finished its execution.
-    The following parameters are included in all events."""
+class SharedStorageWorkletOperationExecutionFinishedEvent(CDPModel):
+    """
+    A shared storage run or selectURL operation finished its execution. The following
+    parameters are included in all events.
+    """
 
     finished_time: network.TimeSinceEpoch
     execution_time: int
@@ -108,26 +123,26 @@ class SharedstorageworkletoperationexecutionfinishedEvent(CDPModel):
     owner_origin: str
 
 
-class StoragebucketcreatedorupdatedEvent(CDPModel):
+class StorageBucketCreatedOrUpdatedEvent(CDPModel):
     bucket_info: StorageBucketInfo
 
 
-class StoragebucketdeletedEvent(CDPModel):
+class StorageBucketDeletedEvent(CDPModel):
     bucket_id: str
 
 
-class AttributionreportingsourceregisteredEvent(CDPModel):
+class AttributionReportingSourceRegisteredEvent(CDPModel):
     registration: AttributionReportingSourceRegistration
     result: AttributionReportingSourceRegistrationResult
 
 
-class AttributionreportingtriggerregisteredEvent(CDPModel):
+class AttributionReportingTriggerRegisteredEvent(CDPModel):
     registration: AttributionReportingTriggerRegistration
     event_level: AttributionReportingEventLevelResult
     aggregatable: AttributionReportingAggregatableResult
 
 
-class AttributionreportingreportsentEvent(CDPModel):
+class AttributionReportingReportSentEvent(CDPModel):
     url: str
     body: dict[str, Any]
     result: AttributionReportingReportResult
@@ -136,7 +151,7 @@ class AttributionreportingreportsentEvent(CDPModel):
     http_status_code: int | None = None
 
 
-class AttributionreportingverbosedebugreportsentEvent(CDPModel):
+class AttributionReportingVerboseDebugReportSentEvent(CDPModel):
     url: str
     body: list[dict[str, Any]] | None = None
     net_error: int | None = None

@@ -1,25 +1,35 @@
 """Generated from CDP specification"""
-# Domain: LayerTree
 
-from typing import Any, Literal
+from typing import Any, Literal, TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
 
-# Unique Layer identifier.
+if TYPE_CHECKING:
+    from pydantic_cpd.cdp import dom
+
+"""
+Unique Layer identifier.
+"""
 LayerId = str
 
-# Unique snapshot identifier.
+"""
+Unique snapshot identifier.
+"""
 SnapshotId = str
 
 
 class ScrollRect(CDPModel):
-    """Rectangle where scrolling happens on the main thread."""
+    """
+    Rectangle where scrolling happens on the main thread.
+    """
 
     rect: dom.Rect
     type: Literal["RepaintsOnScroll", "TouchEventHandler", "WheelEventHandler"]
 
 
 class StickyPositionConstraint(CDPModel):
-    """Sticky position constraints."""
+    """
+    Sticky position constraints.
+    """
 
     sticky_box_rect: dom.Rect
     containing_block_rect: dom.Rect
@@ -28,7 +38,9 @@ class StickyPositionConstraint(CDPModel):
 
 
 class PictureTile(CDPModel):
-    """Serialized fragment of layer picture along with its offset within the layer."""
+    """
+    Serialized fragment of layer picture along with its offset within the layer.
+    """
 
     x: float
     y: float
@@ -36,7 +48,9 @@ class PictureTile(CDPModel):
 
 
 class Layer(CDPModel):
-    """Information about a compositing layer."""
+    """
+    Information about a compositing layer.
+    """
 
     layer_id: LayerId
     parent_layer_id: LayerId | None = None
@@ -56,5 +70,7 @@ class Layer(CDPModel):
     sticky_position_constraint: StickyPositionConstraint | None = None
 
 
-# Array of timings, one per paint step.
+"""
+Array of timings, one per paint step.
+"""
 PaintProfile = list[Any]

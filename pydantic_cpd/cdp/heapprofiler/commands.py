@@ -1,18 +1,18 @@
 """Generated command models from CDP specification"""
-# Domain: HeapProfiler Commands
 
-from typing import Any, Literal
+from typing import TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
 
 from .types import *
 
 from pydantic_cpd.cdp import runtime
-from pydantic_cpd.cdp import runtime
 
 
 class AddInspectedHeapObjectParams(CDPModel):
-    """Enables console to refer to the node with given id via $x (see Command Line API for more details
-    $x functions)."""
+    """
+    Enables console to refer to the node with given id via $x (see Command Line API for
+    more details $x functions).
+    """
 
     heap_object_id: HeapSnapshotObjectId
 

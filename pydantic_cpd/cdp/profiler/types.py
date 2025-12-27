@@ -1,12 +1,16 @@
 """Generated from CDP specification"""
-# Domain: Profiler
 
-from typing import Any, Literal
+from typing import TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
+
+if TYPE_CHECKING:
+    from pydantic_cpd.cdp import runtime
 
 
 class ProfileNode(CDPModel):
-    """Profile node. Holds callsite information, execution statistics and child nodes."""
+    """
+    Profile node. Holds callsite information, execution statistics and child nodes.
+    """
 
     id: int
     call_frame: runtime.CallFrame
@@ -17,7 +21,9 @@ class ProfileNode(CDPModel):
 
 
 class Profile(CDPModel):
-    """Profile."""
+    """
+    Profile.
+    """
 
     nodes: list[ProfileNode]
     start_time: float
@@ -27,14 +33,18 @@ class Profile(CDPModel):
 
 
 class PositionTickInfo(CDPModel):
-    """Specifies a number of samples attributed to a certain source position."""
+    """
+    Specifies a number of samples attributed to a certain source position.
+    """
 
     line: int
     ticks: int
 
 
 class CoverageRange(CDPModel):
-    """Coverage data for a source range."""
+    """
+    Coverage data for a source range.
+    """
 
     start_offset: int
     end_offset: int
@@ -42,7 +52,9 @@ class CoverageRange(CDPModel):
 
 
 class FunctionCoverage(CDPModel):
-    """Coverage data for a JavaScript function."""
+    """
+    Coverage data for a JavaScript function.
+    """
 
     function_name: str
     ranges: list[CoverageRange]
@@ -50,7 +62,9 @@ class FunctionCoverage(CDPModel):
 
 
 class ScriptCoverage(CDPModel):
-    """Coverage data for a JavaScript script."""
+    """
+    Coverage data for a JavaScript script.
+    """
 
     script_id: runtime.ScriptId
     url: str

@@ -1,14 +1,15 @@
 """Generated command models from CDP specification"""
-# Domain: Input Commands
 
-from typing import Any, Literal
+from typing import Literal
 from pydantic_cpd.cdp.base import CDPModel
 
 from .types import *
 
 
 class DispatchDragEventParams(CDPModel):
-    """Dispatches a drag event into the page."""
+    """
+    Dispatches a drag event into the page.
+    """
 
     type: Literal["dragEnter", "dragOver", "drop", "dragCancel"]
     x: float
@@ -18,7 +19,9 @@ class DispatchDragEventParams(CDPModel):
 
 
 class DispatchKeyEventParams(CDPModel):
-    """Dispatches a key event to the page."""
+    """
+    Dispatches a key event to the page.
+    """
 
     type: Literal["keyDown", "keyUp", "rawKeyDown", "char"]
     modifiers: int | None = None
@@ -38,16 +41,20 @@ class DispatchKeyEventParams(CDPModel):
 
 
 class InsertTextParams(CDPModel):
-    """This method emulates inserting text that doesn't come from a key press,
-    for example an emoji keyboard or an IME."""
+    """
+    This method emulates inserting text that doesn't come from a key press, for example
+    an emoji keyboard or an IME.
+    """
 
     text: str
 
 
 class ImeSetCompositionParams(CDPModel):
-    """This method sets the current candidate text for IME.
-    Use imeCommitComposition to commit the final text.
-    Use imeSetComposition with empty string as text to cancel composition."""
+    """
+    This method sets the current candidate text for IME. Use imeCommitComposition to
+    commit the final text. Use imeSetComposition with empty string as text to cancel
+    composition.
+    """
 
     text: str
     selection_start: int
@@ -57,7 +64,9 @@ class ImeSetCompositionParams(CDPModel):
 
 
 class DispatchMouseEventParams(CDPModel):
-    """Dispatches a mouse event to the page."""
+    """
+    Dispatches a mouse event to the page.
+    """
 
     type: Literal["mousePressed", "mouseReleased", "mouseMoved", "mouseWheel"]
     x: float
@@ -78,7 +87,9 @@ class DispatchMouseEventParams(CDPModel):
 
 
 class DispatchTouchEventParams(CDPModel):
-    """Dispatches a touch event to the page."""
+    """
+    Dispatches a touch event to the page.
+    """
 
     type: Literal["touchStart", "touchEnd", "touchMove", "touchCancel"]
     touch_points: list[TouchPoint]
@@ -87,7 +98,9 @@ class DispatchTouchEventParams(CDPModel):
 
 
 class EmulateTouchFromMouseEventParams(CDPModel):
-    """Emulates touch event from the mouse event parameters."""
+    """
+    Emulates touch event from the mouse event parameters.
+    """
 
     type: Literal["mousePressed", "mouseReleased", "mouseMoved", "mouseWheel"]
     x: int
@@ -101,20 +114,27 @@ class EmulateTouchFromMouseEventParams(CDPModel):
 
 
 class SetIgnoreInputEventsParams(CDPModel):
-    """Ignores input events (useful while auditing page)."""
+    """
+    Ignores input events (useful while auditing page).
+    """
 
     ignore: bool
 
 
 class SetInterceptDragsParams(CDPModel):
-    """Prevents default drag and drop behavior and instead emits `Input.dragIntercepted` events.
-    Drag and drop behavior can be directly controlled via `Input.dispatchDragEvent`."""
+    """
+    Prevents default drag and drop behavior and instead emits `Input.dragIntercepted`
+    events. Drag and drop behavior can be directly controlled via
+    `Input.dispatchDragEvent`.
+    """
 
     enabled: bool
 
 
 class SynthesizePinchGestureParams(CDPModel):
-    """Synthesizes a pinch gesture over a time period by issuing appropriate touch events."""
+    """
+    Synthesizes a pinch gesture over a time period by issuing appropriate touch events.
+    """
 
     x: float
     y: float
@@ -124,7 +144,10 @@ class SynthesizePinchGestureParams(CDPModel):
 
 
 class SynthesizeScrollGestureParams(CDPModel):
-    """Synthesizes a scroll gesture over a time period by issuing appropriate touch events."""
+    """
+    Synthesizes a scroll gesture over a time period by issuing appropriate touch
+    events.
+    """
 
     x: float
     y: float
@@ -141,7 +164,9 @@ class SynthesizeScrollGestureParams(CDPModel):
 
 
 class SynthesizeTapGestureParams(CDPModel):
-    """Synthesizes a tap gesture over a time period by issuing appropriate touch events."""
+    """
+    Synthesizes a tap gesture over a time period by issuing appropriate touch events.
+    """
 
     x: float
     y: float

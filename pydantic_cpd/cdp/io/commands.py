@@ -1,7 +1,6 @@
 """Generated command models from CDP specification"""
-# Domain: IO Commands
 
-from typing import Any, Literal
+from typing import TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
 
 from .types import *
@@ -10,13 +9,17 @@ from pydantic_cpd.cdp import runtime
 
 
 class CloseParams(CDPModel):
-    """Close the stream, discard any temporary backing storage."""
+    """
+    Close the stream, discard any temporary backing storage.
+    """
 
     handle: StreamHandle
 
 
 class ReadParams(CDPModel):
-    """Read a chunk of the stream"""
+    """
+    Read a chunk of the stream
+    """
 
     handle: StreamHandle
     offset: int | None = None
@@ -30,7 +33,9 @@ class ReadResult(CDPModel):
 
 
 class ResolveBlobParams(CDPModel):
-    """Return UUID of Blob object specified by a remote object id."""
+    """
+    Return UUID of Blob object specified by a remote object id.
+    """
 
     object_id: runtime.RemoteObjectId
 

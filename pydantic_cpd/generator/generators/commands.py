@@ -1,17 +1,23 @@
-from pydantic_cpd.generator.models import Domain, Command, Parameter
+from pydantic_cpd.generator.models import Command, Domain, Parameter
 from pydantic_cpd.generator.type_mapper import (
     map_cdp_type,
-    to_snake_case,
     to_pascal_case,
+    to_snake_case,
 )
+
+from .utils import format_docstring
 
 
 class CommandsGenerator:
     def __init__(self):
         self.cross_domain_refs: set[str] = set()
+        self.uses_any: bool = False
+        self.uses_literal: bool = False
 
     def generate(self, domain: Domain) -> str:
         self.cross_domain_refs.clear()
+        self.uses_any = False
+        self.uses_literal = False
 
         command_models = self._generate_command_models(domain)
 
@@ -28,14 +34,23 @@ class CommandsGenerator:
         return "\n\n".join(sections)
 
     def _header(self, domain: Domain) -> str:
-        return f'''"""Generated command models from CDP specification"""
-# Domain: {domain.domain} Commands'''
+        return '"""Generated command models from CDP specification"""'
 
     def _imports(self, has_models: bool) -> str:
-        lines = [
-            "from typing import Any, Literal",
-            "from pydantic_cpd.cdp.base import CDPModel",
-        ]
+        typing_imports = []
+
+        if self.uses_any:
+            typing_imports.append("Any")
+        if self.uses_literal:
+            typing_imports.append("Literal")
+        if self.cross_domain_refs:
+            typing_imports.append("TYPE_CHECKING")
+
+        lines = []
+        if typing_imports:
+            lines.append(f"from typing import {', '.join(typing_imports)}")
+
+        lines.append("from pydantic_cpd.cdp.base import CDPModel")
 
         if has_models:
             lines.append("")
@@ -44,10 +59,16 @@ class CommandsGenerator:
         return "\n".join(lines)
 
     def _cross_domain_imports(self) -> str:
-        lines = []
-        for ref in sorted(self.cross_domain_refs):
+        # Dedupliziere domains
+        unique_domains = set()
+        for ref in self.cross_domain_refs:
             domain_name = ref.split(".")[0].lower()
-            lines.append(f"from pydantic_cpd.cdp import {domain_name}")
+            unique_domains.add(domain_name)
+
+        lines = []
+        for domain in sorted(unique_domains):
+            lines.append(f"from pydantic_cpd.cdp import {domain}")
+
         return "\n".join(lines)
 
     def _generate_command_models(self, domain: Domain) -> str:
@@ -69,7 +90,7 @@ class CommandsGenerator:
         lines = [f"class {class_name}(CDPModel):"]
 
         if command.description:
-            lines.append(f'    """{command.description}"""')
+            lines.append(format_docstring(command.description, indent=4))
 
         for param in command.parameters:
             lines.append(f"    {self._create_field(param)}")
@@ -93,7 +114,27 @@ class CommandsGenerator:
         if param.ref and "." in param.ref:
             self.cross_domain_refs.add(param.ref)
 
+        # Track type usage
+        self._track_type_usage(py_type)
+
         return f"{field_name}: {py_type}" + (" = None" if param.optional else "")
+
+    def _track_type_usage(self, type_str: str) -> None:
+        """Track which typing imports are used"""
+        if "Any" in type_str:
+            self.uses_any = True
+        if "Literal" in type_str:
+            self.uses_literal = True
+
+        # Track cross-domain refs
+        import re
+
+        pattern = r"\b([a-z]+)\.([A-Z][a-zA-Z0-9]*)\b"
+        matches = re.findall(pattern, type_str)
+
+        for domain, type_name in matches:
+            ref = f"{domain}.{type_name}"
+            self.cross_domain_refs.add(ref)
 
     def _resolve_type(self, param: Parameter) -> str:
         if param.ref and "." in param.ref:

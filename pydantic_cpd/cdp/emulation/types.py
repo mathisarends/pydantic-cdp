@@ -1,8 +1,6 @@
 """Generated from CDP specification"""
-# Domain: Emulation
-# This domain emulates different environments for the page.
 
-from typing import Any, Literal
+from typing import Literal
 from pydantic_cpd.cdp.base import CDPModel
 
 
@@ -18,7 +16,9 @@ class SafeAreaInsets(CDPModel):
 
 
 class ScreenOrientation(CDPModel):
-    """Screen orientation."""
+    """
+    Screen orientation.
+    """
 
     type: Literal[
         "portraitPrimary", "portraitSecondary", "landscapePrimary", "landscapeSecondary"
@@ -41,23 +41,31 @@ class MediaFeature(CDPModel):
     value: str
 
 
-# advance: If the scheduler runs out of immediate work, the virtual time base may fast
-# forward to allow the next delayed task (if any) to run; pause: The virtual time base
-# may not advance; pauseIfNetworkFetchesPending: The virtual time base may not advance
-# if there are any pending resource fetches.
+"""
+advance: If the scheduler runs out of immediate work, the virtual time base may fast
+forward to allow the next delayed task (if any) to run; pause: The virtual time base may
+not advance; pauseIfNetworkFetchesPending: The virtual time base may not advance if
+there are any pending resource fetches.
+"""
 VirtualTimePolicy = Literal["advance", "pause", "pauseIfNetworkFetchesPending"]
 
 
 class UserAgentBrandVersion(CDPModel):
-    """Used to specify User Agent Client Hints to emulate. See https://wicg.github.io/ua-client-hints"""
+    """
+    Used to specify User Agent Client Hints to emulate. See
+    https://wicg.github.io/ua-client-hints
+    """
 
     brand: str
     version: str
 
 
 class UserAgentMetadata(CDPModel):
-    """Used to specify User Agent Client Hints to emulate. See https://wicg.github.io/ua-client-hints
-    Missing optional values will be filled in by the target with what it would normally use."""
+    """
+    Used to specify User Agent Client Hints to emulate. See
+    https://wicg.github.io/ua-client-hints Missing optional values will be filled in by
+    the target with what it would normally use.
+    """
 
     brands: list[UserAgentBrandVersion] | None = None
     full_version_list: list[UserAgentBrandVersion] | None = None
@@ -72,8 +80,10 @@ class UserAgentMetadata(CDPModel):
     form_factors: list[str] | None = None
 
 
-# Used to specify sensor types to emulate. See
-# https://w3c.github.io/sensors/#automation for more information.
+"""
+Used to specify sensor types to emulate. See https://w3c.github.io/sensors/#automation
+for more information.
+"""
 SensorType = Literal[
     "absolute-orientation",
     "accelerometer",
@@ -135,8 +145,10 @@ ScreenId = str
 
 
 class ScreenInfo(CDPModel):
-    """Screen information similar to the one returned by window.getScreenDetails() method,
-    see https://w3c.github.io/window-management/#screendetailed."""
+    """
+    Screen information similar to the one returned by window.getScreenDetails() method,
+    see https://w3c.github.io/window-management/#screendetailed.
+    """
 
     left: int
     top: int
@@ -156,5 +168,7 @@ class ScreenInfo(CDPModel):
     id: ScreenId
 
 
-# Enum of image types that can be disabled.
+"""
+Enum of image types that can be disabled.
+"""
 DisabledImageType = Literal["avif", "webp"]

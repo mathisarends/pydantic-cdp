@@ -1,20 +1,28 @@
 """Generated from CDP specification"""
-# Domain: CacheStorage
 
-from typing import Any, Literal
+from typing import Literal, TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
 
-# Unique identifier of the Cache object.
+if TYPE_CHECKING:
+    from pydantic_cpd.cdp import storage
+
+"""
+Unique identifier of the Cache object.
+"""
 CacheId = str
 
-# type of HTTP response cached
+"""
+type of HTTP response cached
+"""
 CachedResponseType = Literal[
     "basic", "cors", "default", "error", "opaqueResponse", "opaqueRedirect"
 ]
 
 
 class DataEntry(CDPModel):
-    """Data entry."""
+    """
+    Data entry.
+    """
 
     request_u_r_l: str
     request_method: str
@@ -27,7 +35,9 @@ class DataEntry(CDPModel):
 
 
 class Cache(CDPModel):
-    """Cache identifier."""
+    """
+    Cache identifier.
+    """
 
     cache_id: CacheId
     security_origin: str
@@ -42,6 +52,8 @@ class Header(CDPModel):
 
 
 class CachedResponse(CDPModel):
-    """Cached response"""
+    """
+    Cached response
+    """
 
     body: str

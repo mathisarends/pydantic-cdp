@@ -1,7 +1,6 @@
 """Generated command models from CDP specification"""
-# Domain: LayerTree Commands
 
-from typing import Any, Literal
+from typing import Any, TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
 
 from .types import *
@@ -10,7 +9,9 @@ from pydantic_cpd.cdp import dom
 
 
 class CompositingReasonsParams(CDPModel):
-    """Provides the reasons why the given layer was composited."""
+    """
+    Provides the reasons why the given layer was composited.
+    """
 
     layer_id: LayerId
 
@@ -21,7 +22,9 @@ class CompositingReasonsResult(CDPModel):
 
 
 class LoadSnapshotParams(CDPModel):
-    """Returns the snapshot identifier."""
+    """
+    Returns the snapshot identifier.
+    """
 
     tiles: list[PictureTile]
 
@@ -31,7 +34,9 @@ class LoadSnapshotResult(CDPModel):
 
 
 class MakeSnapshotParams(CDPModel):
-    """Returns the layer snapshot identifier."""
+    """
+    Returns the layer snapshot identifier.
+    """
 
     layer_id: LayerId
 
@@ -52,13 +57,17 @@ class ProfileSnapshotResult(CDPModel):
 
 
 class ReleaseSnapshotParams(CDPModel):
-    """Releases layer snapshot captured by the back-end."""
+    """
+    Releases layer snapshot captured by the back-end.
+    """
 
     snapshot_id: SnapshotId
 
 
 class ReplaySnapshotParams(CDPModel):
-    """Replays the layer snapshot and returns the resulting bitmap."""
+    """
+    Replays the layer snapshot and returns the resulting bitmap.
+    """
 
     snapshot_id: SnapshotId
     from_step: int | None = None
@@ -71,7 +80,9 @@ class ReplaySnapshotResult(CDPModel):
 
 
 class SnapshotCommandLogParams(CDPModel):
-    """Replays the layer snapshot and returns canvas log."""
+    """
+    Replays the layer snapshot and returns canvas log.
+    """
 
     snapshot_id: SnapshotId
 

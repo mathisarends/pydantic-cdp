@@ -1,14 +1,18 @@
 """Generated from CDP specification"""
-# Domain: ServiceWorker
 
-from typing import Any, Literal
+from typing import Literal, TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
+
+if TYPE_CHECKING:
+    from pydantic_cpd.cdp import target
 
 RegistrationID = str
 
 
 class ServiceWorkerRegistration(CDPModel):
-    """ServiceWorker registration."""
+    """
+    ServiceWorker registration.
+    """
 
     registration_id: RegistrationID
     scope_u_r_l: str
@@ -25,7 +29,9 @@ ServiceWorkerVersionStatus = Literal[
 
 
 class ServiceWorkerVersion(CDPModel):
-    """ServiceWorker version."""
+    """
+    ServiceWorker version.
+    """
 
     version_id: str
     registration_id: RegistrationID
@@ -34,13 +40,15 @@ class ServiceWorkerVersion(CDPModel):
     status: ServiceWorkerVersionStatus
     script_last_modified: float | None = None
     script_response_time: float | None = None
-    controlled_clients: list[Target.TargetID] | None = None
+    controlled_clients: list[target.TargetID] | None = None
     target_id: target.TargetID | None = None
     router_rules: str | None = None
 
 
 class ServiceWorkerErrorMessage(CDPModel):
-    """ServiceWorker error message."""
+    """
+    ServiceWorker error message.
+    """
 
     error_message: str
     registration_id: RegistrationID

@@ -1,49 +1,62 @@
 """Generated from CDP specification"""
-# Domain: Page
-# Actions and events related to the inspected page belong to the page domain.
 
-from typing import Any, Literal
+from typing import Literal, TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
 
-# Unique frame identifier.
+if TYPE_CHECKING:
+    from pydantic_cpd.cdp import network, runtime
+
+"""
+Unique frame identifier.
+"""
 FrameId = str
 
-# Indicates whether a frame has been identified as an ad.
+"""
+Indicates whether a frame has been identified as an ad.
+"""
 AdFrameType = Literal["none", "child", "root"]
 
 AdFrameExplanation = Literal["ParentIsAd", "CreatedByAdScript", "MatchedBlockingRule"]
 
 
 class AdFrameStatus(CDPModel):
-    """Indicates whether a frame has been identified as an ad and why."""
+    """
+    Indicates whether a frame has been identified as an ad and why.
+    """
 
     ad_frame_type: AdFrameType
     explanations: list[AdFrameExplanation] | None = None
 
 
 class AdScriptId(CDPModel):
-    """Identifies the script which caused a script or frame to be labelled as an
-    ad."""
+    """
+    Identifies the script which caused a script or frame to be labelled as an ad.
+    """
 
     script_id: runtime.ScriptId
     debugger_id: runtime.UniqueDebuggerId
 
 
 class AdScriptAncestry(CDPModel):
-    """Encapsulates the script ancestry and the root script filterlist rule that
-    caused the frame to be labelled as an ad. Only created when `ancestryChain`
-    is not empty."""
+    """
+    Encapsulates the script ancestry and the root script filterlist rule that caused
+    the frame to be labelled as an ad. Only created when `ancestryChain` is not empty.
+    """
 
     ancestry_chain: list[AdScriptId]
     root_script_filterlist_rule: str | None = None
 
 
-# Indicates whether the frame is a secure context and why it is the case.
+"""
+Indicates whether the frame is a secure context and why it is the case.
+"""
 SecureContextType = Literal[
     "Secure", "SecureLocalhost", "InsecureScheme", "InsecureAncestor"
 ]
 
-# Indicates whether the frame is cross-origin isolated and why it is the case.
+"""
+Indicates whether the frame is cross-origin isolated and why it is the case.
+"""
 CrossOriginIsolatedContextType = Literal[
     "Isolated", "NotIsolated", "NotIsolatedFeatureDisabled"
 ]
@@ -55,9 +68,11 @@ GatedAPIFeatures = Literal[
     "PerformanceProfile",
 ]
 
-# All Permissions Policy features. This enum should match the one defined in
-# services/network/public/cpp/permissions_policy/permissions_policy_features.json5.
-# LINT.IfChange(PermissionsPolicyFeature)
+"""
+All Permissions Policy features. This enum should match the one defined in
+services/network/public/cpp/permissions_policy/permissions_policy_features.json5.
+LINT.IfChange(PermissionsPolicyFeature)
+"""
 PermissionsPolicyFeature = Literal[
     "accelerometer",
     "all-screens-capture",
@@ -171,7 +186,9 @@ PermissionsPolicyFeature = Literal[
     "xr-spatial-tracking",
 ]
 
-# Reason for a permissions policy feature to be disabled.
+"""
+Reason for a permissions policy feature to be disabled.
+"""
 PermissionsPolicyBlockReason = Literal[
     "Header", "IframeAttribute", "InFencedFrameTree", "InIsolatedApp"
 ]
@@ -188,8 +205,10 @@ class PermissionsPolicyFeatureState(CDPModel):
     locator: PermissionsPolicyBlockLocator | None = None
 
 
-# Origin Trial(https://www.chromium.org/blink/origin-trials) support. Status for an
-# Origin Trial token.
+"""
+Origin Trial(https://www.chromium.org/blink/origin-trials) support. Status for an
+Origin Trial token.
+"""
 OriginTrialTokenStatus = Literal[
     "Success",
     "NotSupported",
@@ -205,7 +224,9 @@ OriginTrialTokenStatus = Literal[
     "UnknownTrial",
 ]
 
-# Status for an Origin Trial.
+"""
+Status for an Origin Trial.
+"""
 OriginTrialStatus = Literal[
     "Enabled", "ValidTokenNotProvided", "OSNotSupported", "TrialNotAllowed"
 ]
@@ -235,13 +256,17 @@ class OriginTrial(CDPModel):
 
 
 class SecurityOriginDetails(CDPModel):
-    """Additional information about the frame document's security origin."""
+    """
+    Additional information about the frame document's security origin.
+    """
 
     is_localhost: bool
 
 
 class Frame(CDPModel):
-    """Information about the Frame on the page."""
+    """
+    Information about the Frame on the page.
+    """
 
     id: FrameId
     parent_id: FrameId | None = None
@@ -261,7 +286,9 @@ class Frame(CDPModel):
 
 
 class FrameResource(CDPModel):
-    """Information about the Resource on the page."""
+    """
+    Information about the Resource on the page.
+    """
 
     url: str
     type: network.ResourceType
@@ -273,7 +300,9 @@ class FrameResource(CDPModel):
 
 
 class FrameResourceTree(CDPModel):
-    """Information about the Frame hierarchy along with their cached resources."""
+    """
+    Information about the Frame hierarchy along with their cached resources.
+    """
 
     frame: Frame
     child_frames: list[FrameResourceTree] | None = None
@@ -281,16 +310,22 @@ class FrameResourceTree(CDPModel):
 
 
 class FrameTree(CDPModel):
-    """Information about the Frame hierarchy."""
+    """
+    Information about the Frame hierarchy.
+    """
 
     frame: Frame
     child_frames: list[FrameTree] | None = None
 
 
-# Unique script identifier.
+"""
+Unique script identifier.
+"""
 ScriptIdentifier = str
 
-# Transition type.
+"""
+Transition type.
+"""
 TransitionType = Literal[
     "link",
     "typed",
@@ -309,7 +344,9 @@ TransitionType = Literal[
 
 
 class NavigationEntry(CDPModel):
-    """Navigation history entry."""
+    """
+    Navigation history entry.
+    """
 
     id: int
     url: str
@@ -319,7 +356,9 @@ class NavigationEntry(CDPModel):
 
 
 class ScreencastFrameMetadata(CDPModel):
-    """Screencast frame metadata."""
+    """
+    Screencast frame metadata.
+    """
 
     offset_top: float
     page_scale_factor: float
@@ -330,12 +369,16 @@ class ScreencastFrameMetadata(CDPModel):
     timestamp: network.TimeSinceEpoch | None = None
 
 
-# Javascript dialog type.
+"""
+Javascript dialog type.
+"""
 DialogType = Literal["alert", "confirm", "prompt", "beforeunload"]
 
 
 class AppManifestError(CDPModel):
-    """Error while paring app manifest."""
+    """
+    Error while paring app manifest.
+    """
 
     message: str
     critical: int
@@ -344,13 +387,17 @@ class AppManifestError(CDPModel):
 
 
 class AppManifestParsedProperties(CDPModel):
-    """Parsed app manifest properties."""
+    """
+    Parsed app manifest properties.
+    """
 
     scope: str
 
 
 class LayoutViewport(CDPModel):
-    """Layout viewport position and dimensions."""
+    """
+    Layout viewport position and dimensions.
+    """
 
     page_x: int
     page_y: int
@@ -359,7 +406,9 @@ class LayoutViewport(CDPModel):
 
 
 class VisualViewport(CDPModel):
-    """Visual viewport position, dimensions, and scale."""
+    """
+    Visual viewport position, dimensions, and scale.
+    """
 
     offset_x: float
     offset_y: float
@@ -372,7 +421,9 @@ class VisualViewport(CDPModel):
 
 
 class Viewport(CDPModel):
-    """Viewport for capturing screenshot."""
+    """
+    Viewport for capturing screenshot.
+    """
 
     x: float
     y: float
@@ -382,7 +433,9 @@ class Viewport(CDPModel):
 
 
 class FontFamilies(CDPModel):
-    """Generic font families collection."""
+    """
+    Generic font families collection.
+    """
 
     standard: str | None = None
     fixed: str | None = None
@@ -394,14 +447,18 @@ class FontFamilies(CDPModel):
 
 
 class ScriptFontFamilies(CDPModel):
-    """Font families collection for a script."""
+    """
+    Font families collection for a script.
+    """
 
     script: str
     font_families: FontFamilies
 
 
 class FontSizes(CDPModel):
-    """Default font sizes."""
+    """
+    Default font sizes.
+    """
 
     standard: int | None = None
     fixed: int | None = None
@@ -429,13 +486,17 @@ class InstallabilityErrorArgument(CDPModel):
 
 
 class InstallabilityError(CDPModel):
-    """The installability error"""
+    """
+    The installability error
+    """
 
     error_id: str
     error_arguments: list[InstallabilityErrorArgument]
 
 
-# The referring-policy used for the navigation.
+"""
+The referring-policy used for the navigation.
+"""
 ReferrerPolicy = Literal[
     "noReferrer",
     "noReferrerWhenDowngrade",
@@ -449,7 +510,9 @@ ReferrerPolicy = Literal[
 
 
 class CompilationCacheParams(CDPModel):
-    """Per-script compilation cache parameters for `Page.produceCompilationCache`"""
+    """
+    Per-script compilation cache parameters for `Page.produceCompilationCache`
+    """
 
     url: str
     eager: bool | None = None
@@ -469,7 +532,9 @@ class FileHandler(CDPModel):
 
 
 class ImageResource(CDPModel):
-    """The image definition used in both icon and screenshot."""
+    """
+    The image definition used in both icon and screenshot.
+    """
 
     url: str
     sizes: str | None = None
@@ -542,10 +607,14 @@ class WebAppManifest(CDPModel):
     theme_color: str | None = None
 
 
-# The type of a frameNavigated event.
+"""
+The type of a frameNavigated event.
+"""
 NavigationType = Literal["Navigation", "BackForwardCacheRestore"]
 
-# List of not restored reasons for back-forward cache.
+"""
+List of not restored reasons for back-forward cache.
+"""
 BackForwardCacheNotRestoredReason = Literal[
     "NotPrimaryMainFrame",
     "BackForwardCacheDisabled",
@@ -694,7 +763,9 @@ BackForwardCacheNotRestoredReason = Literal[
     "CacheLimitPrunedOnCriticalMemoryPressure",
 ]
 
-# Types of not restored reasons for back-forward cache.
+"""
+Types of not restored reasons for back-forward cache.
+"""
 BackForwardCacheNotRestoredReasonType = Literal[
     "SupportPending", "PageSupportNeeded", "Circumstantial"
 ]

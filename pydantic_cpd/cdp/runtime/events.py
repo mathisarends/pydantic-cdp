@@ -1,5 +1,4 @@
 """Generated event models from CDP specification"""
-# Domain: Runtime Events
 
 from typing import Any, Literal
 from pydantic_cpd.cdp.base import CDPModel
@@ -7,16 +6,20 @@ from pydantic_cpd.cdp.base import CDPModel
 from .types import *
 
 
-class BindingcalledEvent(CDPModel):
-    """Notification is issued every time when binding is called."""
+class BindingCalledEvent(CDPModel):
+    """
+    Notification is issued every time when binding is called.
+    """
 
     name: str
     payload: str
     execution_context_id: ExecutionContextId
 
 
-class ConsoleapicalledEvent(CDPModel):
-    """Issued when console API was called."""
+class ConsoleAPICalledEvent(CDPModel):
+    """
+    Issued when console API was called.
+    """
 
     type: Literal[
         "log",
@@ -45,42 +48,54 @@ class ConsoleapicalledEvent(CDPModel):
     context: str | None = None
 
 
-class ExceptionrevokedEvent(CDPModel):
-    """Issued when unhandled exception was revoked."""
+class ExceptionRevokedEvent(CDPModel):
+    """
+    Issued when unhandled exception was revoked.
+    """
 
     reason: str
     exception_id: int
 
 
-class ExceptionthrownEvent(CDPModel):
-    """Issued when exception was thrown and unhandled."""
+class ExceptionThrownEvent(CDPModel):
+    """
+    Issued when exception was thrown and unhandled.
+    """
 
     timestamp: Timestamp
     exception_details: ExceptionDetails
 
 
-class ExecutioncontextcreatedEvent(CDPModel):
-    """Issued when new execution context is created."""
+class ExecutionContextCreatedEvent(CDPModel):
+    """
+    Issued when new execution context is created.
+    """
 
     context: ExecutionContextDescription
 
 
-class ExecutioncontextdestroyedEvent(CDPModel):
-    """Issued when execution context is destroyed."""
+class ExecutionContextDestroyedEvent(CDPModel):
+    """
+    Issued when execution context is destroyed.
+    """
 
     execution_context_id: ExecutionContextId
     execution_context_unique_id: str
 
 
-class ExecutioncontextsclearedEvent(CDPModel):
-    """Issued when all executionContexts were cleared in browser"""
+class ExecutionContextsClearedEvent(CDPModel):
+    """
+    Issued when all executionContexts were cleared in browser
+    """
 
     pass
 
 
-class InspectrequestedEvent(CDPModel):
-    """Issued when object should be inspected (for example, as a result of inspect() command line API
-    call)."""
+class InspectRequestedEvent(CDPModel):
+    """
+    Issued when object should be inspected (for example, as a result of inspect()
+    command line API call).
+    """
 
     object: RemoteObject
     hints: dict[str, Any]

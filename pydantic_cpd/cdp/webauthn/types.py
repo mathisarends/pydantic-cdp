@@ -1,8 +1,6 @@
 """Generated from CDP specification"""
-# Domain: WebAuthn
-# This domain allows configuring virtual authenticators to test the WebAuthn API.
 
-from typing import Any, Literal
+from typing import Literal
 from pydantic_cpd.cdp.base import CDPModel
 
 AuthenticatorId = str

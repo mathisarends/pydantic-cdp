@@ -1,7 +1,5 @@
 """Generated command models from CDP specification"""
-# Domain: Profiler Commands
 
-from typing import Any, Literal
 from pydantic_cpd.cdp.base import CDPModel
 
 from .types import *
@@ -12,15 +10,20 @@ class GetBestEffortCoverageResult(CDPModel):
 
 
 class SetSamplingIntervalParams(CDPModel):
-    """Changes CPU profiler sampling interval. Must be called before CPU profiles recording started."""
+    """
+    Changes CPU profiler sampling interval. Must be called before CPU profiles
+    recording started.
+    """
 
     interval: int
 
 
 class StartPreciseCoverageParams(CDPModel):
-    """Enable precise code coverage. Coverage data for JavaScript executed before enabling precise code
-    coverage may be incomplete. Enabling prevents running optimized code and resets execution
-    counters."""
+    """
+    Enable precise code coverage. Coverage data for JavaScript executed before enabling
+    precise code coverage may be incomplete. Enabling prevents running optimized code
+    and resets execution counters.
+    """
 
     call_count: bool | None = None
     detailed: bool | None = None

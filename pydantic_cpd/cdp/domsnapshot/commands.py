@@ -1,17 +1,17 @@
 """Generated command models from CDP specification"""
-# Domain: DOMSnapshot Commands
 
-from typing import Any, Literal
 from pydantic_cpd.cdp.base import CDPModel
 
 from .types import *
 
 
 class GetSnapshotParams(CDPModel):
-    """Returns a document snapshot, including the full DOM tree of the root node (including iframes,
-    template contents, and imported documents) in a flattened array, as well as layout and
-    white-listed computed style information for the nodes. Shadow DOM in the returned DOM tree is
-    flattened."""
+    """
+    Returns a document snapshot, including the full DOM tree of the root node
+    (including iframes, template contents, and imported documents) in a flattened array,
+    as well as layout and white-listed computed style information for the nodes. Shadow
+    DOM in the returned DOM tree is flattened.
+    """
 
     computed_style_whitelist: list[str]
     include_event_listeners: bool | None = None
@@ -26,10 +26,12 @@ class GetSnapshotResult(CDPModel):
 
 
 class CaptureSnapshotParams(CDPModel):
-    """Returns a document snapshot, including the full DOM tree of the root node (including iframes,
-    template contents, and imported documents) in a flattened array, as well as layout and
-    white-listed computed style information for the nodes. Shadow DOM in the returned DOM tree is
-    flattened."""
+    """
+    Returns a document snapshot, including the full DOM tree of the root node
+    (including iframes, template contents, and imported documents) in a flattened array,
+    as well as layout and white-listed computed style information for the nodes. Shadow
+    DOM in the returned DOM tree is flattened.
+    """
 
     computed_styles: list[str]
     include_paint_order: bool | None = None

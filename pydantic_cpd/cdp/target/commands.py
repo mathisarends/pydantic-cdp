@@ -1,7 +1,6 @@
 """Generated command models from CDP specification"""
-# Domain: Target Commands
 
-from typing import Any, Literal
+from typing import TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
 
 from .types import *
@@ -10,13 +9,17 @@ from pydantic_cpd.cdp import browser
 
 
 class ActivateTargetParams(CDPModel):
-    """Activates (focuses) the target."""
+    """
+    Activates (focuses) the target.
+    """
 
     target_id: TargetID
 
 
 class AttachToTargetParams(CDPModel):
-    """Attaches to the target with given id."""
+    """
+    Attaches to the target with given id.
+    """
 
     target_id: TargetID
     flatten: bool | None = None
@@ -31,7 +34,9 @@ class AttachToBrowserTargetResult(CDPModel):
 
 
 class CloseTargetParams(CDPModel):
-    """Closes the target. If the target is a page that gets closed too."""
+    """
+    Closes the target. If the target is a page that gets closed too.
+    """
 
     target_id: TargetID
 
@@ -41,14 +46,14 @@ class CloseTargetResult(CDPModel):
 
 
 class ExposeDevToolsProtocolParams(CDPModel):
-    """Inject object to the target's main frame that provides a communication
-    channel with browser target.
-
-    Injected object will be available as `window[bindingName]`.
-
-    The object has the following API:
-    - `binding.send(json)` - a method to send messages over the remote debugging protocol
-    - `binding.onmessage = json => handleMessage(json)` - a callback that will be called for the protocol notifications and command responses."""
+    """
+    Inject object to the target's main frame that provides a communication channel with
+    browser target. Injected object will be available as `window[bindingName]`. The
+    object has the following API: - `binding.send(json)` - a method to send messages
+    over the remote debugging protocol - `binding.onmessage = json =>
+    handleMessage(json)` - a callback that will be called for the protocol notifications
+    and command responses.
+    """
 
     target_id: TargetID
     binding_name: str | None = None
@@ -56,8 +61,10 @@ class ExposeDevToolsProtocolParams(CDPModel):
 
 
 class CreateBrowserContextParams(CDPModel):
-    """Creates a new empty BrowserContext. Similar to an incognito profile but you can have more than
-    one."""
+    """
+    Creates a new empty BrowserContext. Similar to an incognito profile but you can
+    have more than one.
+    """
 
     dispose_on_detach: bool | None = None
     proxy_server: str | None = None
@@ -70,12 +77,14 @@ class CreateBrowserContextResult(CDPModel):
 
 
 class GetBrowserContextsResult(CDPModel):
-    browser_context_ids: list[Browser.BrowserContextID]
+    browser_context_ids: list[browser.BrowserContextID]
     default_browser_context_id: browser.BrowserContextID | None = None
 
 
 class CreateTargetParams(CDPModel):
-    """Creates a new page."""
+    """
+    Creates a new page.
+    """
 
     url: str
     left: int | None = None
@@ -96,21 +105,27 @@ class CreateTargetResult(CDPModel):
 
 
 class DetachFromTargetParams(CDPModel):
-    """Detaches session with given id."""
+    """
+    Detaches session with given id.
+    """
 
     session_id: SessionID | None = None
     target_id: TargetID | None = None
 
 
 class DisposeBrowserContextParams(CDPModel):
-    """Deletes a BrowserContext. All the belonging pages will be closed without calling their
-    beforeunload hooks."""
+    """
+    Deletes a BrowserContext. All the belonging pages will be closed without calling
+    their beforeunload hooks.
+    """
 
     browser_context_id: browser.BrowserContextID
 
 
 class GetTargetInfoParams(CDPModel):
-    """Returns information about a target."""
+    """
+    Returns information about a target.
+    """
 
     target_id: TargetID | None = None
 
@@ -120,7 +135,9 @@ class GetTargetInfoResult(CDPModel):
 
 
 class GetTargetsParams(CDPModel):
-    """Retrieves a list of available targets."""
+    """
+    Retrieves a list of available targets.
+    """
 
     filter: TargetFilter | None = None
 
@@ -130,9 +147,10 @@ class GetTargetsResult(CDPModel):
 
 
 class SendMessageToTargetParams(CDPModel):
-    """Sends protocol message over session with given id.
-    Consider using flat mode instead; see commands attachToTarget, setAutoAttach,
-    and crbug.com/991325."""
+    """
+    Sends protocol message over session with given id. Consider using flat mode
+    instead; see commands attachToTarget, setAutoAttach, and crbug.com/991325.
+    """
 
     message: str
     session_id: SessionID | None = None
@@ -140,14 +158,15 @@ class SendMessageToTargetParams(CDPModel):
 
 
 class SetAutoAttachParams(CDPModel):
-    """Controls whether to automatically attach to new targets which are considered
-    to be directly related to this one (for example, iframes or workers).
-    When turned on, attaches to all existing related targets as well. When turned off,
-    automatically detaches from all currently attached targets.
-    This also clears all targets added by `autoAttachRelated` from the list of targets to watch
-    for creation of related targets.
-    You might want to call this recursively for auto-attached targets to attach
-    to all available targets."""
+    """
+    Controls whether to automatically attach to new targets which are considered to be
+    directly related to this one (for example, iframes or workers). When turned on,
+    attaches to all existing related targets as well. When turned off, automatically
+    detaches from all currently attached targets. This also clears all targets added by
+    `autoAttachRelated` from the list of targets to watch for creation of related
+    targets. You might want to call this recursively for auto-attached targets to attach
+    to all available targets.
+    """
 
     auto_attach: bool
     wait_for_debugger_on_start: bool
@@ -156,11 +175,13 @@ class SetAutoAttachParams(CDPModel):
 
 
 class AutoAttachRelatedParams(CDPModel):
-    """Adds the specified target to the list of targets that will be monitored for any related target
-    creation (such as child frames, child workers and new versions of service worker) and reported
-    through `attachedToTarget`. The specified target is also auto-attached.
-    This cancels the effect of any previous `setAutoAttach` and is also cancelled by subsequent
-    `setAutoAttach`. Only available at the Browser target."""
+    """
+    Adds the specified target to the list of targets that will be monitored for any
+    related target creation (such as child frames, child workers and new versions of
+    service worker) and reported through `attachedToTarget`. The specified target is
+    also auto-attached. This cancels the effect of any previous `setAutoAttach` and is
+    also cancelled by subsequent `setAutoAttach`. Only available at the Browser target.
+    """
 
     target_id: TargetID
     wait_for_debugger_on_start: bool
@@ -168,23 +189,28 @@ class AutoAttachRelatedParams(CDPModel):
 
 
 class SetDiscoverTargetsParams(CDPModel):
-    """Controls whether to discover available targets and notify via
-    `targetCreated/targetInfoChanged/targetDestroyed` events."""
+    """
+    Controls whether to discover available targets and notify via
+    `targetCreated/targetInfoChanged/targetDestroyed` events.
+    """
 
     discover: bool
     filter: TargetFilter | None = None
 
 
 class SetRemoteLocationsParams(CDPModel):
-    """Enables target discovery for the specified locations, when `setDiscoverTargets` was set to
-    `true`."""
+    """
+    Enables target discovery for the specified locations, when `setDiscoverTargets` was
+    set to `true`.
+    """
 
     locations: list[RemoteLocation]
 
 
 class GetDevToolsTargetParams(CDPModel):
-    """Gets the targetId of the DevTools page target opened for the given target
-    (if any)."""
+    """
+    Gets the targetId of the DevTools page target opened for the given target (if any).
+    """
 
     target_id: TargetID
 
@@ -194,7 +220,9 @@ class GetDevToolsTargetResult(CDPModel):
 
 
 class OpenDevToolsParams(CDPModel):
-    """Opens a DevTools window for the target."""
+    """
+    Opens a DevTools window for the target.
+    """
 
     target_id: TargetID
     panel_id: str | None = None

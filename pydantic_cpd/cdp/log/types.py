@@ -1,13 +1,16 @@
 """Generated from CDP specification"""
-# Domain: Log
-# Provides access to log entries.
 
-from typing import Any, Literal
+from typing import Literal, TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
+
+if TYPE_CHECKING:
+    from pydantic_cpd.cdp import network, runtime
 
 
 class LogEntry(CDPModel):
-    """Log entry."""
+    """
+    Log entry.
+    """
 
     source: Literal[
         "xml",
@@ -33,11 +36,13 @@ class LogEntry(CDPModel):
     stack_trace: runtime.StackTrace | None = None
     network_request_id: network.RequestId | None = None
     worker_id: str | None = None
-    args: list[Runtime.RemoteObject] | None = None
+    args: list[runtime.RemoteObject] | None = None
 
 
 class ViolationSetting(CDPModel):
-    """Violation configuration setting."""
+    """
+    Violation configuration setting.
+    """
 
     name: Literal[
         "longTask",

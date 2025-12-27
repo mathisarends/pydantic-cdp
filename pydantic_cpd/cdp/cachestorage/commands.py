@@ -1,7 +1,6 @@
 """Generated command models from CDP specification"""
-# Domain: CacheStorage Commands
 
-from typing import Any, Literal
+from typing import TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
 
 from .types import *
@@ -10,20 +9,26 @@ from pydantic_cpd.cdp import storage
 
 
 class DeleteCacheParams(CDPModel):
-    """Deletes a cache."""
+    """
+    Deletes a cache.
+    """
 
     cache_id: CacheId
 
 
 class DeleteEntryParams(CDPModel):
-    """Deletes a cache entry."""
+    """
+    Deletes a cache entry.
+    """
 
     cache_id: CacheId
     request: str
 
 
 class RequestCacheNamesParams(CDPModel):
-    """Requests cache names."""
+    """
+    Requests cache names.
+    """
 
     security_origin: str | None = None
     storage_key: str | None = None
@@ -35,7 +40,9 @@ class RequestCacheNamesResult(CDPModel):
 
 
 class RequestCachedResponseParams(CDPModel):
-    """Fetches cache entry."""
+    """
+    Fetches cache entry.
+    """
 
     cache_id: CacheId
     request_u_r_l: str
@@ -47,7 +54,9 @@ class RequestCachedResponseResult(CDPModel):
 
 
 class RequestEntriesParams(CDPModel):
-    """Requests data from cache."""
+    """
+    Requests data from cache.
+    """
 
     cache_id: CacheId
     skip_count: int | None = None

@@ -1,13 +1,14 @@
 """Generated from CDP specification"""
-# Domain: Network
-# Network domain allows tracking network activities of the page. It exposes information
-# about http, file, data and other requests and responses, their headers, bodies,
-# timing, etc.
 
-from typing import Any, Literal
+from typing import Any, Literal, TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
 
-# Resource type as it was perceived by the rendering engine.
+if TYPE_CHECKING:
+    from pydantic_cpd.cdp import io, network, runtime, security
+
+"""
+Resource type as it was perceived by the rendering engine.
+"""
 ResourceType = Literal[
     "Document",
     "Stylesheet",
@@ -30,17 +31,25 @@ ResourceType = Literal[
     "Other",
 ]
 
-# Unique loader identifier.
+"""
+Unique loader identifier.
+"""
 LoaderId = str
 
-# Unique network request identifier. Note that this does not identify individual HTTP
-# requests that are part of a network request.
+"""
+Unique network request identifier. Note that this does not identify individual HTTP
+requests that are part of a network request.
+"""
 RequestId = str
 
-# Unique intercepted request identifier.
+"""
+Unique intercepted request identifier.
+"""
 InterceptionId = str
 
-# Network level fetch failure reason.
+"""
+Network level fetch failure reason.
+"""
 ErrorReason = Literal[
     "Failed",
     "Aborted",
@@ -58,16 +67,24 @@ ErrorReason = Literal[
     "BlockedByResponse",
 ]
 
-# UTC time in seconds, counted from January 1, 1970.
+"""
+UTC time in seconds, counted from January 1, 1970.
+"""
 TimeSinceEpoch = float
 
-# Monotonically increasing time in seconds since an arbitrary point in the past.
+"""
+Monotonically increasing time in seconds since an arbitrary point in the past.
+"""
 MonotonicTime = float
 
-# Request / response headers as keys / values of JSON object.
+"""
+Request / response headers as keys / values of JSON object.
+"""
 Headers = dict[str, Any]
 
-# The underlying connection technology that the browser is supposedly using.
+"""
+The underlying connection technology that the browser is supposedly using.
+"""
 ConnectionType = Literal[
     "none",
     "cellular2g",
@@ -80,22 +97,30 @@ ConnectionType = Literal[
     "other",
 ]
 
-# Represents the cookie's 'SameSite' status:
-# https://tools.ietf.org/html/draft-west-first-party-cookies
+"""
+Represents the cookie's 'SameSite' status:
+https://tools.ietf.org/html/draft-west-first-party-cookies
+"""
 CookieSameSite = Literal["Strict", "Lax", "None"]
 
-# Represents the cookie's 'Priority' status:
-# https://tools.ietf.org/html/draft-west-cookie-priority-00
+"""
+Represents the cookie's 'Priority' status:
+https://tools.ietf.org/html/draft-west-cookie-priority-00
+"""
 CookiePriority = Literal["Low", "Medium", "High"]
 
-# Represents the source scheme of the origin that originally set the cookie. A value of
-# "Unset" allows protocol clients to emulate legacy cookie scope for the scheme. This
-# is a temporary ability and it will be removed in the future.
+"""
+Represents the source scheme of the origin that originally set the cookie. A value of
+"Unset" allows protocol clients to emulate legacy cookie scope for the scheme. This is a
+temporary ability and it will be removed in the future.
+"""
 CookieSourceScheme = Literal["Unset", "NonSecure", "Secure"]
 
 
 class ResourceTiming(CDPModel):
-    """Timing information for the request."""
+    """
+    Timing information for the request.
+    """
 
     request_time: float
     proxy_start: float
@@ -120,10 +145,14 @@ class ResourceTiming(CDPModel):
     receive_headers_end: float
 
 
-# Loading priority of a resource request.
+"""
+Loading priority of a resource request.
+"""
 ResourcePriority = Literal["VeryLow", "Low", "Medium", "High", "VeryHigh"]
 
-# The render blocking behavior of a resource request.
+"""
+The render blocking behavior of a resource request.
+"""
 RenderBlockingBehavior = Literal[
     "Blocking",
     "InBodyParserBlocking",
@@ -134,13 +163,17 @@ RenderBlockingBehavior = Literal[
 
 
 class PostDataEntry(CDPModel):
-    """Post data entry for HTTP request"""
+    """
+    Post data entry for HTTP request
+    """
 
     bytes: str | None = None
 
 
 class Request(CDPModel):
-    """HTTP request data."""
+    """
+    HTTP request data.
+    """
 
     url: str
     url_fragment: str | None = None
@@ -168,7 +201,9 @@ class Request(CDPModel):
 
 
 class SignedCertificateTimestamp(CDPModel):
-    """Details of a signed certificate timestamp (SCT)."""
+    """
+    Details of a signed certificate timestamp (SCT).
+    """
 
     status: str
     origin: str
@@ -181,7 +216,9 @@ class SignedCertificateTimestamp(CDPModel):
 
 
 class SecurityDetails(CDPModel):
-    """Security details about a request."""
+    """
+    Security details about a request.
+    """
 
     protocol: str
     key_exchange: str
@@ -200,10 +237,14 @@ class SecurityDetails(CDPModel):
     encrypted_client_hello: bool
 
 
-# Whether the request complied with Certificate Transparency policy.
+"""
+Whether the request complied with Certificate Transparency policy.
+"""
 CertificateTransparencyCompliance = Literal["unknown", "not-compliant", "compliant"]
 
-# The reason why request was blocked.
+"""
+The reason why request was blocked.
+"""
 BlockedReason = Literal[
     "other",
     "csp",
@@ -223,7 +264,9 @@ BlockedReason = Literal[
     "sri-message-signature-mismatch",
 ]
 
-# The reason why request was blocked.
+"""
+The reason why request was blocked.
+"""
 CorsError = Literal[
     "DisallowedByMode",
     "InvalidResponse",
@@ -268,16 +311,20 @@ class CorsErrorStatus(CDPModel):
     failed_parameter: str
 
 
-# Source of serviceworker response.
+"""
+Source of serviceworker response.
+"""
 ServiceWorkerResponseSource = Literal[
     "cache-storage", "http-cache", "fallback-code", "network"
 ]
 
 
 class TrustTokenParams(CDPModel):
-    """Determines what type of Trust Token operation is executed and
-    depending on the type, some additional parameters. The values
-    are specified in third_party/blink/renderer/core/fetch/trust_token.idl."""
+    """
+    Determines what type of Trust Token operation is executed and depending on the
+    type, some additional parameters. The values are specified in
+    third_party/blink/renderer/core/fetch/trust_token.idl.
+    """
 
     operation: TrustTokenOperationType
     refresh_policy: Literal["UseCached", "Refresh"]
@@ -286,7 +333,9 @@ class TrustTokenParams(CDPModel):
 
 TrustTokenOperationType = Literal["Issuance", "Redemption", "Signing"]
 
-# The reason why Chrome uses a specific transport protocol for HTTP semantics.
+"""
+The reason why Chrome uses a specific transport protocol for HTTP semantics.
+"""
 AlternateProtocolUsage = Literal[
     "alternativeJobWonWithoutRace",
     "alternativeJobWonRace",
@@ -298,7 +347,9 @@ AlternateProtocolUsage = Literal[
     "unspecifiedReason",
 ]
 
-# Source of service worker router.
+"""
+Source of service worker router.
+"""
 ServiceWorkerRouterSource = Literal[
     "network",
     "cache",
@@ -315,7 +366,9 @@ class ServiceWorkerRouterInfo(CDPModel):
 
 
 class Response(CDPModel):
-    """HTTP response data."""
+    """
+    HTTP response data.
+    """
 
     url: str
     status: int
@@ -347,13 +400,17 @@ class Response(CDPModel):
 
 
 class WebSocketRequest(CDPModel):
-    """WebSocket request data."""
+    """
+    WebSocket request data.
+    """
 
     headers: Headers
 
 
 class WebSocketResponse(CDPModel):
-    """WebSocket response data."""
+    """
+    WebSocket response data.
+    """
 
     status: int
     status_text: str
@@ -364,7 +421,10 @@ class WebSocketResponse(CDPModel):
 
 
 class WebSocketFrame(CDPModel):
-    """WebSocket message data. This represents an entire WebSocket message, not just a fragmented frame as the name suggests."""
+    """
+    WebSocket message data. This represents an entire WebSocket message, not just a
+    fragmented frame as the name suggests.
+    """
 
     opcode: float
     mask: bool
@@ -372,7 +432,9 @@ class WebSocketFrame(CDPModel):
 
 
 class CachedResource(CDPModel):
-    """Information about the cached resource."""
+    """
+    Information about the cached resource.
+    """
 
     url: str
     type: ResourceType
@@ -381,7 +443,9 @@ class CachedResource(CDPModel):
 
 
 class Initiator(CDPModel):
-    """Information about the request initiator."""
+    """
+    Information about the request initiator.
+    """
 
     type: Literal[
         "parser", "script", "preload", "SignedExchange", "preflight", "FedCM", "other"
@@ -394,15 +458,20 @@ class Initiator(CDPModel):
 
 
 class CookiePartitionKey(CDPModel):
-    """cookiePartitionKey object
-    The representation of the components of the key that are created by the cookiePartitionKey class contained in net/cookies/cookie_partition_key.h."""
+    """
+    cookiePartitionKey object The representation of the components of the key that are
+    created by the cookiePartitionKey class contained in
+    net/cookies/cookie_partition_key.h.
+    """
 
     top_level_site: str
     has_cross_site_ancestor: bool
 
 
 class Cookie(CDPModel):
-    """Cookie object"""
+    """
+    Cookie object
+    """
 
     name: str
     value: str
@@ -422,7 +491,9 @@ class Cookie(CDPModel):
     partition_key_opaque: bool | None = None
 
 
-# Types of reasons why a cookie may not be stored from a response.
+"""
+Types of reasons why a cookie may not be stored from a response.
+"""
 SetCookieBlockedReason = Literal[
     "SecureOnly",
     "SameSiteStrict",
@@ -448,7 +519,9 @@ SetCookieBlockedReason = Literal[
     "NoCookieContent",
 ]
 
-# Types of reasons why a cookie may not be sent with a request.
+"""
+Types of reasons why a cookie may not be sent with a request.
+"""
 CookieBlockedReason = Literal[
     "SecureOnly",
     "NotOnPath",
@@ -471,8 +544,10 @@ CookieBlockedReason = Literal[
     "AnonymousContext",
 ]
 
-# Types of reasons why a cookie should have been blocked by 3PCD but is exempted for
-# the request.
+"""
+Types of reasons why a cookie should have been blocked by 3PCD but is exempted for the
+request.
+"""
 CookieExemptionReason = Literal[
     "None",
     "UserSetting",
@@ -489,7 +564,9 @@ CookieExemptionReason = Literal[
 
 
 class BlockedSetCookieWithReason(CDPModel):
-    """A cookie which was not stored from a response with the corresponding reason."""
+    """
+    A cookie which was not stored from a response with the corresponding reason.
+    """
 
     blocked_reasons: list[SetCookieBlockedReason]
     cookie_line: str
@@ -497,8 +574,11 @@ class BlockedSetCookieWithReason(CDPModel):
 
 
 class ExemptedSetCookieWithReason(CDPModel):
-    """A cookie should have been blocked by 3PCD but is exempted and stored from a response with the
-    corresponding reason. A cookie could only have at most one exemption reason."""
+    """
+    A cookie should have been blocked by 3PCD but is exempted and stored from a
+    response with the corresponding reason. A cookie could only have at most one
+    exemption reason.
+    """
 
     exemption_reason: CookieExemptionReason
     cookie_line: str
@@ -506,8 +586,10 @@ class ExemptedSetCookieWithReason(CDPModel):
 
 
 class AssociatedCookie(CDPModel):
-    """A cookie associated with the request which may or may not be sent with it.
-    Includes the cookies itself and reasons for blocking or exemption."""
+    """
+    A cookie associated with the request which may or may not be sent with it. Includes
+    the cookies itself and reasons for blocking or exemption.
+    """
 
     cookie: Cookie
     blocked_reasons: list[CookieBlockedReason]
@@ -515,7 +597,9 @@ class AssociatedCookie(CDPModel):
 
 
 class CookieParam(CDPModel):
-    """Cookie parameter object"""
+    """
+    Cookie parameter object
+    """
 
     name: str
     value: str
@@ -534,7 +618,9 @@ class CookieParam(CDPModel):
 
 
 class AuthChallenge(CDPModel):
-    """Authorization challenge for HTTP status code 401 or 407."""
+    """
+    Authorization challenge for HTTP status code 401 or 407.
+    """
 
     source: Literal["Server", "Proxy"] | None = None
     origin: str
@@ -543,20 +629,26 @@ class AuthChallenge(CDPModel):
 
 
 class AuthChallengeResponse(CDPModel):
-    """Response to an AuthChallenge."""
+    """
+    Response to an AuthChallenge.
+    """
 
     response: Literal["Default", "CancelAuth", "ProvideCredentials"]
     username: str | None = None
     password: str | None = None
 
 
-# Stages of the interception to begin intercepting. Request will intercept before the
-# request is sent. Response will intercept after the response is received.
+"""
+Stages of the interception to begin intercepting. Request will intercept before the
+request is sent. Response will intercept after the response is received.
+"""
 InterceptionStage = Literal["Request", "HeadersReceived"]
 
 
 class RequestPattern(CDPModel):
-    """Request pattern for interception."""
+    """
+    Request pattern for interception.
+    """
 
     url_pattern: str | None = None
     resource_type: ResourceType | None = None
@@ -564,8 +656,10 @@ class RequestPattern(CDPModel):
 
 
 class SignedExchangeSignature(CDPModel):
-    """Information about a signed exchange signature.
-    https://wicg.github.io/webpackage/draft-yasskin-httpbis-origin-signed-exchanges-impl.html#rfc.section.3.1"""
+    """
+    Information about a signed exchange signature.
+    https://wicg.github.io/webpackage/draft-yasskin-httpbis-origin-signed-exchanges-impl.html#rfc.section.3.1
+    """
 
     label: str
     signature: str
@@ -579,8 +673,10 @@ class SignedExchangeSignature(CDPModel):
 
 
 class SignedExchangeHeader(CDPModel):
-    """Information about a signed exchange header.
-    https://wicg.github.io/webpackage/draft-yasskin-httpbis-origin-signed-exchanges-impl.html#cbor-representation"""
+    """
+    Information about a signed exchange header.
+    https://wicg.github.io/webpackage/draft-yasskin-httpbis-origin-signed-exchanges-impl.html#cbor-representation
+    """
 
     request_url: str
     response_code: int
@@ -589,7 +685,9 @@ class SignedExchangeHeader(CDPModel):
     header_integrity: str
 
 
-# Field type for a signed exchange related error.
+"""
+Field type for a signed exchange related error.
+"""
 SignedExchangeErrorField = Literal[
     "signatureSig",
     "signatureIntegrity",
@@ -601,7 +699,9 @@ SignedExchangeErrorField = Literal[
 
 
 class SignedExchangeError(CDPModel):
-    """Information about a signed exchange response."""
+    """
+    Information about a signed exchange response.
+    """
 
     message: str
     signature_index: int | None = None
@@ -609,7 +709,9 @@ class SignedExchangeError(CDPModel):
 
 
 class SignedExchangeInfo(CDPModel):
-    """Information about a signed exchange response."""
+    """
+    Information about a signed exchange response.
+    """
 
     outer_response: Response
     has_extra_info: bool
@@ -618,7 +720,9 @@ class SignedExchangeInfo(CDPModel):
     errors: list[SignedExchangeError] | None = None
 
 
-# List of content encodings supported by the backend.
+"""
+List of content encodings supported by the backend.
+"""
 ContentEncoding = Literal["deflate", "gzip", "br", "zstd"]
 
 
@@ -732,14 +836,18 @@ class SecurityIsolationStatus(CDPModel):
     csp: list[ContentSecurityPolicyStatus] | None = None
 
 
-# The status of a Reporting API report.
+"""
+The status of a Reporting API report.
+"""
 ReportStatus = Literal["Queued", "Pending", "MarkedForRemoval", "Success"]
 
 ReportId = str
 
 
 class ReportingApiReport(CDPModel):
-    """An object representing a report generated by the Reporting API."""
+    """
+    An object representing a report generated by the Reporting API.
+    """
 
     id: ReportId
     initiator_url: str
@@ -758,7 +866,9 @@ class ReportingApiEndpoint(CDPModel):
 
 
 class LoadNetworkResourcePageResult(CDPModel):
-    """An object providing the result of a network resource load."""
+    """
+    An object providing the result of a network resource load.
+    """
 
     success: bool
     net_error: float | None = None
@@ -769,8 +879,10 @@ class LoadNetworkResourcePageResult(CDPModel):
 
 
 class LoadNetworkResourceOptions(CDPModel):
-    """An options object that may be extended later to better support CORS,
-    CORB and streaming."""
+    """
+    An options object that may be extended later to better support CORS, CORB and
+    streaming.
+    """
 
     disable_cache: bool
     include_credentials: bool

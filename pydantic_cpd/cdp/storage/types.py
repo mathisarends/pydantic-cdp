@@ -1,12 +1,16 @@
 """Generated from CDP specification"""
-# Domain: Storage
 
-from typing import Any, Literal
+from typing import Literal, TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
+
+if TYPE_CHECKING:
+    from pydantic_cpd.cdp import network, target
 
 SerializedStorageKey = str
 
-# Enum of possible storage types.
+"""
+Enum of possible storage types.
+"""
 StorageType = Literal[
     "cookies",
     "file_systems",
@@ -25,24 +29,32 @@ StorageType = Literal[
 
 
 class UsageForType(CDPModel):
-    """Usage for a storage type."""
+    """
+    Usage for a storage type.
+    """
 
     storage_type: StorageType
     usage: float
 
 
 class TrustTokens(CDPModel):
-    """Pair of issuer origin and number of available (signed, but not used) Trust
-    Tokens from that issuer."""
+    """
+    Pair of issuer origin and number of available (signed, but not used) Trust Tokens
+    from that issuer.
+    """
 
     issuer_origin: str
     count: float
 
 
-# Protected audience interest group auction identifier.
+"""
+Protected audience interest group auction identifier.
+"""
 InterestGroupAuctionId = str
 
-# Enum of interest group access types.
+"""
+Enum of interest group access types.
+"""
 InterestGroupAccessType = Literal[
     "join",
     "leave",
@@ -57,20 +69,28 @@ InterestGroupAccessType = Literal[
     "clear",
 ]
 
-# Enum of auction events.
+"""
+Enum of auction events.
+"""
 InterestGroupAuctionEventType = Literal["started", "configResolved"]
 
-# Enum of network fetches auctions can do.
+"""
+Enum of network fetches auctions can do.
+"""
 InterestGroupAuctionFetchType = Literal[
     "bidderJs", "bidderWasm", "sellerJs", "bidderTrustedSignals", "sellerTrustedSignals"
 ]
 
-# Enum of shared storage access scopes.
+"""
+Enum of shared storage access scopes.
+"""
 SharedStorageAccessScope = Literal[
     "window", "sharedStorageWorklet", "protectedAudienceWorklet", "header"
 ]
 
-# Enum of shared storage access methods.
+"""
+Enum of shared storage access methods.
+"""
 SharedStorageAccessMethod = Literal[
     "addModule",
     "createWorklet",
@@ -91,14 +111,18 @@ SharedStorageAccessMethod = Literal[
 
 
 class SharedStorageEntry(CDPModel):
-    """Struct for a single key-value pair in an origin's shared storage."""
+    """
+    Struct for a single key-value pair in an origin's shared storage.
+    """
 
     key: str
     value: str
 
 
 class SharedStorageMetadata(CDPModel):
-    """Details for an origin's shared storage."""
+    """
+    Details for an origin's shared storage.
+    """
 
     creation_time: network.TimeSinceEpoch
     length: int
@@ -107,8 +131,10 @@ class SharedStorageMetadata(CDPModel):
 
 
 class SharedStoragePrivateAggregationConfig(CDPModel):
-    """Represents a dictionary object passed in as privateAggregationConfig to
-    run or selectURL."""
+    """
+    Represents a dictionary object passed in as privateAggregationConfig to run or
+    selectURL.
+    """
 
     aggregation_coordinator_origin: str | None = None
     context_id: str | None = None
@@ -117,22 +143,28 @@ class SharedStoragePrivateAggregationConfig(CDPModel):
 
 
 class SharedStorageReportingMetadata(CDPModel):
-    """Pair of reporting metadata details for a candidate URL for `selectURL()`."""
+    """
+    Pair of reporting metadata details for a candidate URL for `selectURL()`.
+    """
 
     event_type: str
     reporting_url: str
 
 
 class SharedStorageUrlWithMetadata(CDPModel):
-    """Bundles a candidate URL with its reporting metadata."""
+    """
+    Bundles a candidate URL with its reporting metadata.
+    """
 
     url: str
     reporting_metadata: list[SharedStorageReportingMetadata]
 
 
 class SharedStorageAccessParams(CDPModel):
-    """Bundles the parameters for shared storage access events whose
-    presence/absence can vary according to SharedStorageAccessType."""
+    """
+    Bundles the parameters for shared storage access events whose presence/absence can
+    vary according to SharedStorageAccessType.
+    """
 
     script_source_url: str | None = None
     data_origin: str | None = None
@@ -379,7 +411,9 @@ AttributionReportingReportResult = Literal[
 
 
 class RelatedWebsiteSet(CDPModel):
-    """A single Related Website Set object."""
+    """
+    A single Related Website Set object.
+    """
 
     primary_sites: list[str]
     associated_sites: list[str]

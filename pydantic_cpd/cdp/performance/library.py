@@ -1,5 +1,4 @@
 """Generated client library from CDP specification"""
-# Domain: Performance Client
 
 from __future__ import annotations
 
@@ -16,13 +15,14 @@ from .commands import (
 
 
 class PerformanceClient:
-    """CDP Performance domain client."""
+    """
+    CDP Performance domain client.
+    """
 
     def __init__(self, client: CDPClient) -> None:
         self._client = client
 
     async def disable(self, session_id: str | None = None) -> dict[str, Any]:
-        """Disable collecting and reporting metrics."""
         result = await self._client.send_raw(
             method="Performance.disable",
             params=None,
@@ -33,7 +33,6 @@ class PerformanceClient:
     async def enable(
         self, params: EnableParams | None = None, session_id: str | None = None
     ) -> dict[str, Any]:
-        """Enable collecting and reporting metrics."""
         result = await self._client.send_raw(
             method="Performance.enable",
             params=params.to_cdp_params() if params else None,
@@ -44,9 +43,6 @@ class PerformanceClient:
     async def set_time_domain(
         self, params: SetTimeDomainParams, session_id: str | None = None
     ) -> dict[str, Any]:
-        """Sets time domain to use for collecting and reporting duration metrics.
-        Note that this must be called before enabling metrics collection. Calling
-        this method while metrics collection is enabled returns an error."""
         result = await self._client.send_raw(
             method="Performance.setTimeDomain",
             params=params.to_cdp_params() if params else None,
@@ -55,7 +51,6 @@ class PerformanceClient:
         return result
 
     async def get_metrics(self, session_id: str | None = None) -> GetMetricsResult:
-        """Retrieve current values of run-time metrics."""
         result = await self._client.send_raw(
             method="Performance.getMetrics",
             params=None,

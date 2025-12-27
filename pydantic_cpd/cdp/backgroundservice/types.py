@@ -1,12 +1,15 @@
 """Generated from CDP specification"""
-# Domain: BackgroundService
-# Defines events for background web platform features.
 
-from typing import Any, Literal
+from typing import Literal, TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
 
-# The Background Service that will be associated with the commands/events. Every
-# Background Service operates independently, but they share the same API.
+if TYPE_CHECKING:
+    from pydantic_cpd.cdp import network, serviceworker
+
+"""
+The Background Service that will be associated with the commands/events. Every
+Background Service operates independently, but they share the same API.
+"""
 ServiceName = Literal[
     "backgroundFetch",
     "backgroundSync",
@@ -18,7 +21,9 @@ ServiceName = Literal[
 
 
 class EventMetadata(CDPModel):
-    """A key-value pair for additional event information to pass along."""
+    """
+    A key-value pair for additional event information to pass along.
+    """
 
     key: str
     value: str

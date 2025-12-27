@@ -1,21 +1,19 @@
 """Generated from CDP specification"""
-# Domain: Runtime
-# Runtime domain exposes JavaScript runtime by means of remote evaluation and mirror
-# objects. Evaluation results are returned as mirror object that expose object type,
-# string representation and unique identifier that can be used for further object
-# reference. Original objects are maintained in memory unless they are either
-# explicitly released or are released along with the other objects in their object
-# group.
 
 from typing import Any, Literal
 from pydantic_cpd.cdp.base import CDPModel
 
-# Unique script identifier.
+"""
+Unique script identifier.
+"""
 ScriptId = str
 
 
 class SerializationOptions(CDPModel):
-    """Represents options for serialization. Overrides `generatePreview` and `returnByValue`."""
+    """
+    Represents options for serialization. Overrides `generatePreview` and
+    `returnByValue`.
+    """
 
     serialization: Literal["deep", "json", "idOnly"]
     max_depth: int | None = None
@@ -23,7 +21,9 @@ class SerializationOptions(CDPModel):
 
 
 class DeepSerializedValue(CDPModel):
-    """Represents deep serialized value."""
+    """
+    Represents deep serialized value.
+    """
 
     type: Literal[
         "undefined",
@@ -56,16 +56,22 @@ class DeepSerializedValue(CDPModel):
     weak_local_object_reference: int | None = None
 
 
-# Unique object identifier.
+"""
+Unique object identifier.
+"""
 RemoteObjectId = str
 
-# Primitive value which cannot be JSON-stringified. Includes values `-0`, `NaN`,
-# `Infinity`, `-Infinity`, and bigint literals.
+"""
+Primitive value which cannot be JSON-stringified. Includes values `-0`, `NaN`,
+`Infinity`, `-Infinity`, and bigint literals.
+"""
 UnserializableValue = str
 
 
 class RemoteObject(CDPModel):
-    """Mirror object referencing original JavaScript object."""
+    """
+    Mirror object referencing original JavaScript object.
+    """
 
     type: Literal[
         "object",
@@ -118,7 +124,9 @@ class CustomPreview(CDPModel):
 
 
 class ObjectPreview(CDPModel):
-    """Object containing abbreviated remote object value."""
+    """
+    Object containing abbreviated remote object value.
+    """
 
     type: Literal[
         "object",
@@ -209,7 +217,9 @@ class EntryPreview(CDPModel):
 
 
 class PropertyDescriptor(CDPModel):
-    """Object property descriptor."""
+    """
+    Object property descriptor.
+    """
 
     name: str
     value: RemoteObject | None = None
@@ -224,14 +234,19 @@ class PropertyDescriptor(CDPModel):
 
 
 class InternalPropertyDescriptor(CDPModel):
-    """Object internal property descriptor. This property isn't normally visible in JavaScript code."""
+    """
+    Object internal property descriptor. This property isn't normally visible in
+    JavaScript code.
+    """
 
     name: str
     value: RemoteObject | None = None
 
 
 class PrivatePropertyDescriptor(CDPModel):
-    """Object private field descriptor."""
+    """
+    Object private field descriptor.
+    """
 
     name: str
     value: RemoteObject | None = None
@@ -240,20 +255,27 @@ class PrivatePropertyDescriptor(CDPModel):
 
 
 class CallArgument(CDPModel):
-    """Represents function call argument. Either remote object id `objectId`, primitive `value`,
-    unserializable primitive value or neither of (for undefined) them should be specified."""
+    """
+    Represents function call argument. Either remote object id `objectId`, primitive
+    `value`, unserializable primitive value or neither of (for undefined) them should be
+    specified.
+    """
 
     value: Any | None = None
     unserializable_value: UnserializableValue | None = None
     object_id: RemoteObjectId | None = None
 
 
-# Id of an execution context.
+"""
+Id of an execution context.
+"""
 ExecutionContextId = int
 
 
 class ExecutionContextDescription(CDPModel):
-    """Description of an isolated world."""
+    """
+    Description of an isolated world.
+    """
 
     id: ExecutionContextId
     origin: str
@@ -263,8 +285,10 @@ class ExecutionContextDescription(CDPModel):
 
 
 class ExceptionDetails(CDPModel):
-    """Detailed information about exception (or error) that was thrown during script compilation or
-    execution."""
+    """
+    Detailed information about exception (or error) that was thrown during script
+    compilation or execution.
+    """
 
     exception_id: int
     text: str
@@ -278,15 +302,21 @@ class ExceptionDetails(CDPModel):
     exception_meta_data: dict[str, Any] | None = None
 
 
-# Number of milliseconds since epoch.
+"""
+Number of milliseconds since epoch.
+"""
 Timestamp = float
 
-# Number of milliseconds.
+"""
+Number of milliseconds.
+"""
 TimeDelta = float
 
 
 class CallFrame(CDPModel):
-    """Stack entry for runtime errors and assertions."""
+    """
+    Stack entry for runtime errors and assertions.
+    """
 
     function_name: str
     script_id: ScriptId
@@ -296,7 +326,9 @@ class CallFrame(CDPModel):
 
 
 class StackTrace(CDPModel):
-    """Call frames for assertions or error messages."""
+    """
+    Call frames for assertions or error messages.
+    """
 
     description: str | None = None
     call_frames: list[CallFrame]
@@ -304,13 +336,18 @@ class StackTrace(CDPModel):
     parent_id: StackTraceId | None = None
 
 
-# Unique identifier of current debugger.
+"""
+Unique identifier of current debugger.
+"""
 UniqueDebuggerId = str
 
 
 class StackTraceId(CDPModel):
-    """If `debuggerId` is set stack trace comes from another debugger and can be resolved there. This
-    allows to track cross-debugger calls. See `Runtime.StackTrace` and `Debugger.paused` for usages."""
+    """
+    If `debuggerId` is set stack trace comes from another debugger and can be resolved
+    there. This allows to track cross-debugger calls. See `Runtime.StackTrace` and
+    `Debugger.paused` for usages.
+    """
 
     id: str
     debugger_id: UniqueDebuggerId | None = None

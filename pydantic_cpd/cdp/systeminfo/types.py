@@ -1,14 +1,13 @@
 """Generated from CDP specification"""
-# Domain: SystemInfo
-# The SystemInfo domain defines methods and events for querying low-level system
-# information.
 
 from typing import Any, Literal
 from pydantic_cpd.cdp.base import CDPModel
 
 
 class GPUDevice(CDPModel):
-    """Describes a single graphics processor (GPU)."""
+    """
+    Describes a single graphics processor (GPU).
+    """
 
     vendor_id: float
     device_id: float
@@ -21,15 +20,19 @@ class GPUDevice(CDPModel):
 
 
 class Size(CDPModel):
-    """Describes the width and height dimensions of an entity."""
+    """
+    Describes the width and height dimensions of an entity.
+    """
 
     width: int
     height: int
 
 
 class VideoDecodeAcceleratorCapability(CDPModel):
-    """Describes a supported video decoding profile with its associated minimum and
-    maximum resolutions."""
+    """
+    Describes a supported video decoding profile with its associated minimum and
+    maximum resolutions.
+    """
 
     profile: str
     max_resolution: Size
@@ -37,8 +40,10 @@ class VideoDecodeAcceleratorCapability(CDPModel):
 
 
 class VideoEncodeAcceleratorCapability(CDPModel):
-    """Describes a supported video encoding profile with its associated maximum
-    resolution and maximum framerate."""
+    """
+    Describes a supported video encoding profile with its associated maximum resolution
+    and maximum framerate.
+    """
 
     profile: str
     max_resolution: Size
@@ -46,15 +51,21 @@ class VideoEncodeAcceleratorCapability(CDPModel):
     max_framerate_denominator: int
 
 
-# YUV subsampling type of the pixels of a given image.
+"""
+YUV subsampling type of the pixels of a given image.
+"""
 SubsamplingFormat = Literal["yuv420", "yuv422", "yuv444"]
 
-# Image format of a given image.
+"""
+Image format of a given image.
+"""
 ImageType = Literal["jpeg", "webp", "unknown"]
 
 
 class GPUInfo(CDPModel):
-    """Provides information about the GPU(s) on the system."""
+    """
+    Provides information about the GPU(s) on the system.
+    """
 
     devices: list[GPUDevice]
     aux_attributes: dict[str, Any] | None = None
@@ -65,7 +76,9 @@ class GPUInfo(CDPModel):
 
 
 class ProcessInfo(CDPModel):
-    """Represents process info."""
+    """
+    Represents process info.
+    """
 
     type: str
     id: int

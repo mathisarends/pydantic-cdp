@@ -1,16 +1,18 @@
 """Generated event models from CDP specification"""
-# Domain: Browser Events
 
-from typing import Any, Literal
+from typing import Literal, TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
 
 from .types import *
 
-from pydantic_cpd.cdp import page
+if TYPE_CHECKING:
+    from pydantic_cpd.cdp import page
 
 
-class DownloadwillbeginEvent(CDPModel):
-    """Fired when page is about to start a download."""
+class DownloadWillBeginEvent(CDPModel):
+    """
+    Fired when page is about to start a download.
+    """
 
     frame_id: page.FrameId
     guid: str
@@ -18,8 +20,10 @@ class DownloadwillbeginEvent(CDPModel):
     suggested_filename: str
 
 
-class DownloadprogressEvent(CDPModel):
-    """Fired when download makes progress. Last call has |done| == true."""
+class DownloadProgressEvent(CDPModel):
+    """
+    Fired when download makes progress. Last call has |done| == true.
+    """
 
     guid: str
     total_bytes: float

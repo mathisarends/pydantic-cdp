@@ -1,20 +1,26 @@
 """Generated from CDP specification"""
-# Domain: Debugger
-# Debugger domain exposes JavaScript debugging capabilities. It allows setting and
-# removing breakpoints, stepping through execution, exploring stack traces, etc.
 
-from typing import Any, Literal
+from typing import Literal, TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
 
-# Breakpoint identifier.
+if TYPE_CHECKING:
+    from pydantic_cpd.cdp import runtime
+
+"""
+Breakpoint identifier.
+"""
 BreakpointId = str
 
-# Call frame identifier.
+"""
+Call frame identifier.
+"""
 CallFrameId = str
 
 
 class Location(CDPModel):
-    """Location in the source code."""
+    """
+    Location in the source code.
+    """
 
     script_id: runtime.ScriptId
     line_number: int
@@ -22,14 +28,18 @@ class Location(CDPModel):
 
 
 class ScriptPosition(CDPModel):
-    """Location in the source code."""
+    """
+    Location in the source code.
+    """
 
     line_number: int
     column_number: int
 
 
 class LocationRange(CDPModel):
-    """Location range within one script."""
+    """
+    Location range within one script.
+    """
 
     script_id: runtime.ScriptId
     start: ScriptPosition
@@ -37,7 +47,9 @@ class LocationRange(CDPModel):
 
 
 class CallFrame(CDPModel):
-    """JavaScript call frame. Array of call frames form the call stack."""
+    """
+    JavaScript call frame. Array of call frames form the call stack.
+    """
 
     call_frame_id: CallFrameId
     function_name: str
@@ -51,7 +63,9 @@ class CallFrame(CDPModel):
 
 
 class Scope(CDPModel):
-    """Scope description."""
+    """
+    Scope description.
+    """
 
     type: Literal[
         "global",
@@ -72,7 +86,9 @@ class Scope(CDPModel):
 
 
 class SearchMatch(CDPModel):
-    """Search match for resource."""
+    """
+    Search match for resource.
+    """
 
     line_number: float
     line_content: str
@@ -90,12 +106,16 @@ class WasmDisassemblyChunk(CDPModel):
     bytecode_offsets: list[int]
 
 
-# Enum of possible script languages.
+"""
+Enum of possible script languages.
+"""
 ScriptLanguage = Literal["JavaScript", "WebAssembly"]
 
 
 class DebugSymbols(CDPModel):
-    """Debug symbols available for a wasm script."""
+    """
+    Debug symbols available for a wasm script.
+    """
 
     type: Literal["SourceMap", "EmbeddedDWARF", "ExternalDWARF"]
     external_u_r_l: str | None = None

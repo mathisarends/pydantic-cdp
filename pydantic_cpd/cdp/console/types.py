@@ -1,13 +1,13 @@
 """Generated from CDP specification"""
-# Domain: Console
-# This domain is deprecated - use Runtime or Log instead.
 
-from typing import Any, Literal
+from typing import Literal
 from pydantic_cpd.cdp.base import CDPModel
 
 
 class ConsoleMessage(CDPModel):
-    """Console message."""
+    """
+    Console message.
+    """
 
     source: Literal[
         "xml",

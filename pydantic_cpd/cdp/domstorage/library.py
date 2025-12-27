@@ -1,5 +1,4 @@
 """Generated client library from CDP specification"""
-# Domain: DOMStorage Client
 
 from __future__ import annotations
 
@@ -18,7 +17,9 @@ from .commands import (
 
 
 class DOMStorageClient:
-    """Query and modify DOM storage."""
+    """
+    Query and modify DOM storage.
+    """
 
     def __init__(self, client: CDPClient) -> None:
         self._client = client
@@ -34,7 +35,6 @@ class DOMStorageClient:
         return result
 
     async def disable(self, session_id: str | None = None) -> dict[str, Any]:
-        """Disables storage tracking, prevents storage events from being sent to the client."""
         result = await self._client.send_raw(
             method="DOMStorage.disable",
             params=None,
@@ -43,7 +43,6 @@ class DOMStorageClient:
         return result
 
     async def enable(self, session_id: str | None = None) -> dict[str, Any]:
-        """Enables storage tracking, storage events will now be delivered to the client."""
         result = await self._client.send_raw(
             method="DOMStorage.enable",
             params=None,

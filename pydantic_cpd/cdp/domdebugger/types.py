@@ -1,21 +1,26 @@
 """Generated from CDP specification"""
-# Domain: DOMDebugger
-# DOM debugging allows setting breakpoints on particular DOM operations and events.
-# JavaScript execution will stop on these operations as if there was a regular
-# breakpoint set.
 
-from typing import Any, Literal
+from typing import Literal, TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
 
-# DOM breakpoint type.
+if TYPE_CHECKING:
+    from pydantic_cpd.cdp import dom, runtime
+
+"""
+DOM breakpoint type.
+"""
 DOMBreakpointType = Literal["subtree-modified", "attribute-modified", "node-removed"]
 
-# CSP Violation type.
+"""
+CSP Violation type.
+"""
 CSPViolationType = Literal["trustedtype-sink-violation", "trustedtype-policy-violation"]
 
 
 class EventListener(CDPModel):
-    """Object event listener."""
+    """
+    Object event listener.
+    """
 
     type: str
     use_capture: bool

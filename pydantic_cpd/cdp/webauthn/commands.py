@@ -1,21 +1,23 @@
 """Generated command models from CDP specification"""
-# Domain: WebAuthn Commands
 
-from typing import Any, Literal
 from pydantic_cpd.cdp.base import CDPModel
 
 from .types import *
 
 
 class EnableParams(CDPModel):
-    """Enable the WebAuthn domain and start intercepting credential storage and
-    retrieval with a virtual authenticator."""
+    """
+    Enable the WebAuthn domain and start intercepting credential storage and retrieval
+    with a virtual authenticator.
+    """
 
     enable_u_i: bool | None = None
 
 
 class AddVirtualAuthenticatorParams(CDPModel):
-    """Creates and adds a virtual authenticator."""
+    """
+    Creates and adds a virtual authenticator.
+    """
 
     options: VirtualAuthenticatorOptions
 
@@ -25,7 +27,10 @@ class AddVirtualAuthenticatorResult(CDPModel):
 
 
 class SetResponseOverrideBitsParams(CDPModel):
-    """Resets parameters isBogusSignature, isBadUV, isBadUP to false if they are not present."""
+    """
+    Resets parameters isBogusSignature, isBadUV, isBadUP to false if they are not
+    present.
+    """
 
     authenticator_id: AuthenticatorId
     is_bogus_signature: bool | None = None
@@ -34,21 +39,27 @@ class SetResponseOverrideBitsParams(CDPModel):
 
 
 class RemoveVirtualAuthenticatorParams(CDPModel):
-    """Removes the given authenticator."""
+    """
+    Removes the given authenticator.
+    """
 
     authenticator_id: AuthenticatorId
 
 
 class AddCredentialParams(CDPModel):
-    """Adds the credential to the specified authenticator."""
+    """
+    Adds the credential to the specified authenticator.
+    """
 
     authenticator_id: AuthenticatorId
     credential: Credential
 
 
 class GetCredentialParams(CDPModel):
-    """Returns a single credential stored in the given virtual authenticator that
-    matches the credential ID."""
+    """
+    Returns a single credential stored in the given virtual authenticator that matches
+    the credential ID.
+    """
 
     authenticator_id: AuthenticatorId
     credential_id: str
@@ -59,7 +70,9 @@ class GetCredentialResult(CDPModel):
 
 
 class GetCredentialsParams(CDPModel):
-    """Returns all the credentials stored in the given virtual authenticator."""
+    """
+    Returns all the credentials stored in the given virtual authenticator.
+    """
 
     authenticator_id: AuthenticatorId
 
@@ -69,37 +82,47 @@ class GetCredentialsResult(CDPModel):
 
 
 class RemoveCredentialParams(CDPModel):
-    """Removes a credential from the authenticator."""
+    """
+    Removes a credential from the authenticator.
+    """
 
     authenticator_id: AuthenticatorId
     credential_id: str
 
 
 class ClearCredentialsParams(CDPModel):
-    """Clears all the credentials from the specified device."""
+    """
+    Clears all the credentials from the specified device.
+    """
 
     authenticator_id: AuthenticatorId
 
 
 class SetUserVerifiedParams(CDPModel):
-    """Sets whether User Verification succeeds or fails for an authenticator.
-    The default is true."""
+    """
+    Sets whether User Verification succeeds or fails for an authenticator. The default
+    is true.
+    """
 
     authenticator_id: AuthenticatorId
     is_user_verified: bool
 
 
 class SetAutomaticPresenceSimulationParams(CDPModel):
-    """Sets whether tests of user presence will succeed immediately (if true) or fail to resolve (if false) for an authenticator.
-    The default is true."""
+    """
+    Sets whether tests of user presence will succeed immediately (if true) or fail to
+    resolve (if false) for an authenticator. The default is true.
+    """
 
     authenticator_id: AuthenticatorId
     enabled: bool
 
 
 class SetCredentialPropertiesParams(CDPModel):
-    """Allows setting credential properties.
-    https://w3c.github.io/webauthn/#sctn-automation-set-credential-properties"""
+    """
+    Allows setting credential properties.
+    https://w3c.github.io/webauthn/#sctn-automation-set-credential-properties
+    """
 
     authenticator_id: AuthenticatorId
     credential_id: str

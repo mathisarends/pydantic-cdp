@@ -1,7 +1,6 @@
 """Generated from CDP specification"""
-# Domain: Input
 
-from typing import Any, Literal
+from typing import Literal
 from pydantic_cpd.cdp.base import CDPModel
 
 
@@ -23,7 +22,9 @@ GestureSourceType = Literal["default", "touch", "mouse"]
 
 MouseButton = Literal["none", "left", "middle", "right", "back", "forward"]
 
-# UTC time in seconds, counted from January 1, 1970.
+"""
+UTC time in seconds, counted from January 1, 1970.
+"""
 TimeSinceEpoch = float
 
 

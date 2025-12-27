@@ -1,20 +1,22 @@
 """Generated from CDP specification"""
-# Domain: Browser
-# The Browser domain defines methods and events for browser managing.
 
-from typing import Any, Literal
+from typing import Literal
 from pydantic_cpd.cdp.base import CDPModel
 
 BrowserContextID = str
 
 WindowID = int
 
-# The state of the browser window.
+"""
+The state of the browser window.
+"""
 WindowState = Literal["normal", "minimized", "maximized", "fullscreen"]
 
 
 class Bounds(CDPModel):
-    """Browser window bounds information"""
+    """
+    Browser window bounds information
+    """
 
     left: int | None = None
     top: int | None = None
@@ -69,8 +71,10 @@ PermissionSetting = Literal["granted", "denied", "prompt"]
 
 
 class PermissionDescriptor(CDPModel):
-    """Definition of PermissionDescriptor defined in the Permissions API:
-    https://w3c.github.io/permissions/#dom-permissiondescriptor."""
+    """
+    Definition of PermissionDescriptor defined in the Permissions API:
+    https://w3c.github.io/permissions/#dom-permissiondescriptor.
+    """
 
     name: str
     sysex: bool | None = None
@@ -80,12 +84,16 @@ class PermissionDescriptor(CDPModel):
     pan_tilt_zoom: bool | None = None
 
 
-# Browser command ids used by executeBrowserCommand.
+"""
+Browser command ids used by executeBrowserCommand.
+"""
 BrowserCommandId = Literal["openTabSearch", "closeTabSearch", "openGlic"]
 
 
 class Bucket(CDPModel):
-    """Chrome histogram bucket."""
+    """
+    Chrome histogram bucket.
+    """
 
     low: int
     high: int
@@ -93,7 +101,9 @@ class Bucket(CDPModel):
 
 
 class Histogram(CDPModel):
-    """Chrome histogram."""
+    """
+    Chrome histogram.
+    """
 
     name: str
     sum: int

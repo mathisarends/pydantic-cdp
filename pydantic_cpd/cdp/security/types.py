@@ -1,24 +1,34 @@
 """Generated from CDP specification"""
-# Domain: Security
 
-from typing import Any, Literal
+from typing import Literal, TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
 
-# An internal certificate ID value.
+if TYPE_CHECKING:
+    from pydantic_cpd.cdp import network
+
+"""
+An internal certificate ID value.
+"""
 CertificateId = int
 
-# A description of mixed content (HTTP resources on HTTPS pages), as defined by
-# https://www.w3.org/TR/mixed-content/#categories
+"""
+A description of mixed content (HTTP resources on HTTPS pages), as defined by
+https://www.w3.org/TR/mixed-content/#categories
+"""
 MixedContentType = Literal["blockable", "optionally-blockable", "none"]
 
-# The security level of a page or resource.
+"""
+The security level of a page or resource.
+"""
 SecurityState = Literal[
     "unknown", "neutral", "insecure", "secure", "info", "insecure-broken"
 ]
 
 
 class CertificateSecurityState(CDPModel):
-    """Details about the security state of the page certificate."""
+    """
+    Details about the security state of the page certificate.
+    """
 
     protocol: str
     key_exchange: str
@@ -49,7 +59,9 @@ class SafetyTipInfo(CDPModel):
 
 
 class VisibleSecurityState(CDPModel):
-    """Security state information about the page."""
+    """
+    Security state information about the page.
+    """
 
     security_state: SecurityState
     certificate_security_state: CertificateSecurityState | None = None
@@ -58,7 +70,9 @@ class VisibleSecurityState(CDPModel):
 
 
 class SecurityStateExplanation(CDPModel):
-    """An explanation of an factor contributing to the security state."""
+    """
+    An explanation of an factor contributing to the security state.
+    """
 
     security_state: SecurityState
     title: str
@@ -70,7 +84,9 @@ class SecurityStateExplanation(CDPModel):
 
 
 class InsecureContentStatus(CDPModel):
-    """Information about insecure content on the page."""
+    """
+    Information about insecure content on the page.
+    """
 
     ran_mixed_content: bool
     displayed_mixed_content: bool
@@ -81,6 +97,8 @@ class InsecureContentStatus(CDPModel):
     displayed_insecure_content_style: SecurityState
 
 
-# The action to take when a certificate error occurs. continue will continue processing
-# the request and cancel will cancel the request.
+"""
+The action to take when a certificate error occurs. continue will continue processing
+the request and cancel will cancel the request.
+"""
 CertificateErrorAction = Literal["continue", "cancel"]

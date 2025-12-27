@@ -1,5 +1,4 @@
 """Generated client library from CDP specification"""
-# Domain: Schema Client
 
 from __future__ import annotations
 
@@ -14,13 +13,14 @@ from .commands import (
 
 
 class SchemaClient:
-    """This domain is deprecated."""
+    """
+    This domain is deprecated.
+    """
 
     def __init__(self, client: CDPClient) -> None:
         self._client = client
 
     async def get_domains(self, session_id: str | None = None) -> GetDomainsResult:
-        """Returns supported domains."""
         result = await self._client.send_raw(
             method="Schema.getDomains",
             params=None,

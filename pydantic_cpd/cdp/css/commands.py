@@ -1,20 +1,19 @@
 """Generated command models from CDP specification"""
-# Domain: CSS Commands
 
-from typing import Any, Literal
+from typing import Any, TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
 
 from .types import *
 
 from pydantic_cpd.cdp import dom
-from pydantic_cpd.cdp import dom
-from pydantic_cpd.cdp import dom
 from pydantic_cpd.cdp import page
 
 
 class AddRuleParams(CDPModel):
-    """Inserts a new rule with the given `ruleText` in a stylesheet with given `styleSheetId`, at the
-    position specified by `location`."""
+    """
+    Inserts a new rule with the given `ruleText` in a stylesheet with given
+    `styleSheetId`, at the position specified by `location`.
+    """
 
     style_sheet_id: dom.StyleSheetId
     rule_text: str
@@ -27,7 +26,9 @@ class AddRuleResult(CDPModel):
 
 
 class CollectClassNamesParams(CDPModel):
-    """Returns all class names from specified stylesheet."""
+    """
+    Returns all class names from specified stylesheet.
+    """
 
     style_sheet_id: dom.StyleSheetId
 
@@ -37,7 +38,9 @@ class CollectClassNamesResult(CDPModel):
 
 
 class CreateStyleSheetParams(CDPModel):
-    """Creates a new special "via-inspector" stylesheet in the frame with given `frameId`."""
+    """
+    Creates a new special "via-inspector" stylesheet in the frame with given `frameId`.
+    """
 
     frame_id: page.FrameId
     force: bool | None = None
@@ -48,15 +51,19 @@ class CreateStyleSheetResult(CDPModel):
 
 
 class ForcePseudoStateParams(CDPModel):
-    """Ensures that the given node will have specified pseudo-classes whenever its style is computed by
-    the browser."""
+    """
+    Ensures that the given node will have specified pseudo-classes whenever its style
+    is computed by the browser.
+    """
 
     node_id: dom.NodeId
     forced_pseudo_classes: list[str]
 
 
 class ForceStartingStyleParams(CDPModel):
-    """Ensures that the given node is in its starting-style state."""
+    """
+    Ensures that the given node is in its starting-style state.
+    """
 
     node_id: dom.NodeId
     forced: bool
@@ -73,7 +80,9 @@ class GetBackgroundColorsResult(CDPModel):
 
 
 class GetComputedStyleForNodeParams(CDPModel):
-    """Returns the computed style for a DOM node identified by `nodeId`."""
+    """
+    Returns the computed style for a DOM node identified by `nodeId`.
+    """
 
     node_id: dom.NodeId
 
@@ -84,15 +93,15 @@ class GetComputedStyleForNodeResult(CDPModel):
 
 
 class ResolveValuesParams(CDPModel):
-    """Resolve the specified values in the context of the provided element.
-    For example, a value of '1em' is evaluated according to the computed
-    'font-size' of the element and a value 'calc(1px + 2px)' will be
-    resolved to '3px'.
-    If the `propertyName` was specified the `values` are resolved as if
-    they were property's declaration. If a value cannot be parsed according
-    to the provided property syntax, the value is parsed using combined
-    syntax as if null `propertyName` was provided. If the value cannot be
-    resolved even then, return the provided value without any changes."""
+    """
+    Resolve the specified values in the context of the provided element. For example, a
+    value of '1em' is evaluated according to the computed 'font-size' of the element and
+    a value 'calc(1px + 2px)' will be resolved to '3px'. If the `propertyName` was
+    specified the `values` are resolved as if they were property's declaration. If a
+    value cannot be parsed according to the provided property syntax, the value is
+    parsed using combined syntax as if null `propertyName` was provided. If the value
+    cannot be resolved even then, return the provided value without any changes.
+    """
 
     values: list[str]
     node_id: dom.NodeId
@@ -115,8 +124,10 @@ class GetLonghandPropertiesResult(CDPModel):
 
 
 class GetInlineStylesForNodeParams(CDPModel):
-    """Returns the styles defined inline (explicitly in the "style" attribute and implicitly, using DOM
-    attributes) for a DOM node identified by `nodeId`."""
+    """
+    Returns the styles defined inline (explicitly in the "style" attribute and
+    implicitly, using DOM attributes) for a DOM node identified by `nodeId`.
+    """
 
     node_id: dom.NodeId
 
@@ -127,8 +138,10 @@ class GetInlineStylesForNodeResult(CDPModel):
 
 
 class GetAnimatedStylesForNodeParams(CDPModel):
-    """Returns the styles coming from animations & transitions
-    including the animation & transition styles coming from inheritance chain."""
+    """
+    Returns the styles coming from animations & transitions including the animation &
+    transition styles coming from inheritance chain.
+    """
 
     node_id: dom.NodeId
 
@@ -140,7 +153,9 @@ class GetAnimatedStylesForNodeResult(CDPModel):
 
 
 class GetMatchedStylesForNodeParams(CDPModel):
-    """Returns requested styles for a DOM node identified by `nodeId`."""
+    """
+    Returns requested styles for a DOM node identified by `nodeId`.
+    """
 
     node_id: dom.NodeId
 
@@ -171,8 +186,10 @@ class GetMediaQueriesResult(CDPModel):
 
 
 class GetPlatformFontsForNodeParams(CDPModel):
-    """Requests information about platform fonts which we used to render child TextNodes in the given
-    node."""
+    """
+    Requests information about platform fonts which we used to render child TextNodes
+    in the given node.
+    """
 
     node_id: dom.NodeId
 
@@ -182,7 +199,9 @@ class GetPlatformFontsForNodeResult(CDPModel):
 
 
 class GetStyleSheetTextParams(CDPModel):
-    """Returns the current textual content for a stylesheet."""
+    """
+    Returns the current textual content for a stylesheet.
+    """
 
     style_sheet_id: dom.StyleSheetId
 
@@ -192,10 +211,12 @@ class GetStyleSheetTextResult(CDPModel):
 
 
 class GetLayersForNodeParams(CDPModel):
-    """Returns all layers parsed by the rendering engine for the tree scope of a node.
-    Given a DOM element identified by nodeId, getLayersForNode returns the root
-    layer for the nearest ancestor document or shadow root. The layer root contains
-    the full layer tree for the tree scope and their ordering."""
+    """
+    Returns all layers parsed by the rendering engine for the tree scope of a node.
+    Given a DOM element identified by nodeId, getLayersForNode returns the root layer
+    for the nearest ancestor document or shadow root. The layer root contains the full
+    layer tree for the tree scope and their ordering.
+    """
 
     node_id: dom.NodeId
 
@@ -205,8 +226,10 @@ class GetLayersForNodeResult(CDPModel):
 
 
 class GetLocationForSelectorParams(CDPModel):
-    """Given a CSS selector text and a style sheet ID, getLocationForSelector
-    returns an array of locations of the CSS selector in the style sheet."""
+    """
+    Given a CSS selector text and a style sheet ID, getLocationForSelector returns an
+    array of locations of the CSS selector in the style sheet.
+    """
 
     style_sheet_id: dom.StyleSheetId
     selector_text: str
@@ -217,34 +240,40 @@ class GetLocationForSelectorResult(CDPModel):
 
 
 class TrackComputedStyleUpdatesForNodeParams(CDPModel):
-    """Starts tracking the given node for the computed style updates
-    and whenever the computed style is updated for node, it queues
-    a `computedStyleUpdated` event with throttling.
-    There can only be 1 node tracked for computed style updates
-    so passing a new node id removes tracking from the previous node.
-    Pass `undefined` to disable tracking."""
+    """
+    Starts tracking the given node for the computed style updates and whenever the
+    computed style is updated for node, it queues a `computedStyleUpdated` event with
+    throttling. There can only be 1 node tracked for computed style updates so passing a
+    new node id removes tracking from the previous node. Pass `undefined` to disable
+    tracking.
+    """
 
     node_id: dom.NodeId | None = None
 
 
 class TrackComputedStyleUpdatesParams(CDPModel):
-    """Starts tracking the given computed styles for updates. The specified array of properties
-    replaces the one previously specified. Pass empty array to disable tracking.
-    Use takeComputedStyleUpdates to retrieve the list of nodes that had properties modified.
-    The changes to computed style properties are only tracked for nodes pushed to the front-end
-    by the DOM agent. If no changes to the tracked properties occur after the node has been pushed
-    to the front-end, no updates will be issued for the node."""
+    """
+    Starts tracking the given computed styles for updates. The specified array of
+    properties replaces the one previously specified. Pass empty array to disable
+    tracking. Use takeComputedStyleUpdates to retrieve the list of nodes that had
+    properties modified. The changes to computed style properties are only tracked for
+    nodes pushed to the front-end by the DOM agent. If no changes to the tracked
+    properties occur after the node has been pushed to the front-end, no updates will be
+    issued for the node.
+    """
 
     properties_to_track: list[CSSComputedStyleProperty]
 
 
 class TakeComputedStyleUpdatesResult(CDPModel):
-    node_ids: list[DOM.NodeId]
+    node_ids: list[dom.NodeId]
 
 
 class SetEffectivePropertyValueForNodeParams(CDPModel):
-    """Find a rule with the given active property for the given node and set the new value for this
-    property"""
+    """
+    Find a rule with the given active property for the given node and set the new value
+    for this property
+    """
 
     node_id: dom.NodeId
     property_name: str
@@ -252,7 +281,9 @@ class SetEffectivePropertyValueForNodeParams(CDPModel):
 
 
 class SetPropertyRulePropertyNameParams(CDPModel):
-    """Modifies the property rule property name."""
+    """
+    Modifies the property rule property name.
+    """
 
     style_sheet_id: dom.StyleSheetId
     range: SourceRange
@@ -264,7 +295,9 @@ class SetPropertyRulePropertyNameResult(CDPModel):
 
 
 class SetKeyframeKeyParams(CDPModel):
-    """Modifies the keyframe rule key text."""
+    """
+    Modifies the keyframe rule key text.
+    """
 
     style_sheet_id: dom.StyleSheetId
     range: SourceRange
@@ -276,7 +309,9 @@ class SetKeyframeKeyResult(CDPModel):
 
 
 class SetMediaTextParams(CDPModel):
-    """Modifies the rule selector."""
+    """
+    Modifies the rule selector.
+    """
 
     style_sheet_id: dom.StyleSheetId
     range: SourceRange
@@ -288,7 +323,9 @@ class SetMediaTextResult(CDPModel):
 
 
 class SetContainerQueryTextParams(CDPModel):
-    """Modifies the expression of a container query."""
+    """
+    Modifies the expression of a container query.
+    """
 
     style_sheet_id: dom.StyleSheetId
     range: SourceRange
@@ -300,7 +337,9 @@ class SetContainerQueryTextResult(CDPModel):
 
 
 class SetSupportsTextParams(CDPModel):
-    """Modifies the expression of a supports at-rule."""
+    """
+    Modifies the expression of a supports at-rule.
+    """
 
     style_sheet_id: dom.StyleSheetId
     range: SourceRange
@@ -312,7 +351,9 @@ class SetSupportsTextResult(CDPModel):
 
 
 class SetScopeTextParams(CDPModel):
-    """Modifies the expression of a scope at-rule."""
+    """
+    Modifies the expression of a scope at-rule.
+    """
 
     style_sheet_id: dom.StyleSheetId
     range: SourceRange
@@ -324,7 +365,9 @@ class SetScopeTextResult(CDPModel):
 
 
 class SetRuleSelectorParams(CDPModel):
-    """Modifies the rule selector."""
+    """
+    Modifies the rule selector.
+    """
 
     style_sheet_id: dom.StyleSheetId
     range: SourceRange
@@ -336,7 +379,9 @@ class SetRuleSelectorResult(CDPModel):
 
 
 class SetStyleSheetTextParams(CDPModel):
-    """Sets the new stylesheet text."""
+    """
+    Sets the new stylesheet text.
+    """
 
     style_sheet_id: dom.StyleSheetId
     text: str
@@ -347,7 +392,9 @@ class SetStyleSheetTextResult(CDPModel):
 
 
 class SetStyleTextsParams(CDPModel):
-    """Applies specified style edits one after another in the given order."""
+    """
+    Applies specified style edits one after another in the given order.
+    """
 
     edits: list[StyleDeclarationEdit]
     node_for_property_syntax_validation: dom.NodeId | None = None
@@ -367,6 +414,8 @@ class TakeCoverageDeltaResult(CDPModel):
 
 
 class SetLocalFontsEnabledParams(CDPModel):
-    """Enables/disables rendering of local CSS fonts (enabled by default)."""
+    """
+    Enables/disables rendering of local CSS fonts (enabled by default).
+    """
 
     enabled: bool

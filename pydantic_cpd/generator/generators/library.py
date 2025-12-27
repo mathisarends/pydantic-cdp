@@ -1,5 +1,7 @@
-from pydantic_cpd.generator.models import Domain, Command
-from pydantic_cpd.generator.type_mapper import to_snake_case, to_pascal_case
+from pydantic_cpd.generator.models import Command, Domain
+from pydantic_cpd.generator.type_mapper import to_pascal_case, to_snake_case
+
+from .utils import format_docstring
 
 
 class LibraryGenerator:
@@ -26,7 +28,6 @@ class LibraryGenerator:
             "",
         ]
 
-        # Sammle alle Command-bezogenen Klassen
         if domain.commands:
             param_classes = {
                 f"{to_pascal_case(cmd.name)}Params"
@@ -41,7 +42,6 @@ class LibraryGenerator:
 
             all_classes = sorted(param_classes | return_classes)
 
-            # Importiere zur Runtime (nicht unter TYPE_CHECKING!)
             if all_classes:
                 lines.append("from .commands import (")
                 for cls in all_classes:
@@ -56,11 +56,12 @@ class LibraryGenerator:
         lines = [f"class {class_name}:"]
 
         if domain.description:
-            lines.append(f'    """{domain.description}"""')
+            lines.append(format_docstring(domain.description, indent=4))
         else:
-            lines.append(f'    """CDP {domain.domain} domain client."""')
+            lines.append(
+                format_docstring(f"CDP {domain.domain} domain client.", indent=4)
+            )
 
-        lines.append("")
         lines.append("    def __init__(self, client: CDPClient) -> None:")
         lines.append("        self._client = client")
 
@@ -83,10 +84,6 @@ class LibraryGenerator:
             f"    ) -> {return_type}:",
         ]
 
-        if command.description:
-            lines.append(f'        """{command.description}"""')
-
-        # Unterscheide ob Command Parameter hat oder nicht
         if command.parameters:
             lines.extend(
                 [
@@ -127,9 +124,6 @@ class LibraryGenerator:
                 params.append(f"params: {param_class} | None = None")
             else:
                 params.append(f"params: {param_class}")
-        else:
-            # Kein params Parameter wenn Command keine Parameter hat
-            pass
 
         params.append("session_id: str | None = None")
         return params

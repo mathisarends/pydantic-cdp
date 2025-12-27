@@ -1,13 +1,16 @@
 """Generated from CDP specification"""
-# Domain: Target
-# Supports additional targets discovery and allows to attach to them.
 
-from typing import Any, Literal
+from typing import Any, Literal, TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
+
+if TYPE_CHECKING:
+    from pydantic_cpd.cdp import browser, page
 
 TargetID = str
 
-# Unique identifier of attached debugging session.
+"""
+Unique identifier of attached debugging session.
+"""
 SessionID = str
 
 
@@ -26,17 +29,21 @@ class TargetInfo(CDPModel):
 
 
 class FilterEntry(CDPModel):
-    """A filter used by target query/discovery/auto-attach operations."""
+    """
+    A filter used by target query/discovery/auto-attach operations.
+    """
 
     exclude: bool | None = None
     type: str | None = None
 
 
-# The entries in TargetFilter are matched sequentially against targets and the first
-# entry that matches determines if the target is included or not, depending on the
-# value of `exclude` field in the entry. If filter is not specified, the one assumed is
-# [{type: "browser", exclude: true}, {type: "tab", exclude: true}, {}] (i.e. include
-# everything but `browser` and `tab`).
+"""
+The entries in TargetFilter are matched sequentially against targets and the first
+entry that matches determines if the target is included or not, depending on the value
+of `exclude` field in the entry. If filter is not specified, the one assumed is [{type:
+"browser", exclude: true}, {type: "tab", exclude: true}, {}] (i.e. include everything
+but `browser` and `tab`).
+"""
 TargetFilter = list[Any]
 
 
@@ -45,5 +52,7 @@ class RemoteLocation(CDPModel):
     port: int
 
 
-# The state of the target window.
+"""
+The state of the target window.
+"""
 WindowState = Literal["normal", "minimized", "maximized", "fullscreen"]

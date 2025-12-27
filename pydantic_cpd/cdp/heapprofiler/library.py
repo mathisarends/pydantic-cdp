@@ -1,5 +1,4 @@
 """Generated client library from CDP specification"""
-# Domain: HeapProfiler Client
 
 from __future__ import annotations
 
@@ -24,7 +23,9 @@ from .commands import (
 
 
 class HeapProfilerClient:
-    """CDP HeapProfiler domain client."""
+    """
+    CDP HeapProfiler domain client.
+    """
 
     def __init__(self, client: CDPClient) -> None:
         self._client = client
@@ -32,8 +33,6 @@ class HeapProfilerClient:
     async def add_inspected_heap_object(
         self, params: AddInspectedHeapObjectParams, session_id: str | None = None
     ) -> dict[str, Any]:
-        """Enables console to refer to the node with given id via $x (see Command Line API for more details
-        $x functions)."""
         result = await self._client.send_raw(
             method="HeapProfiler.addInspectedHeapObject",
             params=params.to_cdp_params() if params else None,

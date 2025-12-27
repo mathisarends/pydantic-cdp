@@ -1,12 +1,16 @@
 """Generated from CDP specification"""
-# Domain: Animation
 
-from typing import Any, Literal
+from typing import Literal, TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
+
+if TYPE_CHECKING:
+    from pydantic_cpd.cdp import dom
 
 
 class Animation(CDPModel):
-    """Animation instance."""
+    """
+    Animation instance.
+    """
 
     id: str
     name: str
@@ -22,7 +26,9 @@ class Animation(CDPModel):
 
 
 class ViewOrScrollTimeline(CDPModel):
-    """Timeline instance"""
+    """
+    Timeline instance
+    """
 
     source_node_id: dom.BackendNodeId | None = None
     start_offset: float | None = None
@@ -32,7 +38,9 @@ class ViewOrScrollTimeline(CDPModel):
 
 
 class AnimationEffect(CDPModel):
-    """AnimationEffect instance"""
+    """
+    AnimationEffect instance
+    """
 
     delay: float
     end_delay: float
@@ -47,14 +55,18 @@ class AnimationEffect(CDPModel):
 
 
 class KeyframesRule(CDPModel):
-    """Keyframes Rule"""
+    """
+    Keyframes Rule
+    """
 
     name: str | None = None
     keyframes: list[KeyframeStyle]
 
 
 class KeyframeStyle(CDPModel):
-    """Keyframe Style"""
+    """
+    Keyframe Style
+    """
 
     offset: str
     easing: str

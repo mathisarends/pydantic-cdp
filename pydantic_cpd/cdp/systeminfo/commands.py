@@ -1,7 +1,5 @@
 """Generated command models from CDP specification"""
-# Domain: SystemInfo Commands
 
-from typing import Any, Literal
 from pydantic_cpd.cdp.base import CDPModel
 
 from .types import *
@@ -15,7 +13,9 @@ class GetInfoResult(CDPModel):
 
 
 class GetFeatureStateParams(CDPModel):
-    """Returns information about the feature state."""
+    """
+    Returns information about the feature state.
+    """
 
     feature_state: str
 

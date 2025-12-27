@@ -1,6 +1,5 @@
 from pydantic_cpd.generator.models import Parameter
 
-
 _BASIC_TYPE_MAPPING = {
     "string": "str",
     "integer": "int",
@@ -13,7 +12,11 @@ _BASIC_TYPE_MAPPING = {
 
 def _get_array_item_type(item_spec: dict) -> str:
     if "$ref" in item_spec:
-        return item_spec["$ref"]
+        ref = item_spec["$ref"]
+        if "." in ref:
+            parts = ref.split(".")
+            return f"{parts[0].lower()}.{parts[1]}"
+        return ref
 
     if "type" in item_spec:
         return _BASIC_TYPE_MAPPING.get(item_spec["type"], "Any")
@@ -64,7 +67,6 @@ def map_cdp_type(param: Parameter) -> str:
 
 
 def to_snake_case(name: str) -> str:
-    """Convert camelCase or PascalCase to snake_case"""
     chars = []
     for i, char in enumerate(name):
         if char.isupper() and i > 0:

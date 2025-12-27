@@ -1,15 +1,18 @@
 """Generated from CDP specification"""
-# Domain: Memory
 
-from typing import Any, Literal
+from typing import Literal
 from pydantic_cpd.cdp.base import CDPModel
 
-# Memory pressure level.
+"""
+Memory pressure level.
+"""
 PressureLevel = Literal["moderate", "critical"]
 
 
 class SamplingProfileNode(CDPModel):
-    """Heap profile sample."""
+    """
+    Heap profile sample.
+    """
 
     size: float
     total: float
@@ -17,14 +20,18 @@ class SamplingProfileNode(CDPModel):
 
 
 class SamplingProfile(CDPModel):
-    """Array of heap profile samples."""
+    """
+    Array of heap profile samples.
+    """
 
     samples: list[SamplingProfileNode]
     modules: list[Module]
 
 
 class Module(CDPModel):
-    """Executable module information"""
+    """
+    Executable module information
+    """
 
     name: str
     uuid: str
@@ -33,7 +40,9 @@ class Module(CDPModel):
 
 
 class DOMCounter(CDPModel):
-    """DOM object counter data."""
+    """
+    DOM object counter data.
+    """
 
     name: str
     count: int

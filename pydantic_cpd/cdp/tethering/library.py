@@ -1,5 +1,4 @@
 """Generated client library from CDP specification"""
-# Domain: Tethering Client
 
 from __future__ import annotations
 
@@ -15,7 +14,9 @@ from .commands import (
 
 
 class TetheringClient:
-    """The Tethering domain defines methods and events for browser port binding."""
+    """
+    The Tethering domain defines methods and events for browser port binding.
+    """
 
     def __init__(self, client: CDPClient) -> None:
         self._client = client
@@ -23,7 +24,6 @@ class TetheringClient:
     async def bind(
         self, params: BindParams, session_id: str | None = None
     ) -> dict[str, Any]:
-        """Request browser port binding."""
         result = await self._client.send_raw(
             method="Tethering.bind",
             params=params.to_cdp_params() if params else None,
@@ -34,7 +34,6 @@ class TetheringClient:
     async def unbind(
         self, params: UnbindParams, session_id: str | None = None
     ) -> dict[str, Any]:
-        """Request browser port unbinding."""
         result = await self._client.send_raw(
             method="Tethering.unbind",
             params=params.to_cdp_params() if params else None,

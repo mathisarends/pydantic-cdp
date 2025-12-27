@@ -1,24 +1,23 @@
 """Generated from CDP specification"""
-# Domain: CSS
-# This domain exposes CSS read/write operations. All CSS objects (stylesheets, rules,
-# and styles) have an associated `id` used in subsequent operations on the related
-# object. Each object type has a specific `id` structure, and those are not
-# interchangeable between objects of different kinds. CSS objects can be loaded using
-# the `get*ForNode()` calls (which accept a DOM node id). A client can also keep track
-# of stylesheets via the `styleSheetAdded`/`styleSheetRemoved` events and subsequently
-# load the required stylesheet contents using the `getStyleSheet[Text]()` methods.
 
-from typing import Any, Literal
+from typing import Literal, TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
 
-# Stylesheet type: "injected" for stylesheets injected via extension, "user-agent" for
-# user-agent stylesheets, "inspector" for stylesheets created by the inspector (i.e.
-# those holding the "via inspector" rules), "regular" for regular stylesheets.
+if TYPE_CHECKING:
+    from pydantic_cpd.cdp import dom, page
+
+"""
+Stylesheet type: "injected" for stylesheets injected via extension, "user-agent" for
+user-agent stylesheets, "inspector" for stylesheets created by the inspector (i.e. those
+holding the "via inspector" rules), "regular" for regular stylesheets.
+"""
 StyleSheetOrigin = Literal["injected", "user-agent", "inspector", "regular"]
 
 
 class PseudoElementMatches(CDPModel):
-    """CSS rule collection for a single pseudo style."""
+    """
+    CSS rule collection for a single pseudo style.
+    """
 
     pseudo_type: dom.PseudoType
     pseudo_identifier: str | None = None
@@ -26,41 +25,53 @@ class PseudoElementMatches(CDPModel):
 
 
 class CSSAnimationStyle(CDPModel):
-    """CSS style coming from animations with the name of the animation."""
+    """
+    CSS style coming from animations with the name of the animation.
+    """
 
     name: str | None = None
     style: CSSStyle
 
 
 class InheritedStyleEntry(CDPModel):
-    """Inherited CSS rule collection from ancestor node."""
+    """
+    Inherited CSS rule collection from ancestor node.
+    """
 
     inline_style: CSSStyle | None = None
     matched_c_s_s_rules: list[RuleMatch]
 
 
 class InheritedAnimatedStyleEntry(CDPModel):
-    """Inherited CSS style collection for animated styles from ancestor node."""
+    """
+    Inherited CSS style collection for animated styles from ancestor node.
+    """
 
     animation_styles: list[CSSAnimationStyle] | None = None
     transitions_style: CSSStyle | None = None
 
 
 class InheritedPseudoElementMatches(CDPModel):
-    """Inherited pseudo element matches from pseudos of an ancestor node."""
+    """
+    Inherited pseudo element matches from pseudos of an ancestor node.
+    """
 
     pseudo_elements: list[PseudoElementMatches]
 
 
 class RuleMatch(CDPModel):
-    """Match data for a CSS rule."""
+    """
+    Match data for a CSS rule.
+    """
 
     rule: CSSRule
     matching_selectors: list[int]
 
 
 class Value(CDPModel):
-    """Data for a simple selector (these are delimited by commas in a selector list)."""
+    """
+    Data for a simple selector (these are delimited by commas in a selector list).
+    """
 
     text: str
     range: SourceRange | None = None
@@ -68,8 +79,9 @@ class Value(CDPModel):
 
 
 class Specificity(CDPModel):
-    """Specificity:
-    https://drafts.csswg.org/selectors/#specificity-rules"""
+    """
+    Specificity: https://drafts.csswg.org/selectors/#specificity-rules
+    """
 
     a: int
     b: int
@@ -77,14 +89,18 @@ class Specificity(CDPModel):
 
 
 class SelectorList(CDPModel):
-    """Selector list data."""
+    """
+    Selector list data.
+    """
 
     selectors: list[Value]
     text: str
 
 
 class CSSStyleSheetHeader(CDPModel):
-    """CSS stylesheet metainformation."""
+    """
+    CSS stylesheet metainformation.
+    """
 
     style_sheet_id: dom.StyleSheetId
     frame_id: page.FrameId
@@ -107,7 +123,9 @@ class CSSStyleSheetHeader(CDPModel):
 
 
 class CSSRule(CDPModel):
-    """CSS rule representation."""
+    """
+    CSS rule representation.
+    """
 
     style_sheet_id: dom.StyleSheetId | None = None
     selector_list: SelectorList
@@ -124,9 +142,11 @@ class CSSRule(CDPModel):
     starting_styles: list[CSSStartingStyle] | None = None
 
 
-# Enum indicating the type of a CSS rule, used to represent the order of a style rule's
-# ancestors. This list only contains rule types that are collected during the ancestor
-# rule collection.
+"""
+Enum indicating the type of a CSS rule, used to represent the order of a style rule's
+ancestors. This list only contains rule types that are collected during the ancestor
+rule collection.
+"""
 CSSRuleType = Literal[
     "MediaRule",
     "SupportsRule",
@@ -139,7 +159,9 @@ CSSRuleType = Literal[
 
 
 class RuleUsage(CDPModel):
-    """CSS coverage information."""
+    """
+    CSS coverage information.
+    """
 
     style_sheet_id: dom.StyleSheetId
     start_offset: float
@@ -148,7 +170,9 @@ class RuleUsage(CDPModel):
 
 
 class SourceRange(CDPModel):
-    """Text range within a resource. All numbers are zero-based."""
+    """
+    Text range within a resource. All numbers are zero-based.
+    """
 
     start_line: int
     start_column: int
@@ -172,7 +196,9 @@ class ComputedStyleExtraFields(CDPModel):
 
 
 class CSSStyle(CDPModel):
-    """CSS style representation."""
+    """
+    CSS style representation.
+    """
 
     style_sheet_id: dom.StyleSheetId | None = None
     css_properties: list[CSSProperty]
@@ -182,7 +208,9 @@ class CSSStyle(CDPModel):
 
 
 class CSSProperty(CDPModel):
-    """CSS property declaration data."""
+    """
+    CSS property declaration data.
+    """
 
     name: str
     value: str
@@ -196,7 +224,9 @@ class CSSProperty(CDPModel):
 
 
 class CSSMedia(CDPModel):
-    """CSS media rule descriptor."""
+    """
+    CSS media rule descriptor.
+    """
 
     text: str
     source: Literal["mediaRule", "importRule", "linkedSheet", "inlineSheet"]
@@ -207,14 +237,18 @@ class CSSMedia(CDPModel):
 
 
 class MediaQuery(CDPModel):
-    """Media query descriptor."""
+    """
+    Media query descriptor.
+    """
 
     expressions: list[MediaQueryExpression]
     active: bool
 
 
 class MediaQueryExpression(CDPModel):
-    """Media query expression descriptor."""
+    """
+    Media query expression descriptor.
+    """
 
     value: float
     unit: str
@@ -224,7 +258,9 @@ class MediaQueryExpression(CDPModel):
 
 
 class CSSContainerQuery(CDPModel):
-    """CSS container query rule descriptor."""
+    """
+    CSS container query rule descriptor.
+    """
 
     text: str
     range: SourceRange | None = None
@@ -237,7 +273,9 @@ class CSSContainerQuery(CDPModel):
 
 
 class CSSSupports(CDPModel):
-    """CSS Supports at-rule descriptor."""
+    """
+    CSS Supports at-rule descriptor.
+    """
 
     text: str
     active: bool
@@ -246,7 +284,9 @@ class CSSSupports(CDPModel):
 
 
 class CSSScope(CDPModel):
-    """CSS Scope at-rule descriptor."""
+    """
+    CSS Scope at-rule descriptor.
+    """
 
     text: str
     range: SourceRange | None = None
@@ -254,7 +294,9 @@ class CSSScope(CDPModel):
 
 
 class CSSLayer(CDPModel):
-    """CSS Layer at-rule descriptor."""
+    """
+    CSS Layer at-rule descriptor.
+    """
 
     text: str
     range: SourceRange | None = None
@@ -262,14 +304,18 @@ class CSSLayer(CDPModel):
 
 
 class CSSStartingStyle(CDPModel):
-    """CSS Starting Style at-rule descriptor."""
+    """
+    CSS Starting Style at-rule descriptor.
+    """
 
     range: SourceRange | None = None
     style_sheet_id: dom.StyleSheetId | None = None
 
 
 class CSSLayerData(CDPModel):
-    """CSS Layer data."""
+    """
+    CSS Layer data.
+    """
 
     name: str
     sub_layers: list[CSSLayerData] | None = None
@@ -277,7 +323,9 @@ class CSSLayerData(CDPModel):
 
 
 class PlatformFontUsage(CDPModel):
-    """Information about amount of glyphs that were rendered with given font."""
+    """
+    Information about amount of glyphs that were rendered with given font.
+    """
 
     family_name: str
     post_script_name: str
@@ -286,7 +334,9 @@ class PlatformFontUsage(CDPModel):
 
 
 class FontVariationAxis(CDPModel):
-    """Information about font variation axes for variable fonts"""
+    """
+    Information about font variation axes for variable fonts
+    """
 
     tag: str
     name: str
@@ -296,8 +346,11 @@ class FontVariationAxis(CDPModel):
 
 
 class FontFace(CDPModel):
-    """Properties of a web font: https://www.w3.org/TR/2008/REC-CSS2-20080411/fonts.html#font-descriptions
-    and additional information such as platformFontFamily and fontVariationAxes."""
+    """
+    Properties of a web font:
+    https://www.w3.org/TR/2008/REC-CSS2-20080411/fonts.html#font-descriptions and
+    additional information such as platformFontFamily and fontVariationAxes.
+    """
 
     font_family: str
     font_style: str
@@ -312,7 +365,9 @@ class FontFace(CDPModel):
 
 
 class CSSTryRule(CDPModel):
-    """CSS try rule representation."""
+    """
+    CSS try rule representation.
+    """
 
     style_sheet_id: dom.StyleSheetId | None = None
     origin: StyleSheetOrigin
@@ -320,7 +375,9 @@ class CSSTryRule(CDPModel):
 
 
 class CSSPositionTryRule(CDPModel):
-    """CSS @position-try rule representation."""
+    """
+    CSS @position-try rule representation.
+    """
 
     name: Value
     style_sheet_id: dom.StyleSheetId | None = None
@@ -330,14 +387,18 @@ class CSSPositionTryRule(CDPModel):
 
 
 class CSSKeyframesRule(CDPModel):
-    """CSS keyframes rule representation."""
+    """
+    CSS keyframes rule representation.
+    """
 
     animation_name: Value
     keyframes: list[CSSKeyframeRule]
 
 
 class CSSPropertyRegistration(CDPModel):
-    """Representation of a custom property registration through CSS.registerProperty"""
+    """
+    Representation of a custom property registration through CSS.registerProperty
+    """
 
     property_name: str
     initial_value: Value | None = None
@@ -346,7 +407,9 @@ class CSSPropertyRegistration(CDPModel):
 
 
 class CSSAtRule(CDPModel):
-    """CSS generic @rule representation."""
+    """
+    CSS generic @rule representation.
+    """
 
     type: Literal["font-face", "font-feature-values", "font-palette-values"]
     subsection: (
@@ -367,7 +430,9 @@ class CSSAtRule(CDPModel):
 
 
 class CSSPropertyRule(CDPModel):
-    """CSS property at-rule representation."""
+    """
+    CSS property at-rule representation.
+    """
 
     style_sheet_id: dom.StyleSheetId | None = None
     origin: StyleSheetOrigin
@@ -376,14 +441,18 @@ class CSSPropertyRule(CDPModel):
 
 
 class CSSFunctionParameter(CDPModel):
-    """CSS function argument representation."""
+    """
+    CSS function argument representation.
+    """
 
     name: str
     type: str
 
 
 class CSSFunctionConditionNode(CDPModel):
-    """CSS function conditional block representation."""
+    """
+    CSS function conditional block representation.
+    """
 
     media: CSSMedia | None = None
     container_queries: CSSContainerQuery | None = None
@@ -393,14 +462,18 @@ class CSSFunctionConditionNode(CDPModel):
 
 
 class CSSFunctionNode(CDPModel):
-    """Section of the body of a CSS function rule."""
+    """
+    Section of the body of a CSS function rule.
+    """
 
     condition: CSSFunctionConditionNode | None = None
     style: CSSStyle | None = None
 
 
 class CSSFunctionRule(CDPModel):
-    """CSS function at-rule representation."""
+    """
+    CSS function at-rule representation.
+    """
 
     name: Value
     style_sheet_id: dom.StyleSheetId | None = None
@@ -410,7 +483,9 @@ class CSSFunctionRule(CDPModel):
 
 
 class CSSKeyframeRule(CDPModel):
-    """CSS keyframe rule representation."""
+    """
+    CSS keyframe rule representation.
+    """
 
     style_sheet_id: dom.StyleSheetId | None = None
     origin: StyleSheetOrigin
@@ -419,7 +494,9 @@ class CSSKeyframeRule(CDPModel):
 
 
 class StyleDeclarationEdit(CDPModel):
-    """A descriptor of operation to mutate style declaration text."""
+    """
+    A descriptor of operation to mutate style declaration text.
+    """
 
     style_sheet_id: dom.StyleSheetId
     range: SourceRange

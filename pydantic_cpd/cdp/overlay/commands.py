@@ -1,21 +1,19 @@
 """Generated command models from CDP specification"""
-# Domain: Overlay Commands
 
-from typing import Any, Literal
+from typing import Any, TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
 
 from .types import *
 
-from pydantic_cpd.cdp import dom
-from pydantic_cpd.cdp import dom
-from pydantic_cpd.cdp import dom
 from pydantic_cpd.cdp import dom
 from pydantic_cpd.cdp import page
 from pydantic_cpd.cdp import runtime
 
 
 class GetHighlightObjectForTestParams(CDPModel):
-    """For testing."""
+    """
+    For testing.
+    """
 
     node_id: dom.NodeId
     include_distance: bool | None = None
@@ -29,9 +27,11 @@ class GetHighlightObjectForTestResult(CDPModel):
 
 
 class GetGridHighlightObjectsForTestParams(CDPModel):
-    """For Persistent Grid testing."""
+    """
+    For Persistent Grid testing.
+    """
 
-    node_ids: list[DOM.NodeId]
+    node_ids: list[dom.NodeId]
 
 
 class GetGridHighlightObjectsForTestResult(CDPModel):
@@ -39,7 +39,9 @@ class GetGridHighlightObjectsForTestResult(CDPModel):
 
 
 class GetSourceOrderHighlightObjectForTestParams(CDPModel):
-    """For Source Order Viewer testing."""
+    """
+    For Source Order Viewer testing.
+    """
 
     node_id: dom.NodeId
 
@@ -49,10 +51,11 @@ class GetSourceOrderHighlightObjectForTestResult(CDPModel):
 
 
 class HighlightFrameParams(CDPModel):
-    """Highlights owner element of the frame with given id.
-    Deprecated: Doesn't work reliably and cannot be fixed due to process
-    separation (the owner node might be in a different process). Determine
-    the owner node in the client and use highlightNode."""
+    """
+    Highlights owner element of the frame with given id. Deprecated: Doesn't work
+    reliably and cannot be fixed due to process separation (the owner node might be in a
+    different process). Determine the owner node in the client and use highlightNode.
+    """
 
     frame_id: page.FrameId
     content_color: dom.RGBA | None = None
@@ -60,8 +63,10 @@ class HighlightFrameParams(CDPModel):
 
 
 class HighlightNodeParams(CDPModel):
-    """Highlights DOM node with given id or with the given JavaScript object wrapper. Either nodeId or
-    objectId must be specified."""
+    """
+    Highlights DOM node with given id or with the given JavaScript object wrapper.
+    Either nodeId or objectId must be specified.
+    """
 
     highlight_config: HighlightConfig
     node_id: dom.NodeId | None = None
@@ -71,7 +76,10 @@ class HighlightNodeParams(CDPModel):
 
 
 class HighlightQuadParams(CDPModel):
-    """Highlights given quad. Coordinates are absolute with respect to the main frame viewport."""
+    """
+    Highlights given quad. Coordinates are absolute with respect to the main frame
+    viewport.
+    """
 
     quad: dom.Quad
     color: dom.RGBA | None = None
@@ -79,10 +87,12 @@ class HighlightQuadParams(CDPModel):
 
 
 class HighlightRectParams(CDPModel):
-    """Highlights given rectangle. Coordinates are absolute with respect to the main frame viewport.
-    Issue: the method does not handle device pixel ratio (DPR) correctly.
-    The coordinates currently have to be adjusted by the client
-    if DPR is not 1 (see crbug.com/437807128)."""
+    """
+    Highlights given rectangle. Coordinates are absolute with respect to the main frame
+    viewport. Issue: the method does not handle device pixel ratio (DPR) correctly. The
+    coordinates currently have to be adjusted by the client if DPR is not 1 (see
+    crbug.com/437807128).
+    """
 
     x: int
     y: int
@@ -93,8 +103,10 @@ class HighlightRectParams(CDPModel):
 
 
 class HighlightSourceOrderParams(CDPModel):
-    """Highlights the source order of the children of the DOM node with given id or with the given
-    JavaScript object wrapper. Either nodeId or objectId must be specified."""
+    """
+    Highlights the source order of the children of the DOM node with given id or with
+    the given JavaScript object wrapper. Either nodeId or objectId must be specified.
+    """
 
     source_order_config: SourceOrderConfig
     node_id: dom.NodeId | None = None
@@ -103,15 +115,20 @@ class HighlightSourceOrderParams(CDPModel):
 
 
 class SetInspectModeParams(CDPModel):
-    """Enters the 'inspect' mode. In this mode, elements that user is hovering over are highlighted.
-    Backend then generates 'inspectNodeRequested' event upon element selection."""
+    """
+    Enters the 'inspect' mode. In this mode, elements that user is hovering over are
+    highlighted. Backend then generates 'inspectNodeRequested' event upon element
+    selection.
+    """
 
     mode: InspectMode
     highlight_config: HighlightConfig | None = None
 
 
 class SetShowAdHighlightsParams(CDPModel):
-    """Highlights owner element of all frames detected to be ads."""
+    """
+    Highlights owner element of all frames detected to be ads.
+    """
 
     show: bool
 
@@ -121,19 +138,25 @@ class SetPausedInDebuggerMessageParams(CDPModel):
 
 
 class SetShowDebugBordersParams(CDPModel):
-    """Requests that backend shows debug borders on layers"""
+    """
+    Requests that backend shows debug borders on layers
+    """
 
     show: bool
 
 
 class SetShowFPSCounterParams(CDPModel):
-    """Requests that backend shows the FPS counter"""
+    """
+    Requests that backend shows the FPS counter
+    """
 
     show: bool
 
 
 class SetShowGridOverlaysParams(CDPModel):
-    """Highlight multiple elements with the CSS Grid overlay."""
+    """
+    Highlight multiple elements with the CSS Grid overlay.
+    """
 
     grid_node_highlight_configs: list[GridNodeHighlightConfig]
 
@@ -151,54 +174,72 @@ class SetShowContainerQueryOverlaysParams(CDPModel):
 
 
 class SetShowPaintRectsParams(CDPModel):
-    """Requests that backend shows paint rectangles"""
+    """
+    Requests that backend shows paint rectangles
+    """
 
     result: bool
 
 
 class SetShowLayoutShiftRegionsParams(CDPModel):
-    """Requests that backend shows layout shift regions"""
+    """
+    Requests that backend shows layout shift regions
+    """
 
     result: bool
 
 
 class SetShowScrollBottleneckRectsParams(CDPModel):
-    """Requests that backend shows scroll bottleneck rects"""
+    """
+    Requests that backend shows scroll bottleneck rects
+    """
 
     show: bool
 
 
 class SetShowHitTestBordersParams(CDPModel):
-    """Deprecated, no longer has any effect."""
+    """
+    Deprecated, no longer has any effect.
+    """
 
     show: bool
 
 
 class SetShowWebVitalsParams(CDPModel):
-    """Deprecated, no longer has any effect."""
+    """
+    Deprecated, no longer has any effect.
+    """
 
     show: bool
 
 
 class SetShowViewportSizeOnResizeParams(CDPModel):
-    """Paints viewport size upon main frame resize."""
+    """
+    Paints viewport size upon main frame resize.
+    """
 
     show: bool
 
 
 class SetShowHingeParams(CDPModel):
-    """Add a dual screen device hinge"""
+    """
+    Add a dual screen device hinge
+    """
 
     hinge_config: HingeConfig | None = None
 
 
 class SetShowIsolatedElementsParams(CDPModel):
-    """Show elements in isolation mode with overlays."""
+    """
+    Show elements in isolation mode with overlays.
+    """
 
     isolated_element_highlight_configs: list[IsolatedElementHighlightConfig]
 
 
 class SetShowWindowControlsOverlayParams(CDPModel):
-    """Show Window Controls Overlay for PWA"""
+    """
+    Show Window Controls Overlay for PWA
+    """
 
     window_controls_overlay_config: WindowControlsOverlayConfig | None = None

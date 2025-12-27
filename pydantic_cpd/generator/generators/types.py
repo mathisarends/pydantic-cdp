@@ -1,46 +1,74 @@
-from pydantic_cpd.generator.models import Domain, TypeDefinition, Parameter
+from pydantic_cpd.generator.models import Domain, Parameter, TypeDefinition
 from pydantic_cpd.generator.type_mapper import map_cdp_type, to_snake_case
+
+from .utils import format_docstring
 
 
 class TypesGenerator:
     def __init__(self):
         self.cross_domain_refs: set[str] = set()
+        self.uses_any: bool = False
+        self.uses_literal: bool = False
 
     def generate(self, domain: Domain) -> str:
         self.cross_domain_refs.clear()
+        self.uses_any = False
+        self.uses_literal = False
 
         sections = [
             self._header(domain),
-            self._imports(),
         ]
 
+        # Erst alle Type Defs generieren (sammelt verwendete Types)
+        type_defs = self._generate_type_definitions(domain)
+
+        # Dann Imports basierend auf Verwendung
+        sections.append(self._imports())
+
+        # Dann cross-domain imports hinzufügen
         if self.cross_domain_refs:
             sections.append(self._cross_domain_imports())
 
-        type_defs = self._generate_type_definitions(domain)
         if type_defs:
             sections.append(type_defs)
+        else:
+            sections.append("# No types defined")
 
         return "\n\n".join(sections)
 
     def _header(self, domain: Domain) -> str:
-        lines = ['"""Generated from CDP specification"""', f"# Domain: {domain.domain}"]
-
-        if domain.description:
-            lines.extend(self._format_comment(domain.description))
-
-        return "\n".join(lines)
+        return '"""Generated from CDP specification"""'
 
     def _imports(self) -> str:
-        return """from typing import Any, Literal
-from pydantic_cpd.cdp.base import CDPModel"""
+        typing_imports = []
+
+        if self.uses_any:
+            typing_imports.append("Any")
+        if self.uses_literal:
+            typing_imports.append("Literal")
+        if self.cross_domain_refs:
+            typing_imports.append("TYPE_CHECKING")
+
+        lines = []
+        if typing_imports:
+            lines.append(f"from typing import {', '.join(typing_imports)}")
+
+        lines.append("from pydantic_cpd.cdp.base import CDPModel")
+
+        return "\n".join(lines)
 
     def _cross_domain_imports(self) -> str:
-        lines = []
-        for ref in sorted(self.cross_domain_refs):
+        # Dedupliziere domains
+        unique_domains = set()
+        for ref in self.cross_domain_refs:
             domain_name = ref.split(".")[0].lower()
-            lines.append(f"from pydantic_cpd.cdp import {domain_name}")
-        return "\n".join(lines)
+            unique_domains.add(domain_name)
+
+        if not unique_domains:
+            return ""
+
+        domains_list = ", ".join(sorted(unique_domains))
+        return f"if TYPE_CHECKING:\n    from pydantic_cpd.cdp import {domains_list}"
 
     def _generate_type_definitions(self, domain: Domain) -> str:
         if not domain.types:
@@ -67,10 +95,16 @@ from pydantic_cpd.cdp.base import CDPModel"""
         lines = []
 
         if type_def.description:
-            lines.extend(self._format_comment(type_def.description))
+            # Module-level docstring for the enum/type alias
+            lines.append(format_docstring(type_def.description, indent=0))
 
         values = ", ".join(f'"{v}"' for v in type_def.enum)
-        lines.append(f"{type_def.id} = Literal[{values}]")
+        literal_type = f"Literal[{values}]"
+
+        # Track Literal usage
+        self.uses_literal = True
+
+        lines.append(f"{type_def.id} = {literal_type}")
 
         return "\n".join(lines)
 
@@ -78,7 +112,7 @@ from pydantic_cpd.cdp.base import CDPModel"""
         lines = [f"class {type_def.id}(CDPModel):"]
 
         if type_def.description:
-            lines.append(f'    """{type_def.description}"""')
+            lines.append(format_docstring(type_def.description, indent=4))
 
         for prop in type_def.properties:
             lines.append(f"    {self._create_field(prop)}")
@@ -89,10 +123,31 @@ from pydantic_cpd.cdp.base import CDPModel"""
         field_name = to_snake_case(param.name)
         py_type = self._resolve_type(param)
 
+        # Track cross-domain refs
         if param.ref and "." in param.ref:
             self.cross_domain_refs.add(param.ref)
 
+        # Track type usage
+        self._track_type_usage(py_type)
+
         return f"{field_name}: {py_type}" + (" = None" if param.optional else "")
+
+    def _track_type_usage(self, type_str: str) -> None:
+        """Track which typing imports are used"""
+        if "Any" in type_str:
+            self.uses_any = True
+        if "Literal" in type_str:
+            self.uses_literal = True
+
+        # Track cross-domain refs
+        import re
+
+        pattern = r"\b([a-z]+)\.([A-Z][a-zA-Z0-9]*)\b"
+        matches = re.findall(pattern, type_str)
+
+        for domain, type_name in matches:
+            ref = f"{domain}.{type_name}"
+            self.cross_domain_refs.add(ref)
 
     def _resolve_type(self, param: Parameter) -> str:
         if param.ref and "." in param.ref:
@@ -108,33 +163,20 @@ from pydantic_cpd.cdp.base import CDPModel"""
 
         return base_type
 
-    def _format_comment(self, text: str, max_length: int = 88) -> list[str]:
-        """Format description text as Python comments with line wrapping."""
-        words = text.split()
-        lines = []
-        current_line = "# "
-
-        for word in words:
-            if len(current_line) + len(word) + 1 <= max_length:
-                current_line += word + " "
-            else:
-                lines.append(current_line.rstrip())
-                current_line = "# " + word + " "
-
-        if current_line.strip() != "#":
-            lines.append(current_line.rstrip())
-
-        return lines
-
     def _create_type_alias(self, type_def: TypeDefinition) -> str:
         lines = []
 
         if type_def.description:
-            lines.extend(self._format_comment(type_def.description))
+            # Module-level docstring for the type alias
+            lines.append(format_docstring(type_def.description, indent=0))
 
         py_type = map_cdp_type(
             Parameter(name=type_def.id, type=type_def.type, optional=False)
         )
+
+        # Track type usage in type alias
+        self._track_type_usage(py_type)
+
         lines.append(f"{type_def.id} = {py_type}")
 
         return "\n".join(lines)

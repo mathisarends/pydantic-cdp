@@ -1,15 +1,22 @@
 """Generated from CDP specification"""
-# Domain: HeapProfiler
 
-from typing import Any, Literal
+from typing import TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
 
-# Heap snapshot object id.
+if TYPE_CHECKING:
+    from pydantic_cpd.cdp import runtime
+
+"""
+Heap snapshot object id.
+"""
 HeapSnapshotObjectId = str
 
 
 class SamplingHeapProfileNode(CDPModel):
-    """Sampling Heap Profile node. Holds callsite information, allocation statistics and child nodes."""
+    """
+    Sampling Heap Profile node. Holds callsite information, allocation statistics and
+    child nodes.
+    """
 
     call_frame: runtime.CallFrame
     self_size: float
@@ -18,7 +25,9 @@ class SamplingHeapProfileNode(CDPModel):
 
 
 class SamplingHeapProfileSample(CDPModel):
-    """A single sample from a sampling profile."""
+    """
+    A single sample from a sampling profile.
+    """
 
     size: float
     node_id: int
@@ -26,7 +35,9 @@ class SamplingHeapProfileSample(CDPModel):
 
 
 class SamplingHeapProfile(CDPModel):
-    """Sampling profile."""
+    """
+    Sampling profile.
+    """
 
     head: SamplingHeapProfileNode
     samples: list[SamplingHeapProfileSample]

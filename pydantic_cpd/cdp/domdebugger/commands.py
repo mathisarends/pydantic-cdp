@@ -1,7 +1,6 @@
 """Generated command models from CDP specification"""
-# Domain: DOMDebugger Commands
 
-from typing import Any, Literal
+from typing import TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
 
 from .types import *
@@ -11,7 +10,9 @@ from pydantic_cpd.cdp import runtime
 
 
 class GetEventListenersParams(CDPModel):
-    """Returns event listeners of the given object."""
+    """
+    Returns event listeners of the given object.
+    """
 
     object_id: runtime.RemoteObjectId
     depth: int | None = None
@@ -23,58 +24,76 @@ class GetEventListenersResult(CDPModel):
 
 
 class RemoveDOMBreakpointParams(CDPModel):
-    """Removes DOM breakpoint that was set using `setDOMBreakpoint`."""
+    """
+    Removes DOM breakpoint that was set using `setDOMBreakpoint`.
+    """
 
     node_id: dom.NodeId
     type: DOMBreakpointType
 
 
 class RemoveEventListenerBreakpointParams(CDPModel):
-    """Removes breakpoint on particular DOM event."""
+    """
+    Removes breakpoint on particular DOM event.
+    """
 
     event_name: str
     target_name: str | None = None
 
 
 class RemoveInstrumentationBreakpointParams(CDPModel):
-    """Removes breakpoint on particular native event."""
+    """
+    Removes breakpoint on particular native event.
+    """
 
     event_name: str
 
 
 class RemoveXHRBreakpointParams(CDPModel):
-    """Removes breakpoint from XMLHttpRequest."""
+    """
+    Removes breakpoint from XMLHttpRequest.
+    """
 
     url: str
 
 
 class SetBreakOnCSPViolationParams(CDPModel):
-    """Sets breakpoint on particular CSP violations."""
+    """
+    Sets breakpoint on particular CSP violations.
+    """
 
     violation_types: list[CSPViolationType]
 
 
 class SetDOMBreakpointParams(CDPModel):
-    """Sets breakpoint on particular operation with DOM."""
+    """
+    Sets breakpoint on particular operation with DOM.
+    """
 
     node_id: dom.NodeId
     type: DOMBreakpointType
 
 
 class SetEventListenerBreakpointParams(CDPModel):
-    """Sets breakpoint on particular DOM event."""
+    """
+    Sets breakpoint on particular DOM event.
+    """
 
     event_name: str
     target_name: str | None = None
 
 
 class SetInstrumentationBreakpointParams(CDPModel):
-    """Sets breakpoint on particular native event."""
+    """
+    Sets breakpoint on particular native event.
+    """
 
     event_name: str
 
 
 class SetXHRBreakpointParams(CDPModel):
-    """Sets breakpoint on XMLHttpRequest."""
+    """
+    Sets breakpoint on XMLHttpRequest.
+    """
 
     url: str

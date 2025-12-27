@@ -1,5 +1,4 @@
 """Generated client library from CDP specification"""
-# Domain: Profiler Client
 
 from __future__ import annotations
 
@@ -19,7 +18,9 @@ from .commands import (
 
 
 class ProfilerClient:
-    """CDP Profiler domain client."""
+    """
+    CDP Profiler domain client.
+    """
 
     def __init__(self, client: CDPClient) -> None:
         self._client = client
@@ -43,8 +44,6 @@ class ProfilerClient:
     async def get_best_effort_coverage(
         self, session_id: str | None = None
     ) -> GetBestEffortCoverageResult:
-        """Collect coverage data for the current isolate. The coverage data may be incomplete due to
-        garbage collection."""
         result = await self._client.send_raw(
             method="Profiler.getBestEffortCoverage",
             params=None,
@@ -55,7 +54,6 @@ class ProfilerClient:
     async def set_sampling_interval(
         self, params: SetSamplingIntervalParams, session_id: str | None = None
     ) -> dict[str, Any]:
-        """Changes CPU profiler sampling interval. Must be called before CPU profiles recording started."""
         result = await self._client.send_raw(
             method="Profiler.setSamplingInterval",
             params=params.to_cdp_params() if params else None,
@@ -76,9 +74,6 @@ class ProfilerClient:
         params: StartPreciseCoverageParams | None = None,
         session_id: str | None = None,
     ) -> StartPreciseCoverageResult:
-        """Enable precise code coverage. Coverage data for JavaScript executed before enabling precise code
-        coverage may be incomplete. Enabling prevents running optimized code and resets execution
-        counters."""
         result = await self._client.send_raw(
             method="Profiler.startPreciseCoverage",
             params=params.to_cdp_params() if params else None,
@@ -97,8 +92,6 @@ class ProfilerClient:
     async def stop_precise_coverage(
         self, session_id: str | None = None
     ) -> dict[str, Any]:
-        """Disable precise code coverage. Disabling releases unnecessary execution count records and allows
-        executing optimized code."""
         result = await self._client.send_raw(
             method="Profiler.stopPreciseCoverage",
             params=None,
@@ -109,8 +102,6 @@ class ProfilerClient:
     async def take_precise_coverage(
         self, session_id: str | None = None
     ) -> TakePreciseCoverageResult:
-        """Collect coverage data for the current isolate, and resets execution counters. Precise code
-        coverage needs to have started."""
         result = await self._client.send_raw(
             method="Profiler.takePreciseCoverage",
             params=None,

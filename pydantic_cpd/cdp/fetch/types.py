@@ -1,17 +1,22 @@
 """Generated from CDP specification"""
-# Domain: Fetch
-# A domain for letting clients substitute browser's network layer with client code.
 
-from typing import Any, Literal
+from typing import Literal, TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
 
-# Unique request identifier. Note that this does not identify individual HTTP requests
-# that are part of a network request.
+if TYPE_CHECKING:
+    from pydantic_cpd.cdp import network
+
+"""
+Unique request identifier. Note that this does not identify individual HTTP requests
+that are part of a network request.
+"""
 RequestId = str
 
-# Stages of the request to handle. Request will intercept before the request is sent.
-# Response will intercept after the response is received (but before response body is
-# received).
+"""
+Stages of the request to handle. Request will intercept before the request is sent.
+Response will intercept after the response is received (but before response body is
+received).
+"""
 RequestStage = Literal["Request", "Response"]
 
 
@@ -22,14 +27,18 @@ class RequestPattern(CDPModel):
 
 
 class HeaderEntry(CDPModel):
-    """Response HTTP header entry"""
+    """
+    Response HTTP header entry
+    """
 
     name: str
     value: str
 
 
 class AuthChallenge(CDPModel):
-    """Authorization challenge for HTTP status code 401 or 407."""
+    """
+    Authorization challenge for HTTP status code 401 or 407.
+    """
 
     source: Literal["Server", "Proxy"] | None = None
     origin: str
@@ -38,7 +47,9 @@ class AuthChallenge(CDPModel):
 
 
 class AuthChallengeResponse(CDPModel):
-    """Response to an AuthChallenge."""
+    """
+    Response to an AuthChallenge.
+    """
 
     response: Literal["Default", "CancelAuth", "ProvideCredentials"]
     username: str | None = None

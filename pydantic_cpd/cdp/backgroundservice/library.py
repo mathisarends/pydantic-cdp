@@ -1,5 +1,4 @@
 """Generated client library from CDP specification"""
-# Domain: BackgroundService Client
 
 from __future__ import annotations
 
@@ -17,7 +16,9 @@ from .commands import (
 
 
 class BackgroundServiceClient:
-    """Defines events for background web platform features."""
+    """
+    Defines events for background web platform features.
+    """
 
     def __init__(self, client: CDPClient) -> None:
         self._client = client
@@ -25,7 +26,6 @@ class BackgroundServiceClient:
     async def start_observing(
         self, params: StartObservingParams, session_id: str | None = None
     ) -> dict[str, Any]:
-        """Enables event updates for the service."""
         result = await self._client.send_raw(
             method="BackgroundService.startObserving",
             params=params.to_cdp_params() if params else None,
@@ -36,7 +36,6 @@ class BackgroundServiceClient:
     async def stop_observing(
         self, params: StopObservingParams, session_id: str | None = None
     ) -> dict[str, Any]:
-        """Disables event updates for the service."""
         result = await self._client.send_raw(
             method="BackgroundService.stopObserving",
             params=params.to_cdp_params() if params else None,
@@ -47,7 +46,6 @@ class BackgroundServiceClient:
     async def set_recording(
         self, params: SetRecordingParams, session_id: str | None = None
     ) -> dict[str, Any]:
-        """Set the recording state for the service."""
         result = await self._client.send_raw(
             method="BackgroundService.setRecording",
             params=params.to_cdp_params() if params else None,
@@ -58,7 +56,6 @@ class BackgroundServiceClient:
     async def clear_events(
         self, params: ClearEventsParams, session_id: str | None = None
     ) -> dict[str, Any]:
-        """Clears all stored data for the service."""
         result = await self._client.send_raw(
             method="BackgroundService.clearEvents",
             params=params.to_cdp_params() if params else None,

@@ -1,13 +1,19 @@
 """Generated from CDP specification"""
-# Domain: Accessibility
 
-from typing import Any, Literal
+from typing import Any, Literal, TYPE_CHECKING
 from pydantic_cpd.cdp.base import CDPModel
 
-# Unique accessibility node identifier.
+if TYPE_CHECKING:
+    from pydantic_cpd.cdp import dom, page
+
+"""
+Unique accessibility node identifier.
+"""
 AXNodeId = str
 
-# Enum of possible property types.
+"""
+Enum of possible property types.
+"""
 AXValueType = Literal[
     "boolean",
     "tristate",
@@ -28,13 +34,17 @@ AXValueType = Literal[
     "valueUndefined",
 ]
 
-# Enum of possible property sources.
+"""
+Enum of possible property sources.
+"""
 AXValueSourceType = Literal[
     "attribute", "implicit", "style", "contents", "placeholder", "relatedElement"
 ]
 
-# Enum of possible native property sources (as a subtype of a particular
-# AXValueSourceType).
+"""
+Enum of possible native property sources (as a subtype of a particular
+AXValueSourceType).
+"""
 AXValueNativeSourceType = Literal[
     "description",
     "figcaption",
@@ -50,7 +60,9 @@ AXValueNativeSourceType = Literal[
 
 
 class AXValueSource(CDPModel):
-    """A single source for a computed AX property."""
+    """
+    A single source for a computed AX property.
+    """
 
     type: AXValueSourceType
     value: AXValue | None = None
@@ -75,7 +87,9 @@ class AXProperty(CDPModel):
 
 
 class AXValue(CDPModel):
-    """A single computed AX property."""
+    """
+    A single computed AX property.
+    """
 
     type: AXValueType
     value: Any | None = None
@@ -83,12 +97,14 @@ class AXValue(CDPModel):
     sources: list[AXValueSource] | None = None
 
 
-# Values of AXProperty name: - from 'busy' to 'roledescription': states which apply to
-# every AX node - from 'live' to 'root': attributes which apply to nodes in live
-# regions - from 'autocomplete' to 'valuetext': attributes which apply to widgets -
-# from 'checked' to 'selected': states which apply to widgets - from 'activedescendant'
-# to 'owns': relationships between elements other than parent/child/sibling - from
-# 'activeFullscreenElement' to 'uninteresting': reasons why this noode is hidden
+"""
+Values of AXProperty name: - from 'busy' to 'roledescription': states which apply to
+every AX node - from 'live' to 'root': attributes which apply to nodes in live regions -
+from 'autocomplete' to 'valuetext': attributes which apply to widgets - from 'checked'
+to 'selected': states which apply to widgets - from 'activedescendant' to 'owns':
+relationships between elements other than parent/child/sibling - from
+'activeFullscreenElement' to 'uninteresting': reasons why this noode is hidden
+"""
 AXPropertyName = Literal[
     "actions",
     "busy",
@@ -152,7 +168,9 @@ AXPropertyName = Literal[
 
 
 class AXNode(CDPModel):
-    """A node in the accessibility tree."""
+    """
+    A node in the accessibility tree.
+    """
 
     node_id: AXNodeId
     ignored: bool
