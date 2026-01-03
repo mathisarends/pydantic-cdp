@@ -1,5 +1,9 @@
-from pydantic_cpd.generator.models import CDPSpecs, Domain
+import logging
+
 from pydantic_cpd.generator.config import DOMAINS_TO_GENERATE
+from pydantic_cpd.generator.models import CDPSpecs, Domain
+
+logger = logging.getLogger(__name__)
 
 
 def filter_domains(specs: CDPSpecs) -> list[Domain]:
@@ -9,10 +13,11 @@ def filter_domains(specs: CDPSpecs) -> list[Domain]:
         domain = specs.get_domain(domain_name)
         if domain:
             domains.append(domain)
-            print(
-                f"  ✓ {domain_name}: {len(domain.commands)} commands, {len(domain.events)} events"
+            logger.info(
+                f"  ✓ {domain_name}: {len(domain.commands)} commands, "
+                f"{len(domain.events)} events"
             )
         else:
-            print(f"  ✗ {domain_name}: NOT FOUND")
+            logger.warning(f"  ✗ {domain_name}: NOT FOUND")
 
     return domains

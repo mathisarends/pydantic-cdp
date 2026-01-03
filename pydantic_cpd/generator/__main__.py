@@ -1,24 +1,26 @@
 import asyncio
+import logging
 
 from pydantic_cpd.generator.downloader import download_specs
-from pydantic_cpd.generator.parser import filter_domains
 from pydantic_cpd.generator.generator import generate_all_domains
+from pydantic_cpd.generator.parser import filter_domains
+
+logging.basicConfig(level=logging.INFO, format="%(message)s")
+logger = logging.getLogger(__name__)
 
 
 async def main() -> None:
-    print("🚀 CDP Pydantic Generator\n")
+    logger.info("🚀 CDP Pydantic Generator\n")
 
     specs = await download_specs()
-    print(f"✓ CDP Version: {specs.version_string}")
-    print(f"✓ Total domains: {len(specs.all_domains)}")
+    logger.info(f"✓ CDP Version: {specs.version_string}")
+    logger.info(f"✓ Total domains: {len(specs.all_domains)}")
 
-    # Filter domains
     domains = filter_domains(specs)
-    print(f"✓ Selected: {len(domains)} domains")
+    logger.info(f"✓ Selected: {len(domains)} domains")
 
-    # Generate code
     generate_all_domains(domains)
-    print("\n✅ Generation complete!")
+    logger.info("\n✅ Generation complete!")
 
 
 if __name__ == "__main__":

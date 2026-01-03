@@ -1,3 +1,5 @@
+import logging
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -10,54 +12,60 @@ from pydantic_cpd.generator.generators import (
 from pydantic_cpd.generator.models import Domain
 
 CDP_DIR = Path(__file__).parent.parent / "cdp"
+logger = logging.getLogger(__name__)
 
 
 class DomainGenerator:
     def __init__(self):
-        self.types_gen = TypesGenerator()
-        self.commands_gen = CommandsGenerator()
-        self.events_gen = EventsGenerator()
-        self.library_gen = LibraryGenerator()
+        self._types_gen = TypesGenerator()
+        self._commands_gen = CommandsGenerator()
+        self._events_gen = EventsGenerator()
+        self._library_gen = LibraryGenerator()
 
     def generate_all(self, domains: list[Domain]) -> None:
         self._prepare_output_dir()
-        print(f"\n📝 Generating {len(domains)} domains...")
+        logger.info(f"\n📝 Generating {len(domains)} domains...")
 
         for domain in domains:
             self._generate_domain(domain)
 
         self._generate_base_file()
         self._generate_init_file(domains)
-
-        print("\n✨ Formatting generated code with Ruff...")
         self._format_with_ruff()
 
-        print("\n✅ Generation complete!")
+        logger.info("\n✅ Generation complete!")
 
     def _prepare_output_dir(self) -> None:
         if CDP_DIR.exists():
-            import shutil
-
             shutil.rmtree(CDP_DIR)
 
         CDP_DIR.mkdir(parents=True, exist_ok=True)
 
     def _generate_domain(self, domain: Domain) -> None:
+        domain_dir = self._create_domain_directory(domain)
+        self._print_domain_summary(domain)
+        self._write_domain_files(domain, domain_dir)
+
+    def _create_domain_directory(self, domain: Domain) -> Path:
         domain_dir = CDP_DIR / domain.domain.lower()
         domain_dir.mkdir(exist_ok=True)
 
-        print(f"  ✓ {domain.domain}")
-        print(f"    - {len(domain.types)} types")
-        print(f"    - {len(domain.commands)} commands")
-        print(f"    - {len(domain.events)} events")
+        return domain_dir
 
-        (domain_dir / "types.py").write_text(self.types_gen.generate(domain))
-        (domain_dir / "commands.py").write_text(self.commands_gen.generate(domain))
-        (domain_dir / "events.py").write_text(self.events_gen.generate(domain))
-        (domain_dir / "library.py").write_text(self.library_gen.generate(domain))
-        (domain_dir / "__init__.py").write_text(self._generate_domain_init(domain))
+    def _print_domain_summary(self, domain: Domain) -> None:
+        logger.info(f"  ✓ {domain.domain}")
+        logger.info(f"    - {len(domain.types)} types")
+        logger.info(f"    - {len(domain.commands)} commands")
+        logger.info(f"    - {len(domain.events)} events")
 
-    def _generate_domain_init(self, domain: Domain) -> str:
+    def _write_domain_files(self, domain: Domain, domain_dir: Path) -> None:
+        (domain_dir / "types.py").write_text(self._types_gen.generate(domain))
+        (domain_dir / "commands.py").write_text(self._commands_gen.generate(domain))
+        (domain_dir / "events.py").write_text(self._events_gen.generate(domain))
+        (domain_dir / "library.py").write_text(self._library_gen.generate(domain))
+        (domain_dir / "__init__.py").write_text(self._build_domain_init(domain))
+
+    def _build_domain_init(self, domain: Domain) -> str:
         return f'''"""CDP {domain.domain} Domain"""
 
 from .types import *
@@ -69,7 +77,11 @@ __all__ = ["{domain.domain}Client"]
 '''
 
     def _generate_base_file(self) -> None:
-        content = '''"""Base Pydantic models for CDP."""
+        (CDP_DIR / "base.py").write_text(self._build_base_content())
+        logger.info("  ✓ base.py")
+
+    def _build_base_content(self) -> str:
+        return '''"""Base Pydantic models for CDP."""
 
 from typing import Any
 from pydantic import BaseModel, ConfigDict
@@ -88,48 +100,73 @@ class CDPModel(BaseModel):
         """Convert model to CDP parameters format."""
         return self.model_dump(by_alias=True, exclude_none=True)
 '''
-        (CDP_DIR / "base.py").write_text(content)
-        print("  ✓ base.py")
 
     def _generate_init_file(self, domains: list[Domain]) -> None:
-        lines = ['"""Generated CDP domains"""', ""]
+        content = self._build_main_init_content(domains)
+        (CDP_DIR / "__init__.py").write_text(content)
+        logger.info("  ✓ __init__.py")
 
+    def _build_main_init_content(self, domains: list[Domain]) -> str:
+        imports = self._build_domain_imports(domains)
+        exports = self._build_domain_exports(domains)
+
+        return f'''"""Generated CDP domains"""
+
+{imports}
+
+{exports}
+'''
+
+    def _build_domain_imports(self, domains: list[Domain]) -> str:
+        lines = []
         for domain in domains:
             domain_lower = domain.domain.lower()
             lines.append(f"from .{domain_lower} import {domain.domain}Client")
 
-        lines.append("")
-        lines.append("__all__ = [")
+        return "\n".join(lines)
+
+    def _build_domain_exports(self, domains: list[Domain]) -> str:
+        lines = ["__all__ = ["]
         for domain in domains:
             lines.append(f'    "{domain.domain}Client",')
         lines.append("]")
 
-        (CDP_DIR / "__init__.py").write_text("\n".join(lines))
-        print("  ✓ __init__.py")
+        return "\n".join(lines)
 
     def _format_with_ruff(self) -> None:
-        """Format all generated Python files with Ruff"""
+        logger.info("\n✨ Formatting generated code with Ruff...")
+
         try:
-            # Ruff format auf das ganze CDP-Verzeichnis
-            result = subprocess.run(
-                ["ruff", "format", str(CDP_DIR)],
-                capture_output=True,
-                text=True,
-                check=False,
-            )
-
-            if result.returncode == 0:
-                print("  ✓ Code formatted successfully")
-            else:
-                print("  ⚠️  Ruff formatting had warnings:")
-                if result.stderr:
-                    print(f"     {result.stderr}")
-
+            self._run_ruff_format()
         except FileNotFoundError:
-            print("  ⚠️  Ruff not found - skipping formatting")
-            print("     Install with: uv add --dev ruff")
+            self._handle_ruff_not_found()
         except Exception as e:
-            print(f"  ⚠️  Error during formatting: {e}")
+            self._handle_ruff_error(e)
+
+    def _run_ruff_format(self) -> None:
+        result = subprocess.run(
+            ["ruff", "format", str(CDP_DIR)],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+        if result.returncode == 0:
+            logger.info("  ✓ Code formatted successfully")
+        else:
+            self._handle_ruff_warnings(result.stderr)
+
+    def _handle_ruff_warnings(self, stderr: str) -> None:
+        logger.warning("  ⚠️  Ruff formatting had warnings:")
+        if stderr:
+            logger.warning(f"     {stderr}")
+
+    def _handle_ruff_not_found(self) -> None:
+        logger.warning("  ⚠️  Ruff not found - skipping formatting")
+        logger.warning("     Install with: uv add --dev ruff")
+
+    def _handle_ruff_error(self, error: Exception) -> None:
+        logger.warning(f"  ⚠️  Error during formatting: {error}")
 
 
 def generate_all_domains(domains: list[Domain]) -> None:

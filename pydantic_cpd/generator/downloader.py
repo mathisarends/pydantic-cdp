@@ -1,4 +1,5 @@
 import json
+import logging
 from pathlib import Path
 
 import httpx
@@ -7,18 +8,19 @@ from pydantic_cpd.generator.constants import BROWSER_PROTOCOL_URL, JS_PROTOCOL_U
 from pydantic_cpd.generator.models import CDPSpecs, ProtocolSpec
 
 SPECS_DIR = Path(__file__).parent.parent.parent / "specs"
+logger = logging.getLogger(__name__)
 
 
 async def download_specs() -> CDPSpecs:
     SPECS_DIR.mkdir(exist_ok=True)
 
     async with httpx.AsyncClient() as client:
-        print("📥 Downloading browser_protocol.json...")
+        logger.info("📥 Downloading browser_protocol.json...")
         browser_response = await client.get(BROWSER_PROTOCOL_URL)
         browser_response.raise_for_status()
         browser_data = browser_response.json()
 
-        print("📥 Downloading js_protocol.json...")
+        logger.info("📥 Downloading js_protocol.json...")
         js_response = await client.get(JS_PROTOCOL_URL)
         js_response.raise_for_status()
         js_data = js_response.json()
@@ -26,7 +28,7 @@ async def download_specs() -> CDPSpecs:
     (SPECS_DIR / "browser_protocol.json").write_text(json.dumps(browser_data, indent=2))
     (SPECS_DIR / "js_protocol.json").write_text(json.dumps(js_data, indent=2))
 
-    print("✅ Specs downloaded and saved to specs/")
+    logger.info("✅ Specs downloaded and saved to specs/")
 
     return CDPSpecs(
         browser=ProtocolSpec.model_validate(browser_data),
