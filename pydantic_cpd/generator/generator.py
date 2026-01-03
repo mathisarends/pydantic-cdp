@@ -11,7 +11,7 @@ from pydantic_cpd.generator.generators import (
 )
 from pydantic_cpd.generator.models import Domain
 
-CDP_DIR = Path(__file__).parent.parent / "cdp"
+CDP_DIR = Path(__file__).parent.parent / "domains"
 logger = logging.getLogger(__name__)
 
 
