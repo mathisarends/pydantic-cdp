@@ -42,14 +42,16 @@ class DOMDebuggerClient:
         pierce: bool | None = None,
         session_id: str | None = None,
     ) -> GetEventListenersResult:
-        params = GetEventListenersParams(objectId=object_id, depth=depth, pierce=pierce)
+        params = GetEventListenersParams(
+            object_id=object_id, depth=depth, pierce=pierce
+        )
 
         result = await self._client.send_raw(
             method=DOMDebuggerCommand.GET_EVENT_LISTENERS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetEventListenersResult.model_validate(result)
+        return GetEventListenersResult.from_cdp(result)
 
     async def remove_d_o_m_breakpoint(
         self,
@@ -58,7 +60,7 @@ class DOMDebuggerClient:
         type: DOMBreakpointType,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = RemoveDOMBreakpointParams(nodeId=node_id, type=type)
+        params = RemoveDOMBreakpointParams(node_id=node_id, type=type)
 
         result = await self._client.send_raw(
             method=DOMDebuggerCommand.REMOVE_D_O_M_BREAKPOINT,
@@ -75,7 +77,7 @@ class DOMDebuggerClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = RemoveEventListenerBreakpointParams(
-            eventName=event_name, targetName=target_name
+            event_name=event_name, target_name=target_name
         )
 
         result = await self._client.send_raw(
@@ -91,7 +93,7 @@ class DOMDebuggerClient:
         event_name: str,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = RemoveInstrumentationBreakpointParams(eventName=event_name)
+        params = RemoveInstrumentationBreakpointParams(event_name=event_name)
 
         result = await self._client.send_raw(
             method=DOMDebuggerCommand.REMOVE_INSTRUMENTATION_BREAKPOINT,
@@ -121,7 +123,7 @@ class DOMDebuggerClient:
         violation_types: list[CSPViolationType],
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = SetBreakOnCSPViolationParams(violationTypes=violation_types)
+        params = SetBreakOnCSPViolationParams(violation_types=violation_types)
 
         result = await self._client.send_raw(
             method=DOMDebuggerCommand.SET_BREAK_ON_C_S_P_VIOLATION,
@@ -137,7 +139,7 @@ class DOMDebuggerClient:
         type: DOMBreakpointType,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = SetDOMBreakpointParams(nodeId=node_id, type=type)
+        params = SetDOMBreakpointParams(node_id=node_id, type=type)
 
         result = await self._client.send_raw(
             method=DOMDebuggerCommand.SET_D_O_M_BREAKPOINT,
@@ -154,7 +156,7 @@ class DOMDebuggerClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = SetEventListenerBreakpointParams(
-            eventName=event_name, targetName=target_name
+            event_name=event_name, target_name=target_name
         )
 
         result = await self._client.send_raw(
@@ -170,7 +172,7 @@ class DOMDebuggerClient:
         event_name: str,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = SetInstrumentationBreakpointParams(eventName=event_name)
+        params = SetInstrumentationBreakpointParams(event_name=event_name)
 
         result = await self._client.send_raw(
             method=DOMDebuggerCommand.SET_INSTRUMENTATION_BREAKPOINT,

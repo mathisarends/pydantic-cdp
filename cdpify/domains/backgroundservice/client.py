@@ -63,7 +63,7 @@ class BackgroundServiceClient:
         service: ServiceName,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = SetRecordingParams(shouldRecord=should_record, service=service)
+        params = SetRecordingParams(should_record=should_record, service=service)
 
         result = await self._client.send_raw(
             method=BackgroundServiceCommand.SET_RECORDING,

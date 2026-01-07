@@ -84,15 +84,15 @@ class InputClient:
             modifiers=modifiers,
             timestamp=timestamp,
             text=text,
-            unmodifiedText=unmodified_text,
-            keyIdentifier=key_identifier,
+            unmodified_text=unmodified_text,
+            key_identifier=key_identifier,
             code=code,
             key=key,
-            windowsVirtualKeyCode=windows_virtual_key_code,
-            nativeVirtualKeyCode=native_virtual_key_code,
-            autoRepeat=auto_repeat,
-            isKeypad=is_keypad,
-            isSystemKey=is_system_key,
+            windows_virtual_key_code=windows_virtual_key_code,
+            native_virtual_key_code=native_virtual_key_code,
+            auto_repeat=auto_repeat,
+            is_keypad=is_keypad,
+            is_system_key=is_system_key,
             location=location,
             commands=commands,
         )
@@ -131,10 +131,10 @@ class InputClient:
     ) -> dict[str, Any]:
         params = ImeSetCompositionParams(
             text=text,
-            selectionStart=selection_start,
-            selectionEnd=selection_end,
-            replacementStart=replacement_start,
-            replacementEnd=replacement_end,
+            selection_start=selection_start,
+            selection_end=selection_end,
+            replacement_start=replacement_start,
+            replacement_end=replacement_end,
         )
 
         result = await self._client.send_raw(
@@ -173,15 +173,15 @@ class InputClient:
             timestamp=timestamp,
             button=button,
             buttons=buttons,
-            clickCount=click_count,
+            click_count=click_count,
             force=force,
-            tangentialPressure=tangential_pressure,
-            tiltX=tilt_x,
-            tiltY=tilt_y,
+            tangential_pressure=tangential_pressure,
+            tilt_x=tilt_x,
+            tilt_y=tilt_y,
             twist=twist,
-            deltaX=delta_x,
-            deltaY=delta_y,
-            pointerType=pointer_type,
+            delta_x=delta_x,
+            delta_y=delta_y,
+            pointer_type=pointer_type,
         )
 
         result = await self._client.send_raw(
@@ -202,7 +202,7 @@ class InputClient:
     ) -> dict[str, Any]:
         params = DispatchTouchEventParams(
             type=type,
-            touchPoints=touch_points,
+            touch_points=touch_points,
             modifiers=modifiers,
             timestamp=timestamp,
         )
@@ -245,10 +245,10 @@ class InputClient:
             y=y,
             button=button,
             timestamp=timestamp,
-            deltaX=delta_x,
-            deltaY=delta_y,
+            delta_x=delta_x,
+            delta_y=delta_y,
             modifiers=modifiers,
-            clickCount=click_count,
+            click_count=click_count,
         )
 
         result = await self._client.send_raw(
@@ -301,9 +301,9 @@ class InputClient:
         params = SynthesizePinchGestureParams(
             x=x,
             y=y,
-            scaleFactor=scale_factor,
-            relativeSpeed=relative_speed,
-            gestureSourceType=gesture_source_type,
+            scale_factor=scale_factor,
+            relative_speed=relative_speed,
+            gesture_source_type=gesture_source_type,
         )
 
         result = await self._client.send_raw(
@@ -333,16 +333,16 @@ class InputClient:
         params = SynthesizeScrollGestureParams(
             x=x,
             y=y,
-            xDistance=x_distance,
-            yDistance=y_distance,
-            xOverscroll=x_overscroll,
-            yOverscroll=y_overscroll,
-            preventFling=prevent_fling,
+            x_distance=x_distance,
+            y_distance=y_distance,
+            x_overscroll=x_overscroll,
+            y_overscroll=y_overscroll,
+            prevent_fling=prevent_fling,
             speed=speed,
-            gestureSourceType=gesture_source_type,
-            repeatCount=repeat_count,
-            repeatDelayMs=repeat_delay_ms,
-            interactionMarkerName=interaction_marker_name,
+            gesture_source_type=gesture_source_type,
+            repeat_count=repeat_count,
+            repeat_delay_ms=repeat_delay_ms,
+            interaction_marker_name=interaction_marker_name,
         )
 
         result = await self._client.send_raw(
@@ -366,8 +366,8 @@ class InputClient:
             x=x,
             y=y,
             duration=duration,
-            tapCount=tap_count,
-            gestureSourceType=gesture_source_type,
+            tap_count=tap_count,
+            gesture_source_type=gesture_source_type,
         )
 
         result = await self._client.send_raw(

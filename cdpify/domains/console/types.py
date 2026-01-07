@@ -3,9 +3,11 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Literal
-from cdpify.domains.base import CDPModel
+from dataclasses import dataclass
+from cdpify.domains.shared import CDPModel
 
 
+@dataclass(kw_only=True)
 class ConsoleMessage(CDPModel):
     """
     Console message.
@@ -26,6 +28,6 @@ class ConsoleMessage(CDPModel):
     ]
     level: Literal["log", "warning", "error", "debug", "info"]
     text: str
-    url: str | None = None
-    line: int | None = None
-    column: int | None = None
+    url: str | None | None = None
+    line: int | None | None = None
+    column: int | None | None = None

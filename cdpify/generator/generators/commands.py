@@ -37,8 +37,9 @@ class CommandsGenerator(BaseGenerator):
         if typing_imports:
             lines.append(typing_imports)
 
+        lines.append("from dataclasses import dataclass")
         lines.append("from enum import StrEnum")
-        lines.append("from cdpify.domains.base import CDPModel")
+        lines.append("from cdpify.domains.shared import CDPModel")
 
         if has_models:
             lines.append("")
@@ -83,7 +84,8 @@ class CommandsGenerator(BaseGenerator):
     def _create_params_model(self, command: Command) -> str:
         class_name = f"{to_pascal_case(command.name)}Params"
 
-        lines = [f"class {class_name}(CDPModel):"]
+        lines = ["@dataclass(kw_only=True)"]
+        lines.append(f"class {class_name}(CDPModel):")
 
         if command.description:
             doc = format_docstring(command.description, indent=4)
@@ -97,7 +99,8 @@ class CommandsGenerator(BaseGenerator):
     def _create_returns_model(self, command: Command) -> str:
         class_name = f"{to_pascal_case(command.name)}Result"
 
-        lines = [f"class {class_name}(CDPModel):"]
+        lines = ["@dataclass(kw_only=True)"]
+        lines.append(f"class {class_name}(CDPModel):")
 
         for param in command.returns:
             lines.append(f"    {self._create_field(param)}")
@@ -113,18 +116,15 @@ class CommandsGenerator(BaseGenerator):
 
         self._track_type_usage(py_type)
 
-        return f"{field_name}: {py_type}" + (" = None" if param.optional else "")
+        if param.optional:
+            return f"{field_name}: {py_type} | None = None"
+        return f"{field_name}: {py_type}"
 
     def _resolve_type(self, param: Parameter) -> str:
         if param.ref and "." in param.ref:
             parts = param.ref.split(".")
             domain_lower = parts[0].lower()
             type_name = parts[1]
-            base_type = f"{domain_lower}.{type_name}"
-        else:
-            base_type = map_cdp_type(param)
+            return f"{domain_lower}.{type_name}"
 
-        if param.optional and " | None" not in base_type:
-            return f"{base_type} | None"
-
-        return base_type
+        return map_cdp_type(param)

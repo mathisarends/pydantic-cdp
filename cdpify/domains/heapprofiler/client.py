@@ -39,7 +39,7 @@ class HeapProfilerClient:
         heap_object_id: HeapSnapshotObjectId,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = AddInspectedHeapObjectParams(heapObjectId=heap_object_id)
+        params = AddInspectedHeapObjectParams(heap_object_id=heap_object_id)
 
         result = await self._client.send_raw(
             method=HeapProfilerCommand.ADD_INSPECTED_HEAP_OBJECT,
@@ -87,14 +87,14 @@ class HeapProfilerClient:
         object_id: Runtime.RemoteObjectId,
         session_id: str | None = None,
     ) -> GetHeapObjectIdResult:
-        params = GetHeapObjectIdParams(objectId=object_id)
+        params = GetHeapObjectIdParams(object_id=object_id)
 
         result = await self._client.send_raw(
             method=HeapProfilerCommand.GET_HEAP_OBJECT_ID,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetHeapObjectIdResult.model_validate(result)
+        return GetHeapObjectIdResult.from_cdp(result)
 
     async def get_object_by_heap_object_id(
         self,
@@ -104,7 +104,7 @@ class HeapProfilerClient:
         session_id: str | None = None,
     ) -> GetObjectByHeapObjectIdResult:
         params = GetObjectByHeapObjectIdParams(
-            objectId=object_id, objectGroup=object_group
+            object_id=object_id, object_group=object_group
         )
 
         result = await self._client.send_raw(
@@ -112,7 +112,7 @@ class HeapProfilerClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetObjectByHeapObjectIdResult.model_validate(result)
+        return GetObjectByHeapObjectIdResult.from_cdp(result)
 
     async def get_sampling_profile(
         self,
@@ -123,7 +123,7 @@ class HeapProfilerClient:
             params=None,
             session_id=session_id,
         )
-        return GetSamplingProfileResult.model_validate(result)
+        return GetSamplingProfileResult.from_cdp(result)
 
     async def start_sampling(
         self,
@@ -135,10 +135,10 @@ class HeapProfilerClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = StartSamplingParams(
-            samplingInterval=sampling_interval,
-            stackDepth=stack_depth,
-            includeObjectsCollectedByMajorGC=include_objects_collected_by_major_g_c,
-            includeObjectsCollectedByMinorGC=include_objects_collected_by_minor_g_c,
+            sampling_interval=sampling_interval,
+            stack_depth=stack_depth,
+            include_objects_collected_by_major_g_c=include_objects_collected_by_major_g_c,
+            include_objects_collected_by_minor_g_c=include_objects_collected_by_minor_g_c,
         )
 
         result = await self._client.send_raw(
@@ -154,7 +154,7 @@ class HeapProfilerClient:
         track_allocations: bool | None = None,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = StartTrackingHeapObjectsParams(trackAllocations=track_allocations)
+        params = StartTrackingHeapObjectsParams(track_allocations=track_allocations)
 
         result = await self._client.send_raw(
             method=HeapProfilerCommand.START_TRACKING_HEAP_OBJECTS,
@@ -172,7 +172,7 @@ class HeapProfilerClient:
             params=None,
             session_id=session_id,
         )
-        return StopSamplingResult.model_validate(result)
+        return StopSamplingResult.from_cdp(result)
 
     async def stop_tracking_heap_objects(
         self,
@@ -184,10 +184,10 @@ class HeapProfilerClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = StopTrackingHeapObjectsParams(
-            reportProgress=report_progress,
-            treatGlobalObjectsAsRoots=treat_global_objects_as_roots,
-            captureNumericValue=capture_numeric_value,
-            exposeInternals=expose_internals,
+            report_progress=report_progress,
+            treat_global_objects_as_roots=treat_global_objects_as_roots,
+            capture_numeric_value=capture_numeric_value,
+            expose_internals=expose_internals,
         )
 
         result = await self._client.send_raw(
@@ -207,10 +207,10 @@ class HeapProfilerClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = TakeHeapSnapshotParams(
-            reportProgress=report_progress,
-            treatGlobalObjectsAsRoots=treat_global_objects_as_roots,
-            captureNumericValue=capture_numeric_value,
-            exposeInternals=expose_internals,
+            report_progress=report_progress,
+            treat_global_objects_as_roots=treat_global_objects_as_roots,
+            capture_numeric_value=capture_numeric_value,
+            expose_internals=expose_internals,
         )
 
         result = await self._client.send_raw(

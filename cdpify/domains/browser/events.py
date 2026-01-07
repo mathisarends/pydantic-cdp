@@ -3,8 +3,9 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Literal, TYPE_CHECKING
+from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.domains.base import CDPModel
+from cdpify.domains.shared import CDPModel
 
 from .types import *
 
@@ -17,6 +18,7 @@ class BrowserEvent(StrEnum):
     DOWNLOAD_PROGRESS = "Browser.downloadProgress"
 
 
+@dataclass(kw_only=True)
 class DownloadWillBeginEvent(CDPModel):
     """
     Fired when page is about to start a download.
@@ -28,6 +30,7 @@ class DownloadWillBeginEvent(CDPModel):
     suggested_filename: str
 
 
+@dataclass(kw_only=True)
 class DownloadProgressEvent(CDPModel):
     """
     Fired when download makes progress. Last call has |done| == true.
@@ -37,4 +40,4 @@ class DownloadProgressEvent(CDPModel):
     total_bytes: float
     received_bytes: float
     state: Literal["inProgress", "completed", "canceled"]
-    file_path: str | None = None
+    file_path: str | None | None = None

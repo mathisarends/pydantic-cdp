@@ -3,7 +3,8 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Literal, TYPE_CHECKING
-from cdpify.domains.base import CDPModel
+from dataclasses import dataclass
+from cdpify.domains.shared import CDPModel
 
 if TYPE_CHECKING:
     from cdpify.domains import network
@@ -22,12 +23,14 @@ received).
 RequestStage = Literal["Request", "Response"]
 
 
+@dataclass(kw_only=True)
 class RequestPattern(CDPModel):
-    url_pattern: str | None = None
+    url_pattern: str | None | None = None
     resource_type: network.ResourceType | None = None
-    request_stage: RequestStage | None = None
+    request_stage: RequestStage | None | None = None
 
 
+@dataclass(kw_only=True)
 class HeaderEntry(CDPModel):
     """
     Response HTTP header entry
@@ -37,22 +40,24 @@ class HeaderEntry(CDPModel):
     value: str
 
 
+@dataclass(kw_only=True)
 class AuthChallenge(CDPModel):
     """
     Authorization challenge for HTTP status code 401 or 407.
     """
 
-    source: Literal["Server", "Proxy"] | None = None
+    source: Literal["Server", "Proxy"] | None | None = None
     origin: str
     scheme: str
     realm: str
 
 
+@dataclass(kw_only=True)
 class AuthChallengeResponse(CDPModel):
     """
     Response to an AuthChallenge.
     """
 
     response: Literal["Default", "CancelAuth", "ProvideCredentials"]
-    username: str | None = None
-    password: str | None = None
+    username: str | None | None = None
+    password: str | None | None = None

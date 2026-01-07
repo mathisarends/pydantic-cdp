@@ -3,7 +3,8 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Literal
-from cdpify.domains.base import CDPModel
+from dataclasses import dataclass
+from cdpify.domains.shared import CDPModel
 
 BrowserContextID = str
 
@@ -15,16 +16,17 @@ The state of the browser window.
 WindowState = Literal["normal", "minimized", "maximized", "fullscreen"]
 
 
+@dataclass(kw_only=True)
 class Bounds(CDPModel):
     """
     Browser window bounds information
     """
 
-    left: int | None = None
-    top: int | None = None
-    width: int | None = None
-    height: int | None = None
-    window_state: WindowState | None = None
+    left: int | None | None = None
+    top: int | None | None = None
+    width: int | None | None = None
+    height: int | None | None = None
+    window_state: WindowState | None | None = None
 
 
 PermissionType = Literal[
@@ -72,6 +74,7 @@ PermissionType = Literal[
 PermissionSetting = Literal["granted", "denied", "prompt"]
 
 
+@dataclass(kw_only=True)
 class PermissionDescriptor(CDPModel):
     """
     Definition of PermissionDescriptor defined in the Permissions API:
@@ -79,11 +82,11 @@ class PermissionDescriptor(CDPModel):
     """
 
     name: str
-    sysex: bool | None = None
-    user_visible_only: bool | None = None
-    allow_without_sanitization: bool | None = None
-    allow_without_gesture: bool | None = None
-    pan_tilt_zoom: bool | None = None
+    sysex: bool | None | None = None
+    user_visible_only: bool | None | None = None
+    allow_without_sanitization: bool | None | None = None
+    allow_without_gesture: bool | None | None = None
+    pan_tilt_zoom: bool | None | None = None
 
 
 """
@@ -92,6 +95,7 @@ Browser command ids used by executeBrowserCommand.
 BrowserCommandId = Literal["openTabSearch", "closeTabSearch", "openGlic"]
 
 
+@dataclass(kw_only=True)
 class Bucket(CDPModel):
     """
     Chrome histogram bucket.
@@ -102,6 +106,7 @@ class Bucket(CDPModel):
     count: int
 
 
+@dataclass(kw_only=True)
 class Histogram(CDPModel):
     """
     Chrome histogram.

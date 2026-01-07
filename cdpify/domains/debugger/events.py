@@ -3,8 +3,9 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Any, Literal, TYPE_CHECKING
+from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.domains.base import CDPModel
+from cdpify.domains.shared import CDPModel
 
 from .types import *
 
@@ -20,6 +21,7 @@ class DebuggerEvent(StrEnum):
     SCRIPT_PARSED = "Debugger.scriptParsed"
 
 
+@dataclass(kw_only=True)
 class BreakpointResolvedEvent(CDPModel):
     """
     Fired when breakpoint is resolved to an actual script and location. Deprecated in
@@ -30,6 +32,7 @@ class BreakpointResolvedEvent(CDPModel):
     location: Location
 
 
+@dataclass(kw_only=True)
 class PausedEvent(CDPModel):
     """
     Fired when the virtual machine stopped on breakpoint or exception or any other stop
@@ -52,13 +55,14 @@ class PausedEvent(CDPModel):
         "XHR",
         "step",
     ]
-    data: dict[str, Any] | None = None
-    hit_breakpoints: list[str] | None = None
+    data: dict[str, Any] | None | None = None
+    hit_breakpoints: list[str] | None | None = None
     async_stack_trace: runtime.StackTrace | None = None
     async_stack_trace_id: runtime.StackTraceId | None = None
     async_call_stack_trace_id: runtime.StackTraceId | None = None
 
 
+@dataclass(kw_only=True)
 class ResumedEvent(CDPModel):
     """
     Fired when the virtual machine resumed execution.
@@ -67,6 +71,7 @@ class ResumedEvent(CDPModel):
     pass
 
 
+@dataclass(kw_only=True)
 class ScriptFailedToParseEvent(CDPModel):
     """
     Fired when virtual machine fails to parse the script.
@@ -81,17 +86,18 @@ class ScriptFailedToParseEvent(CDPModel):
     execution_context_id: runtime.ExecutionContextId
     hash: str
     build_id: str
-    execution_context_aux_data: dict[str, Any] | None = None
-    source_map_u_r_l: str | None = None
-    has_source_u_r_l: bool | None = None
-    is_module: bool | None = None
-    length: int | None = None
+    execution_context_aux_data: dict[str, Any] | None | None = None
+    source_map_u_r_l: str | None | None = None
+    has_source_u_r_l: bool | None | None = None
+    is_module: bool | None | None = None
+    length: int | None | None = None
     stack_trace: runtime.StackTrace | None = None
-    code_offset: int | None = None
+    code_offset: int | None | None = None
     script_language: debugger.ScriptLanguage | None = None
-    embedder_name: str | None = None
+    embedder_name: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class ScriptParsedEvent(CDPModel):
     """
     Fired when virtual machine parses script. This event is also fired for all known
@@ -107,15 +113,15 @@ class ScriptParsedEvent(CDPModel):
     execution_context_id: runtime.ExecutionContextId
     hash: str
     build_id: str
-    execution_context_aux_data: dict[str, Any] | None = None
-    is_live_edit: bool | None = None
-    source_map_u_r_l: str | None = None
-    has_source_u_r_l: bool | None = None
-    is_module: bool | None = None
-    length: int | None = None
+    execution_context_aux_data: dict[str, Any] | None | None = None
+    is_live_edit: bool | None | None = None
+    source_map_u_r_l: str | None | None = None
+    has_source_u_r_l: bool | None | None = None
+    is_module: bool | None | None = None
+    length: int | None | None = None
     stack_trace: runtime.StackTrace | None = None
-    code_offset: int | None = None
+    code_offset: int | None | None = None
     script_language: debugger.ScriptLanguage | None = None
-    debug_symbols: list[debugger.DebugSymbols] | None = None
-    embedder_name: str | None = None
-    resolved_breakpoints: list[ResolvedBreakpoint] | None = None
+    debug_symbols: list[debugger.DebugSymbols] | None | None = None
+    embedder_name: str | None | None = None
+    resolved_breakpoints: list[ResolvedBreakpoint] | None | None = None

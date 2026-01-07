@@ -3,8 +3,9 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Literal, TYPE_CHECKING
+from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.domains.base import CDPModel
+from cdpify.domains.shared import CDPModel
 
 from .types import *
 
@@ -47,28 +48,32 @@ class DebuggerCommand(StrEnum):
     STEP_OVER = "Debugger.stepOver"
 
 
+@dataclass(kw_only=True)
 class ContinueToLocationParams(CDPModel):
     """
     Continues execution until specific location is reached.
     """
 
     location: Location
-    target_call_frames: Literal["any", "current"] | None = None
+    target_call_frames: Literal["any", "current"] | None | None = None
 
 
+@dataclass(kw_only=True)
 class EnableParams(CDPModel):
     """
     Enables debugger for the given page. Clients should not assume that the debugging
     has been enabled until the result for this command is received.
     """
 
-    max_scripts_cache_size: float | None = None
+    max_scripts_cache_size: float | None | None = None
 
 
+@dataclass(kw_only=True)
 class EnableResult(CDPModel):
     debugger_id: runtime.UniqueDebuggerId
 
 
+@dataclass(kw_only=True)
 class EvaluateOnCallFrameParams(CDPModel):
     """
     Evaluates expression on a given call frame.
@@ -76,20 +81,22 @@ class EvaluateOnCallFrameParams(CDPModel):
 
     call_frame_id: CallFrameId
     expression: str
-    object_group: str | None = None
-    include_command_line_a_p_i: bool | None = None
-    silent: bool | None = None
-    return_by_value: bool | None = None
-    generate_preview: bool | None = None
-    throw_on_side_effect: bool | None = None
+    object_group: str | None | None = None
+    include_command_line_a_p_i: bool | None | None = None
+    silent: bool | None | None = None
+    return_by_value: bool | None | None = None
+    generate_preview: bool | None | None = None
+    throw_on_side_effect: bool | None | None = None
     timeout: runtime.TimeDelta | None = None
 
 
+@dataclass(kw_only=True)
 class EvaluateOnCallFrameResult(CDPModel):
     result: runtime.RemoteObject
     exception_details: runtime.ExceptionDetails | None = None
 
 
+@dataclass(kw_only=True)
 class GetPossibleBreakpointsParams(CDPModel):
     """
     Returns possible locations for breakpoint. scriptId in start and end range
@@ -97,14 +104,16 @@ class GetPossibleBreakpointsParams(CDPModel):
     """
 
     start: Location
-    end: Location | None = None
-    restrict_to_function: bool | None = None
+    end: Location | None | None = None
+    restrict_to_function: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class GetPossibleBreakpointsResult(CDPModel):
     locations: list[BreakLocation]
 
 
+@dataclass(kw_only=True)
 class GetScriptSourceParams(CDPModel):
     """
     Returns source for the script with given id.
@@ -113,22 +122,26 @@ class GetScriptSourceParams(CDPModel):
     script_id: runtime.ScriptId
 
 
+@dataclass(kw_only=True)
 class GetScriptSourceResult(CDPModel):
     script_source: str
-    bytecode: str | None = None
+    bytecode: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class DisassembleWasmModuleParams(CDPModel):
     script_id: runtime.ScriptId
 
 
+@dataclass(kw_only=True)
 class DisassembleWasmModuleResult(CDPModel):
-    stream_id: str | None = None
+    stream_id: str | None | None = None
     total_number_of_lines: int
     function_body_offsets: list[int]
     chunk: WasmDisassemblyChunk
 
 
+@dataclass(kw_only=True)
 class NextWasmDisassemblyChunkParams(CDPModel):
     """
     Disassemble the next chunk of lines for the module corresponding to the stream. If
@@ -139,10 +152,12 @@ class NextWasmDisassemblyChunkParams(CDPModel):
     stream_id: str
 
 
+@dataclass(kw_only=True)
 class NextWasmDisassemblyChunkResult(CDPModel):
     chunk: WasmDisassemblyChunk
 
 
+@dataclass(kw_only=True)
 class GetWasmBytecodeParams(CDPModel):
     """
     This command is deprecated. Use getScriptSource instead.
@@ -151,10 +166,12 @@ class GetWasmBytecodeParams(CDPModel):
     script_id: runtime.ScriptId
 
 
+@dataclass(kw_only=True)
 class GetWasmBytecodeResult(CDPModel):
     bytecode: str
 
 
+@dataclass(kw_only=True)
 class GetStackTraceParams(CDPModel):
     """
     Returns stack trace with given `stackTraceId`.
@@ -163,14 +180,17 @@ class GetStackTraceParams(CDPModel):
     stack_trace_id: runtime.StackTraceId
 
 
+@dataclass(kw_only=True)
 class GetStackTraceResult(CDPModel):
     stack_trace: runtime.StackTrace
 
 
+@dataclass(kw_only=True)
 class PauseOnAsyncCallParams(CDPModel):
     parent_stack_trace_id: runtime.StackTraceId
 
 
+@dataclass(kw_only=True)
 class RemoveBreakpointParams(CDPModel):
     """
     Removes JavaScript breakpoint.
@@ -179,6 +199,7 @@ class RemoveBreakpointParams(CDPModel):
     breakpoint_id: BreakpointId
 
 
+@dataclass(kw_only=True)
 class RestartFrameParams(CDPModel):
     """
     Restarts particular call frame from the beginning. The old, deprecated behavior of
@@ -193,23 +214,26 @@ class RestartFrameParams(CDPModel):
     """
 
     call_frame_id: CallFrameId
-    mode: Literal["StepInto"] | None = None
+    mode: Literal["StepInto"] | None | None = None
 
 
+@dataclass(kw_only=True)
 class RestartFrameResult(CDPModel):
     call_frames: list[CallFrame]
     async_stack_trace: runtime.StackTrace | None = None
     async_stack_trace_id: runtime.StackTraceId | None = None
 
 
+@dataclass(kw_only=True)
 class ResumeParams(CDPModel):
     """
     Resumes JavaScript execution.
     """
 
-    terminate_on_resume: bool | None = None
+    terminate_on_resume: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class SearchInContentParams(CDPModel):
     """
     Searches for given string in script content.
@@ -217,14 +241,16 @@ class SearchInContentParams(CDPModel):
 
     script_id: runtime.ScriptId
     query: str
-    case_sensitive: bool | None = None
-    is_regex: bool | None = None
+    case_sensitive: bool | None | None = None
+    is_regex: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class SearchInContentResult(CDPModel):
     result: list[SearchMatch]
 
 
+@dataclass(kw_only=True)
 class SetAsyncCallStackDepthParams(CDPModel):
     """
     Enables or disables async call stacks tracking.
@@ -233,6 +259,7 @@ class SetAsyncCallStackDepthParams(CDPModel):
     max_depth: int
 
 
+@dataclass(kw_only=True)
 class SetBlackboxExecutionContextsParams(CDPModel):
     """
     Replace previous blackbox execution contexts with passed ones. Forces backend to
@@ -244,6 +271,7 @@ class SetBlackboxExecutionContextsParams(CDPModel):
     unique_ids: list[str]
 
 
+@dataclass(kw_only=True)
 class SetBlackboxPatternsParams(CDPModel):
     """
     Replace previous blackbox patterns with passed ones. Forces backend to skip
@@ -253,9 +281,10 @@ class SetBlackboxPatternsParams(CDPModel):
     """
 
     patterns: list[str]
-    skip_anonymous: bool | None = None
+    skip_anonymous: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetBlackboxedRangesParams(CDPModel):
     """
     Makes backend skip steps in the script in blackboxed ranges. VM will try leave
@@ -268,20 +297,23 @@ class SetBlackboxedRangesParams(CDPModel):
     positions: list[ScriptPosition]
 
 
+@dataclass(kw_only=True)
 class SetBreakpointParams(CDPModel):
     """
     Sets JavaScript breakpoint at a given location.
     """
 
     location: Location
-    condition: str | None = None
+    condition: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetBreakpointResult(CDPModel):
     breakpoint_id: BreakpointId
     actual_location: Location
 
 
+@dataclass(kw_only=True)
 class SetInstrumentationBreakpointParams(CDPModel):
     """
     Sets instrumentation breakpoint.
@@ -292,10 +324,12 @@ class SetInstrumentationBreakpointParams(CDPModel):
     ]
 
 
+@dataclass(kw_only=True)
 class SetInstrumentationBreakpointResult(CDPModel):
     breakpoint_id: BreakpointId
 
 
+@dataclass(kw_only=True)
 class SetBreakpointByUrlParams(CDPModel):
     """
     Sets JavaScript breakpoint at given location specified either by URL or URL regex.
@@ -306,18 +340,20 @@ class SetBreakpointByUrlParams(CDPModel):
     """
 
     line_number: int
-    url: str | None = None
-    url_regex: str | None = None
-    script_hash: str | None = None
-    column_number: int | None = None
-    condition: str | None = None
+    url: str | None | None = None
+    url_regex: str | None | None = None
+    script_hash: str | None | None = None
+    column_number: int | None | None = None
+    condition: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetBreakpointByUrlResult(CDPModel):
     breakpoint_id: BreakpointId
     locations: list[Location]
 
 
+@dataclass(kw_only=True)
 class SetBreakpointOnFunctionCallParams(CDPModel):
     """
     Sets JavaScript breakpoint before each call to the given function. If another
@@ -326,13 +362,15 @@ class SetBreakpointOnFunctionCallParams(CDPModel):
     """
 
     object_id: runtime.RemoteObjectId
-    condition: str | None = None
+    condition: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetBreakpointOnFunctionCallResult(CDPModel):
     breakpoint_id: BreakpointId
 
 
+@dataclass(kw_only=True)
 class SetBreakpointsActiveParams(CDPModel):
     """
     Activates / deactivates all breakpoints on the page.
@@ -341,6 +379,7 @@ class SetBreakpointsActiveParams(CDPModel):
     active: bool
 
 
+@dataclass(kw_only=True)
 class SetPauseOnExceptionsParams(CDPModel):
     """
     Defines pause on exceptions state. Can be set to stop on all exceptions, uncaught
@@ -351,6 +390,7 @@ class SetPauseOnExceptionsParams(CDPModel):
     state: Literal["none", "caught", "uncaught", "all"]
 
 
+@dataclass(kw_only=True)
 class SetReturnValueParams(CDPModel):
     """
     Changes return value in top frame. Available only at return break position.
@@ -359,6 +399,7 @@ class SetReturnValueParams(CDPModel):
     new_value: runtime.CallArgument
 
 
+@dataclass(kw_only=True)
 class SetScriptSourceParams(CDPModel):
     """
     Edits JavaScript source live. In general, functions that are currently on the stack
@@ -370,13 +411,14 @@ class SetScriptSourceParams(CDPModel):
 
     script_id: runtime.ScriptId
     script_source: str
-    dry_run: bool | None = None
-    allow_top_frame_editing: bool | None = None
+    dry_run: bool | None | None = None
+    allow_top_frame_editing: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetScriptSourceResult(CDPModel):
-    call_frames: list[CallFrame] | None = None
-    stack_changed: bool | None = None
+    call_frames: list[CallFrame] | None | None = None
+    stack_changed: bool | None | None = None
     async_stack_trace: runtime.StackTrace | None = None
     async_stack_trace_id: runtime.StackTraceId | None = None
     status: Literal[
@@ -389,6 +431,7 @@ class SetScriptSourceResult(CDPModel):
     exception_details: runtime.ExceptionDetails | None = None
 
 
+@dataclass(kw_only=True)
 class SetSkipAllPausesParams(CDPModel):
     """
     Makes page not interrupt on any pauses (breakpoint, exception, dom exception etc).
@@ -397,6 +440,7 @@ class SetSkipAllPausesParams(CDPModel):
     skip: bool
 
 
+@dataclass(kw_only=True)
 class SetVariableValueParams(CDPModel):
     """
     Changes value of variable in a callframe. Object-based scopes are not supported and
@@ -409,18 +453,20 @@ class SetVariableValueParams(CDPModel):
     call_frame_id: CallFrameId
 
 
+@dataclass(kw_only=True)
 class StepIntoParams(CDPModel):
     """
     Steps into the function call.
     """
 
-    break_on_async_call: bool | None = None
-    skip_list: list[LocationRange] | None = None
+    break_on_async_call: bool | None | None = None
+    skip_list: list[LocationRange] | None | None = None
 
 
+@dataclass(kw_only=True)
 class StepOverParams(CDPModel):
     """
     Steps over the statement.
     """
 
-    skip_list: list[LocationRange] | None = None
+    skip_list: list[LocationRange] | None | None = None

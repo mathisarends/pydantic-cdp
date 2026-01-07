@@ -29,7 +29,7 @@ class CastClient:
         presentation_url: str | None = None,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = EnableParams(presentationUrl=presentation_url)
+        params = EnableParams(presentation_url=presentation_url)
 
         result = await self._client.send_raw(
             method=CastCommand.ENABLE,
@@ -55,7 +55,7 @@ class CastClient:
         sink_name: str,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = SetSinkToUseParams(sinkName=sink_name)
+        params = SetSinkToUseParams(sink_name=sink_name)
 
         result = await self._client.send_raw(
             method=CastCommand.SET_SINK_TO_USE,
@@ -70,7 +70,7 @@ class CastClient:
         sink_name: str,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = StartDesktopMirroringParams(sinkName=sink_name)
+        params = StartDesktopMirroringParams(sink_name=sink_name)
 
         result = await self._client.send_raw(
             method=CastCommand.START_DESKTOP_MIRRORING,
@@ -85,7 +85,7 @@ class CastClient:
         sink_name: str,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = StartTabMirroringParams(sinkName=sink_name)
+        params = StartTabMirroringParams(sink_name=sink_name)
 
         result = await self._client.send_raw(
             method=CastCommand.START_TAB_MIRRORING,
@@ -100,7 +100,7 @@ class CastClient:
         sink_name: str,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = StopCastingParams(sinkName=sink_name)
+        params = StopCastingParams(sink_name=sink_name)
 
         result = await self._client.send_raw(
             method=CastCommand.STOP_CASTING,

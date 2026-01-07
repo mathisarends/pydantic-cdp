@@ -3,21 +3,23 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Literal
-from cdpify.domains.base import CDPModel
+from dataclasses import dataclass
+from cdpify.domains.shared import CDPModel
 
 
+@dataclass(kw_only=True)
 class TouchPoint(CDPModel):
     x: float
     y: float
-    radius_x: float | None = None
-    radius_y: float | None = None
-    rotation_angle: float | None = None
-    force: float | None = None
-    tangential_pressure: float | None = None
-    tilt_x: float | None = None
-    tilt_y: float | None = None
-    twist: int | None = None
-    id: float | None = None
+    radius_x: float | None | None = None
+    radius_y: float | None | None = None
+    rotation_angle: float | None | None = None
+    force: float | None | None = None
+    tangential_pressure: float | None | None = None
+    tilt_x: float | None | None = None
+    tilt_y: float | None | None = None
+    twist: int | None | None = None
+    id: float | None | None = None
 
 
 GestureSourceType = Literal["default", "touch", "mouse"]
@@ -30,14 +32,16 @@ UTC time in seconds, counted from January 1, 1970.
 TimeSinceEpoch = float
 
 
+@dataclass(kw_only=True)
 class DragDataItem(CDPModel):
     mime_type: str
     data: str
-    title: str | None = None
-    base_u_r_l: str | None = None
+    title: str | None | None = None
+    base_u_r_l: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class DragData(CDPModel):
     items: list[DragDataItem]
-    files: list[str] | None = None
+    files: list[str] | None | None = None
     drag_operations_mask: int

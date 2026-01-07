@@ -3,8 +3,9 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Literal, TYPE_CHECKING
+from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.domains.base import CDPModel
+from cdpify.domains.shared import CDPModel
 
 from .types import *
 
@@ -19,6 +20,7 @@ class AuditsCommand(StrEnum):
     CHECK_FORMS_ISSUES = "Audits.checkFormsIssues"
 
 
+@dataclass(kw_only=True)
 class GetEncodedResponseParams(CDPModel):
     """
     Returns the response body and size if it were re-encoded with the specified
@@ -27,24 +29,27 @@ class GetEncodedResponseParams(CDPModel):
 
     request_id: network.RequestId
     encoding: Literal["webp", "jpeg", "png"]
-    quality: float | None = None
-    size_only: bool | None = None
+    quality: float | None | None = None
+    size_only: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class GetEncodedResponseResult(CDPModel):
-    body: str | None = None
+    body: str | None | None = None
     original_size: int
     encoded_size: int
 
 
+@dataclass(kw_only=True)
 class CheckContrastParams(CDPModel):
     """
     Runs the contrast check for the target page. Found issues are reported using
     Audits.issueAdded event.
     """
 
-    report_a_a_a: bool | None = None
+    report_a_a_a: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class CheckFormsIssuesResult(CDPModel):
     form_issues: list[GenericIssueDetails]

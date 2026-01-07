@@ -3,8 +3,9 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import TYPE_CHECKING
+from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.domains.base import CDPModel
+from cdpify.domains.shared import CDPModel
 
 from .types import *
 
@@ -17,6 +18,7 @@ class FetchEvent(StrEnum):
     AUTH_REQUIRED = "Fetch.authRequired"
 
 
+@dataclass(kw_only=True)
 class RequestPausedEvent(CDPModel):
     """
     Issued when the domain is enabled and the request URL matches the specified filter.
@@ -36,13 +38,14 @@ class RequestPausedEvent(CDPModel):
     frame_id: page.FrameId
     resource_type: network.ResourceType
     response_error_reason: network.ErrorReason | None = None
-    response_status_code: int | None = None
-    response_status_text: str | None = None
-    response_headers: list[HeaderEntry] | None = None
+    response_status_code: int | None | None = None
+    response_status_text: str | None | None = None
+    response_headers: list[HeaderEntry] | None | None = None
     network_id: network.RequestId | None = None
-    redirected_request_id: RequestId | None = None
+    redirected_request_id: RequestId | None | None = None
 
 
+@dataclass(kw_only=True)
 class AuthRequiredEvent(CDPModel):
     """
     Issued when the domain is enabled with handleAuthRequests set to true. The request

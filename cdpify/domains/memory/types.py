@@ -3,7 +3,8 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Literal
-from cdpify.domains.base import CDPModel
+from dataclasses import dataclass
+from cdpify.domains.shared import CDPModel
 
 """
 Memory pressure level.
@@ -11,6 +12,7 @@ Memory pressure level.
 PressureLevel = Literal["moderate", "critical"]
 
 
+@dataclass(kw_only=True)
 class SamplingProfileNode(CDPModel):
     """
     Heap profile sample.
@@ -21,6 +23,7 @@ class SamplingProfileNode(CDPModel):
     stack: list[str]
 
 
+@dataclass(kw_only=True)
 class SamplingProfile(CDPModel):
     """
     Array of heap profile samples.
@@ -30,6 +33,7 @@ class SamplingProfile(CDPModel):
     modules: list[Module]
 
 
+@dataclass(kw_only=True)
 class Module(CDPModel):
     """
     Executable module information
@@ -41,6 +45,7 @@ class Module(CDPModel):
     size: float
 
 
+@dataclass(kw_only=True)
 class DOMCounter(CDPModel):
     """
     DOM object counter data.

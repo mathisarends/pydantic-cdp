@@ -3,8 +3,9 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Any, TYPE_CHECKING
+from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.domains.base import CDPModel
+from cdpify.domains.shared import CDPModel
 
 from .types import *
 
@@ -47,22 +48,25 @@ class OverlayCommand(StrEnum):
     SET_SHOW_WINDOW_CONTROLS_OVERLAY = "Overlay.setShowWindowControlsOverlay"
 
 
+@dataclass(kw_only=True)
 class GetHighlightObjectForTestParams(CDPModel):
     """
     For testing.
     """
 
     node_id: dom.NodeId
-    include_distance: bool | None = None
-    include_style: bool | None = None
-    color_format: ColorFormat | None = None
-    show_accessibility_info: bool | None = None
+    include_distance: bool | None | None = None
+    include_style: bool | None | None = None
+    color_format: ColorFormat | None | None = None
+    show_accessibility_info: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class GetHighlightObjectForTestResult(CDPModel):
     highlight: dict[str, Any]
 
 
+@dataclass(kw_only=True)
 class GetGridHighlightObjectsForTestParams(CDPModel):
     """
     For Persistent Grid testing.
@@ -71,10 +75,12 @@ class GetGridHighlightObjectsForTestParams(CDPModel):
     node_ids: list[dom.NodeId]
 
 
+@dataclass(kw_only=True)
 class GetGridHighlightObjectsForTestResult(CDPModel):
     highlights: dict[str, Any]
 
 
+@dataclass(kw_only=True)
 class GetSourceOrderHighlightObjectForTestParams(CDPModel):
     """
     For Source Order Viewer testing.
@@ -83,10 +89,12 @@ class GetSourceOrderHighlightObjectForTestParams(CDPModel):
     node_id: dom.NodeId
 
 
+@dataclass(kw_only=True)
 class GetSourceOrderHighlightObjectForTestResult(CDPModel):
     highlight: dict[str, Any]
 
 
+@dataclass(kw_only=True)
 class HighlightFrameParams(CDPModel):
     """
     Highlights owner element of the frame with given id. Deprecated: Doesn't work
@@ -99,6 +107,7 @@ class HighlightFrameParams(CDPModel):
     content_outline_color: dom.RGBA | None = None
 
 
+@dataclass(kw_only=True)
 class HighlightNodeParams(CDPModel):
     """
     Highlights DOM node with given id or with the given JavaScript object wrapper.
@@ -109,9 +118,10 @@ class HighlightNodeParams(CDPModel):
     node_id: dom.NodeId | None = None
     backend_node_id: dom.BackendNodeId | None = None
     object_id: runtime.RemoteObjectId | None = None
-    selector: str | None = None
+    selector: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class HighlightQuadParams(CDPModel):
     """
     Highlights given quad. Coordinates are absolute with respect to the main frame
@@ -123,6 +133,7 @@ class HighlightQuadParams(CDPModel):
     outline_color: dom.RGBA | None = None
 
 
+@dataclass(kw_only=True)
 class HighlightRectParams(CDPModel):
     """
     Highlights given rectangle. Coordinates are absolute with respect to the main frame
@@ -139,6 +150,7 @@ class HighlightRectParams(CDPModel):
     outline_color: dom.RGBA | None = None
 
 
+@dataclass(kw_only=True)
 class HighlightSourceOrderParams(CDPModel):
     """
     Highlights the source order of the children of the DOM node with given id or with
@@ -151,6 +163,7 @@ class HighlightSourceOrderParams(CDPModel):
     object_id: runtime.RemoteObjectId | None = None
 
 
+@dataclass(kw_only=True)
 class SetInspectModeParams(CDPModel):
     """
     Enters the 'inspect' mode. In this mode, elements that user is hovering over are
@@ -159,9 +172,10 @@ class SetInspectModeParams(CDPModel):
     """
 
     mode: InspectMode
-    highlight_config: HighlightConfig | None = None
+    highlight_config: HighlightConfig | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetShowAdHighlightsParams(CDPModel):
     """
     Highlights owner element of all frames detected to be ads.
@@ -170,10 +184,12 @@ class SetShowAdHighlightsParams(CDPModel):
     show: bool
 
 
+@dataclass(kw_only=True)
 class SetPausedInDebuggerMessageParams(CDPModel):
-    message: str | None = None
+    message: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetShowDebugBordersParams(CDPModel):
     """
     Requests that backend shows debug borders on layers
@@ -182,6 +198,7 @@ class SetShowDebugBordersParams(CDPModel):
     show: bool
 
 
+@dataclass(kw_only=True)
 class SetShowFPSCounterParams(CDPModel):
     """
     Requests that backend shows the FPS counter
@@ -190,6 +207,7 @@ class SetShowFPSCounterParams(CDPModel):
     show: bool
 
 
+@dataclass(kw_only=True)
 class SetShowGridOverlaysParams(CDPModel):
     """
     Highlight multiple elements with the CSS Grid overlay.
@@ -198,18 +216,22 @@ class SetShowGridOverlaysParams(CDPModel):
     grid_node_highlight_configs: list[GridNodeHighlightConfig]
 
 
+@dataclass(kw_only=True)
 class SetShowFlexOverlaysParams(CDPModel):
     flex_node_highlight_configs: list[FlexNodeHighlightConfig]
 
 
+@dataclass(kw_only=True)
 class SetShowScrollSnapOverlaysParams(CDPModel):
     scroll_snap_highlight_configs: list[ScrollSnapHighlightConfig]
 
 
+@dataclass(kw_only=True)
 class SetShowContainerQueryOverlaysParams(CDPModel):
     container_query_highlight_configs: list[ContainerQueryHighlightConfig]
 
 
+@dataclass(kw_only=True)
 class SetShowPaintRectsParams(CDPModel):
     """
     Requests that backend shows paint rectangles
@@ -218,6 +240,7 @@ class SetShowPaintRectsParams(CDPModel):
     result: bool
 
 
+@dataclass(kw_only=True)
 class SetShowLayoutShiftRegionsParams(CDPModel):
     """
     Requests that backend shows layout shift regions
@@ -226,6 +249,7 @@ class SetShowLayoutShiftRegionsParams(CDPModel):
     result: bool
 
 
+@dataclass(kw_only=True)
 class SetShowScrollBottleneckRectsParams(CDPModel):
     """
     Requests that backend shows scroll bottleneck rects
@@ -234,6 +258,7 @@ class SetShowScrollBottleneckRectsParams(CDPModel):
     show: bool
 
 
+@dataclass(kw_only=True)
 class SetShowHitTestBordersParams(CDPModel):
     """
     Deprecated, no longer has any effect.
@@ -242,6 +267,7 @@ class SetShowHitTestBordersParams(CDPModel):
     show: bool
 
 
+@dataclass(kw_only=True)
 class SetShowWebVitalsParams(CDPModel):
     """
     Deprecated, no longer has any effect.
@@ -250,6 +276,7 @@ class SetShowWebVitalsParams(CDPModel):
     show: bool
 
 
+@dataclass(kw_only=True)
 class SetShowViewportSizeOnResizeParams(CDPModel):
     """
     Paints viewport size upon main frame resize.
@@ -258,14 +285,16 @@ class SetShowViewportSizeOnResizeParams(CDPModel):
     show: bool
 
 
+@dataclass(kw_only=True)
 class SetShowHingeParams(CDPModel):
     """
     Add a dual screen device hinge
     """
 
-    hinge_config: HingeConfig | None = None
+    hinge_config: HingeConfig | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetShowIsolatedElementsParams(CDPModel):
     """
     Show elements in isolation mode with overlays.
@@ -274,9 +303,10 @@ class SetShowIsolatedElementsParams(CDPModel):
     isolated_element_highlight_configs: list[IsolatedElementHighlightConfig]
 
 
+@dataclass(kw_only=True)
 class SetShowWindowControlsOverlayParams(CDPModel):
     """
     Show Window Controls Overlay for PWA
     """
 
-    window_controls_overlay_config: WindowControlsOverlayConfig | None = None
+    window_controls_overlay_config: WindowControlsOverlayConfig | None | None = None

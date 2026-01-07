@@ -39,7 +39,7 @@ class MemoryClient:
             params=None,
             session_id=session_id,
         )
-        return GetDOMCountersResult.model_validate(result)
+        return GetDOMCountersResult.from_cdp(result)
 
     async def get_d_o_m_counters_for_leak_detection(
         self,
@@ -50,7 +50,7 @@ class MemoryClient:
             params=None,
             session_id=session_id,
         )
-        return GetDOMCountersForLeakDetectionResult.model_validate(result)
+        return GetDOMCountersForLeakDetectionResult.from_cdp(result)
 
     async def prepare_for_leak_detection(
         self,
@@ -112,7 +112,7 @@ class MemoryClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = StartSamplingParams(
-            samplingInterval=sampling_interval, suppressRandomness=suppress_randomness
+            sampling_interval=sampling_interval, suppress_randomness=suppress_randomness
         )
 
         result = await self._client.send_raw(
@@ -142,7 +142,7 @@ class MemoryClient:
             params=None,
             session_id=session_id,
         )
-        return GetAllTimeSamplingProfileResult.model_validate(result)
+        return GetAllTimeSamplingProfileResult.from_cdp(result)
 
     async def get_browser_sampling_profile(
         self,
@@ -153,7 +153,7 @@ class MemoryClient:
             params=None,
             session_id=session_id,
         )
-        return GetBrowserSamplingProfileResult.model_validate(result)
+        return GetBrowserSamplingProfileResult.from_cdp(result)
 
     async def get_sampling_profile(
         self,
@@ -164,4 +164,4 @@ class MemoryClient:
             params=None,
             session_id=session_id,
         )
-        return GetSamplingProfileResult.model_validate(result)
+        return GetSamplingProfileResult.from_cdp(result)

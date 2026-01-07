@@ -3,8 +3,9 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Any, TYPE_CHECKING
+from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.domains.base import CDPModel
+from cdpify.domains.shared import CDPModel
 
 from .types import *
 
@@ -23,6 +24,7 @@ class LayerTreeCommand(StrEnum):
     SNAPSHOT_COMMAND_LOG = "LayerTree.snapshotCommandLog"
 
 
+@dataclass(kw_only=True)
 class CompositingReasonsParams(CDPModel):
     """
     Provides the reasons why the given layer was composited.
@@ -31,11 +33,13 @@ class CompositingReasonsParams(CDPModel):
     layer_id: LayerId
 
 
+@dataclass(kw_only=True)
 class CompositingReasonsResult(CDPModel):
     compositing_reasons: list[str]
     compositing_reason_ids: list[str]
 
 
+@dataclass(kw_only=True)
 class LoadSnapshotParams(CDPModel):
     """
     Returns the snapshot identifier.
@@ -44,10 +48,12 @@ class LoadSnapshotParams(CDPModel):
     tiles: list[PictureTile]
 
 
+@dataclass(kw_only=True)
 class LoadSnapshotResult(CDPModel):
     snapshot_id: SnapshotId
 
 
+@dataclass(kw_only=True)
 class MakeSnapshotParams(CDPModel):
     """
     Returns the layer snapshot identifier.
@@ -56,21 +62,25 @@ class MakeSnapshotParams(CDPModel):
     layer_id: LayerId
 
 
+@dataclass(kw_only=True)
 class MakeSnapshotResult(CDPModel):
     snapshot_id: SnapshotId
 
 
+@dataclass(kw_only=True)
 class ProfileSnapshotParams(CDPModel):
     snapshot_id: SnapshotId
-    min_repeat_count: int | None = None
-    min_duration: float | None = None
+    min_repeat_count: int | None | None = None
+    min_duration: float | None | None = None
     clip_rect: dom.Rect | None = None
 
 
+@dataclass(kw_only=True)
 class ProfileSnapshotResult(CDPModel):
     timings: list[PaintProfile]
 
 
+@dataclass(kw_only=True)
 class ReleaseSnapshotParams(CDPModel):
     """
     Releases layer snapshot captured by the back-end.
@@ -79,21 +89,24 @@ class ReleaseSnapshotParams(CDPModel):
     snapshot_id: SnapshotId
 
 
+@dataclass(kw_only=True)
 class ReplaySnapshotParams(CDPModel):
     """
     Replays the layer snapshot and returns the resulting bitmap.
     """
 
     snapshot_id: SnapshotId
-    from_step: int | None = None
-    to_step: int | None = None
-    scale: float | None = None
+    from_step: int | None | None = None
+    to_step: int | None | None = None
+    scale: float | None | None = None
 
 
+@dataclass(kw_only=True)
 class ReplaySnapshotResult(CDPModel):
     data_u_r_l: str
 
 
+@dataclass(kw_only=True)
 class SnapshotCommandLogParams(CDPModel):
     """
     Replays the layer snapshot and returns canvas log.
@@ -102,5 +115,6 @@ class SnapshotCommandLogParams(CDPModel):
     snapshot_id: SnapshotId
 
 
+@dataclass(kw_only=True)
 class SnapshotCommandLogResult(CDPModel):
     command_log: list[dict[str, Any]]

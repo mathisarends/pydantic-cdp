@@ -3,8 +3,9 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Any, TYPE_CHECKING
+from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.domains.base import CDPModel
+from cdpify.domains.shared import CDPModel
 
 from .types import *
 
@@ -52,6 +53,7 @@ class CSSCommand(StrEnum):
     SET_LOCAL_FONTS_ENABLED = "CSS.setLocalFontsEnabled"
 
 
+@dataclass(kw_only=True)
 class AddRuleParams(CDPModel):
     """
     Inserts a new rule with the given `ruleText` in a stylesheet with given
@@ -64,10 +66,12 @@ class AddRuleParams(CDPModel):
     node_for_property_syntax_validation: dom.NodeId | None = None
 
 
+@dataclass(kw_only=True)
 class AddRuleResult(CDPModel):
     rule: CSSRule
 
 
+@dataclass(kw_only=True)
 class CollectClassNamesParams(CDPModel):
     """
     Returns all class names from specified stylesheet.
@@ -76,23 +80,27 @@ class CollectClassNamesParams(CDPModel):
     style_sheet_id: dom.StyleSheetId
 
 
+@dataclass(kw_only=True)
 class CollectClassNamesResult(CDPModel):
     class_names: list[str]
 
 
+@dataclass(kw_only=True)
 class CreateStyleSheetParams(CDPModel):
     """
     Creates a new special "via-inspector" stylesheet in the frame with given `frameId`.
     """
 
     frame_id: page.FrameId
-    force: bool | None = None
+    force: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class CreateStyleSheetResult(CDPModel):
     style_sheet_id: dom.StyleSheetId
 
 
+@dataclass(kw_only=True)
 class ForcePseudoStateParams(CDPModel):
     """
     Ensures that the given node will have specified pseudo-classes whenever its style
@@ -103,6 +111,7 @@ class ForcePseudoStateParams(CDPModel):
     forced_pseudo_classes: list[str]
 
 
+@dataclass(kw_only=True)
 class ForceStartingStyleParams(CDPModel):
     """
     Ensures that the given node is in its starting-style state.
@@ -112,16 +121,19 @@ class ForceStartingStyleParams(CDPModel):
     forced: bool
 
 
+@dataclass(kw_only=True)
 class GetBackgroundColorsParams(CDPModel):
     node_id: dom.NodeId
 
 
+@dataclass(kw_only=True)
 class GetBackgroundColorsResult(CDPModel):
-    background_colors: list[str] | None = None
-    computed_font_size: str | None = None
-    computed_font_weight: str | None = None
+    background_colors: list[str] | None | None = None
+    computed_font_size: str | None | None = None
+    computed_font_weight: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class GetComputedStyleForNodeParams(CDPModel):
     """
     Returns the computed style for a DOM node identified by `nodeId`.
@@ -130,11 +142,13 @@ class GetComputedStyleForNodeParams(CDPModel):
     node_id: dom.NodeId
 
 
+@dataclass(kw_only=True)
 class GetComputedStyleForNodeResult(CDPModel):
     computed_style: list[CSSComputedStyleProperty]
     extra_fields: ComputedStyleExtraFields
 
 
+@dataclass(kw_only=True)
 class ResolveValuesParams(CDPModel):
     """
     Resolve the specified values in the context of the provided element. For example, a
@@ -148,24 +162,28 @@ class ResolveValuesParams(CDPModel):
 
     values: list[str]
     node_id: dom.NodeId
-    property_name: str | None = None
+    property_name: str | None | None = None
     pseudo_type: dom.PseudoType | None = None
-    pseudo_identifier: str | None = None
+    pseudo_identifier: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class ResolveValuesResult(CDPModel):
     results: list[str]
 
 
+@dataclass(kw_only=True)
 class GetLonghandPropertiesParams(CDPModel):
     shorthand_name: str
     value: str
 
 
+@dataclass(kw_only=True)
 class GetLonghandPropertiesResult(CDPModel):
     longhand_properties: list[CSSProperty]
 
 
+@dataclass(kw_only=True)
 class GetInlineStylesForNodeParams(CDPModel):
     """
     Returns the styles defined inline (explicitly in the "style" attribute and
@@ -175,11 +193,13 @@ class GetInlineStylesForNodeParams(CDPModel):
     node_id: dom.NodeId
 
 
+@dataclass(kw_only=True)
 class GetInlineStylesForNodeResult(CDPModel):
-    inline_style: CSSStyle | None = None
-    attributes_style: CSSStyle | None = None
+    inline_style: CSSStyle | None | None = None
+    attributes_style: CSSStyle | None | None = None
 
 
+@dataclass(kw_only=True)
 class GetAnimatedStylesForNodeParams(CDPModel):
     """
     Returns the styles coming from animations & transitions including the animation &
@@ -189,12 +209,14 @@ class GetAnimatedStylesForNodeParams(CDPModel):
     node_id: dom.NodeId
 
 
+@dataclass(kw_only=True)
 class GetAnimatedStylesForNodeResult(CDPModel):
-    animation_styles: list[CSSAnimationStyle] | None = None
-    transitions_style: CSSStyle | None = None
-    inherited: list[InheritedAnimatedStyleEntry] | None = None
+    animation_styles: list[CSSAnimationStyle] | None | None = None
+    transitions_style: CSSStyle | None | None = None
+    inherited: list[InheritedAnimatedStyleEntry] | None | None = None
 
 
+@dataclass(kw_only=True)
 class GetMatchedStylesForNodeParams(CDPModel):
     """
     Returns requested styles for a DOM node identified by `nodeId`.
@@ -203,31 +225,35 @@ class GetMatchedStylesForNodeParams(CDPModel):
     node_id: dom.NodeId
 
 
+@dataclass(kw_only=True)
 class GetMatchedStylesForNodeResult(CDPModel):
-    inline_style: CSSStyle | None = None
-    attributes_style: CSSStyle | None = None
-    matched_c_s_s_rules: list[RuleMatch] | None = None
-    pseudo_elements: list[PseudoElementMatches] | None = None
-    inherited: list[InheritedStyleEntry] | None = None
-    inherited_pseudo_elements: list[InheritedPseudoElementMatches] | None = None
-    css_keyframes_rules: list[CSSKeyframesRule] | None = None
-    css_position_try_rules: list[CSSPositionTryRule] | None = None
-    active_position_fallback_index: int | None = None
-    css_property_rules: list[CSSPropertyRule] | None = None
-    css_property_registrations: list[CSSPropertyRegistration] | None = None
-    css_at_rules: list[CSSAtRule] | None = None
+    inline_style: CSSStyle | None | None = None
+    attributes_style: CSSStyle | None | None = None
+    matched_c_s_s_rules: list[RuleMatch] | None | None = None
+    pseudo_elements: list[PseudoElementMatches] | None | None = None
+    inherited: list[InheritedStyleEntry] | None | None = None
+    inherited_pseudo_elements: list[InheritedPseudoElementMatches] | None | None = None
+    css_keyframes_rules: list[CSSKeyframesRule] | None | None = None
+    css_position_try_rules: list[CSSPositionTryRule] | None | None = None
+    active_position_fallback_index: int | None | None = None
+    css_property_rules: list[CSSPropertyRule] | None | None = None
+    css_property_registrations: list[CSSPropertyRegistration] | None | None = None
+    css_at_rules: list[CSSAtRule] | None | None = None
     parent_layout_node_id: dom.NodeId | None = None
-    css_function_rules: list[CSSFunctionRule] | None = None
+    css_function_rules: list[CSSFunctionRule] | None | None = None
 
 
+@dataclass(kw_only=True)
 class GetEnvironmentVariablesResult(CDPModel):
     environment_variables: dict[str, Any]
 
 
+@dataclass(kw_only=True)
 class GetMediaQueriesResult(CDPModel):
     medias: list[CSSMedia]
 
 
+@dataclass(kw_only=True)
 class GetPlatformFontsForNodeParams(CDPModel):
     """
     Requests information about platform fonts which we used to render child TextNodes
@@ -237,10 +263,12 @@ class GetPlatformFontsForNodeParams(CDPModel):
     node_id: dom.NodeId
 
 
+@dataclass(kw_only=True)
 class GetPlatformFontsForNodeResult(CDPModel):
     fonts: list[PlatformFontUsage]
 
 
+@dataclass(kw_only=True)
 class GetStyleSheetTextParams(CDPModel):
     """
     Returns the current textual content for a stylesheet.
@@ -249,10 +277,12 @@ class GetStyleSheetTextParams(CDPModel):
     style_sheet_id: dom.StyleSheetId
 
 
+@dataclass(kw_only=True)
 class GetStyleSheetTextResult(CDPModel):
     text: str
 
 
+@dataclass(kw_only=True)
 class GetLayersForNodeParams(CDPModel):
     """
     Returns all layers parsed by the rendering engine for the tree scope of a node.
@@ -264,10 +294,12 @@ class GetLayersForNodeParams(CDPModel):
     node_id: dom.NodeId
 
 
+@dataclass(kw_only=True)
 class GetLayersForNodeResult(CDPModel):
     root_layer: CSSLayerData
 
 
+@dataclass(kw_only=True)
 class GetLocationForSelectorParams(CDPModel):
     """
     Given a CSS selector text and a style sheet ID, getLocationForSelector returns an
@@ -278,10 +310,12 @@ class GetLocationForSelectorParams(CDPModel):
     selector_text: str
 
 
+@dataclass(kw_only=True)
 class GetLocationForSelectorResult(CDPModel):
     ranges: list[SourceRange]
 
 
+@dataclass(kw_only=True)
 class TrackComputedStyleUpdatesForNodeParams(CDPModel):
     """
     Starts tracking the given node for the computed style updates and whenever the
@@ -294,6 +328,7 @@ class TrackComputedStyleUpdatesForNodeParams(CDPModel):
     node_id: dom.NodeId | None = None
 
 
+@dataclass(kw_only=True)
 class TrackComputedStyleUpdatesParams(CDPModel):
     """
     Starts tracking the given computed styles for updates. The specified array of
@@ -308,10 +343,12 @@ class TrackComputedStyleUpdatesParams(CDPModel):
     properties_to_track: list[CSSComputedStyleProperty]
 
 
+@dataclass(kw_only=True)
 class TakeComputedStyleUpdatesResult(CDPModel):
     node_ids: list[dom.NodeId]
 
 
+@dataclass(kw_only=True)
 class SetEffectivePropertyValueForNodeParams(CDPModel):
     """
     Find a rule with the given active property for the given node and set the new value
@@ -323,6 +360,7 @@ class SetEffectivePropertyValueForNodeParams(CDPModel):
     value: str
 
 
+@dataclass(kw_only=True)
 class SetPropertyRulePropertyNameParams(CDPModel):
     """
     Modifies the property rule property name.
@@ -333,10 +371,12 @@ class SetPropertyRulePropertyNameParams(CDPModel):
     property_name: str
 
 
+@dataclass(kw_only=True)
 class SetPropertyRulePropertyNameResult(CDPModel):
     property_name: Value
 
 
+@dataclass(kw_only=True)
 class SetKeyframeKeyParams(CDPModel):
     """
     Modifies the keyframe rule key text.
@@ -347,10 +387,12 @@ class SetKeyframeKeyParams(CDPModel):
     key_text: str
 
 
+@dataclass(kw_only=True)
 class SetKeyframeKeyResult(CDPModel):
     key_text: Value
 
 
+@dataclass(kw_only=True)
 class SetMediaTextParams(CDPModel):
     """
     Modifies the rule selector.
@@ -361,10 +403,12 @@ class SetMediaTextParams(CDPModel):
     text: str
 
 
+@dataclass(kw_only=True)
 class SetMediaTextResult(CDPModel):
     media: CSSMedia
 
 
+@dataclass(kw_only=True)
 class SetContainerQueryTextParams(CDPModel):
     """
     Modifies the expression of a container query.
@@ -375,10 +419,12 @@ class SetContainerQueryTextParams(CDPModel):
     text: str
 
 
+@dataclass(kw_only=True)
 class SetContainerQueryTextResult(CDPModel):
     container_query: CSSContainerQuery
 
 
+@dataclass(kw_only=True)
 class SetSupportsTextParams(CDPModel):
     """
     Modifies the expression of a supports at-rule.
@@ -389,10 +435,12 @@ class SetSupportsTextParams(CDPModel):
     text: str
 
 
+@dataclass(kw_only=True)
 class SetSupportsTextResult(CDPModel):
     supports: CSSSupports
 
 
+@dataclass(kw_only=True)
 class SetScopeTextParams(CDPModel):
     """
     Modifies the expression of a scope at-rule.
@@ -403,10 +451,12 @@ class SetScopeTextParams(CDPModel):
     text: str
 
 
+@dataclass(kw_only=True)
 class SetScopeTextResult(CDPModel):
     scope: CSSScope
 
 
+@dataclass(kw_only=True)
 class SetRuleSelectorParams(CDPModel):
     """
     Modifies the rule selector.
@@ -417,10 +467,12 @@ class SetRuleSelectorParams(CDPModel):
     selector: str
 
 
+@dataclass(kw_only=True)
 class SetRuleSelectorResult(CDPModel):
     selector_list: SelectorList
 
 
+@dataclass(kw_only=True)
 class SetStyleSheetTextParams(CDPModel):
     """
     Sets the new stylesheet text.
@@ -430,10 +482,12 @@ class SetStyleSheetTextParams(CDPModel):
     text: str
 
 
+@dataclass(kw_only=True)
 class SetStyleSheetTextResult(CDPModel):
-    source_map_u_r_l: str | None = None
+    source_map_u_r_l: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetStyleTextsParams(CDPModel):
     """
     Applies specified style edits one after another in the given order.
@@ -443,19 +497,23 @@ class SetStyleTextsParams(CDPModel):
     node_for_property_syntax_validation: dom.NodeId | None = None
 
 
+@dataclass(kw_only=True)
 class SetStyleTextsResult(CDPModel):
     styles: list[CSSStyle]
 
 
+@dataclass(kw_only=True)
 class StopRuleUsageTrackingResult(CDPModel):
     rule_usage: list[RuleUsage]
 
 
+@dataclass(kw_only=True)
 class TakeCoverageDeltaResult(CDPModel):
     coverage: list[RuleUsage]
     timestamp: float
 
 
+@dataclass(kw_only=True)
 class SetLocalFontsEnabledParams(CDPModel):
     """
     Enables/disables rendering of local CSS fonts (enabled by default).

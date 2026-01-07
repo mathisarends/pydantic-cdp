@@ -3,8 +3,9 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import TYPE_CHECKING
+from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.domains.base import CDPModel
+from cdpify.domains.shared import CDPModel
 
 from .types import *
 
@@ -25,20 +26,23 @@ class DOMDebuggerCommand(StrEnum):
     SET_X_H_R_BREAKPOINT = "DOMDebugger.setXHRBreakpoint"
 
 
+@dataclass(kw_only=True)
 class GetEventListenersParams(CDPModel):
     """
     Returns event listeners of the given object.
     """
 
     object_id: runtime.RemoteObjectId
-    depth: int | None = None
-    pierce: bool | None = None
+    depth: int | None | None = None
+    pierce: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class GetEventListenersResult(CDPModel):
     listeners: list[EventListener]
 
 
+@dataclass(kw_only=True)
 class RemoveDOMBreakpointParams(CDPModel):
     """
     Removes DOM breakpoint that was set using `setDOMBreakpoint`.
@@ -48,15 +52,17 @@ class RemoveDOMBreakpointParams(CDPModel):
     type: DOMBreakpointType
 
 
+@dataclass(kw_only=True)
 class RemoveEventListenerBreakpointParams(CDPModel):
     """
     Removes breakpoint on particular DOM event.
     """
 
     event_name: str
-    target_name: str | None = None
+    target_name: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class RemoveInstrumentationBreakpointParams(CDPModel):
     """
     Removes breakpoint on particular native event.
@@ -65,6 +71,7 @@ class RemoveInstrumentationBreakpointParams(CDPModel):
     event_name: str
 
 
+@dataclass(kw_only=True)
 class RemoveXHRBreakpointParams(CDPModel):
     """
     Removes breakpoint from XMLHttpRequest.
@@ -73,6 +80,7 @@ class RemoveXHRBreakpointParams(CDPModel):
     url: str
 
 
+@dataclass(kw_only=True)
 class SetBreakOnCSPViolationParams(CDPModel):
     """
     Sets breakpoint on particular CSP violations.
@@ -81,6 +89,7 @@ class SetBreakOnCSPViolationParams(CDPModel):
     violation_types: list[CSPViolationType]
 
 
+@dataclass(kw_only=True)
 class SetDOMBreakpointParams(CDPModel):
     """
     Sets breakpoint on particular operation with DOM.
@@ -90,15 +99,17 @@ class SetDOMBreakpointParams(CDPModel):
     type: DOMBreakpointType
 
 
+@dataclass(kw_only=True)
 class SetEventListenerBreakpointParams(CDPModel):
     """
     Sets breakpoint on particular DOM event.
     """
 
     event_name: str
-    target_name: str | None = None
+    target_name: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetInstrumentationBreakpointParams(CDPModel):
     """
     Sets breakpoint on particular native event.
@@ -107,6 +118,7 @@ class SetInstrumentationBreakpointParams(CDPModel):
     event_name: str
 
 
+@dataclass(kw_only=True)
 class SetXHRBreakpointParams(CDPModel):
     """
     Sets breakpoint on XMLHttpRequest.

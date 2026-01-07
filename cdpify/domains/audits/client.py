@@ -32,7 +32,10 @@ class AuditsClient:
         session_id: str | None = None,
     ) -> GetEncodedResponseResult:
         params = GetEncodedResponseParams(
-            requestId=request_id, encoding=encoding, quality=quality, sizeOnly=size_only
+            request_id=request_id,
+            encoding=encoding,
+            quality=quality,
+            size_only=size_only,
         )
 
         result = await self._client.send_raw(
@@ -40,7 +43,7 @@ class AuditsClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetEncodedResponseResult.model_validate(result)
+        return GetEncodedResponseResult.from_cdp(result)
 
     async def disable(
         self,
@@ -70,7 +73,7 @@ class AuditsClient:
         report_a_a_a: bool | None = None,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = CheckContrastParams(reportAAA=report_a_a_a)
+        params = CheckContrastParams(report_a_a_a=report_a_a_a)
 
         result = await self._client.send_raw(
             method=AuditsCommand.CHECK_CONTRAST,
@@ -88,4 +91,4 @@ class AuditsClient:
             params=None,
             session_id=session_id,
         )
-        return CheckFormsIssuesResult.model_validate(result)
+        return CheckFormsIssuesResult.from_cdp(result)

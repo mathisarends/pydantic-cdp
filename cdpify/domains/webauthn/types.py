@@ -3,7 +3,8 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Literal
-from cdpify.domains.base import CDPModel
+from dataclasses import dataclass
+from cdpify.domains.shared import CDPModel
 
 AuthenticatorId = str
 
@@ -14,31 +15,33 @@ Ctap2Version = Literal["ctap2_0", "ctap2_1"]
 AuthenticatorTransport = Literal["usb", "nfc", "ble", "cable", "internal"]
 
 
+@dataclass(kw_only=True)
 class VirtualAuthenticatorOptions(CDPModel):
     protocol: AuthenticatorProtocol
-    ctap2_version: Ctap2Version | None = None
+    ctap2_version: Ctap2Version | None | None = None
     transport: AuthenticatorTransport
-    has_resident_key: bool | None = None
-    has_user_verification: bool | None = None
-    has_large_blob: bool | None = None
-    has_cred_blob: bool | None = None
-    has_min_pin_length: bool | None = None
-    has_prf: bool | None = None
-    automatic_presence_simulation: bool | None = None
-    is_user_verified: bool | None = None
-    default_backup_eligibility: bool | None = None
-    default_backup_state: bool | None = None
+    has_resident_key: bool | None | None = None
+    has_user_verification: bool | None | None = None
+    has_large_blob: bool | None | None = None
+    has_cred_blob: bool | None | None = None
+    has_min_pin_length: bool | None | None = None
+    has_prf: bool | None | None = None
+    automatic_presence_simulation: bool | None | None = None
+    is_user_verified: bool | None | None = None
+    default_backup_eligibility: bool | None | None = None
+    default_backup_state: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class Credential(CDPModel):
     credential_id: str
     is_resident_credential: bool
-    rp_id: str | None = None
+    rp_id: str | None | None = None
     private_key: str
-    user_handle: str | None = None
+    user_handle: str | None | None = None
     sign_count: int
-    large_blob: str | None = None
-    backup_eligibility: bool | None = None
-    backup_state: bool | None = None
-    user_name: str | None = None
-    user_display_name: str | None = None
+    large_blob: str | None | None = None
+    backup_eligibility: bool | None | None = None
+    backup_state: bool | None | None = None
+    user_name: str | None | None = None
+    user_display_name: str | None | None = None

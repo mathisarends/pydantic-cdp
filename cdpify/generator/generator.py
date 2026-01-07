@@ -77,24 +77,36 @@ __all__ = ["{domain.domain}Client"]
 '''
 
     def _generate_base_file(self) -> None:
-        (CDP_DIR / "base.py").write_text(self._build_base_content())
-        logger.info("  ✓ base.py")
+        (CDP_DIR / "shared.py").write_text(self._build_shared_content())
+        logger.info("  ✓ shared.py")
 
-    def _build_base_content(self) -> str:
-        return """
-from typing import Any
-from pydantic import BaseModel, ConfigDict
-from pydantic.alias_generators import to_camel
+    def _build_shared_content(self) -> str:
+        return """import re
+from dataclasses import asdict, dataclass, fields
+from typing import Any, Self
 
 
-class CDPModel(BaseModel):
-    model_config = ConfigDict(
-        populate_by_name=True,
-        alias_generator=to_camel,
-    )
-
+@dataclass
+class CDPModel:
     def to_cdp_params(self) -> dict[str, Any]:
-        return self.model_dump(by_alias=True, exclude_none=True)
+        return {self._to_camel(k): v for k, v in asdict(self).items() if v is not None}
+
+    @staticmethod
+    def _to_camel(s: str) -> str:
+        parts = s.split("_")
+        return parts[0] + "".join(p.title() for p in parts[1:])
+
+
+    @classmethod
+    def from_cdp(cls, data: dict) -> Self:
+        snake_data = {cls._to_snake(k): v for k, v in data.items()}
+        valid_fields = {f.name for f in fields(cls)}
+        return cls(**{k: v for k, v in snake_data.items() if k in valid_fields})
+
+    @staticmethod
+    def _to_snake(s: str) -> str:
+        import re
+        return re.sub(r"(?<!^)(?=[A-Z])", "_", s).lower()
 """
 
     def _generate_init_file(self, domains: list[Domain]) -> None:

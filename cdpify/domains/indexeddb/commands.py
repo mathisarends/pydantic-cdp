@@ -3,8 +3,9 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import TYPE_CHECKING
+from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.domains.base import CDPModel
+from cdpify.domains.shared import CDPModel
 
 from .types import *
 
@@ -23,104 +24,115 @@ class IndexedDBCommand(StrEnum):
     REQUEST_DATABASE_NAMES = "IndexedDB.requestDatabaseNames"
 
 
+@dataclass(kw_only=True)
 class ClearObjectStoreParams(CDPModel):
     """
     Clears all entries from an object store.
     """
 
-    security_origin: str | None = None
-    storage_key: str | None = None
+    security_origin: str | None | None = None
+    storage_key: str | None | None = None
     storage_bucket: storage.StorageBucket | None = None
     database_name: str
     object_store_name: str
 
 
+@dataclass(kw_only=True)
 class DeleteDatabaseParams(CDPModel):
     """
     Deletes a database.
     """
 
-    security_origin: str | None = None
-    storage_key: str | None = None
+    security_origin: str | None | None = None
+    storage_key: str | None | None = None
     storage_bucket: storage.StorageBucket | None = None
     database_name: str
 
 
+@dataclass(kw_only=True)
 class DeleteObjectStoreEntriesParams(CDPModel):
     """
     Delete a range of entries from an object store
     """
 
-    security_origin: str | None = None
-    storage_key: str | None = None
+    security_origin: str | None | None = None
+    storage_key: str | None | None = None
     storage_bucket: storage.StorageBucket | None = None
     database_name: str
     object_store_name: str
     key_range: KeyRange
 
 
+@dataclass(kw_only=True)
 class RequestDataParams(CDPModel):
     """
     Requests data from object store or index.
     """
 
-    security_origin: str | None = None
-    storage_key: str | None = None
+    security_origin: str | None | None = None
+    storage_key: str | None | None = None
     storage_bucket: storage.StorageBucket | None = None
     database_name: str
     object_store_name: str
-    index_name: str | None = None
+    index_name: str | None | None = None
     skip_count: int
     page_size: int
-    key_range: KeyRange | None = None
+    key_range: KeyRange | None | None = None
 
 
+@dataclass(kw_only=True)
 class RequestDataResult(CDPModel):
     object_store_data_entries: list[DataEntry]
     has_more: bool
 
 
+@dataclass(kw_only=True)
 class GetMetadataParams(CDPModel):
     """
     Gets metadata of an object store.
     """
 
-    security_origin: str | None = None
-    storage_key: str | None = None
+    security_origin: str | None | None = None
+    storage_key: str | None | None = None
     storage_bucket: storage.StorageBucket | None = None
     database_name: str
     object_store_name: str
 
 
+@dataclass(kw_only=True)
 class GetMetadataResult(CDPModel):
     entries_count: float
     key_generator_value: float
 
 
+@dataclass(kw_only=True)
 class RequestDatabaseParams(CDPModel):
     """
     Requests database with given name in given frame.
     """
 
-    security_origin: str | None = None
-    storage_key: str | None = None
+    security_origin: str | None | None = None
+    storage_key: str | None | None = None
     storage_bucket: storage.StorageBucket | None = None
     database_name: str
 
 
+@dataclass(kw_only=True)
 class RequestDatabaseResult(CDPModel):
     database_with_object_stores: DatabaseWithObjectStores
 
 
+@dataclass(kw_only=True)
 class RequestDatabaseNamesParams(CDPModel):
     """
     Requests database names for given security origin.
     """
 
-    security_origin: str | None = None
-    storage_key: str | None = None
+    security_origin: str | None | None = None
+    storage_key: str | None | None = None
     storage_bucket: storage.StorageBucket | None = None
 
 
+@dataclass(kw_only=True)
 class RequestDatabaseNamesResult(CDPModel):
     database_names: list[str]

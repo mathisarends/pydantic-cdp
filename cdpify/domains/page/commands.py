@@ -3,8 +3,9 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Literal, TYPE_CHECKING
+from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.domains.base import CDPModel
+from cdpify.domains.shared import CDPModel
 
 from .types import *
 
@@ -82,6 +83,7 @@ class PageCommand(StrEnum):
     GET_ANNOTATED_PAGE_CONTENT = "Page.getAnnotatedPageContent"
 
 
+@dataclass(kw_only=True)
 class AddScriptToEvaluateOnLoadParams(CDPModel):
     """
     Deprecated, please use addScriptToEvaluateOnNewDocument instead.
@@ -90,10 +92,12 @@ class AddScriptToEvaluateOnLoadParams(CDPModel):
     script_source: str
 
 
+@dataclass(kw_only=True)
 class AddScriptToEvaluateOnLoadResult(CDPModel):
     identifier: ScriptIdentifier
 
 
+@dataclass(kw_only=True)
 class AddScriptToEvaluateOnNewDocumentParams(CDPModel):
     """
     Evaluates given script in every frame upon creation (before loading frame's
@@ -101,59 +105,67 @@ class AddScriptToEvaluateOnNewDocumentParams(CDPModel):
     """
 
     source: str
-    world_name: str | None = None
-    include_command_line_a_p_i: bool | None = None
-    run_immediately: bool | None = None
+    world_name: str | None | None = None
+    include_command_line_a_p_i: bool | None | None = None
+    run_immediately: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class AddScriptToEvaluateOnNewDocumentResult(CDPModel):
     identifier: ScriptIdentifier
 
 
+@dataclass(kw_only=True)
 class CaptureScreenshotParams(CDPModel):
     """
     Capture page screenshot.
     """
 
-    format: Literal["jpeg", "png", "webp"] | None = None
-    quality: int | None = None
-    clip: Viewport | None = None
-    from_surface: bool | None = None
-    capture_beyond_viewport: bool | None = None
-    optimize_for_speed: bool | None = None
+    format: Literal["jpeg", "png", "webp"] | None | None = None
+    quality: int | None | None = None
+    clip: Viewport | None | None = None
+    from_surface: bool | None | None = None
+    capture_beyond_viewport: bool | None | None = None
+    optimize_for_speed: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class CaptureScreenshotResult(CDPModel):
     data: str
 
 
+@dataclass(kw_only=True)
 class CaptureSnapshotParams(CDPModel):
     """
     Returns a snapshot of the page as a string. For MHTML format, the serialization
     includes iframes, shadow DOM, external resources, and element-inline styles.
     """
 
-    format: Literal["mhtml"] | None = None
+    format: Literal["mhtml"] | None | None = None
 
 
+@dataclass(kw_only=True)
 class CaptureSnapshotResult(CDPModel):
     data: str
 
 
+@dataclass(kw_only=True)
 class CreateIsolatedWorldParams(CDPModel):
     """
     Creates an isolated world for the given frame.
     """
 
     frame_id: FrameId
-    world_name: str | None = None
-    grant_univeral_access: bool | None = None
+    world_name: str | None | None = None
+    grant_univeral_access: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class CreateIsolatedWorldResult(CDPModel):
     execution_context_id: runtime.ExecutionContextId
 
 
+@dataclass(kw_only=True)
 class DeleteCookieParams(CDPModel):
     """
     Deletes browser cookie with given name, domain and path.
@@ -163,14 +175,16 @@ class DeleteCookieParams(CDPModel):
     url: str
 
 
+@dataclass(kw_only=True)
 class EnableParams(CDPModel):
     """
     Enables page domain notifications.
     """
 
-    enable_file_chooser_opened_event: bool | None = None
+    enable_file_chooser_opened_event: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class GetAppManifestParams(CDPModel):
     """
     Gets the processed manifest for this current document. This API always waits for
@@ -179,42 +193,50 @@ class GetAppManifestParams(CDPModel):
     page, this API errors out immediately.
     """
 
-    manifest_id: str | None = None
+    manifest_id: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class GetAppManifestResult(CDPModel):
     url: str
     errors: list[AppManifestError]
-    data: str | None = None
-    parsed: AppManifestParsedProperties | None = None
+    data: str | None | None = None
+    parsed: AppManifestParsedProperties | None | None = None
     manifest: WebAppManifest
 
 
+@dataclass(kw_only=True)
 class GetInstallabilityErrorsResult(CDPModel):
     installability_errors: list[InstallabilityError]
 
 
+@dataclass(kw_only=True)
 class GetManifestIconsResult(CDPModel):
-    primary_icon: str | None = None
+    primary_icon: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class GetAppIdResult(CDPModel):
-    app_id: str | None = None
-    recommended_id: str | None = None
+    app_id: str | None | None = None
+    recommended_id: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class GetAdScriptAncestryParams(CDPModel):
     frame_id: FrameId
 
 
+@dataclass(kw_only=True)
 class GetAdScriptAncestryResult(CDPModel):
-    ad_script_ancestry: AdScriptAncestry | None = None
+    ad_script_ancestry: AdScriptAncestry | None | None = None
 
 
+@dataclass(kw_only=True)
 class GetFrameTreeResult(CDPModel):
     frame_tree: FrameTree
 
 
+@dataclass(kw_only=True)
 class GetLayoutMetricsResult(CDPModel):
     layout_viewport: LayoutViewport
     visual_viewport: VisualViewport
@@ -224,11 +246,13 @@ class GetLayoutMetricsResult(CDPModel):
     css_content_size: dom.Rect
 
 
+@dataclass(kw_only=True)
 class GetNavigationHistoryResult(CDPModel):
     current_index: int
     entries: list[NavigationEntry]
 
 
+@dataclass(kw_only=True)
 class GetResourceContentParams(CDPModel):
     """
     Returns content of the given resource.
@@ -238,15 +262,18 @@ class GetResourceContentParams(CDPModel):
     url: str
 
 
+@dataclass(kw_only=True)
 class GetResourceContentResult(CDPModel):
     content: str
     base64_encoded: bool
 
 
+@dataclass(kw_only=True)
 class GetResourceTreeResult(CDPModel):
     frame_tree: FrameResourceTree
 
 
+@dataclass(kw_only=True)
 class HandleJavaScriptDialogParams(CDPModel):
     """
     Accepts or dismisses a JavaScript initiated dialog (alert, confirm, prompt, or
@@ -254,28 +281,31 @@ class HandleJavaScriptDialogParams(CDPModel):
     """
 
     accept: bool
-    prompt_text: str | None = None
+    prompt_text: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class NavigateParams(CDPModel):
     """
     Navigates current page to the given URL.
     """
 
     url: str
-    referrer: str | None = None
-    transition_type: TransitionType | None = None
-    frame_id: FrameId | None = None
-    referrer_policy: ReferrerPolicy | None = None
+    referrer: str | None | None = None
+    transition_type: TransitionType | None | None = None
+    frame_id: FrameId | None | None = None
+    referrer_policy: ReferrerPolicy | None | None = None
 
 
+@dataclass(kw_only=True)
 class NavigateResult(CDPModel):
     frame_id: FrameId
     loader_id: network.LoaderId | None = None
-    error_text: str | None = None
-    is_download: bool | None = None
+    error_text: str | None | None = None
+    is_download: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class NavigateToHistoryEntryParams(CDPModel):
     """
     Navigates current page to the given history entry.
@@ -284,45 +314,49 @@ class NavigateToHistoryEntryParams(CDPModel):
     entry_id: int
 
 
+@dataclass(kw_only=True)
 class PrintToPDFParams(CDPModel):
     """
     Print page as PDF.
     """
 
-    landscape: bool | None = None
-    display_header_footer: bool | None = None
-    print_background: bool | None = None
-    scale: float | None = None
-    paper_width: float | None = None
-    paper_height: float | None = None
-    margin_top: float | None = None
-    margin_bottom: float | None = None
-    margin_left: float | None = None
-    margin_right: float | None = None
-    page_ranges: str | None = None
-    header_template: str | None = None
-    footer_template: str | None = None
-    prefer_c_s_s_page_size: bool | None = None
-    transfer_mode: Literal["ReturnAsBase64", "ReturnAsStream"] | None = None
-    generate_tagged_p_d_f: bool | None = None
-    generate_document_outline: bool | None = None
+    landscape: bool | None | None = None
+    display_header_footer: bool | None | None = None
+    print_background: bool | None | None = None
+    scale: float | None | None = None
+    paper_width: float | None | None = None
+    paper_height: float | None | None = None
+    margin_top: float | None | None = None
+    margin_bottom: float | None | None = None
+    margin_left: float | None | None = None
+    margin_right: float | None | None = None
+    page_ranges: str | None | None = None
+    header_template: str | None | None = None
+    footer_template: str | None | None = None
+    prefer_c_s_s_page_size: bool | None | None = None
+    transfer_mode: Literal["ReturnAsBase64", "ReturnAsStream"] | None | None = None
+    generate_tagged_p_d_f: bool | None | None = None
+    generate_document_outline: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class PrintToPDFResult(CDPModel):
     data: str
     stream: io.StreamHandle | None = None
 
 
+@dataclass(kw_only=True)
 class ReloadParams(CDPModel):
     """
     Reloads given page optionally ignoring the cache.
     """
 
-    ignore_cache: bool | None = None
-    script_to_evaluate_on_load: str | None = None
+    ignore_cache: bool | None | None = None
+    script_to_evaluate_on_load: str | None | None = None
     loader_id: network.LoaderId | None = None
 
 
+@dataclass(kw_only=True)
 class RemoveScriptToEvaluateOnLoadParams(CDPModel):
     """
     Deprecated, please use removeScriptToEvaluateOnNewDocument instead.
@@ -331,6 +365,7 @@ class RemoveScriptToEvaluateOnLoadParams(CDPModel):
     identifier: ScriptIdentifier
 
 
+@dataclass(kw_only=True)
 class RemoveScriptToEvaluateOnNewDocumentParams(CDPModel):
     """
     Removes given script from the list.
@@ -339,6 +374,7 @@ class RemoveScriptToEvaluateOnNewDocumentParams(CDPModel):
     identifier: ScriptIdentifier
 
 
+@dataclass(kw_only=True)
 class ScreencastFrameAckParams(CDPModel):
     """
     Acknowledges that a screencast frame has been received by the frontend.
@@ -347,6 +383,7 @@ class ScreencastFrameAckParams(CDPModel):
     session_id: int
 
 
+@dataclass(kw_only=True)
 class SearchInResourceParams(CDPModel):
     """
     Searches for given string in resource content.
@@ -355,14 +392,16 @@ class SearchInResourceParams(CDPModel):
     frame_id: FrameId
     url: str
     query: str
-    case_sensitive: bool | None = None
-    is_regex: bool | None = None
+    case_sensitive: bool | None | None = None
+    is_regex: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class SearchInResourceResult(CDPModel):
     result: list[debugger.SearchMatch]
 
 
+@dataclass(kw_only=True)
 class SetAdBlockingEnabledParams(CDPModel):
     """
     Enable Chrome's experimental ad filter on all sites.
@@ -371,6 +410,7 @@ class SetAdBlockingEnabledParams(CDPModel):
     enabled: bool
 
 
+@dataclass(kw_only=True)
 class SetBypassCSPParams(CDPModel):
     """
     Enable page Content Security Policy by-passing.
@@ -379,6 +419,7 @@ class SetBypassCSPParams(CDPModel):
     enabled: bool
 
 
+@dataclass(kw_only=True)
 class GetPermissionsPolicyStateParams(CDPModel):
     """
     Get Permissions Policy state on given frame.
@@ -387,10 +428,12 @@ class GetPermissionsPolicyStateParams(CDPModel):
     frame_id: FrameId
 
 
+@dataclass(kw_only=True)
 class GetPermissionsPolicyStateResult(CDPModel):
     states: list[PermissionsPolicyFeatureState]
 
 
+@dataclass(kw_only=True)
 class GetOriginTrialsParams(CDPModel):
     """
     Get Origin Trials on given frame.
@@ -399,10 +442,12 @@ class GetOriginTrialsParams(CDPModel):
     frame_id: FrameId
 
 
+@dataclass(kw_only=True)
 class GetOriginTrialsResult(CDPModel):
     origin_trials: list[OriginTrial]
 
 
+@dataclass(kw_only=True)
 class SetDeviceMetricsOverrideParams(CDPModel):
     """
     Overrides the values of device screen dimensions (window.screen.width,
@@ -414,16 +459,17 @@ class SetDeviceMetricsOverrideParams(CDPModel):
     height: int
     device_scale_factor: float
     mobile: bool
-    scale: float | None = None
-    screen_width: int | None = None
-    screen_height: int | None = None
-    position_x: int | None = None
-    position_y: int | None = None
-    dont_set_visible_size: bool | None = None
+    scale: float | None | None = None
+    screen_width: int | None | None = None
+    screen_height: int | None | None = None
+    position_x: int | None | None = None
+    position_y: int | None | None = None
+    dont_set_visible_size: bool | None | None = None
     screen_orientation: emulation.ScreenOrientation | None = None
-    viewport: Viewport | None = None
+    viewport: Viewport | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetDeviceOrientationOverrideParams(CDPModel):
     """
     Overrides the Device Orientation.
@@ -434,15 +480,17 @@ class SetDeviceOrientationOverrideParams(CDPModel):
     gamma: float
 
 
+@dataclass(kw_only=True)
 class SetFontFamiliesParams(CDPModel):
     """
     Set generic font families.
     """
 
     font_families: FontFamilies
-    for_scripts: list[ScriptFontFamilies] | None = None
+    for_scripts: list[ScriptFontFamilies] | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetFontSizesParams(CDPModel):
     """
     Set default font sizes.
@@ -451,6 +499,7 @@ class SetFontSizesParams(CDPModel):
     font_sizes: FontSizes
 
 
+@dataclass(kw_only=True)
 class SetDocumentContentParams(CDPModel):
     """
     Sets given markup as the document's HTML.
@@ -460,26 +509,29 @@ class SetDocumentContentParams(CDPModel):
     html: str
 
 
+@dataclass(kw_only=True)
 class SetDownloadBehaviorParams(CDPModel):
     """
     Set the behavior when downloading a file.
     """
 
     behavior: Literal["deny", "allow", "default"]
-    download_path: str | None = None
+    download_path: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetGeolocationOverrideParams(CDPModel):
     """
     Overrides the Geolocation Position or Error. Omitting any of the parameters
     emulates position unavailable.
     """
 
-    latitude: float | None = None
-    longitude: float | None = None
-    accuracy: float | None = None
+    latitude: float | None | None = None
+    longitude: float | None | None = None
+    accuracy: float | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetLifecycleEventsEnabledParams(CDPModel):
     """
     Controls whether page will emit lifecycle events.
@@ -488,27 +540,30 @@ class SetLifecycleEventsEnabledParams(CDPModel):
     enabled: bool
 
 
+@dataclass(kw_only=True)
 class SetTouchEmulationEnabledParams(CDPModel):
     """
     Toggles mouse event-based touch event emulation.
     """
 
     enabled: bool
-    configuration: Literal["mobile", "desktop"] | None = None
+    configuration: Literal["mobile", "desktop"] | None | None = None
 
 
+@dataclass(kw_only=True)
 class StartScreencastParams(CDPModel):
     """
     Starts sending each frame using the `screencastFrame` event.
     """
 
-    format: Literal["jpeg", "png"] | None = None
-    quality: int | None = None
-    max_width: int | None = None
-    max_height: int | None = None
-    every_nth_frame: int | None = None
+    format: Literal["jpeg", "png"] | None | None = None
+    quality: int | None | None = None
+    max_width: int | None | None = None
+    max_height: int | None | None = None
+    every_nth_frame: int | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetWebLifecycleStateParams(CDPModel):
     """
     Tries to update the web lifecycle state of the page. It will transition the page to
@@ -518,6 +573,7 @@ class SetWebLifecycleStateParams(CDPModel):
     state: Literal["frozen", "active"]
 
 
+@dataclass(kw_only=True)
 class ProduceCompilationCacheParams(CDPModel):
     """
     Requests backend to produce compilation cache for the specified scripts. `scripts`
@@ -530,6 +586,7 @@ class ProduceCompilationCacheParams(CDPModel):
     scripts: list[CompilationCacheParams]
 
 
+@dataclass(kw_only=True)
 class AddCompilationCacheParams(CDPModel):
     """
     Seeds compilation cache for given url. Compilation cache does not survive
@@ -540,6 +597,7 @@ class AddCompilationCacheParams(CDPModel):
     data: str
 
 
+@dataclass(kw_only=True)
 class SetSPCTransactionModeParams(CDPModel):
     """
     Sets the Secure Payment Confirmation transaction mode.
@@ -551,6 +609,7 @@ class SetSPCTransactionModeParams(CDPModel):
     ]
 
 
+@dataclass(kw_only=True)
 class SetRPHRegistrationModeParams(CDPModel):
     """
     Extensions for Custom Handlers API:
@@ -560,15 +619,17 @@ class SetRPHRegistrationModeParams(CDPModel):
     mode: Literal["none", "autoAccept", "autoReject"]
 
 
+@dataclass(kw_only=True)
 class GenerateTestReportParams(CDPModel):
     """
     Generates a report for testing.
     """
 
     message: str
-    group: str | None = None
+    group: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetInterceptFileChooserDialogParams(CDPModel):
     """
     Intercept file chooser requests and transfer control to protocol clients. When file
@@ -577,9 +638,10 @@ class SetInterceptFileChooserDialogParams(CDPModel):
     """
 
     enabled: bool
-    cancel: bool | None = None
+    cancel: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetPrerenderingAllowedParams(CDPModel):
     """
     Enable/disable prerendering manually. This command is a short-term solution for
@@ -592,14 +654,16 @@ class SetPrerenderingAllowedParams(CDPModel):
     is_allowed: bool
 
 
+@dataclass(kw_only=True)
 class GetAnnotatedPageContentParams(CDPModel):
     """
     Get the annotated page content for the main frame. This is an experimental command
     that is subject to change.
     """
 
-    include_actionable_information: bool | None = None
+    include_actionable_information: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class GetAnnotatedPageContentResult(CDPModel):
     content: str

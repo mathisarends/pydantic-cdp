@@ -3,8 +3,9 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import TYPE_CHECKING
+from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.domains.base import CDPModel
+from cdpify.domains.shared import CDPModel
 
 from .types import *
 
@@ -24,16 +25,18 @@ class FetchCommand(StrEnum):
     TAKE_RESPONSE_BODY_AS_STREAM = "Fetch.takeResponseBodyAsStream"
 
 
+@dataclass(kw_only=True)
 class EnableParams(CDPModel):
     """
     Enables issuing of requestPaused events. A request will be paused until client
     calls one of failRequest, fulfillRequest or continueRequest/continueWithAuth.
     """
 
-    patterns: list[RequestPattern] | None = None
-    handle_auth_requests: bool | None = None
+    patterns: list[RequestPattern] | None | None = None
+    handle_auth_requests: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class FailRequestParams(CDPModel):
     """
     Causes the request to fail with specified reason.
@@ -43,6 +46,7 @@ class FailRequestParams(CDPModel):
     error_reason: network.ErrorReason
 
 
+@dataclass(kw_only=True)
 class FulfillRequestParams(CDPModel):
     """
     Provides response to the request.
@@ -50,25 +54,27 @@ class FulfillRequestParams(CDPModel):
 
     request_id: RequestId
     response_code: int
-    response_headers: list[HeaderEntry] | None = None
-    binary_response_headers: str | None = None
-    body: str | None = None
-    response_phrase: str | None = None
+    response_headers: list[HeaderEntry] | None | None = None
+    binary_response_headers: str | None | None = None
+    body: str | None | None = None
+    response_phrase: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class ContinueRequestParams(CDPModel):
     """
     Continues the request, optionally modifying some of its parameters.
     """
 
     request_id: RequestId
-    url: str | None = None
-    method: str | None = None
-    post_data: str | None = None
-    headers: list[HeaderEntry] | None = None
-    intercept_response: bool | None = None
+    url: str | None | None = None
+    method: str | None | None = None
+    post_data: str | None | None = None
+    headers: list[HeaderEntry] | None | None = None
+    intercept_response: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class ContinueWithAuthParams(CDPModel):
     """
     Continues a request supplying authChallengeResponse following authRequired event.
@@ -78,6 +84,7 @@ class ContinueWithAuthParams(CDPModel):
     auth_challenge_response: AuthChallengeResponse
 
 
+@dataclass(kw_only=True)
 class ContinueResponseParams(CDPModel):
     """
     Continues loading of the paused response, optionally modifying the response
@@ -86,12 +93,13 @@ class ContinueResponseParams(CDPModel):
     """
 
     request_id: RequestId
-    response_code: int | None = None
-    response_phrase: str | None = None
-    response_headers: list[HeaderEntry] | None = None
-    binary_response_headers: str | None = None
+    response_code: int | None | None = None
+    response_phrase: str | None | None = None
+    response_headers: list[HeaderEntry] | None | None = None
+    binary_response_headers: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class GetResponseBodyParams(CDPModel):
     """
     Causes the body of the response to be received from the server and returned as a
@@ -107,11 +115,13 @@ class GetResponseBodyParams(CDPModel):
     request_id: RequestId
 
 
+@dataclass(kw_only=True)
 class GetResponseBodyResult(CDPModel):
     body: str
     base64_encoded: bool
 
 
+@dataclass(kw_only=True)
 class TakeResponseBodyAsStreamParams(CDPModel):
     """
     Returns a handle to the stream representing the response body. The request must be
@@ -126,5 +136,6 @@ class TakeResponseBodyAsStreamParams(CDPModel):
     request_id: RequestId
 
 
+@dataclass(kw_only=True)
 class TakeResponseBodyAsStreamResult(CDPModel):
     stream: io.StreamHandle

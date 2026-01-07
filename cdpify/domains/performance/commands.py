@@ -3,8 +3,9 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Literal
+from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.domains.base import CDPModel
+from cdpify.domains.shared import CDPModel
 
 from .types import *
 
@@ -16,14 +17,16 @@ class PerformanceCommand(StrEnum):
     GET_METRICS = "Performance.getMetrics"
 
 
+@dataclass(kw_only=True)
 class EnableParams(CDPModel):
     """
     Enable collecting and reporting metrics.
     """
 
-    time_domain: Literal["timeTicks", "threadTicks"] | None = None
+    time_domain: Literal["timeTicks", "threadTicks"] | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetTimeDomainParams(CDPModel):
     """
     Sets time domain to use for collecting and reporting duration metrics. Note that
@@ -34,5 +37,6 @@ class SetTimeDomainParams(CDPModel):
     time_domain: Literal["timeTicks", "threadTicks"]
 
 
+@dataclass(kw_only=True)
 class GetMetricsResult(CDPModel):
     metrics: list[Metric]

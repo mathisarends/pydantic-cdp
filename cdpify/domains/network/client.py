@@ -122,7 +122,7 @@ class NetworkClient:
             params=None,
             session_id=session_id,
         )
-        return CanClearBrowserCacheResult.model_validate(result)
+        return CanClearBrowserCacheResult.from_cdp(result)
 
     async def can_clear_browser_cookies(
         self,
@@ -133,7 +133,7 @@ class NetworkClient:
             params=None,
             session_id=session_id,
         )
-        return CanClearBrowserCookiesResult.model_validate(result)
+        return CanClearBrowserCookiesResult.from_cdp(result)
 
     async def can_emulate_network_conditions(
         self,
@@ -144,7 +144,7 @@ class NetworkClient:
             params=None,
             session_id=session_id,
         )
-        return CanEmulateNetworkConditionsResult.model_validate(result)
+        return CanEmulateNetworkConditionsResult.from_cdp(result)
 
     async def clear_browser_cache(
         self,
@@ -182,14 +182,14 @@ class NetworkClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = ContinueInterceptedRequestParams(
-            interceptionId=interception_id,
-            errorReason=error_reason,
-            rawResponse=raw_response,
+            interception_id=interception_id,
+            error_reason=error_reason,
+            raw_response=raw_response,
             url=url,
             method=method,
-            postData=post_data,
+            post_data=post_data,
             headers=headers,
-            authChallengeResponse=auth_challenge_response,
+            auth_challenge_response=auth_challenge_response,
         )
 
         result = await self._client.send_raw(
@@ -210,7 +210,7 @@ class NetworkClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = DeleteCookiesParams(
-            name=name, url=url, domain=domain, path=path, partitionKey=partition_key
+            name=name, url=url, domain=domain, path=path, partition_key=partition_key
         )
 
         result = await self._client.send_raw(
@@ -247,12 +247,12 @@ class NetworkClient:
         params = EmulateNetworkConditionsParams(
             offline=offline,
             latency=latency,
-            downloadThroughput=download_throughput,
-            uploadThroughput=upload_throughput,
-            connectionType=connection_type,
-            packetLoss=packet_loss,
-            packetQueueLength=packet_queue_length,
-            packetReordering=packet_reordering,
+            download_throughput=download_throughput,
+            upload_throughput=upload_throughput,
+            connection_type=connection_type,
+            packet_loss=packet_loss,
+            packet_queue_length=packet_queue_length,
+            packet_reordering=packet_reordering,
         )
 
         result = await self._client.send_raw(
@@ -270,7 +270,7 @@ class NetworkClient:
         session_id: str | None = None,
     ) -> EmulateNetworkConditionsByRuleResult:
         params = EmulateNetworkConditionsByRuleParams(
-            offline=offline, matchedNetworkConditions=matched_network_conditions
+            offline=offline, matched_network_conditions=matched_network_conditions
         )
 
         result = await self._client.send_raw(
@@ -278,7 +278,7 @@ class NetworkClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return EmulateNetworkConditionsByRuleResult.model_validate(result)
+        return EmulateNetworkConditionsByRuleResult.from_cdp(result)
 
     async def override_network_state(
         self,
@@ -293,9 +293,9 @@ class NetworkClient:
         params = OverrideNetworkStateParams(
             offline=offline,
             latency=latency,
-            downloadThroughput=download_throughput,
-            uploadThroughput=upload_throughput,
-            connectionType=connection_type,
+            download_throughput=download_throughput,
+            upload_throughput=upload_throughput,
+            connection_type=connection_type,
         )
 
         result = await self._client.send_raw(
@@ -316,11 +316,11 @@ class NetworkClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = EnableParams(
-            maxTotalBufferSize=max_total_buffer_size,
-            maxResourceBufferSize=max_resource_buffer_size,
-            maxPostDataSize=max_post_data_size,
-            reportDirectSocketTraffic=report_direct_socket_traffic,
-            enableDurableMessages=enable_durable_messages,
+            max_total_buffer_size=max_total_buffer_size,
+            max_resource_buffer_size=max_resource_buffer_size,
+            max_post_data_size=max_post_data_size,
+            report_direct_socket_traffic=report_direct_socket_traffic,
+            enable_durable_messages=enable_durable_messages,
         )
 
         result = await self._client.send_raw(
@@ -338,8 +338,8 @@ class NetworkClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = ConfigureDurableMessagesParams(
-            maxTotalBufferSize=max_total_buffer_size,
-            maxResourceBufferSize=max_resource_buffer_size,
+            max_total_buffer_size=max_total_buffer_size,
+            max_resource_buffer_size=max_resource_buffer_size,
         )
 
         result = await self._client.send_raw(
@@ -358,7 +358,7 @@ class NetworkClient:
             params=None,
             session_id=session_id,
         )
-        return GetAllCookiesResult.model_validate(result)
+        return GetAllCookiesResult.from_cdp(result)
 
     async def get_certificate(
         self,
@@ -373,7 +373,7 @@ class NetworkClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetCertificateResult.model_validate(result)
+        return GetCertificateResult.from_cdp(result)
 
     async def get_cookies(
         self,
@@ -388,7 +388,7 @@ class NetworkClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetCookiesResult.model_validate(result)
+        return GetCookiesResult.from_cdp(result)
 
     async def get_response_body(
         self,
@@ -396,14 +396,14 @@ class NetworkClient:
         request_id: RequestId,
         session_id: str | None = None,
     ) -> GetResponseBodyResult:
-        params = GetResponseBodyParams(requestId=request_id)
+        params = GetResponseBodyParams(request_id=request_id)
 
         result = await self._client.send_raw(
             method=NetworkCommand.GET_RESPONSE_BODY,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetResponseBodyResult.model_validate(result)
+        return GetResponseBodyResult.from_cdp(result)
 
     async def get_request_post_data(
         self,
@@ -411,14 +411,14 @@ class NetworkClient:
         request_id: RequestId,
         session_id: str | None = None,
     ) -> GetRequestPostDataResult:
-        params = GetRequestPostDataParams(requestId=request_id)
+        params = GetRequestPostDataParams(request_id=request_id)
 
         result = await self._client.send_raw(
             method=NetworkCommand.GET_REQUEST_POST_DATA,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetRequestPostDataResult.model_validate(result)
+        return GetRequestPostDataResult.from_cdp(result)
 
     async def get_response_body_for_interception(
         self,
@@ -426,14 +426,14 @@ class NetworkClient:
         interception_id: InterceptionId,
         session_id: str | None = None,
     ) -> GetResponseBodyForInterceptionResult:
-        params = GetResponseBodyForInterceptionParams(interceptionId=interception_id)
+        params = GetResponseBodyForInterceptionParams(interception_id=interception_id)
 
         result = await self._client.send_raw(
             method=NetworkCommand.GET_RESPONSE_BODY_FOR_INTERCEPTION,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetResponseBodyForInterceptionResult.model_validate(result)
+        return GetResponseBodyForInterceptionResult.from_cdp(result)
 
     async def take_response_body_for_interception_as_stream(
         self,
@@ -442,7 +442,7 @@ class NetworkClient:
         session_id: str | None = None,
     ) -> TakeResponseBodyForInterceptionAsStreamResult:
         params = TakeResponseBodyForInterceptionAsStreamParams(
-            interceptionId=interception_id
+            interception_id=interception_id
         )
 
         result = await self._client.send_raw(
@@ -450,7 +450,7 @@ class NetworkClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return TakeResponseBodyForInterceptionAsStreamResult.model_validate(result)
+        return TakeResponseBodyForInterceptionAsStreamResult.from_cdp(result)
 
     async def replay_x_h_r(
         self,
@@ -458,7 +458,7 @@ class NetworkClient:
         request_id: RequestId,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = ReplayXHRParams(requestId=request_id)
+        params = ReplayXHRParams(request_id=request_id)
 
         result = await self._client.send_raw(
             method=NetworkCommand.REPLAY_X_H_R,
@@ -477,10 +477,10 @@ class NetworkClient:
         session_id: str | None = None,
     ) -> SearchInResponseBodyResult:
         params = SearchInResponseBodyParams(
-            requestId=request_id,
+            request_id=request_id,
             query=query,
-            caseSensitive=case_sensitive,
-            isRegex=is_regex,
+            case_sensitive=case_sensitive,
+            is_regex=is_regex,
         )
 
         result = await self._client.send_raw(
@@ -488,7 +488,7 @@ class NetworkClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return SearchInResponseBodyResult.model_validate(result)
+        return SearchInResponseBodyResult.from_cdp(result)
 
     async def set_blocked_u_r_ls(
         self,
@@ -497,7 +497,7 @@ class NetworkClient:
         urls: list[str] | None = None,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = SetBlockedURLsParams(urlPatterns=url_patterns, urls=urls)
+        params = SetBlockedURLsParams(url_patterns=url_patterns, urls=urls)
 
         result = await self._client.send_raw(
             method=NetworkCommand.SET_BLOCKED_U_R_LS,
@@ -527,7 +527,7 @@ class NetworkClient:
         cache_disabled: bool,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = SetCacheDisabledParams(cacheDisabled=cache_disabled)
+        params = SetCacheDisabledParams(cache_disabled=cache_disabled)
 
         result = await self._client.send_raw(
             method=NetworkCommand.SET_CACHE_DISABLED,
@@ -562,14 +562,14 @@ class NetworkClient:
             domain=domain,
             path=path,
             secure=secure,
-            httpOnly=http_only,
-            sameSite=same_site,
+            http_only=http_only,
+            same_site=same_site,
             expires=expires,
             priority=priority,
-            sameParty=same_party,
-            sourceScheme=source_scheme,
-            sourcePort=source_port,
-            partitionKey=partition_key,
+            same_party=same_party,
+            source_scheme=source_scheme,
+            source_port=source_port,
+            partition_key=partition_key,
         )
 
         result = await self._client.send_raw(
@@ -577,7 +577,7 @@ class NetworkClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return SetCookieResult.model_validate(result)
+        return SetCookieResult.from_cdp(result)
 
     async def set_cookies(
         self,
@@ -649,10 +649,10 @@ class NetworkClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = SetUserAgentOverrideParams(
-            userAgent=user_agent,
-            acceptLanguage=accept_language,
+            user_agent=user_agent,
+            accept_language=accept_language,
             platform=platform,
-            userAgentMetadata=user_agent_metadata,
+            user_agent_metadata=user_agent_metadata,
         )
 
         result = await self._client.send_raw(
@@ -668,14 +668,14 @@ class NetworkClient:
         request_id: RequestId,
         session_id: str | None = None,
     ) -> StreamResourceContentResult:
-        params = StreamResourceContentParams(requestId=request_id)
+        params = StreamResourceContentParams(request_id=request_id)
 
         result = await self._client.send_raw(
             method=NetworkCommand.STREAM_RESOURCE_CONTENT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return StreamResourceContentResult.model_validate(result)
+        return StreamResourceContentResult.from_cdp(result)
 
     async def get_security_isolation_status(
         self,
@@ -683,14 +683,14 @@ class NetworkClient:
         frame_id: Page.FrameId | None = None,
         session_id: str | None = None,
     ) -> GetSecurityIsolationStatusResult:
-        params = GetSecurityIsolationStatusParams(frameId=frame_id)
+        params = GetSecurityIsolationStatusParams(frame_id=frame_id)
 
         result = await self._client.send_raw(
             method=NetworkCommand.GET_SECURITY_ISOLATION_STATUS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetSecurityIsolationStatusResult.model_validate(result)
+        return GetSecurityIsolationStatusResult.from_cdp(result)
 
     async def enable_reporting_api(
         self,
@@ -735,7 +735,7 @@ class NetworkClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return FetchSchemefulSiteResult.model_validate(result)
+        return FetchSchemefulSiteResult.from_cdp(result)
 
     async def load_network_resource(
         self,
@@ -745,14 +745,14 @@ class NetworkClient:
         options: LoadNetworkResourceOptions,
         session_id: str | None = None,
     ) -> LoadNetworkResourceResult:
-        params = LoadNetworkResourceParams(frameId=frame_id, url=url, options=options)
+        params = LoadNetworkResourceParams(frame_id=frame_id, url=url, options=options)
 
         result = await self._client.send_raw(
             method=NetworkCommand.LOAD_NETWORK_RESOURCE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return LoadNetworkResourceResult.model_validate(result)
+        return LoadNetworkResourceResult.from_cdp(result)
 
     async def set_cookie_controls(
         self,
@@ -763,9 +763,9 @@ class NetworkClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = SetCookieControlsParams(
-            enableThirdPartyCookieRestriction=enable_third_party_cookie_restriction,
-            disableThirdPartyCookieMetadata=disable_third_party_cookie_metadata,
-            disableThirdPartyCookieHeuristics=disable_third_party_cookie_heuristics,
+            enable_third_party_cookie_restriction=enable_third_party_cookie_restriction,
+            disable_third_party_cookie_metadata=disable_third_party_cookie_metadata,
+            disable_third_party_cookie_heuristics=disable_third_party_cookie_heuristics,
         )
 
         result = await self._client.send_raw(

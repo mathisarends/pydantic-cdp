@@ -3,12 +3,14 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Literal, TYPE_CHECKING
-from cdpify.domains.base import CDPModel
+from dataclasses import dataclass
+from cdpify.domains.shared import CDPModel
 
 if TYPE_CHECKING:
     from cdpify.domains import dom
 
 
+@dataclass(kw_only=True)
 class Animation(CDPModel):
     """
     Animation instance.
@@ -22,23 +24,25 @@ class Animation(CDPModel):
     start_time: float
     current_time: float
     type: Literal["CSSTransition", "CSSAnimation", "WebAnimation"]
-    source: AnimationEffect | None = None
-    css_id: str | None = None
-    view_or_scroll_timeline: ViewOrScrollTimeline | None = None
+    source: AnimationEffect | None | None = None
+    css_id: str | None | None = None
+    view_or_scroll_timeline: ViewOrScrollTimeline | None | None = None
 
 
+@dataclass(kw_only=True)
 class ViewOrScrollTimeline(CDPModel):
     """
     Timeline instance
     """
 
     source_node_id: dom.BackendNodeId | None = None
-    start_offset: float | None = None
-    end_offset: float | None = None
+    start_offset: float | None | None = None
+    end_offset: float | None | None = None
     subject_node_id: dom.BackendNodeId | None = None
     axis: dom.ScrollOrientation
 
 
+@dataclass(kw_only=True)
 class AnimationEffect(CDPModel):
     """
     AnimationEffect instance
@@ -47,24 +51,26 @@ class AnimationEffect(CDPModel):
     delay: float
     end_delay: float
     iteration_start: float
-    iterations: float | None = None
+    iterations: float | None | None = None
     duration: float
     direction: str
     fill: str
     backend_node_id: dom.BackendNodeId | None = None
-    keyframes_rule: KeyframesRule | None = None
+    keyframes_rule: KeyframesRule | None | None = None
     easing: str
 
 
+@dataclass(kw_only=True)
 class KeyframesRule(CDPModel):
     """
     Keyframes Rule
     """
 
-    name: str | None = None
+    name: str | None | None = None
     keyframes: list[KeyframeStyle]
 
 
+@dataclass(kw_only=True)
 class KeyframeStyle(CDPModel):
     """
     Keyframe Style

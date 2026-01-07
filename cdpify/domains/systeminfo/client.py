@@ -31,7 +31,7 @@ class SystemInfoClient:
             params=None,
             session_id=session_id,
         )
-        return GetInfoResult.model_validate(result)
+        return GetInfoResult.from_cdp(result)
 
     async def get_feature_state(
         self,
@@ -39,14 +39,14 @@ class SystemInfoClient:
         feature_state: str,
         session_id: str | None = None,
     ) -> GetFeatureStateResult:
-        params = GetFeatureStateParams(featureState=feature_state)
+        params = GetFeatureStateParams(feature_state=feature_state)
 
         result = await self._client.send_raw(
             method=SystemInfoCommand.GET_FEATURE_STATE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetFeatureStateResult.model_validate(result)
+        return GetFeatureStateResult.from_cdp(result)
 
     async def get_process_info(
         self,
@@ -57,4 +57,4 @@ class SystemInfoClient:
             params=None,
             session_id=session_id,
         )
-        return GetProcessInfoResult.model_validate(result)
+        return GetProcessInfoResult.from_cdp(result)

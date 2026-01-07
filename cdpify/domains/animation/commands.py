@@ -3,8 +3,9 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import TYPE_CHECKING
+from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.domains.base import CDPModel
+from cdpify.domains.shared import CDPModel
 
 from .types import *
 
@@ -24,6 +25,7 @@ class AnimationCommand(StrEnum):
     SET_TIMING = "Animation.setTiming"
 
 
+@dataclass(kw_only=True)
 class GetCurrentTimeParams(CDPModel):
     """
     Returns the current time of the an animation.
@@ -32,14 +34,17 @@ class GetCurrentTimeParams(CDPModel):
     id: str
 
 
+@dataclass(kw_only=True)
 class GetCurrentTimeResult(CDPModel):
     current_time: float
 
 
+@dataclass(kw_only=True)
 class GetPlaybackRateResult(CDPModel):
     playback_rate: float
 
 
+@dataclass(kw_only=True)
 class ReleaseAnimationsParams(CDPModel):
     """
     Releases a set of animations to no longer be manipulated.
@@ -48,6 +53,7 @@ class ReleaseAnimationsParams(CDPModel):
     animations: list[str]
 
 
+@dataclass(kw_only=True)
 class ResolveAnimationParams(CDPModel):
     """
     Gets the remote object of the Animation.
@@ -56,10 +62,12 @@ class ResolveAnimationParams(CDPModel):
     animation_id: str
 
 
+@dataclass(kw_only=True)
 class ResolveAnimationResult(CDPModel):
     remote_object: runtime.RemoteObject
 
 
+@dataclass(kw_only=True)
 class SeekAnimationsParams(CDPModel):
     """
     Seek a set of animations to a particular time within each animation.
@@ -69,6 +77,7 @@ class SeekAnimationsParams(CDPModel):
     current_time: float
 
 
+@dataclass(kw_only=True)
 class SetPausedParams(CDPModel):
     """
     Sets the paused state of a set of animations.
@@ -78,6 +87,7 @@ class SetPausedParams(CDPModel):
     paused: bool
 
 
+@dataclass(kw_only=True)
 class SetPlaybackRateParams(CDPModel):
     """
     Sets the playback rate of the document timeline.
@@ -86,6 +96,7 @@ class SetPlaybackRateParams(CDPModel):
     playback_rate: float
 
 
+@dataclass(kw_only=True)
 class SetTimingParams(CDPModel):
     """
     Sets the timing of an animation node.

@@ -3,7 +3,8 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Any, Literal, TYPE_CHECKING
-from cdpify.domains.base import CDPModel
+from dataclasses import dataclass
+from cdpify.domains.shared import CDPModel
 
 if TYPE_CHECKING:
     from cdpify.domains import dom, page
@@ -61,42 +62,46 @@ AXValueNativeSourceType = Literal[
 ]
 
 
+@dataclass(kw_only=True)
 class AXValueSource(CDPModel):
     """
     A single source for a computed AX property.
     """
 
     type: AXValueSourceType
-    value: AXValue | None = None
-    attribute: str | None = None
-    attribute_value: AXValue | None = None
-    superseded: bool | None = None
-    native_source: AXValueNativeSourceType | None = None
-    native_source_value: AXValue | None = None
-    invalid: bool | None = None
-    invalid_reason: str | None = None
+    value: AXValue | None | None = None
+    attribute: str | None | None = None
+    attribute_value: AXValue | None | None = None
+    superseded: bool | None | None = None
+    native_source: AXValueNativeSourceType | None | None = None
+    native_source_value: AXValue | None | None = None
+    invalid: bool | None | None = None
+    invalid_reason: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class AXRelatedNode(CDPModel):
     backend_d_o_m_node_id: dom.BackendNodeId
-    idref: str | None = None
-    text: str | None = None
+    idref: str | None | None = None
+    text: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class AXProperty(CDPModel):
     name: AXPropertyName
     value: AXValue
 
 
+@dataclass(kw_only=True)
 class AXValue(CDPModel):
     """
     A single computed AX property.
     """
 
     type: AXValueType
-    value: Any | None = None
-    related_nodes: list[AXRelatedNode] | None = None
-    sources: list[AXValueSource] | None = None
+    value: Any | None | None = None
+    related_nodes: list[AXRelatedNode] | None | None = None
+    sources: list[AXValueSource] | None | None = None
 
 
 """
@@ -169,6 +174,7 @@ AXPropertyName = Literal[
 ]
 
 
+@dataclass(kw_only=True)
 class AXNode(CDPModel):
     """
     A node in the accessibility tree.
@@ -176,14 +182,14 @@ class AXNode(CDPModel):
 
     node_id: AXNodeId
     ignored: bool
-    ignored_reasons: list[AXProperty] | None = None
-    role: AXValue | None = None
-    chrome_role: AXValue | None = None
-    name: AXValue | None = None
-    description: AXValue | None = None
-    value: AXValue | None = None
-    properties: list[AXProperty] | None = None
-    parent_id: AXNodeId | None = None
-    child_ids: list[AXNodeId] | None = None
+    ignored_reasons: list[AXProperty] | None | None = None
+    role: AXValue | None | None = None
+    chrome_role: AXValue | None | None = None
+    name: AXValue | None | None = None
+    description: AXValue | None | None = None
+    value: AXValue | None | None = None
+    properties: list[AXProperty] | None | None = None
+    parent_id: AXNodeId | None | None = None
+    child_ids: list[AXNodeId] | None | None = None
     backend_d_o_m_node_id: dom.BackendNodeId | None = None
     frame_id: page.FrameId | None = None

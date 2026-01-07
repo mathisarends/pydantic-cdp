@@ -66,10 +66,10 @@ class AccessibilityClient:
         session_id: str | None = None,
     ) -> GetPartialAXTreeResult:
         params = GetPartialAXTreeParams(
-            nodeId=node_id,
-            backendNodeId=backend_node_id,
-            objectId=object_id,
-            fetchRelatives=fetch_relatives,
+            node_id=node_id,
+            backend_node_id=backend_node_id,
+            object_id=object_id,
+            fetch_relatives=fetch_relatives,
         )
 
         result = await self._client.send_raw(
@@ -77,7 +77,7 @@ class AccessibilityClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetPartialAXTreeResult.model_validate(result)
+        return GetPartialAXTreeResult.from_cdp(result)
 
     async def get_full_a_x_tree(
         self,
@@ -86,14 +86,14 @@ class AccessibilityClient:
         frame_id: Page.FrameId | None = None,
         session_id: str | None = None,
     ) -> GetFullAXTreeResult:
-        params = GetFullAXTreeParams(depth=depth, frameId=frame_id)
+        params = GetFullAXTreeParams(depth=depth, frame_id=frame_id)
 
         result = await self._client.send_raw(
             method=AccessibilityCommand.GET_FULL_A_X_TREE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetFullAXTreeResult.model_validate(result)
+        return GetFullAXTreeResult.from_cdp(result)
 
     async def get_root_a_x_node(
         self,
@@ -101,14 +101,14 @@ class AccessibilityClient:
         frame_id: Page.FrameId | None = None,
         session_id: str | None = None,
     ) -> GetRootAXNodeResult:
-        params = GetRootAXNodeParams(frameId=frame_id)
+        params = GetRootAXNodeParams(frame_id=frame_id)
 
         result = await self._client.send_raw(
             method=AccessibilityCommand.GET_ROOT_A_X_NODE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetRootAXNodeResult.model_validate(result)
+        return GetRootAXNodeResult.from_cdp(result)
 
     async def get_a_x_node_and_ancestors(
         self,
@@ -119,7 +119,7 @@ class AccessibilityClient:
         session_id: str | None = None,
     ) -> GetAXNodeAndAncestorsResult:
         params = GetAXNodeAndAncestorsParams(
-            nodeId=node_id, backendNodeId=backend_node_id, objectId=object_id
+            node_id=node_id, backend_node_id=backend_node_id, object_id=object_id
         )
 
         result = await self._client.send_raw(
@@ -127,7 +127,7 @@ class AccessibilityClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetAXNodeAndAncestorsResult.model_validate(result)
+        return GetAXNodeAndAncestorsResult.from_cdp(result)
 
     async def get_child_a_x_nodes(
         self,
@@ -136,14 +136,14 @@ class AccessibilityClient:
         frame_id: Page.FrameId | None = None,
         session_id: str | None = None,
     ) -> GetChildAXNodesResult:
-        params = GetChildAXNodesParams(id=id, frameId=frame_id)
+        params = GetChildAXNodesParams(id=id, frame_id=frame_id)
 
         result = await self._client.send_raw(
             method=AccessibilityCommand.GET_CHILD_A_X_NODES,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetChildAXNodesResult.model_validate(result)
+        return GetChildAXNodesResult.from_cdp(result)
 
     async def query_a_x_tree(
         self,
@@ -156,10 +156,10 @@ class AccessibilityClient:
         session_id: str | None = None,
     ) -> QueryAXTreeResult:
         params = QueryAXTreeParams(
-            nodeId=node_id,
-            backendNodeId=backend_node_id,
-            objectId=object_id,
-            accessibleName=accessible_name,
+            node_id=node_id,
+            backend_node_id=backend_node_id,
+            object_id=object_id,
+            accessible_name=accessible_name,
             role=role,
         )
 
@@ -168,4 +168,4 @@ class AccessibilityClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return QueryAXTreeResult.model_validate(result)
+        return QueryAXTreeResult.from_cdp(result)

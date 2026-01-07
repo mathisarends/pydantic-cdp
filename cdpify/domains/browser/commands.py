@@ -3,8 +3,9 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Literal, TYPE_CHECKING
+from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.domains.base import CDPModel
+from cdpify.domains.shared import CDPModel
 
 from .types import *
 
@@ -38,6 +39,7 @@ class BrowserCommand(StrEnum):
     )
 
 
+@dataclass(kw_only=True)
 class SetPermissionParams(CDPModel):
     """
     Set permission settings for given embedding and embedded origins.
@@ -45,11 +47,12 @@ class SetPermissionParams(CDPModel):
 
     permission: PermissionDescriptor
     setting: PermissionSetting
-    origin: str | None = None
-    embedded_origin: str | None = None
-    browser_context_id: BrowserContextID | None = None
+    origin: str | None | None = None
+    embedded_origin: str | None | None = None
+    browser_context_id: BrowserContextID | None | None = None
 
 
+@dataclass(kw_only=True)
 class GrantPermissionsParams(CDPModel):
     """
     Grant specific permissions to the given origin and reject all others. Deprecated.
@@ -57,38 +60,42 @@ class GrantPermissionsParams(CDPModel):
     """
 
     permissions: list[PermissionType]
-    origin: str | None = None
-    browser_context_id: BrowserContextID | None = None
+    origin: str | None | None = None
+    browser_context_id: BrowserContextID | None | None = None
 
 
+@dataclass(kw_only=True)
 class ResetPermissionsParams(CDPModel):
     """
     Reset all permission management for all origins.
     """
 
-    browser_context_id: BrowserContextID | None = None
+    browser_context_id: BrowserContextID | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetDownloadBehaviorParams(CDPModel):
     """
     Set the behavior when downloading a file.
     """
 
     behavior: Literal["deny", "allow", "allowAndName", "default"]
-    browser_context_id: BrowserContextID | None = None
-    download_path: str | None = None
-    events_enabled: bool | None = None
+    browser_context_id: BrowserContextID | None | None = None
+    download_path: str | None | None = None
+    events_enabled: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class CancelDownloadParams(CDPModel):
     """
     Cancel a download if in progress
     """
 
     guid: str
-    browser_context_id: BrowserContextID | None = None
+    browser_context_id: BrowserContextID | None | None = None
 
 
+@dataclass(kw_only=True)
 class GetVersionResult(CDPModel):
     protocol_version: str
     product: str
@@ -97,36 +104,42 @@ class GetVersionResult(CDPModel):
     js_version: str
 
 
+@dataclass(kw_only=True)
 class GetBrowserCommandLineResult(CDPModel):
     arguments: list[str]
 
 
+@dataclass(kw_only=True)
 class GetHistogramsParams(CDPModel):
     """
     Get Chrome histograms.
     """
 
-    query: str | None = None
-    delta: bool | None = None
+    query: str | None | None = None
+    delta: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class GetHistogramsResult(CDPModel):
     histograms: list[Histogram]
 
 
+@dataclass(kw_only=True)
 class GetHistogramParams(CDPModel):
     """
     Get a Chrome histogram by name.
     """
 
     name: str
-    delta: bool | None = None
+    delta: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class GetHistogramResult(CDPModel):
     histogram: Histogram
 
 
+@dataclass(kw_only=True)
 class GetWindowBoundsParams(CDPModel):
     """
     Get position and size of the browser window.
@@ -135,10 +148,12 @@ class GetWindowBoundsParams(CDPModel):
     window_id: WindowID
 
 
+@dataclass(kw_only=True)
 class GetWindowBoundsResult(CDPModel):
     bounds: Bounds
 
 
+@dataclass(kw_only=True)
 class GetWindowForTargetParams(CDPModel):
     """
     Get the browser window that contains the devtools target.
@@ -147,11 +162,13 @@ class GetWindowForTargetParams(CDPModel):
     target_id: target.TargetID | None = None
 
 
+@dataclass(kw_only=True)
 class GetWindowForTargetResult(CDPModel):
     window_id: WindowID
     bounds: Bounds
 
 
+@dataclass(kw_only=True)
 class SetWindowBoundsParams(CDPModel):
     """
     Set position and/or size of the browser window.
@@ -161,25 +178,28 @@ class SetWindowBoundsParams(CDPModel):
     bounds: Bounds
 
 
+@dataclass(kw_only=True)
 class SetContentsSizeParams(CDPModel):
     """
     Set size of the browser contents resizing browser window as necessary.
     """
 
     window_id: WindowID
-    width: int | None = None
-    height: int | None = None
+    width: int | None | None = None
+    height: int | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetDockTileParams(CDPModel):
     """
     Set dock tile details, platform-specific.
     """
 
-    badge_label: str | None = None
-    image: str | None = None
+    badge_label: str | None | None = None
+    image: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class ExecuteBrowserCommandParams(CDPModel):
     """
     Invoke custom browser commands used by telemetry.
@@ -188,6 +208,7 @@ class ExecuteBrowserCommandParams(CDPModel):
     command_id: BrowserCommandId
 
 
+@dataclass(kw_only=True)
 class AddPrivacySandboxEnrollmentOverrideParams(CDPModel):
     """
     Allows a site to use privacy sandbox features that require enrollment without the
@@ -197,6 +218,7 @@ class AddPrivacySandboxEnrollmentOverrideParams(CDPModel):
     url: str
 
 
+@dataclass(kw_only=True)
 class AddPrivacySandboxCoordinatorKeyConfigParams(CDPModel):
     """
     Configures encryption keys used with a given privacy sandbox API to talk to a
@@ -208,4 +230,4 @@ class AddPrivacySandboxCoordinatorKeyConfigParams(CDPModel):
     api: PrivacySandboxAPI
     coordinator_origin: str
     key_config: str
-    browser_context_id: BrowserContextID | None = None
+    browser_context_id: BrowserContextID | None | None = None

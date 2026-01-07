@@ -3,8 +3,9 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import TYPE_CHECKING
+from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.domains.base import CDPModel
+from cdpify.domains.shared import CDPModel
 
 from .types import *
 
@@ -19,6 +20,7 @@ class CacheStorageCommand(StrEnum):
     REQUEST_ENTRIES = "CacheStorage.requestEntries"
 
 
+@dataclass(kw_only=True)
 class DeleteCacheParams(CDPModel):
     """
     Deletes a cache.
@@ -27,6 +29,7 @@ class DeleteCacheParams(CDPModel):
     cache_id: CacheId
 
 
+@dataclass(kw_only=True)
 class DeleteEntryParams(CDPModel):
     """
     Deletes a cache entry.
@@ -36,20 +39,23 @@ class DeleteEntryParams(CDPModel):
     request: str
 
 
+@dataclass(kw_only=True)
 class RequestCacheNamesParams(CDPModel):
     """
     Requests cache names.
     """
 
-    security_origin: str | None = None
-    storage_key: str | None = None
+    security_origin: str | None | None = None
+    storage_key: str | None | None = None
     storage_bucket: storage.StorageBucket | None = None
 
 
+@dataclass(kw_only=True)
 class RequestCacheNamesResult(CDPModel):
     caches: list[Cache]
 
 
+@dataclass(kw_only=True)
 class RequestCachedResponseParams(CDPModel):
     """
     Fetches cache entry.
@@ -60,21 +66,24 @@ class RequestCachedResponseParams(CDPModel):
     request_headers: list[Header]
 
 
+@dataclass(kw_only=True)
 class RequestCachedResponseResult(CDPModel):
     response: CachedResponse
 
 
+@dataclass(kw_only=True)
 class RequestEntriesParams(CDPModel):
     """
     Requests data from cache.
     """
 
     cache_id: CacheId
-    skip_count: int | None = None
-    page_size: int | None = None
-    path_filter: str | None = None
+    skip_count: int | None | None = None
+    page_size: int | None | None = None
+    path_filter: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class RequestEntriesResult(CDPModel):
     cache_data_entries: list[DataEntry]
     return_count: float

@@ -3,8 +3,9 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import TYPE_CHECKING
+from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.domains.base import CDPModel
+from cdpify.domains.shared import CDPModel
 
 from .types import *
 
@@ -19,6 +20,7 @@ class OverlayEvent(StrEnum):
     INSPECT_MODE_CANCELED = "Overlay.inspectModeCanceled"
 
 
+@dataclass(kw_only=True)
 class InspectNodeRequestedEvent(CDPModel):
     """
     Fired when the node should be inspected. This happens after call to
@@ -28,6 +30,7 @@ class InspectNodeRequestedEvent(CDPModel):
     backend_node_id: dom.BackendNodeId
 
 
+@dataclass(kw_only=True)
 class NodeHighlightRequestedEvent(CDPModel):
     """
     Fired when the node should be highlighted. This happens after call to
@@ -37,6 +40,7 @@ class NodeHighlightRequestedEvent(CDPModel):
     node_id: dom.NodeId
 
 
+@dataclass(kw_only=True)
 class ScreenshotRequestedEvent(CDPModel):
     """
     Fired when user asks to capture screenshot of some area on the page.
@@ -45,6 +49,7 @@ class ScreenshotRequestedEvent(CDPModel):
     viewport: page.Viewport
 
 
+@dataclass(kw_only=True)
 class InspectModeCanceledEvent(CDPModel):
     """
     Fired when user cancels the inspect mode.

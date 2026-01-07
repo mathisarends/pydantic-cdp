@@ -3,7 +3,8 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Literal
-from cdpify.domains.base import CDPModel
+from dataclasses import dataclass
+from cdpify.domains.shared import CDPModel
 
 """
 An unique ID for a graph object (AudioContext, AudioNode, AudioParam) in Web Audio API
@@ -46,6 +47,7 @@ Enum of AudioParam::AutomationRate from the spec
 AutomationRate = Literal["a-rate", "k-rate"]
 
 
+@dataclass(kw_only=True)
 class ContextRealtimeData(CDPModel):
     """
     Fields in AudioContext that change in real-time.
@@ -57,6 +59,7 @@ class ContextRealtimeData(CDPModel):
     callback_interval_variance: float
 
 
+@dataclass(kw_only=True)
 class BaseAudioContext(CDPModel):
     """
     Protocol object for BaseAudioContext
@@ -65,12 +68,13 @@ class BaseAudioContext(CDPModel):
     context_id: GraphObjectId
     context_type: ContextType
     context_state: ContextState
-    realtime_data: ContextRealtimeData | None = None
+    realtime_data: ContextRealtimeData | None | None = None
     callback_buffer_size: float
     max_output_channel_count: float
     sample_rate: float
 
 
+@dataclass(kw_only=True)
 class AudioListener(CDPModel):
     """
     Protocol object for AudioListener
@@ -80,6 +84,7 @@ class AudioListener(CDPModel):
     context_id: GraphObjectId
 
 
+@dataclass(kw_only=True)
 class AudioNode(CDPModel):
     """
     Protocol object for AudioNode
@@ -95,6 +100,7 @@ class AudioNode(CDPModel):
     channel_interpretation: ChannelInterpretation
 
 
+@dataclass(kw_only=True)
 class AudioParam(CDPModel):
     """
     Protocol object for AudioParam

@@ -26,7 +26,7 @@ class EventBreakpointsClient:
         event_name: str,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = SetInstrumentationBreakpointParams(eventName=event_name)
+        params = SetInstrumentationBreakpointParams(event_name=event_name)
 
         result = await self._client.send_raw(
             method=EventBreakpointsCommand.SET_INSTRUMENTATION_BREAKPOINT,
@@ -41,7 +41,7 @@ class EventBreakpointsClient:
         event_name: str,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = RemoveInstrumentationBreakpointParams(eventName=event_name)
+        params = RemoveInstrumentationBreakpointParams(event_name=event_name)
 
         result = await self._client.send_raw(
             method=EventBreakpointsCommand.REMOVE_INSTRUMENTATION_BREAKPOINT,

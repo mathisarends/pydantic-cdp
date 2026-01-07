@@ -3,7 +3,8 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Any, Literal, TYPE_CHECKING
-from cdpify.domains.base import CDPModel
+from dataclasses import dataclass
+from cdpify.domains.shared import CDPModel
 
 if TYPE_CHECKING:
     from cdpify.domains import dom
@@ -19,6 +20,7 @@ Unique snapshot identifier.
 SnapshotId = str
 
 
+@dataclass(kw_only=True)
 class ScrollRect(CDPModel):
     """
     Rectangle where scrolling happens on the main thread.
@@ -28,6 +30,7 @@ class ScrollRect(CDPModel):
     type: Literal["RepaintsOnScroll", "TouchEventHandler", "WheelEventHandler"]
 
 
+@dataclass(kw_only=True)
 class StickyPositionConstraint(CDPModel):
     """
     Sticky position constraints.
@@ -35,10 +38,11 @@ class StickyPositionConstraint(CDPModel):
 
     sticky_box_rect: dom.Rect
     containing_block_rect: dom.Rect
-    nearest_layer_shifting_sticky_box: LayerId | None = None
-    nearest_layer_shifting_containing_block: LayerId | None = None
+    nearest_layer_shifting_sticky_box: LayerId | None | None = None
+    nearest_layer_shifting_containing_block: LayerId | None | None = None
 
 
+@dataclass(kw_only=True)
 class PictureTile(CDPModel):
     """
     Serialized fragment of layer picture along with its offset within the layer.
@@ -49,27 +53,28 @@ class PictureTile(CDPModel):
     picture: str
 
 
+@dataclass(kw_only=True)
 class Layer(CDPModel):
     """
     Information about a compositing layer.
     """
 
     layer_id: LayerId
-    parent_layer_id: LayerId | None = None
+    parent_layer_id: LayerId | None | None = None
     backend_node_id: dom.BackendNodeId | None = None
     offset_x: float
     offset_y: float
     width: float
     height: float
-    transform: list[float] | None = None
-    anchor_x: float | None = None
-    anchor_y: float | None = None
-    anchor_z: float | None = None
+    transform: list[float] | None | None = None
+    anchor_x: float | None | None = None
+    anchor_y: float | None | None = None
+    anchor_z: float | None | None = None
     paint_count: int
     draws_content: bool
-    invisible: bool | None = None
-    scroll_rects: list[ScrollRect] | None = None
-    sticky_position_constraint: StickyPositionConstraint | None = None
+    invisible: bool | None | None = None
+    scroll_rects: list[ScrollRect] | None | None = None
+    sticky_position_constraint: StickyPositionConstraint | None | None = None
 
 
 """

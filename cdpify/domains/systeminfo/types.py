@@ -3,9 +3,11 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Any, Literal
-from cdpify.domains.base import CDPModel
+from dataclasses import dataclass
+from cdpify.domains.shared import CDPModel
 
 
+@dataclass(kw_only=True)
 class GPUDevice(CDPModel):
     """
     Describes a single graphics processor (GPU).
@@ -13,14 +15,15 @@ class GPUDevice(CDPModel):
 
     vendor_id: float
     device_id: float
-    sub_sys_id: float | None = None
-    revision: float | None = None
+    sub_sys_id: float | None | None = None
+    revision: float | None | None = None
     vendor_string: str
     device_string: str
     driver_vendor: str
     driver_version: str
 
 
+@dataclass(kw_only=True)
 class Size(CDPModel):
     """
     Describes the width and height dimensions of an entity.
@@ -30,6 +33,7 @@ class Size(CDPModel):
     height: int
 
 
+@dataclass(kw_only=True)
 class VideoDecodeAcceleratorCapability(CDPModel):
     """
     Describes a supported video decoding profile with its associated minimum and
@@ -41,6 +45,7 @@ class VideoDecodeAcceleratorCapability(CDPModel):
     min_resolution: Size
 
 
+@dataclass(kw_only=True)
 class VideoEncodeAcceleratorCapability(CDPModel):
     """
     Describes a supported video encoding profile with its associated maximum resolution
@@ -64,19 +69,21 @@ Image format of a given image.
 ImageType = Literal["jpeg", "webp", "unknown"]
 
 
+@dataclass(kw_only=True)
 class GPUInfo(CDPModel):
     """
     Provides information about the GPU(s) on the system.
     """
 
     devices: list[GPUDevice]
-    aux_attributes: dict[str, Any] | None = None
-    feature_status: dict[str, Any] | None = None
+    aux_attributes: dict[str, Any] | None | None = None
+    feature_status: dict[str, Any] | None | None = None
     driver_bug_workarounds: list[str]
     video_decoding: list[VideoDecodeAcceleratorCapability]
     video_encoding: list[VideoEncodeAcceleratorCapability]
 
 
+@dataclass(kw_only=True)
 class ProcessInfo(CDPModel):
     """
     Represents process info.

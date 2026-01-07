@@ -63,9 +63,9 @@ class RuntimeClient:
         session_id: str | None = None,
     ) -> AwaitPromiseResult:
         params = AwaitPromiseParams(
-            promiseObjectId=promise_object_id,
-            returnByValue=return_by_value,
-            generatePreview=generate_preview,
+            promise_object_id=promise_object_id,
+            return_by_value=return_by_value,
+            generate_preview=generate_preview,
         )
 
         result = await self._client.send_raw(
@@ -73,7 +73,7 @@ class RuntimeClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return AwaitPromiseResult.model_validate(result)
+        return AwaitPromiseResult.from_cdp(result)
 
     async def call_function_on(
         self,
@@ -94,19 +94,19 @@ class RuntimeClient:
         session_id: str | None = None,
     ) -> CallFunctionOnResult:
         params = CallFunctionOnParams(
-            functionDeclaration=function_declaration,
-            objectId=object_id,
+            function_declaration=function_declaration,
+            object_id=object_id,
             arguments=arguments,
             silent=silent,
-            returnByValue=return_by_value,
-            generatePreview=generate_preview,
-            userGesture=user_gesture,
-            awaitPromise=await_promise,
-            executionContextId=execution_context_id,
-            objectGroup=object_group,
-            throwOnSideEffect=throw_on_side_effect,
-            uniqueContextId=unique_context_id,
-            serializationOptions=serialization_options,
+            return_by_value=return_by_value,
+            generate_preview=generate_preview,
+            user_gesture=user_gesture,
+            await_promise=await_promise,
+            execution_context_id=execution_context_id,
+            object_group=object_group,
+            throw_on_side_effect=throw_on_side_effect,
+            unique_context_id=unique_context_id,
+            serialization_options=serialization_options,
         )
 
         result = await self._client.send_raw(
@@ -114,7 +114,7 @@ class RuntimeClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return CallFunctionOnResult.model_validate(result)
+        return CallFunctionOnResult.from_cdp(result)
 
     async def compile_script(
         self,
@@ -127,9 +127,9 @@ class RuntimeClient:
     ) -> CompileScriptResult:
         params = CompileScriptParams(
             expression=expression,
-            sourceURL=source_u_r_l,
-            persistScript=persist_script,
-            executionContextId=execution_context_id,
+            source_u_r_l=source_u_r_l,
+            persist_script=persist_script,
+            execution_context_id=execution_context_id,
         )
 
         result = await self._client.send_raw(
@@ -137,7 +137,7 @@ class RuntimeClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return CompileScriptResult.model_validate(result)
+        return CompileScriptResult.from_cdp(result)
 
     async def disable(
         self,
@@ -195,21 +195,21 @@ class RuntimeClient:
     ) -> EvaluateResult:
         params = EvaluateParams(
             expression=expression,
-            objectGroup=object_group,
-            includeCommandLineAPI=include_command_line_a_p_i,
+            object_group=object_group,
+            include_command_line_a_p_i=include_command_line_a_p_i,
             silent=silent,
-            contextId=context_id,
-            returnByValue=return_by_value,
-            generatePreview=generate_preview,
-            userGesture=user_gesture,
-            awaitPromise=await_promise,
-            throwOnSideEffect=throw_on_side_effect,
+            context_id=context_id,
+            return_by_value=return_by_value,
+            generate_preview=generate_preview,
+            user_gesture=user_gesture,
+            await_promise=await_promise,
+            throw_on_side_effect=throw_on_side_effect,
             timeout=timeout,
-            disableBreaks=disable_breaks,
-            replMode=repl_mode,
-            allowUnsafeEvalBlockedByCSP=allow_unsafe_eval_blocked_by_c_s_p,
-            uniqueContextId=unique_context_id,
-            serializationOptions=serialization_options,
+            disable_breaks=disable_breaks,
+            repl_mode=repl_mode,
+            allow_unsafe_eval_blocked_by_c_s_p=allow_unsafe_eval_blocked_by_c_s_p,
+            unique_context_id=unique_context_id,
+            serialization_options=serialization_options,
         )
 
         result = await self._client.send_raw(
@@ -217,7 +217,7 @@ class RuntimeClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return EvaluateResult.model_validate(result)
+        return EvaluateResult.from_cdp(result)
 
     async def get_isolate_id(
         self,
@@ -228,7 +228,7 @@ class RuntimeClient:
             params=None,
             session_id=session_id,
         )
-        return GetIsolateIdResult.model_validate(result)
+        return GetIsolateIdResult.from_cdp(result)
 
     async def get_heap_usage(
         self,
@@ -239,7 +239,7 @@ class RuntimeClient:
             params=None,
             session_id=session_id,
         )
-        return GetHeapUsageResult.model_validate(result)
+        return GetHeapUsageResult.from_cdp(result)
 
     async def get_properties(
         self,
@@ -252,11 +252,11 @@ class RuntimeClient:
         session_id: str | None = None,
     ) -> GetPropertiesResult:
         params = GetPropertiesParams(
-            objectId=object_id,
-            ownProperties=own_properties,
-            accessorPropertiesOnly=accessor_properties_only,
-            generatePreview=generate_preview,
-            nonIndexedPropertiesOnly=non_indexed_properties_only,
+            object_id=object_id,
+            own_properties=own_properties,
+            accessor_properties_only=accessor_properties_only,
+            generate_preview=generate_preview,
+            non_indexed_properties_only=non_indexed_properties_only,
         )
 
         result = await self._client.send_raw(
@@ -264,7 +264,7 @@ class RuntimeClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetPropertiesResult.model_validate(result)
+        return GetPropertiesResult.from_cdp(result)
 
     async def global_lexical_scope_names(
         self,
@@ -272,14 +272,16 @@ class RuntimeClient:
         execution_context_id: ExecutionContextId | None = None,
         session_id: str | None = None,
     ) -> GlobalLexicalScopeNamesResult:
-        params = GlobalLexicalScopeNamesParams(executionContextId=execution_context_id)
+        params = GlobalLexicalScopeNamesParams(
+            execution_context_id=execution_context_id
+        )
 
         result = await self._client.send_raw(
             method=RuntimeCommand.GLOBAL_LEXICAL_SCOPE_NAMES,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GlobalLexicalScopeNamesResult.model_validate(result)
+        return GlobalLexicalScopeNamesResult.from_cdp(result)
 
     async def query_objects(
         self,
@@ -289,7 +291,7 @@ class RuntimeClient:
         session_id: str | None = None,
     ) -> QueryObjectsResult:
         params = QueryObjectsParams(
-            prototypeObjectId=prototype_object_id, objectGroup=object_group
+            prototype_object_id=prototype_object_id, object_group=object_group
         )
 
         result = await self._client.send_raw(
@@ -297,7 +299,7 @@ class RuntimeClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return QueryObjectsResult.model_validate(result)
+        return QueryObjectsResult.from_cdp(result)
 
     async def release_object(
         self,
@@ -305,7 +307,7 @@ class RuntimeClient:
         object_id: RemoteObjectId,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = ReleaseObjectParams(objectId=object_id)
+        params = ReleaseObjectParams(object_id=object_id)
 
         result = await self._client.send_raw(
             method=RuntimeCommand.RELEASE_OBJECT,
@@ -320,7 +322,7 @@ class RuntimeClient:
         object_group: str,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = ReleaseObjectGroupParams(objectGroup=object_group)
+        params = ReleaseObjectGroupParams(object_group=object_group)
 
         result = await self._client.send_raw(
             method=RuntimeCommand.RELEASE_OBJECT_GROUP,
@@ -354,14 +356,14 @@ class RuntimeClient:
         session_id: str | None = None,
     ) -> RunScriptResult:
         params = RunScriptParams(
-            scriptId=script_id,
-            executionContextId=execution_context_id,
-            objectGroup=object_group,
+            script_id=script_id,
+            execution_context_id=execution_context_id,
+            object_group=object_group,
             silent=silent,
-            includeCommandLineAPI=include_command_line_a_p_i,
-            returnByValue=return_by_value,
-            generatePreview=generate_preview,
-            awaitPromise=await_promise,
+            include_command_line_a_p_i=include_command_line_a_p_i,
+            return_by_value=return_by_value,
+            generate_preview=generate_preview,
+            await_promise=await_promise,
         )
 
         result = await self._client.send_raw(
@@ -369,7 +371,7 @@ class RuntimeClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return RunScriptResult.model_validate(result)
+        return RunScriptResult.from_cdp(result)
 
     async def set_async_call_stack_depth(
         self,
@@ -377,7 +379,7 @@ class RuntimeClient:
         max_depth: int,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = SetAsyncCallStackDepthParams(maxDepth=max_depth)
+        params = SetAsyncCallStackDepthParams(max_depth=max_depth)
 
         result = await self._client.send_raw(
             method=RuntimeCommand.SET_ASYNC_CALL_STACK_DEPTH,
@@ -437,8 +439,8 @@ class RuntimeClient:
     ) -> dict[str, Any]:
         params = AddBindingParams(
             name=name,
-            executionContextId=execution_context_id,
-            executionContextName=execution_context_name,
+            execution_context_id=execution_context_id,
+            execution_context_name=execution_context_name,
         )
 
         result = await self._client.send_raw(
@@ -469,11 +471,11 @@ class RuntimeClient:
         error_object_id: RemoteObjectId,
         session_id: str | None = None,
     ) -> GetExceptionDetailsResult:
-        params = GetExceptionDetailsParams(errorObjectId=error_object_id)
+        params = GetExceptionDetailsParams(error_object_id=error_object_id)
 
         result = await self._client.send_raw(
             method=RuntimeCommand.GET_EXCEPTION_DETAILS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetExceptionDetailsResult.model_validate(result)
+        return GetExceptionDetailsResult.from_cdp(result)

@@ -40,7 +40,7 @@ class ServiceWorkerClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = DeliverPushMessageParams(
-            origin=origin, registrationId=registration_id, data=data
+            origin=origin, registration_id=registration_id, data=data
         )
 
         result = await self._client.send_raw(
@@ -72,9 +72,9 @@ class ServiceWorkerClient:
     ) -> dict[str, Any]:
         params = DispatchSyncEventParams(
             origin=origin,
-            registrationId=registration_id,
+            registration_id=registration_id,
             tag=tag,
-            lastChance=last_chance,
+            last_chance=last_chance,
         )
 
         result = await self._client.send_raw(
@@ -93,7 +93,7 @@ class ServiceWorkerClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = DispatchPeriodicSyncEventParams(
-            origin=origin, registrationId=registration_id, tag=tag
+            origin=origin, registration_id=registration_id, tag=tag
         )
 
         result = await self._client.send_raw(
@@ -121,7 +121,7 @@ class ServiceWorkerClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = SetForceUpdateOnPageLoadParams(
-            forceUpdateOnPageLoad=force_update_on_page_load
+            force_update_on_page_load=force_update_on_page_load
         )
 
         result = await self._client.send_raw(
@@ -137,7 +137,7 @@ class ServiceWorkerClient:
         scope_u_r_l: str,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = SkipWaitingParams(scopeURL=scope_u_r_l)
+        params = SkipWaitingParams(scope_u_r_l=scope_u_r_l)
 
         result = await self._client.send_raw(
             method=ServiceWorkerCommand.SKIP_WAITING,
@@ -152,7 +152,7 @@ class ServiceWorkerClient:
         scope_u_r_l: str,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = StartWorkerParams(scopeURL=scope_u_r_l)
+        params = StartWorkerParams(scope_u_r_l=scope_u_r_l)
 
         result = await self._client.send_raw(
             method=ServiceWorkerCommand.START_WORKER,
@@ -178,7 +178,7 @@ class ServiceWorkerClient:
         version_id: str,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = StopWorkerParams(versionId=version_id)
+        params = StopWorkerParams(version_id=version_id)
 
         result = await self._client.send_raw(
             method=ServiceWorkerCommand.STOP_WORKER,
@@ -193,7 +193,7 @@ class ServiceWorkerClient:
         scope_u_r_l: str,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = UnregisterParams(scopeURL=scope_u_r_l)
+        params = UnregisterParams(scope_u_r_l=scope_u_r_l)
 
         result = await self._client.send_raw(
             method=ServiceWorkerCommand.UNREGISTER,
@@ -208,7 +208,7 @@ class ServiceWorkerClient:
         scope_u_r_l: str,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = UpdateRegistrationParams(scopeURL=scope_u_r_l)
+        params = UpdateRegistrationParams(scope_u_r_l=scope_u_r_l)
 
         result = await self._client.send_raw(
             method=ServiceWorkerCommand.UPDATE_REGISTRATION,

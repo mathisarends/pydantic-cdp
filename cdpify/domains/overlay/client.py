@@ -96,11 +96,11 @@ class OverlayClient:
         session_id: str | None = None,
     ) -> GetHighlightObjectForTestResult:
         params = GetHighlightObjectForTestParams(
-            nodeId=node_id,
-            includeDistance=include_distance,
-            includeStyle=include_style,
-            colorFormat=color_format,
-            showAccessibilityInfo=show_accessibility_info,
+            node_id=node_id,
+            include_distance=include_distance,
+            include_style=include_style,
+            color_format=color_format,
+            show_accessibility_info=show_accessibility_info,
         )
 
         result = await self._client.send_raw(
@@ -108,7 +108,7 @@ class OverlayClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetHighlightObjectForTestResult.model_validate(result)
+        return GetHighlightObjectForTestResult.from_cdp(result)
 
     async def get_grid_highlight_objects_for_test(
         self,
@@ -116,14 +116,14 @@ class OverlayClient:
         node_ids: list[dom.NodeId],
         session_id: str | None = None,
     ) -> GetGridHighlightObjectsForTestResult:
-        params = GetGridHighlightObjectsForTestParams(nodeIds=node_ids)
+        params = GetGridHighlightObjectsForTestParams(node_ids=node_ids)
 
         result = await self._client.send_raw(
             method=OverlayCommand.GET_GRID_HIGHLIGHT_OBJECTS_FOR_TEST,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetGridHighlightObjectsForTestResult.model_validate(result)
+        return GetGridHighlightObjectsForTestResult.from_cdp(result)
 
     async def get_source_order_highlight_object_for_test(
         self,
@@ -131,14 +131,14 @@ class OverlayClient:
         node_id: DOM.NodeId,
         session_id: str | None = None,
     ) -> GetSourceOrderHighlightObjectForTestResult:
-        params = GetSourceOrderHighlightObjectForTestParams(nodeId=node_id)
+        params = GetSourceOrderHighlightObjectForTestParams(node_id=node_id)
 
         result = await self._client.send_raw(
             method=OverlayCommand.GET_SOURCE_ORDER_HIGHLIGHT_OBJECT_FOR_TEST,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetSourceOrderHighlightObjectForTestResult.model_validate(result)
+        return GetSourceOrderHighlightObjectForTestResult.from_cdp(result)
 
     async def hide_highlight(
         self,
@@ -160,9 +160,9 @@ class OverlayClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = HighlightFrameParams(
-            frameId=frame_id,
-            contentColor=content_color,
-            contentOutlineColor=content_outline_color,
+            frame_id=frame_id,
+            content_color=content_color,
+            content_outline_color=content_outline_color,
         )
 
         result = await self._client.send_raw(
@@ -183,10 +183,10 @@ class OverlayClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = HighlightNodeParams(
-            highlightConfig=highlight_config,
-            nodeId=node_id,
-            backendNodeId=backend_node_id,
-            objectId=object_id,
+            highlight_config=highlight_config,
+            node_id=node_id,
+            backend_node_id=backend_node_id,
+            object_id=object_id,
             selector=selector,
         )
 
@@ -205,7 +205,9 @@ class OverlayClient:
         outline_color: DOM.RGBA | None = None,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = HighlightQuadParams(quad=quad, color=color, outlineColor=outline_color)
+        params = HighlightQuadParams(
+            quad=quad, color=color, outline_color=outline_color
+        )
 
         result = await self._client.send_raw(
             method=OverlayCommand.HIGHLIGHT_QUAD,
@@ -231,7 +233,7 @@ class OverlayClient:
             width=width,
             height=height,
             color=color,
-            outlineColor=outline_color,
+            outline_color=outline_color,
         )
 
         result = await self._client.send_raw(
@@ -251,10 +253,10 @@ class OverlayClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = HighlightSourceOrderParams(
-            sourceOrderConfig=source_order_config,
-            nodeId=node_id,
-            backendNodeId=backend_node_id,
-            objectId=object_id,
+            source_order_config=source_order_config,
+            node_id=node_id,
+            backend_node_id=backend_node_id,
+            object_id=object_id,
         )
 
         result = await self._client.send_raw(
@@ -271,7 +273,7 @@ class OverlayClient:
         highlight_config: HighlightConfig | None = None,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = SetInspectModeParams(mode=mode, highlightConfig=highlight_config)
+        params = SetInspectModeParams(mode=mode, highlight_config=highlight_config)
 
         result = await self._client.send_raw(
             method=OverlayCommand.SET_INSPECT_MODE,
@@ -347,7 +349,7 @@ class OverlayClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = SetShowGridOverlaysParams(
-            gridNodeHighlightConfigs=grid_node_highlight_configs
+            grid_node_highlight_configs=grid_node_highlight_configs
         )
 
         result = await self._client.send_raw(
@@ -364,7 +366,7 @@ class OverlayClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = SetShowFlexOverlaysParams(
-            flexNodeHighlightConfigs=flex_node_highlight_configs
+            flex_node_highlight_configs=flex_node_highlight_configs
         )
 
         result = await self._client.send_raw(
@@ -381,7 +383,7 @@ class OverlayClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = SetShowScrollSnapOverlaysParams(
-            scrollSnapHighlightConfigs=scroll_snap_highlight_configs
+            scroll_snap_highlight_configs=scroll_snap_highlight_configs
         )
 
         result = await self._client.send_raw(
@@ -398,7 +400,7 @@ class OverlayClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = SetShowContainerQueryOverlaysParams(
-            containerQueryHighlightConfigs=container_query_highlight_configs
+            container_query_highlight_configs=container_query_highlight_configs
         )
 
         result = await self._client.send_raw(
@@ -504,7 +506,7 @@ class OverlayClient:
         hinge_config: HingeConfig | None = None,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = SetShowHingeParams(hingeConfig=hinge_config)
+        params = SetShowHingeParams(hinge_config=hinge_config)
 
         result = await self._client.send_raw(
             method=OverlayCommand.SET_SHOW_HINGE,
@@ -520,7 +522,7 @@ class OverlayClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = SetShowIsolatedElementsParams(
-            isolatedElementHighlightConfigs=isolated_element_highlight_configs
+            isolated_element_highlight_configs=isolated_element_highlight_configs
         )
 
         result = await self._client.send_raw(
@@ -537,7 +539,7 @@ class OverlayClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = SetShowWindowControlsOverlayParams(
-            windowControlsOverlayConfig=window_controls_overlay_config
+            window_controls_overlay_config=window_controls_overlay_config
         )
 
         result = await self._client.send_raw(

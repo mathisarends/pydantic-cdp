@@ -52,11 +52,11 @@ class WebAudioClient:
         context_id: GraphObjectId,
         session_id: str | None = None,
     ) -> GetRealtimeDataResult:
-        params = GetRealtimeDataParams(contextId=context_id)
+        params = GetRealtimeDataParams(context_id=context_id)
 
         result = await self._client.send_raw(
             method=WebAudioCommand.GET_REALTIME_DATA,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetRealtimeDataResult.model_validate(result)
+        return GetRealtimeDataResult.from_cdp(result)

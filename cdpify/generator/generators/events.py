@@ -37,8 +37,9 @@ class EventsGenerator(BaseGenerator):
         if typing_imports:
             lines.append(typing_imports)
 
+        lines.append("from dataclasses import dataclass")
         lines.append("from enum import StrEnum")
-        lines.append("from cdpify.domains.base import CDPModel")
+        lines.append("from cdpify.domains.shared import CDPModel")
 
         if has_models:
             lines.append("")
@@ -76,7 +77,8 @@ class EventsGenerator(BaseGenerator):
     def _create_event_model(self, event: Event) -> str:
         class_name = f"{to_pascal_case(event.name)}Event"
 
-        lines = [f"class {class_name}(CDPModel):"]
+        lines = ["@dataclass(kw_only=True)"]
+        lines.append(f"class {class_name}(CDPModel):")
 
         if event.description:
             doc = format_docstring(event.description, indent=4)
@@ -99,18 +101,15 @@ class EventsGenerator(BaseGenerator):
 
         self._track_type_usage(py_type)
 
-        return f"{field_name}: {py_type}" + (" = None" if param.optional else "")
+        if param.optional:
+            return f"{field_name}: {py_type} | None = None"
+        return f"{field_name}: {py_type}"
 
     def _resolve_type(self, param: Parameter) -> str:
         if param.ref and "." in param.ref:
             parts = param.ref.split(".")
             domain_lower = parts[0].lower()
             type_name = parts[1]
-            base_type = f"{domain_lower}.{type_name}"
-        else:
-            base_type = map_cdp_type(param)
+            return f"{domain_lower}.{type_name}"
 
-        if param.optional and " | None" not in base_type:
-            return f"{base_type} | None"
-
-        return base_type
+        return map_cdp_type(param)

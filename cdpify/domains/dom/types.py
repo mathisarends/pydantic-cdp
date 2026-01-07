@@ -3,7 +3,8 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Any, Literal, TYPE_CHECKING
-from cdpify.domains.base import CDPModel
+from dataclasses import dataclass
+from cdpify.domains.shared import CDPModel
 
 if TYPE_CHECKING:
     from cdpify.domains import page
@@ -25,6 +26,7 @@ Unique identifier for a CSS stylesheet.
 StyleSheetId = str
 
 
+@dataclass(kw_only=True)
 class BackendNode(CDPModel):
     """
     Backend node with a friendly name.
@@ -107,6 +109,7 @@ Physical scroll orientation
 ScrollOrientation = Literal["horizontal", "vertical"]
 
 
+@dataclass(kw_only=True)
 class Node(CDPModel):
     """
     DOM interaction is implemented in terms of mirror objects that represent the actual
@@ -114,41 +117,42 @@ class Node(CDPModel):
     """
 
     node_id: NodeId
-    parent_id: NodeId | None = None
+    parent_id: NodeId | None | None = None
     backend_node_id: BackendNodeId
     node_type: int
     node_name: str
     local_name: str
     node_value: str
-    child_node_count: int | None = None
-    children: list[Node] | None = None
-    attributes: list[str] | None = None
-    document_u_r_l: str | None = None
-    base_u_r_l: str | None = None
-    public_id: str | None = None
-    system_id: str | None = None
-    internal_subset: str | None = None
-    xml_version: str | None = None
-    name: str | None = None
-    value: str | None = None
-    pseudo_type: PseudoType | None = None
-    pseudo_identifier: str | None = None
-    shadow_root_type: ShadowRootType | None = None
+    child_node_count: int | None | None = None
+    children: list[Node] | None | None = None
+    attributes: list[str] | None | None = None
+    document_u_r_l: str | None | None = None
+    base_u_r_l: str | None | None = None
+    public_id: str | None | None = None
+    system_id: str | None | None = None
+    internal_subset: str | None | None = None
+    xml_version: str | None | None = None
+    name: str | None | None = None
+    value: str | None | None = None
+    pseudo_type: PseudoType | None | None = None
+    pseudo_identifier: str | None | None = None
+    shadow_root_type: ShadowRootType | None | None = None
     frame_id: page.FrameId | None = None
-    content_document: Node | None = None
-    shadow_roots: list[Node] | None = None
-    template_content: Node | None = None
-    pseudo_elements: list[Node] | None = None
-    imported_document: Node | None = None
-    distributed_nodes: list[BackendNode] | None = None
-    is_s_v_g: bool | None = None
-    compatibility_mode: CompatibilityMode | None = None
-    assigned_slot: BackendNode | None = None
-    is_scrollable: bool | None = None
-    affected_by_starting_styles: bool | None = None
-    adopted_style_sheets: list[StyleSheetId] | None = None
+    content_document: Node | None | None = None
+    shadow_roots: list[Node] | None | None = None
+    template_content: Node | None | None = None
+    pseudo_elements: list[Node] | None | None = None
+    imported_document: Node | None | None = None
+    distributed_nodes: list[BackendNode] | None | None = None
+    is_s_v_g: bool | None | None = None
+    compatibility_mode: CompatibilityMode | None | None = None
+    assigned_slot: BackendNode | None | None = None
+    is_scrollable: bool | None | None = None
+    affected_by_starting_styles: bool | None | None = None
+    adopted_style_sheets: list[StyleSheetId] | None | None = None
 
 
+@dataclass(kw_only=True)
 class DetachedElementInfo(CDPModel):
     """
     A structure to hold the top-level node of a detached tree and an array of its
@@ -159,6 +163,7 @@ class DetachedElementInfo(CDPModel):
     retained_node_ids: list[NodeId]
 
 
+@dataclass(kw_only=True)
 class RGBA(CDPModel):
     """
     A structure holding an RGBA color.
@@ -167,7 +172,7 @@ class RGBA(CDPModel):
     r: int
     g: int
     b: int
-    a: float | None = None
+    a: float | None | None = None
 
 
 """
@@ -177,6 +182,7 @@ clock-wise.
 Quad = list[Any]
 
 
+@dataclass(kw_only=True)
 class BoxModel(CDPModel):
     """
     Box model.
@@ -188,9 +194,10 @@ class BoxModel(CDPModel):
     margin: Quad
     width: int
     height: int
-    shape_outside: ShapeOutsideInfo | None = None
+    shape_outside: ShapeOutsideInfo | None | None = None
 
 
+@dataclass(kw_only=True)
 class ShapeOutsideInfo(CDPModel):
     """
     CSS Shape Outside details.
@@ -201,6 +208,7 @@ class ShapeOutsideInfo(CDPModel):
     margin_shape: list[Any]
 
 
+@dataclass(kw_only=True)
 class Rect(CDPModel):
     """
     Rectangle.
@@ -212,6 +220,7 @@ class Rect(CDPModel):
     height: float
 
 
+@dataclass(kw_only=True)
 class CSSComputedStyleProperty(CDPModel):
     name: str
     value: str

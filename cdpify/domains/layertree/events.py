@@ -3,8 +3,9 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import TYPE_CHECKING
+from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.domains.base import CDPModel
+from cdpify.domains.shared import CDPModel
 
 from .types import *
 
@@ -17,10 +18,12 @@ class LayerTreeEvent(StrEnum):
     LAYER_TREE_DID_CHANGE = "LayerTree.layerTreeDidChange"
 
 
+@dataclass(kw_only=True)
 class LayerPaintedEvent(CDPModel):
     layer_id: LayerId
     clip: dom.Rect
 
 
+@dataclass(kw_only=True)
 class LayerTreeDidChangeEvent(CDPModel):
-    layers: list[Layer] | None = None
+    layers: list[Layer] | None | None = None

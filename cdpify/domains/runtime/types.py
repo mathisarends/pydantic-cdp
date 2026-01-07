@@ -3,7 +3,8 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Any, Literal
-from cdpify.domains.base import CDPModel
+from dataclasses import dataclass
+from cdpify.domains.shared import CDPModel
 
 """
 Unique script identifier.
@@ -11,6 +12,7 @@ Unique script identifier.
 ScriptId = str
 
 
+@dataclass(kw_only=True)
 class SerializationOptions(CDPModel):
     """
     Represents options for serialization. Overrides `generatePreview` and
@@ -18,10 +20,11 @@ class SerializationOptions(CDPModel):
     """
 
     serialization: Literal["deep", "json", "idOnly"]
-    max_depth: int | None = None
-    additional_parameters: dict[str, Any] | None = None
+    max_depth: int | None | None = None
+    additional_parameters: dict[str, Any] | None | None = None
 
 
+@dataclass(kw_only=True)
 class DeepSerializedValue(CDPModel):
     """
     Represents deep serialized value.
@@ -53,9 +56,9 @@ class DeepSerializedValue(CDPModel):
         "window",
         "generator",
     ]
-    value: Any | None = None
-    object_id: str | None = None
-    weak_local_object_reference: int | None = None
+    value: Any | None | None = None
+    object_id: str | None | None = None
+    weak_local_object_reference: int | None | None = None
 
 
 """
@@ -70,6 +73,7 @@ Primitive value which cannot be JSON-stringified. Includes values `-0`, `NaN`,
 UnserializableValue = str
 
 
+@dataclass(kw_only=True)
 class RemoteObject(CDPModel):
     """
     Mirror object referencing original JavaScript object.
@@ -109,22 +113,25 @@ class RemoteObject(CDPModel):
             "trustedtype",
         ]
         | None
+        | None
     ) = None
-    class_name: str | None = None
-    value: Any | None = None
-    unserializable_value: UnserializableValue | None = None
-    description: str | None = None
-    deep_serialized_value: DeepSerializedValue | None = None
-    object_id: RemoteObjectId | None = None
-    preview: ObjectPreview | None = None
-    custom_preview: CustomPreview | None = None
+    class_name: str | None | None = None
+    value: Any | None | None = None
+    unserializable_value: UnserializableValue | None | None = None
+    description: str | None | None = None
+    deep_serialized_value: DeepSerializedValue | None | None = None
+    object_id: RemoteObjectId | None | None = None
+    preview: ObjectPreview | None | None = None
+    custom_preview: CustomPreview | None | None = None
 
 
+@dataclass(kw_only=True)
 class CustomPreview(CDPModel):
     header: str
-    body_getter_id: RemoteObjectId | None = None
+    body_getter_id: RemoteObjectId | None | None = None
 
 
+@dataclass(kw_only=True)
 class ObjectPreview(CDPModel):
     """
     Object containing abbreviated remote object value.
@@ -164,13 +171,15 @@ class ObjectPreview(CDPModel):
             "trustedtype",
         ]
         | None
+        | None
     ) = None
-    description: str | None = None
+    description: str | None | None = None
     overflow: bool
     properties: list[PropertyPreview]
-    entries: list[EntryPreview] | None = None
+    entries: list[EntryPreview] | None | None = None
 
 
+@dataclass(kw_only=True)
 class PropertyPreview(CDPModel):
     name: str
     type: Literal[
@@ -184,8 +193,8 @@ class PropertyPreview(CDPModel):
         "accessor",
         "bigint",
     ]
-    value: str | None = None
-    value_preview: ObjectPreview | None = None
+    value: str | None | None = None
+    value_preview: ObjectPreview | None | None = None
     subtype: (
         Literal[
             "array",
@@ -210,31 +219,35 @@ class PropertyPreview(CDPModel):
             "trustedtype",
         ]
         | None
+        | None
     ) = None
 
 
+@dataclass(kw_only=True)
 class EntryPreview(CDPModel):
-    key: ObjectPreview | None = None
+    key: ObjectPreview | None | None = None
     value: ObjectPreview
 
 
+@dataclass(kw_only=True)
 class PropertyDescriptor(CDPModel):
     """
     Object property descriptor.
     """
 
     name: str
-    value: RemoteObject | None = None
-    writable: bool | None = None
-    get: RemoteObject | None = None
-    set: RemoteObject | None = None
+    value: RemoteObject | None | None = None
+    writable: bool | None | None = None
+    get: RemoteObject | None | None = None
+    set: RemoteObject | None | None = None
     configurable: bool
     enumerable: bool
-    was_thrown: bool | None = None
-    is_own: bool | None = None
-    symbol: RemoteObject | None = None
+    was_thrown: bool | None | None = None
+    is_own: bool | None | None = None
+    symbol: RemoteObject | None | None = None
 
 
+@dataclass(kw_only=True)
 class InternalPropertyDescriptor(CDPModel):
     """
     Object internal property descriptor. This property isn't normally visible in
@@ -242,20 +255,22 @@ class InternalPropertyDescriptor(CDPModel):
     """
 
     name: str
-    value: RemoteObject | None = None
+    value: RemoteObject | None | None = None
 
 
+@dataclass(kw_only=True)
 class PrivatePropertyDescriptor(CDPModel):
     """
     Object private field descriptor.
     """
 
     name: str
-    value: RemoteObject | None = None
-    get: RemoteObject | None = None
-    set: RemoteObject | None = None
+    value: RemoteObject | None | None = None
+    get: RemoteObject | None | None = None
+    set: RemoteObject | None | None = None
 
 
+@dataclass(kw_only=True)
 class CallArgument(CDPModel):
     """
     Represents function call argument. Either remote object id `objectId`, primitive
@@ -263,9 +278,9 @@ class CallArgument(CDPModel):
     specified.
     """
 
-    value: Any | None = None
-    unserializable_value: UnserializableValue | None = None
-    object_id: RemoteObjectId | None = None
+    value: Any | None | None = None
+    unserializable_value: UnserializableValue | None | None = None
+    object_id: RemoteObjectId | None | None = None
 
 
 """
@@ -274,6 +289,7 @@ Id of an execution context.
 ExecutionContextId = int
 
 
+@dataclass(kw_only=True)
 class ExecutionContextDescription(CDPModel):
     """
     Description of an isolated world.
@@ -283,9 +299,10 @@ class ExecutionContextDescription(CDPModel):
     origin: str
     name: str
     unique_id: str
-    aux_data: dict[str, Any] | None = None
+    aux_data: dict[str, Any] | None | None = None
 
 
+@dataclass(kw_only=True)
 class ExceptionDetails(CDPModel):
     """
     Detailed information about exception (or error) that was thrown during script
@@ -296,12 +313,12 @@ class ExceptionDetails(CDPModel):
     text: str
     line_number: int
     column_number: int
-    script_id: ScriptId | None = None
-    url: str | None = None
-    stack_trace: StackTrace | None = None
-    exception: RemoteObject | None = None
-    execution_context_id: ExecutionContextId | None = None
-    exception_meta_data: dict[str, Any] | None = None
+    script_id: ScriptId | None | None = None
+    url: str | None | None = None
+    stack_trace: StackTrace | None | None = None
+    exception: RemoteObject | None | None = None
+    execution_context_id: ExecutionContextId | None | None = None
+    exception_meta_data: dict[str, Any] | None | None = None
 
 
 """
@@ -315,6 +332,7 @@ Number of milliseconds.
 TimeDelta = float
 
 
+@dataclass(kw_only=True)
 class CallFrame(CDPModel):
     """
     Stack entry for runtime errors and assertions.
@@ -327,15 +345,16 @@ class CallFrame(CDPModel):
     column_number: int
 
 
+@dataclass(kw_only=True)
 class StackTrace(CDPModel):
     """
     Call frames for assertions or error messages.
     """
 
-    description: str | None = None
+    description: str | None | None = None
     call_frames: list[CallFrame]
-    parent: StackTrace | None = None
-    parent_id: StackTraceId | None = None
+    parent: StackTrace | None | None = None
+    parent_id: StackTraceId | None | None = None
 
 
 """
@@ -344,6 +363,7 @@ Unique identifier of current debugger.
 UniqueDebuggerId = str
 
 
+@dataclass(kw_only=True)
 class StackTraceId(CDPModel):
     """
     If `debuggerId` is set stack trace comes from another debugger and can be resolved
@@ -352,4 +372,4 @@ class StackTraceId(CDPModel):
     """
 
     id: str
-    debugger_id: UniqueDebuggerId | None = None
+    debugger_id: UniqueDebuggerId | None | None = None

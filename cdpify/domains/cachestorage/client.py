@@ -37,7 +37,7 @@ class CacheStorageClient:
         cache_id: CacheId,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = DeleteCacheParams(cacheId=cache_id)
+        params = DeleteCacheParams(cache_id=cache_id)
 
         result = await self._client.send_raw(
             method=CacheStorageCommand.DELETE_CACHE,
@@ -53,7 +53,7 @@ class CacheStorageClient:
         request: str,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = DeleteEntryParams(cacheId=cache_id, request=request)
+        params = DeleteEntryParams(cache_id=cache_id, request=request)
 
         result = await self._client.send_raw(
             method=CacheStorageCommand.DELETE_ENTRY,
@@ -71,9 +71,9 @@ class CacheStorageClient:
         session_id: str | None = None,
     ) -> RequestCacheNamesResult:
         params = RequestCacheNamesParams(
-            securityOrigin=security_origin,
-            storageKey=storage_key,
-            storageBucket=storage_bucket,
+            security_origin=security_origin,
+            storage_key=storage_key,
+            storage_bucket=storage_bucket,
         )
 
         result = await self._client.send_raw(
@@ -81,7 +81,7 @@ class CacheStorageClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return RequestCacheNamesResult.model_validate(result)
+        return RequestCacheNamesResult.from_cdp(result)
 
     async def request_cached_response(
         self,
@@ -92,7 +92,9 @@ class CacheStorageClient:
         session_id: str | None = None,
     ) -> RequestCachedResponseResult:
         params = RequestCachedResponseParams(
-            cacheId=cache_id, requestURL=request_u_r_l, requestHeaders=request_headers
+            cache_id=cache_id,
+            request_u_r_l=request_u_r_l,
+            request_headers=request_headers,
         )
 
         result = await self._client.send_raw(
@@ -100,7 +102,7 @@ class CacheStorageClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return RequestCachedResponseResult.model_validate(result)
+        return RequestCachedResponseResult.from_cdp(result)
 
     async def request_entries(
         self,
@@ -112,10 +114,10 @@ class CacheStorageClient:
         session_id: str | None = None,
     ) -> RequestEntriesResult:
         params = RequestEntriesParams(
-            cacheId=cache_id,
-            skipCount=skip_count,
-            pageSize=page_size,
-            pathFilter=path_filter,
+            cache_id=cache_id,
+            skip_count=skip_count,
+            page_size=page_size,
+            path_filter=path_filter,
         )
 
         result = await self._client.send_raw(
@@ -123,4 +125,4 @@ class CacheStorageClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return RequestEntriesResult.model_validate(result)
+        return RequestEntriesResult.from_cdp(result)

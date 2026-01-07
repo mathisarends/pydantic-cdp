@@ -63,7 +63,7 @@ class AnimationClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetCurrentTimeResult.model_validate(result)
+        return GetCurrentTimeResult.from_cdp(result)
 
     async def get_playback_rate(
         self,
@@ -74,7 +74,7 @@ class AnimationClient:
             params=None,
             session_id=session_id,
         )
-        return GetPlaybackRateResult.model_validate(result)
+        return GetPlaybackRateResult.from_cdp(result)
 
     async def release_animations(
         self,
@@ -97,14 +97,14 @@ class AnimationClient:
         animation_id: str,
         session_id: str | None = None,
     ) -> ResolveAnimationResult:
-        params = ResolveAnimationParams(animationId=animation_id)
+        params = ResolveAnimationParams(animation_id=animation_id)
 
         result = await self._client.send_raw(
             method=AnimationCommand.RESOLVE_ANIMATION,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return ResolveAnimationResult.model_validate(result)
+        return ResolveAnimationResult.from_cdp(result)
 
     async def seek_animations(
         self,
@@ -113,7 +113,7 @@ class AnimationClient:
         current_time: float,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = SeekAnimationsParams(animations=animations, currentTime=current_time)
+        params = SeekAnimationsParams(animations=animations, current_time=current_time)
 
         result = await self._client.send_raw(
             method=AnimationCommand.SEEK_ANIMATIONS,
@@ -144,7 +144,7 @@ class AnimationClient:
         playback_rate: float,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = SetPlaybackRateParams(playbackRate=playback_rate)
+        params = SetPlaybackRateParams(playback_rate=playback_rate)
 
         result = await self._client.send_raw(
             method=AnimationCommand.SET_PLAYBACK_RATE,
@@ -162,7 +162,7 @@ class AnimationClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = SetTimingParams(
-            animationId=animation_id, duration=duration, delay=delay
+            animation_id=animation_id, duration=duration, delay=delay
         )
 
         result = await self._client.send_raw(

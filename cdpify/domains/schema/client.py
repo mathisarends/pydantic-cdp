@@ -28,4 +28,4 @@ class SchemaClient:
             params=None,
             session_id=session_id,
         )
-        return GetDomainsResult.model_validate(result)
+        return GetDomainsResult.from_cdp(result)

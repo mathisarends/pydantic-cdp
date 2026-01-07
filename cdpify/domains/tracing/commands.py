@@ -3,8 +3,9 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Literal
+from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.domains.base import CDPModel
+from cdpify.domains.shared import CDPModel
 
 from .types import *
 
@@ -18,14 +19,17 @@ class TracingCommand(StrEnum):
     START = "Tracing.start"
 
 
+@dataclass(kw_only=True)
 class GetCategoriesResult(CDPModel):
     categories: list[str]
 
 
+@dataclass(kw_only=True)
 class GetTrackEventDescriptorResult(CDPModel):
     descriptor: str
 
 
+@dataclass(kw_only=True)
 class RecordClockSyncMarkerParams(CDPModel):
     """
     Record a clock sync marker in the trace.
@@ -34,31 +38,34 @@ class RecordClockSyncMarkerParams(CDPModel):
     sync_id: str
 
 
+@dataclass(kw_only=True)
 class RequestMemoryDumpParams(CDPModel):
     """
     Request a global memory dump.
     """
 
-    deterministic: bool | None = None
-    level_of_detail: MemoryDumpLevelOfDetail | None = None
+    deterministic: bool | None | None = None
+    level_of_detail: MemoryDumpLevelOfDetail | None | None = None
 
 
+@dataclass(kw_only=True)
 class RequestMemoryDumpResult(CDPModel):
     dump_guid: str
     success: bool
 
 
+@dataclass(kw_only=True)
 class StartParams(CDPModel):
     """
     Start trace events collection.
     """
 
-    categories: str | None = None
-    options: str | None = None
-    buffer_usage_reporting_interval: float | None = None
-    transfer_mode: Literal["ReportEvents", "ReturnAsStream"] | None = None
-    stream_format: StreamFormat | None = None
-    stream_compression: StreamCompression | None = None
-    trace_config: TraceConfig | None = None
-    perfetto_config: str | None = None
-    tracing_backend: TracingBackend | None = None
+    categories: str | None | None = None
+    options: str | None | None = None
+    buffer_usage_reporting_interval: float | None | None = None
+    transfer_mode: Literal["ReportEvents", "ReturnAsStream"] | None | None = None
+    stream_format: StreamFormat | None | None = None
+    stream_compression: StreamCompression | None | None = None
+    trace_config: TraceConfig | None | None = None
+    perfetto_config: str | None | None = None
+    tracing_backend: TracingBackend | None | None = None

@@ -3,20 +3,23 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Literal
-from cdpify.domains.base import CDPModel
+from dataclasses import dataclass
+from cdpify.domains.shared import CDPModel
 
 
+@dataclass(kw_only=True)
 class SafeAreaInsets(CDPModel):
-    top: int | None = None
-    top_max: int | None = None
-    left: int | None = None
-    left_max: int | None = None
-    bottom: int | None = None
-    bottom_max: int | None = None
-    right: int | None = None
-    right_max: int | None = None
+    top: int | None | None = None
+    top_max: int | None | None = None
+    left: int | None | None = None
+    left_max: int | None | None = None
+    bottom: int | None | None = None
+    bottom_max: int | None | None = None
+    right: int | None | None = None
+    right_max: int | None | None = None
 
 
+@dataclass(kw_only=True)
 class ScreenOrientation(CDPModel):
     """
     Screen orientation.
@@ -28,16 +31,19 @@ class ScreenOrientation(CDPModel):
     angle: int
 
 
+@dataclass(kw_only=True)
 class DisplayFeature(CDPModel):
     orientation: Literal["vertical", "horizontal"]
     offset: int
     mask_length: int
 
 
+@dataclass(kw_only=True)
 class DevicePosture(CDPModel):
     type: Literal["continuous", "folded"]
 
 
+@dataclass(kw_only=True)
 class MediaFeature(CDPModel):
     name: str
     value: str
@@ -52,6 +58,7 @@ there are any pending resource fetches.
 VirtualTimePolicy = Literal["advance", "pause", "pauseIfNetworkFetchesPending"]
 
 
+@dataclass(kw_only=True)
 class UserAgentBrandVersion(CDPModel):
     """
     Used to specify User Agent Client Hints to emulate. See
@@ -62,6 +69,7 @@ class UserAgentBrandVersion(CDPModel):
     version: str
 
 
+@dataclass(kw_only=True)
 class UserAgentMetadata(CDPModel):
     """
     Used to specify User Agent Client Hints to emulate. See
@@ -69,17 +77,17 @@ class UserAgentMetadata(CDPModel):
     the target with what it would normally use.
     """
 
-    brands: list[UserAgentBrandVersion] | None = None
-    full_version_list: list[UserAgentBrandVersion] | None = None
-    full_version: str | None = None
+    brands: list[UserAgentBrandVersion] | None | None = None
+    full_version_list: list[UserAgentBrandVersion] | None | None = None
+    full_version: str | None | None = None
     platform: str
     platform_version: str
     architecture: str
     model: str
     mobile: bool
-    bitness: str | None = None
-    wow64: bool | None = None
-    form_factors: list[str] | None = None
+    bitness: str | None | None = None
+    wow64: bool | None | None = None
+    form_factors: list[str] | None | None = None
 
 
 """
@@ -98,22 +106,26 @@ SensorType = Literal[
 ]
 
 
+@dataclass(kw_only=True)
 class SensorMetadata(CDPModel):
-    available: bool | None = None
-    minimum_frequency: float | None = None
-    maximum_frequency: float | None = None
+    available: bool | None | None = None
+    minimum_frequency: float | None | None = None
+    maximum_frequency: float | None | None = None
 
 
+@dataclass(kw_only=True)
 class SensorReadingSingle(CDPModel):
     value: float
 
 
+@dataclass(kw_only=True)
 class SensorReadingXYZ(CDPModel):
     x: float
     y: float
     z: float
 
 
+@dataclass(kw_only=True)
 class SensorReadingQuaternion(CDPModel):
     x: float
     y: float
@@ -121,10 +133,11 @@ class SensorReadingQuaternion(CDPModel):
     w: float
 
 
+@dataclass(kw_only=True)
 class SensorReading(CDPModel):
-    single: SensorReadingSingle | None = None
-    xyz: SensorReadingXYZ | None = None
-    quaternion: SensorReadingQuaternion | None = None
+    single: SensorReadingSingle | None | None = None
+    xyz: SensorReadingXYZ | None | None = None
+    quaternion: SensorReadingQuaternion | None | None = None
 
 
 PressureSource = Literal["cpu"]
@@ -132,20 +145,23 @@ PressureSource = Literal["cpu"]
 PressureState = Literal["nominal", "fair", "serious", "critical"]
 
 
+@dataclass(kw_only=True)
 class PressureMetadata(CDPModel):
-    available: bool | None = None
+    available: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class WorkAreaInsets(CDPModel):
-    top: int | None = None
-    left: int | None = None
-    bottom: int | None = None
-    right: int | None = None
+    top: int | None | None = None
+    left: int | None | None = None
+    bottom: int | None | None = None
+    right: int | None | None = None
 
 
 ScreenId = str
 
 
+@dataclass(kw_only=True)
 class ScreenInfo(CDPModel):
     """
     Screen information similar to the one returned by window.getScreenDetails() method,

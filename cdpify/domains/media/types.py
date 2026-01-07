@@ -3,7 +3,8 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Any, Literal, TYPE_CHECKING
-from cdpify.domains.base import CDPModel
+from dataclasses import dataclass
+from cdpify.domains.shared import CDPModel
 
 if TYPE_CHECKING:
     from cdpify.domains import dom
@@ -16,6 +17,7 @@ PlayerId = str
 Timestamp = float
 
 
+@dataclass(kw_only=True)
 class PlayerMessage(CDPModel):
     """
     Have one type per entry in MediaLogRecord::Type Corresponds to kMessage
@@ -25,6 +27,7 @@ class PlayerMessage(CDPModel):
     message: str
 
 
+@dataclass(kw_only=True)
 class PlayerProperty(CDPModel):
     """
     Corresponds to kMediaPropertyChange
@@ -34,6 +37,7 @@ class PlayerProperty(CDPModel):
     value: str
 
 
+@dataclass(kw_only=True)
 class PlayerEvent(CDPModel):
     """
     Corresponds to kMediaEventTriggered
@@ -43,6 +47,7 @@ class PlayerEvent(CDPModel):
     value: str
 
 
+@dataclass(kw_only=True)
 class PlayerErrorSourceLocation(CDPModel):
     """
     Represents logged source line numbers reported in an error. NOTE: file and line are
@@ -53,6 +58,7 @@ class PlayerErrorSourceLocation(CDPModel):
     line: int
 
 
+@dataclass(kw_only=True)
 class PlayerError(CDPModel):
     """
     Corresponds to kMediaError
@@ -65,6 +71,7 @@ class PlayerError(CDPModel):
     data: dict[str, Any]
 
 
+@dataclass(kw_only=True)
 class Player(CDPModel):
     player_id: PlayerId
     dom_node_id: dom.BackendNodeId | None = None

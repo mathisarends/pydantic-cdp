@@ -77,14 +77,14 @@ class StorageClient:
         frame_id: Page.FrameId,
         session_id: str | None = None,
     ) -> GetStorageKeyForFrameResult:
-        params = GetStorageKeyForFrameParams(frameId=frame_id)
+        params = GetStorageKeyForFrameParams(frame_id=frame_id)
 
         result = await self._client.send_raw(
             method=StorageCommand.GET_STORAGE_KEY_FOR_FRAME,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetStorageKeyForFrameResult.model_validate(result)
+        return GetStorageKeyForFrameResult.from_cdp(result)
 
     async def get_storage_key(
         self,
@@ -92,14 +92,14 @@ class StorageClient:
         frame_id: Page.FrameId | None = None,
         session_id: str | None = None,
     ) -> GetStorageKeyResult:
-        params = GetStorageKeyParams(frameId=frame_id)
+        params = GetStorageKeyParams(frame_id=frame_id)
 
         result = await self._client.send_raw(
             method=StorageCommand.GET_STORAGE_KEY,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetStorageKeyResult.model_validate(result)
+        return GetStorageKeyResult.from_cdp(result)
 
     async def clear_data_for_origin(
         self,
@@ -108,7 +108,7 @@ class StorageClient:
         storage_types: str,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = ClearDataForOriginParams(origin=origin, storageTypes=storage_types)
+        params = ClearDataForOriginParams(origin=origin, storage_types=storage_types)
 
         result = await self._client.send_raw(
             method=StorageCommand.CLEAR_DATA_FOR_ORIGIN,
@@ -125,7 +125,7 @@ class StorageClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = ClearDataForStorageKeyParams(
-            storageKey=storage_key, storageTypes=storage_types
+            storage_key=storage_key, storage_types=storage_types
         )
 
         result = await self._client.send_raw(
@@ -141,14 +141,14 @@ class StorageClient:
         browser_context_id: Browser.BrowserContextID | None = None,
         session_id: str | None = None,
     ) -> GetCookiesResult:
-        params = GetCookiesParams(browserContextId=browser_context_id)
+        params = GetCookiesParams(browser_context_id=browser_context_id)
 
         result = await self._client.send_raw(
             method=StorageCommand.GET_COOKIES,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetCookiesResult.model_validate(result)
+        return GetCookiesResult.from_cdp(result)
 
     async def set_cookies(
         self,
@@ -157,7 +157,9 @@ class StorageClient:
         browser_context_id: Browser.BrowserContextID | None = None,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = SetCookiesParams(cookies=cookies, browserContextId=browser_context_id)
+        params = SetCookiesParams(
+            cookies=cookies, browser_context_id=browser_context_id
+        )
 
         result = await self._client.send_raw(
             method=StorageCommand.SET_COOKIES,
@@ -172,7 +174,7 @@ class StorageClient:
         browser_context_id: Browser.BrowserContextID | None = None,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = ClearCookiesParams(browserContextId=browser_context_id)
+        params = ClearCookiesParams(browser_context_id=browser_context_id)
 
         result = await self._client.send_raw(
             method=StorageCommand.CLEAR_COOKIES,
@@ -194,7 +196,7 @@ class StorageClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetUsageAndQuotaResult.model_validate(result)
+        return GetUsageAndQuotaResult.from_cdp(result)
 
     async def override_quota_for_origin(
         self,
@@ -203,7 +205,7 @@ class StorageClient:
         quota_size: float | None = None,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = OverrideQuotaForOriginParams(origin=origin, quotaSize=quota_size)
+        params = OverrideQuotaForOriginParams(origin=origin, quota_size=quota_size)
 
         result = await self._client.send_raw(
             method=StorageCommand.OVERRIDE_QUOTA_FOR_ORIGIN,
@@ -233,7 +235,7 @@ class StorageClient:
         storage_key: str,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = TrackCacheStorageForStorageKeyParams(storageKey=storage_key)
+        params = TrackCacheStorageForStorageKeyParams(storage_key=storage_key)
 
         result = await self._client.send_raw(
             method=StorageCommand.TRACK_CACHE_STORAGE_FOR_STORAGE_KEY,
@@ -263,7 +265,7 @@ class StorageClient:
         storage_key: str,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = TrackIndexedDBForStorageKeyParams(storageKey=storage_key)
+        params = TrackIndexedDBForStorageKeyParams(storage_key=storage_key)
 
         result = await self._client.send_raw(
             method=StorageCommand.TRACK_INDEXED_D_B_FOR_STORAGE_KEY,
@@ -293,7 +295,7 @@ class StorageClient:
         storage_key: str,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = UntrackCacheStorageForStorageKeyParams(storageKey=storage_key)
+        params = UntrackCacheStorageForStorageKeyParams(storage_key=storage_key)
 
         result = await self._client.send_raw(
             method=StorageCommand.UNTRACK_CACHE_STORAGE_FOR_STORAGE_KEY,
@@ -323,7 +325,7 @@ class StorageClient:
         storage_key: str,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = UntrackIndexedDBForStorageKeyParams(storageKey=storage_key)
+        params = UntrackIndexedDBForStorageKeyParams(storage_key=storage_key)
 
         result = await self._client.send_raw(
             method=StorageCommand.UNTRACK_INDEXED_D_B_FOR_STORAGE_KEY,
@@ -341,7 +343,7 @@ class StorageClient:
             params=None,
             session_id=session_id,
         )
-        return GetTrustTokensResult.model_validate(result)
+        return GetTrustTokensResult.from_cdp(result)
 
     async def clear_trust_tokens(
         self,
@@ -349,14 +351,14 @@ class StorageClient:
         issuer_origin: str,
         session_id: str | None = None,
     ) -> ClearTrustTokensResult:
-        params = ClearTrustTokensParams(issuerOrigin=issuer_origin)
+        params = ClearTrustTokensParams(issuer_origin=issuer_origin)
 
         result = await self._client.send_raw(
             method=StorageCommand.CLEAR_TRUST_TOKENS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return ClearTrustTokensResult.model_validate(result)
+        return ClearTrustTokensResult.from_cdp(result)
 
     async def get_interest_group_details(
         self,
@@ -365,14 +367,14 @@ class StorageClient:
         name: str,
         session_id: str | None = None,
     ) -> GetInterestGroupDetailsResult:
-        params = GetInterestGroupDetailsParams(ownerOrigin=owner_origin, name=name)
+        params = GetInterestGroupDetailsParams(owner_origin=owner_origin, name=name)
 
         result = await self._client.send_raw(
             method=StorageCommand.GET_INTEREST_GROUP_DETAILS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetInterestGroupDetailsResult.model_validate(result)
+        return GetInterestGroupDetailsResult.from_cdp(result)
 
     async def set_interest_group_tracking(
         self,
@@ -410,14 +412,14 @@ class StorageClient:
         owner_origin: str,
         session_id: str | None = None,
     ) -> GetSharedStorageMetadataResult:
-        params = GetSharedStorageMetadataParams(ownerOrigin=owner_origin)
+        params = GetSharedStorageMetadataParams(owner_origin=owner_origin)
 
         result = await self._client.send_raw(
             method=StorageCommand.GET_SHARED_STORAGE_METADATA,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetSharedStorageMetadataResult.model_validate(result)
+        return GetSharedStorageMetadataResult.from_cdp(result)
 
     async def get_shared_storage_entries(
         self,
@@ -425,14 +427,14 @@ class StorageClient:
         owner_origin: str,
         session_id: str | None = None,
     ) -> GetSharedStorageEntriesResult:
-        params = GetSharedStorageEntriesParams(ownerOrigin=owner_origin)
+        params = GetSharedStorageEntriesParams(owner_origin=owner_origin)
 
         result = await self._client.send_raw(
             method=StorageCommand.GET_SHARED_STORAGE_ENTRIES,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetSharedStorageEntriesResult.model_validate(result)
+        return GetSharedStorageEntriesResult.from_cdp(result)
 
     async def set_shared_storage_entry(
         self,
@@ -444,10 +446,10 @@ class StorageClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = SetSharedStorageEntryParams(
-            ownerOrigin=owner_origin,
+            owner_origin=owner_origin,
             key=key,
             value=value,
-            ignoreIfPresent=ignore_if_present,
+            ignore_if_present=ignore_if_present,
         )
 
         result = await self._client.send_raw(
@@ -464,7 +466,7 @@ class StorageClient:
         key: str,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = DeleteSharedStorageEntryParams(ownerOrigin=owner_origin, key=key)
+        params = DeleteSharedStorageEntryParams(owner_origin=owner_origin, key=key)
 
         result = await self._client.send_raw(
             method=StorageCommand.DELETE_SHARED_STORAGE_ENTRY,
@@ -479,7 +481,7 @@ class StorageClient:
         owner_origin: str,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = ClearSharedStorageEntriesParams(ownerOrigin=owner_origin)
+        params = ClearSharedStorageEntriesParams(owner_origin=owner_origin)
 
         result = await self._client.send_raw(
             method=StorageCommand.CLEAR_SHARED_STORAGE_ENTRIES,
@@ -494,7 +496,7 @@ class StorageClient:
         owner_origin: str,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = ResetSharedStorageBudgetParams(ownerOrigin=owner_origin)
+        params = ResetSharedStorageBudgetParams(owner_origin=owner_origin)
 
         result = await self._client.send_raw(
             method=StorageCommand.RESET_SHARED_STORAGE_BUDGET,
@@ -525,7 +527,7 @@ class StorageClient:
         enable: bool,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = SetStorageBucketTrackingParams(storageKey=storage_key, enable=enable)
+        params = SetStorageBucketTrackingParams(storage_key=storage_key, enable=enable)
 
         result = await self._client.send_raw(
             method=StorageCommand.SET_STORAGE_BUCKET_TRACKING,
@@ -558,7 +560,7 @@ class StorageClient:
             params=None,
             session_id=session_id,
         )
-        return RunBounceTrackingMitigationsResult.model_validate(result)
+        return RunBounceTrackingMitigationsResult.from_cdp(result)
 
     async def set_attribution_reporting_local_testing_mode(
         self,
@@ -599,7 +601,7 @@ class StorageClient:
             params=None,
             session_id=session_id,
         )
-        return SendPendingAttributionReportsResult.model_validate(result)
+        return SendPendingAttributionReportsResult.from_cdp(result)
 
     async def get_related_website_sets(
         self,
@@ -610,7 +612,7 @@ class StorageClient:
             params=None,
             session_id=session_id,
         )
-        return GetRelatedWebsiteSetsResult.model_validate(result)
+        return GetRelatedWebsiteSetsResult.from_cdp(result)
 
     async def get_affected_urls_for_third_party_cookie_metadata(
         self,
@@ -620,7 +622,7 @@ class StorageClient:
         session_id: str | None = None,
     ) -> GetAffectedUrlsForThirdPartyCookieMetadataResult:
         params = GetAffectedUrlsForThirdPartyCookieMetadataParams(
-            firstPartyUrl=first_party_url, thirdPartyUrls=third_party_urls
+            first_party_url=first_party_url, third_party_urls=third_party_urls
         )
 
         result = await self._client.send_raw(
@@ -628,7 +630,7 @@ class StorageClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetAffectedUrlsForThirdPartyCookieMetadataResult.model_validate(result)
+        return GetAffectedUrlsForThirdPartyCookieMetadataResult.from_cdp(result)
 
     async def set_protected_audience_k_anonymity(
         self,

@@ -3,8 +3,9 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Any, TYPE_CHECKING
+from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.domains.base import CDPModel
+from cdpify.domains.shared import CDPModel
 
 from .types import *
 
@@ -18,12 +19,14 @@ class TracingEvent(StrEnum):
     TRACING_COMPLETE = "Tracing.tracingComplete"
 
 
+@dataclass(kw_only=True)
 class BufferUsageEvent(CDPModel):
-    percent_full: float | None = None
-    event_count: float | None = None
-    value: float | None = None
+    percent_full: float | None | None = None
+    event_count: float | None | None = None
+    value: float | None | None = None
 
 
+@dataclass(kw_only=True)
 class DataCollectedEvent(CDPModel):
     """
     Contains a bucket of collected trace events. When tracing is stopped collected
@@ -34,6 +37,7 @@ class DataCollectedEvent(CDPModel):
     value: list[dict[str, Any]]
 
 
+@dataclass(kw_only=True)
 class TracingCompleteEvent(CDPModel):
     """
     Signals that tracing is stopped and there is no trace buffers pending flush, all
@@ -42,5 +46,5 @@ class TracingCompleteEvent(CDPModel):
 
     data_loss_occurred: bool
     stream: io.StreamHandle | None = None
-    trace_format: StreamFormat | None = None
-    stream_compression: StreamCompression | None = None
+    trace_format: StreamFormat | None | None = None
+    stream_compression: StreamCompression | None | None = None

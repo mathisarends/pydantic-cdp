@@ -54,10 +54,10 @@ class DOMSnapshotClient:
         session_id: str | None = None,
     ) -> GetSnapshotResult:
         params = GetSnapshotParams(
-            computedStyleWhitelist=computed_style_whitelist,
-            includeEventListeners=include_event_listeners,
-            includePaintOrder=include_paint_order,
-            includeUserAgentShadowTree=include_user_agent_shadow_tree,
+            computed_style_whitelist=computed_style_whitelist,
+            include_event_listeners=include_event_listeners,
+            include_paint_order=include_paint_order,
+            include_user_agent_shadow_tree=include_user_agent_shadow_tree,
         )
 
         result = await self._client.send_raw(
@@ -65,7 +65,7 @@ class DOMSnapshotClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetSnapshotResult.model_validate(result)
+        return GetSnapshotResult.from_cdp(result)
 
     async def capture_snapshot(
         self,
@@ -78,11 +78,11 @@ class DOMSnapshotClient:
         session_id: str | None = None,
     ) -> CaptureSnapshotResult:
         params = CaptureSnapshotParams(
-            computedStyles=computed_styles,
-            includePaintOrder=include_paint_order,
-            includeDOMRects=include_d_o_m_rects,
-            includeBlendedBackgroundColors=include_blended_background_colors,
-            includeTextColorOpacities=include_text_color_opacities,
+            computed_styles=computed_styles,
+            include_paint_order=include_paint_order,
+            include_d_o_m_rects=include_d_o_m_rects,
+            include_blended_background_colors=include_blended_background_colors,
+            include_text_color_opacities=include_text_color_opacities,
         )
 
         result = await self._client.send_raw(
@@ -90,4 +90,4 @@ class DOMSnapshotClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return CaptureSnapshotResult.model_validate(result)
+        return CaptureSnapshotResult.from_cdp(result)

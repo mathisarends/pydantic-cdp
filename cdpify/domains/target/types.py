@@ -3,7 +3,8 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Any, Literal, TYPE_CHECKING
-from cdpify.domains.base import CDPModel
+from dataclasses import dataclass
+from cdpify.domains.shared import CDPModel
 
 if TYPE_CHECKING:
     from cdpify.domains import browser, page
@@ -16,27 +17,29 @@ Unique identifier of attached debugging session.
 SessionID = str
 
 
+@dataclass(kw_only=True)
 class TargetInfo(CDPModel):
     target_id: TargetID
     type: str
     title: str
     url: str
     attached: bool
-    opener_id: TargetID | None = None
+    opener_id: TargetID | None | None = None
     can_access_opener: bool
     opener_frame_id: page.FrameId | None = None
     parent_frame_id: page.FrameId | None = None
     browser_context_id: browser.BrowserContextID | None = None
-    subtype: str | None = None
+    subtype: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class FilterEntry(CDPModel):
     """
     A filter used by target query/discovery/auto-attach operations.
     """
 
-    exclude: bool | None = None
-    type: str | None = None
+    exclude: bool | None | None = None
+    type: str | None | None = None
 
 
 """
@@ -49,6 +52,7 @@ but `browser` and `tab`).
 TargetFilter = list[Any]
 
 
+@dataclass(kw_only=True)
 class RemoteLocation(CDPModel):
     host: str
     port: int

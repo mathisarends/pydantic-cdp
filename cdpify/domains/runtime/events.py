@@ -3,8 +3,9 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Any, Literal
+from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.domains.base import CDPModel
+from cdpify.domains.shared import CDPModel
 
 from .types import *
 
@@ -20,6 +21,7 @@ class RuntimeEvent(StrEnum):
     INSPECT_REQUESTED = "Runtime.inspectRequested"
 
 
+@dataclass(kw_only=True)
 class BindingCalledEvent(CDPModel):
     """
     Notification is issued every time when binding is called.
@@ -30,6 +32,7 @@ class BindingCalledEvent(CDPModel):
     execution_context_id: ExecutionContextId
 
 
+@dataclass(kw_only=True)
 class ConsoleAPICalledEvent(CDPModel):
     """
     Issued when console API was called.
@@ -58,10 +61,11 @@ class ConsoleAPICalledEvent(CDPModel):
     args: list[RemoteObject]
     execution_context_id: ExecutionContextId
     timestamp: Timestamp
-    stack_trace: StackTrace | None = None
-    context: str | None = None
+    stack_trace: StackTrace | None | None = None
+    context: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class ExceptionRevokedEvent(CDPModel):
     """
     Issued when unhandled exception was revoked.
@@ -71,6 +75,7 @@ class ExceptionRevokedEvent(CDPModel):
     exception_id: int
 
 
+@dataclass(kw_only=True)
 class ExceptionThrownEvent(CDPModel):
     """
     Issued when exception was thrown and unhandled.
@@ -80,6 +85,7 @@ class ExceptionThrownEvent(CDPModel):
     exception_details: ExceptionDetails
 
 
+@dataclass(kw_only=True)
 class ExecutionContextCreatedEvent(CDPModel):
     """
     Issued when new execution context is created.
@@ -88,6 +94,7 @@ class ExecutionContextCreatedEvent(CDPModel):
     context: ExecutionContextDescription
 
 
+@dataclass(kw_only=True)
 class ExecutionContextDestroyedEvent(CDPModel):
     """
     Issued when execution context is destroyed.
@@ -97,6 +104,7 @@ class ExecutionContextDestroyedEvent(CDPModel):
     execution_context_unique_id: str
 
 
+@dataclass(kw_only=True)
 class ExecutionContextsClearedEvent(CDPModel):
     """
     Issued when all executionContexts were cleared in browser
@@ -105,6 +113,7 @@ class ExecutionContextsClearedEvent(CDPModel):
     pass
 
 
+@dataclass(kw_only=True)
 class InspectRequestedEvent(CDPModel):
     """
     Issued when object should be inspected (for example, as a result of inspect()
@@ -113,4 +122,4 @@ class InspectRequestedEvent(CDPModel):
 
     object: RemoteObject
     hints: dict[str, Any]
-    execution_context_id: ExecutionContextId | None = None
+    execution_context_id: ExecutionContextId | None | None = None

@@ -79,7 +79,7 @@ class DebuggerClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = ContinueToLocationParams(
-            location=location, targetCallFrames=target_call_frames
+            location=location, target_call_frames=target_call_frames
         )
 
         result = await self._client.send_raw(
@@ -106,14 +106,14 @@ class DebuggerClient:
         max_scripts_cache_size: float | None = None,
         session_id: str | None = None,
     ) -> EnableResult:
-        params = EnableParams(maxScriptsCacheSize=max_scripts_cache_size)
+        params = EnableParams(max_scripts_cache_size=max_scripts_cache_size)
 
         result = await self._client.send_raw(
             method=DebuggerCommand.ENABLE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return EnableResult.model_validate(result)
+        return EnableResult.from_cdp(result)
 
     async def evaluate_on_call_frame(
         self,
@@ -130,14 +130,14 @@ class DebuggerClient:
         session_id: str | None = None,
     ) -> EvaluateOnCallFrameResult:
         params = EvaluateOnCallFrameParams(
-            callFrameId=call_frame_id,
+            call_frame_id=call_frame_id,
             expression=expression,
-            objectGroup=object_group,
-            includeCommandLineAPI=include_command_line_a_p_i,
+            object_group=object_group,
+            include_command_line_a_p_i=include_command_line_a_p_i,
             silent=silent,
-            returnByValue=return_by_value,
-            generatePreview=generate_preview,
-            throwOnSideEffect=throw_on_side_effect,
+            return_by_value=return_by_value,
+            generate_preview=generate_preview,
+            throw_on_side_effect=throw_on_side_effect,
             timeout=timeout,
         )
 
@@ -146,7 +146,7 @@ class DebuggerClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return EvaluateOnCallFrameResult.model_validate(result)
+        return EvaluateOnCallFrameResult.from_cdp(result)
 
     async def get_possible_breakpoints(
         self,
@@ -157,7 +157,7 @@ class DebuggerClient:
         session_id: str | None = None,
     ) -> GetPossibleBreakpointsResult:
         params = GetPossibleBreakpointsParams(
-            start=start, end=end, restrictToFunction=restrict_to_function
+            start=start, end=end, restrict_to_function=restrict_to_function
         )
 
         result = await self._client.send_raw(
@@ -165,7 +165,7 @@ class DebuggerClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetPossibleBreakpointsResult.model_validate(result)
+        return GetPossibleBreakpointsResult.from_cdp(result)
 
     async def get_script_source(
         self,
@@ -173,14 +173,14 @@ class DebuggerClient:
         script_id: Runtime.ScriptId,
         session_id: str | None = None,
     ) -> GetScriptSourceResult:
-        params = GetScriptSourceParams(scriptId=script_id)
+        params = GetScriptSourceParams(script_id=script_id)
 
         result = await self._client.send_raw(
             method=DebuggerCommand.GET_SCRIPT_SOURCE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetScriptSourceResult.model_validate(result)
+        return GetScriptSourceResult.from_cdp(result)
 
     async def disassemble_wasm_module(
         self,
@@ -188,14 +188,14 @@ class DebuggerClient:
         script_id: Runtime.ScriptId,
         session_id: str | None = None,
     ) -> DisassembleWasmModuleResult:
-        params = DisassembleWasmModuleParams(scriptId=script_id)
+        params = DisassembleWasmModuleParams(script_id=script_id)
 
         result = await self._client.send_raw(
             method=DebuggerCommand.DISASSEMBLE_WASM_MODULE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return DisassembleWasmModuleResult.model_validate(result)
+        return DisassembleWasmModuleResult.from_cdp(result)
 
     async def next_wasm_disassembly_chunk(
         self,
@@ -203,14 +203,14 @@ class DebuggerClient:
         stream_id: str,
         session_id: str | None = None,
     ) -> NextWasmDisassemblyChunkResult:
-        params = NextWasmDisassemblyChunkParams(streamId=stream_id)
+        params = NextWasmDisassemblyChunkParams(stream_id=stream_id)
 
         result = await self._client.send_raw(
             method=DebuggerCommand.NEXT_WASM_DISASSEMBLY_CHUNK,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return NextWasmDisassemblyChunkResult.model_validate(result)
+        return NextWasmDisassemblyChunkResult.from_cdp(result)
 
     async def get_wasm_bytecode(
         self,
@@ -218,14 +218,14 @@ class DebuggerClient:
         script_id: Runtime.ScriptId,
         session_id: str | None = None,
     ) -> GetWasmBytecodeResult:
-        params = GetWasmBytecodeParams(scriptId=script_id)
+        params = GetWasmBytecodeParams(script_id=script_id)
 
         result = await self._client.send_raw(
             method=DebuggerCommand.GET_WASM_BYTECODE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetWasmBytecodeResult.model_validate(result)
+        return GetWasmBytecodeResult.from_cdp(result)
 
     async def get_stack_trace(
         self,
@@ -233,14 +233,14 @@ class DebuggerClient:
         stack_trace_id: Runtime.StackTraceId,
         session_id: str | None = None,
     ) -> GetStackTraceResult:
-        params = GetStackTraceParams(stackTraceId=stack_trace_id)
+        params = GetStackTraceParams(stack_trace_id=stack_trace_id)
 
         result = await self._client.send_raw(
             method=DebuggerCommand.GET_STACK_TRACE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetStackTraceResult.model_validate(result)
+        return GetStackTraceResult.from_cdp(result)
 
     async def pause(
         self,
@@ -259,7 +259,7 @@ class DebuggerClient:
         parent_stack_trace_id: Runtime.StackTraceId,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = PauseOnAsyncCallParams(parentStackTraceId=parent_stack_trace_id)
+        params = PauseOnAsyncCallParams(parent_stack_trace_id=parent_stack_trace_id)
 
         result = await self._client.send_raw(
             method=DebuggerCommand.PAUSE_ON_ASYNC_CALL,
@@ -274,7 +274,7 @@ class DebuggerClient:
         breakpoint_id: BreakpointId,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = RemoveBreakpointParams(breakpointId=breakpoint_id)
+        params = RemoveBreakpointParams(breakpoint_id=breakpoint_id)
 
         result = await self._client.send_raw(
             method=DebuggerCommand.REMOVE_BREAKPOINT,
@@ -290,14 +290,14 @@ class DebuggerClient:
         mode: Literal["StepInto"] | None = None,
         session_id: str | None = None,
     ) -> RestartFrameResult:
-        params = RestartFrameParams(callFrameId=call_frame_id, mode=mode)
+        params = RestartFrameParams(call_frame_id=call_frame_id, mode=mode)
 
         result = await self._client.send_raw(
             method=DebuggerCommand.RESTART_FRAME,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return RestartFrameResult.model_validate(result)
+        return RestartFrameResult.from_cdp(result)
 
     async def resume(
         self,
@@ -305,7 +305,7 @@ class DebuggerClient:
         terminate_on_resume: bool | None = None,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = ResumeParams(terminateOnResume=terminate_on_resume)
+        params = ResumeParams(terminate_on_resume=terminate_on_resume)
 
         result = await self._client.send_raw(
             method=DebuggerCommand.RESUME,
@@ -324,10 +324,10 @@ class DebuggerClient:
         session_id: str | None = None,
     ) -> SearchInContentResult:
         params = SearchInContentParams(
-            scriptId=script_id,
+            script_id=script_id,
             query=query,
-            caseSensitive=case_sensitive,
-            isRegex=is_regex,
+            case_sensitive=case_sensitive,
+            is_regex=is_regex,
         )
 
         result = await self._client.send_raw(
@@ -335,7 +335,7 @@ class DebuggerClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return SearchInContentResult.model_validate(result)
+        return SearchInContentResult.from_cdp(result)
 
     async def set_async_call_stack_depth(
         self,
@@ -343,7 +343,7 @@ class DebuggerClient:
         max_depth: int,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = SetAsyncCallStackDepthParams(maxDepth=max_depth)
+        params = SetAsyncCallStackDepthParams(max_depth=max_depth)
 
         result = await self._client.send_raw(
             method=DebuggerCommand.SET_ASYNC_CALL_STACK_DEPTH,
@@ -358,7 +358,7 @@ class DebuggerClient:
         unique_ids: list[str],
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = SetBlackboxExecutionContextsParams(uniqueIds=unique_ids)
+        params = SetBlackboxExecutionContextsParams(unique_ids=unique_ids)
 
         result = await self._client.send_raw(
             method=DebuggerCommand.SET_BLACKBOX_EXECUTION_CONTEXTS,
@@ -375,7 +375,7 @@ class DebuggerClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = SetBlackboxPatternsParams(
-            patterns=patterns, skipAnonymous=skip_anonymous
+            patterns=patterns, skip_anonymous=skip_anonymous
         )
 
         result = await self._client.send_raw(
@@ -392,7 +392,7 @@ class DebuggerClient:
         positions: list[ScriptPosition],
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = SetBlackboxedRangesParams(scriptId=script_id, positions=positions)
+        params = SetBlackboxedRangesParams(script_id=script_id, positions=positions)
 
         result = await self._client.send_raw(
             method=DebuggerCommand.SET_BLACKBOXED_RANGES,
@@ -415,7 +415,7 @@ class DebuggerClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return SetBreakpointResult.model_validate(result)
+        return SetBreakpointResult.from_cdp(result)
 
     async def set_instrumentation_breakpoint(
         self,
@@ -432,7 +432,7 @@ class DebuggerClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return SetInstrumentationBreakpointResult.model_validate(result)
+        return SetInstrumentationBreakpointResult.from_cdp(result)
 
     async def set_breakpoint_by_url(
         self,
@@ -446,11 +446,11 @@ class DebuggerClient:
         session_id: str | None = None,
     ) -> SetBreakpointByUrlResult:
         params = SetBreakpointByUrlParams(
-            lineNumber=line_number,
+            line_number=line_number,
             url=url,
-            urlRegex=url_regex,
-            scriptHash=script_hash,
-            columnNumber=column_number,
+            url_regex=url_regex,
+            script_hash=script_hash,
+            column_number=column_number,
             condition=condition,
         )
 
@@ -459,7 +459,7 @@ class DebuggerClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return SetBreakpointByUrlResult.model_validate(result)
+        return SetBreakpointByUrlResult.from_cdp(result)
 
     async def set_breakpoint_on_function_call(
         self,
@@ -469,7 +469,7 @@ class DebuggerClient:
         session_id: str | None = None,
     ) -> SetBreakpointOnFunctionCallResult:
         params = SetBreakpointOnFunctionCallParams(
-            objectId=object_id, condition=condition
+            object_id=object_id, condition=condition
         )
 
         result = await self._client.send_raw(
@@ -477,7 +477,7 @@ class DebuggerClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return SetBreakpointOnFunctionCallResult.model_validate(result)
+        return SetBreakpointOnFunctionCallResult.from_cdp(result)
 
     async def set_breakpoints_active(
         self,
@@ -515,7 +515,7 @@ class DebuggerClient:
         new_value: Runtime.CallArgument,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = SetReturnValueParams(newValue=new_value)
+        params = SetReturnValueParams(new_value=new_value)
 
         result = await self._client.send_raw(
             method=DebuggerCommand.SET_RETURN_VALUE,
@@ -534,10 +534,10 @@ class DebuggerClient:
         session_id: str | None = None,
     ) -> SetScriptSourceResult:
         params = SetScriptSourceParams(
-            scriptId=script_id,
-            scriptSource=script_source,
-            dryRun=dry_run,
-            allowTopFrameEditing=allow_top_frame_editing,
+            script_id=script_id,
+            script_source=script_source,
+            dry_run=dry_run,
+            allow_top_frame_editing=allow_top_frame_editing,
         )
 
         result = await self._client.send_raw(
@@ -545,7 +545,7 @@ class DebuggerClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return SetScriptSourceResult.model_validate(result)
+        return SetScriptSourceResult.from_cdp(result)
 
     async def set_skip_all_pauses(
         self,
@@ -572,10 +572,10 @@ class DebuggerClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = SetVariableValueParams(
-            scopeNumber=scope_number,
-            variableName=variable_name,
-            newValue=new_value,
-            callFrameId=call_frame_id,
+            scope_number=scope_number,
+            variable_name=variable_name,
+            new_value=new_value,
+            call_frame_id=call_frame_id,
         )
 
         result = await self._client.send_raw(
@@ -593,7 +593,7 @@ class DebuggerClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = StepIntoParams(
-            breakOnAsyncCall=break_on_async_call, skipList=skip_list
+            break_on_async_call=break_on_async_call, skip_list=skip_list
         )
 
         result = await self._client.send_raw(
@@ -620,7 +620,7 @@ class DebuggerClient:
         skip_list: list[LocationRange] | None = None,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = StepOverParams(skipList=skip_list)
+        params = StepOverParams(skip_list=skip_list)
 
         result = await self._client.send_raw(
             method=DebuggerCommand.STEP_OVER,

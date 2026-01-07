@@ -3,7 +3,8 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Literal, TYPE_CHECKING
-from cdpify.domains.base import CDPModel
+from dataclasses import dataclass
+from cdpify.domains.shared import CDPModel
 
 if TYPE_CHECKING:
     from cdpify.domains import runtime
@@ -19,6 +20,7 @@ Call frame identifier.
 CallFrameId = str
 
 
+@dataclass(kw_only=True)
 class Location(CDPModel):
     """
     Location in the source code.
@@ -26,9 +28,10 @@ class Location(CDPModel):
 
     script_id: runtime.ScriptId
     line_number: int
-    column_number: int | None = None
+    column_number: int | None | None = None
 
 
+@dataclass(kw_only=True)
 class ScriptPosition(CDPModel):
     """
     Location in the source code.
@@ -38,6 +41,7 @@ class ScriptPosition(CDPModel):
     column_number: int
 
 
+@dataclass(kw_only=True)
 class LocationRange(CDPModel):
     """
     Location range within one script.
@@ -48,6 +52,7 @@ class LocationRange(CDPModel):
     end: ScriptPosition
 
 
+@dataclass(kw_only=True)
 class CallFrame(CDPModel):
     """
     JavaScript call frame. Array of call frames form the call stack.
@@ -55,15 +60,16 @@ class CallFrame(CDPModel):
 
     call_frame_id: CallFrameId
     function_name: str
-    function_location: Location | None = None
+    function_location: Location | None | None = None
     location: Location
     url: str
     scope_chain: list[Scope]
     this: runtime.RemoteObject
     return_value: runtime.RemoteObject | None = None
-    can_be_restarted: bool | None = None
+    can_be_restarted: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class Scope(CDPModel):
     """
     Scope description.
@@ -82,11 +88,12 @@ class Scope(CDPModel):
         "wasm-expression-stack",
     ]
     object: runtime.RemoteObject
-    name: str | None = None
-    start_location: Location | None = None
-    end_location: Location | None = None
+    name: str | None | None = None
+    start_location: Location | None | None = None
+    end_location: Location | None | None = None
 
 
+@dataclass(kw_only=True)
 class SearchMatch(CDPModel):
     """
     Search match for resource.
@@ -96,13 +103,15 @@ class SearchMatch(CDPModel):
     line_content: str
 
 
+@dataclass(kw_only=True)
 class BreakLocation(CDPModel):
     script_id: runtime.ScriptId
     line_number: int
-    column_number: int | None = None
-    type: Literal["debuggerStatement", "call", "return"] | None = None
+    column_number: int | None | None = None
+    type: Literal["debuggerStatement", "call", "return"] | None | None = None
 
 
+@dataclass(kw_only=True)
 class WasmDisassemblyChunk(CDPModel):
     lines: list[str]
     bytecode_offsets: list[int]
@@ -114,15 +123,17 @@ Enum of possible script languages.
 ScriptLanguage = Literal["JavaScript", "WebAssembly"]
 
 
+@dataclass(kw_only=True)
 class DebugSymbols(CDPModel):
     """
     Debug symbols available for a wasm script.
     """
 
     type: Literal["SourceMap", "EmbeddedDWARF", "ExternalDWARF"]
-    external_u_r_l: str | None = None
+    external_u_r_l: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class ResolvedBreakpoint(CDPModel):
     breakpoint_id: BreakpointId
     location: Location

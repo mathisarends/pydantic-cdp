@@ -44,11 +44,11 @@ class IndexedDBClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = ClearObjectStoreParams(
-            securityOrigin=security_origin,
-            storageKey=storage_key,
-            storageBucket=storage_bucket,
-            databaseName=database_name,
-            objectStoreName=object_store_name,
+            security_origin=security_origin,
+            storage_key=storage_key,
+            storage_bucket=storage_bucket,
+            database_name=database_name,
+            object_store_name=object_store_name,
         )
 
         result = await self._client.send_raw(
@@ -68,10 +68,10 @@ class IndexedDBClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = DeleteDatabaseParams(
-            securityOrigin=security_origin,
-            storageKey=storage_key,
-            storageBucket=storage_bucket,
-            databaseName=database_name,
+            security_origin=security_origin,
+            storage_key=storage_key,
+            storage_bucket=storage_bucket,
+            database_name=database_name,
         )
 
         result = await self._client.send_raw(
@@ -93,12 +93,12 @@ class IndexedDBClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = DeleteObjectStoreEntriesParams(
-            securityOrigin=security_origin,
-            storageKey=storage_key,
-            storageBucket=storage_bucket,
-            databaseName=database_name,
-            objectStoreName=object_store_name,
-            keyRange=key_range,
+            security_origin=security_origin,
+            storage_key=storage_key,
+            storage_bucket=storage_bucket,
+            database_name=database_name,
+            object_store_name=object_store_name,
+            key_range=key_range,
         )
 
         result = await self._client.send_raw(
@@ -145,15 +145,15 @@ class IndexedDBClient:
         session_id: str | None = None,
     ) -> RequestDataResult:
         params = RequestDataParams(
-            securityOrigin=security_origin,
-            storageKey=storage_key,
-            storageBucket=storage_bucket,
-            databaseName=database_name,
-            objectStoreName=object_store_name,
-            indexName=index_name,
-            skipCount=skip_count,
-            pageSize=page_size,
-            keyRange=key_range,
+            security_origin=security_origin,
+            storage_key=storage_key,
+            storage_bucket=storage_bucket,
+            database_name=database_name,
+            object_store_name=object_store_name,
+            index_name=index_name,
+            skip_count=skip_count,
+            page_size=page_size,
+            key_range=key_range,
         )
 
         result = await self._client.send_raw(
@@ -161,7 +161,7 @@ class IndexedDBClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return RequestDataResult.model_validate(result)
+        return RequestDataResult.from_cdp(result)
 
     async def get_metadata(
         self,
@@ -174,11 +174,11 @@ class IndexedDBClient:
         session_id: str | None = None,
     ) -> GetMetadataResult:
         params = GetMetadataParams(
-            securityOrigin=security_origin,
-            storageKey=storage_key,
-            storageBucket=storage_bucket,
-            databaseName=database_name,
-            objectStoreName=object_store_name,
+            security_origin=security_origin,
+            storage_key=storage_key,
+            storage_bucket=storage_bucket,
+            database_name=database_name,
+            object_store_name=object_store_name,
         )
 
         result = await self._client.send_raw(
@@ -186,7 +186,7 @@ class IndexedDBClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetMetadataResult.model_validate(result)
+        return GetMetadataResult.from_cdp(result)
 
     async def request_database(
         self,
@@ -198,10 +198,10 @@ class IndexedDBClient:
         session_id: str | None = None,
     ) -> RequestDatabaseResult:
         params = RequestDatabaseParams(
-            securityOrigin=security_origin,
-            storageKey=storage_key,
-            storageBucket=storage_bucket,
-            databaseName=database_name,
+            security_origin=security_origin,
+            storage_key=storage_key,
+            storage_bucket=storage_bucket,
+            database_name=database_name,
         )
 
         result = await self._client.send_raw(
@@ -209,7 +209,7 @@ class IndexedDBClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return RequestDatabaseResult.model_validate(result)
+        return RequestDatabaseResult.from_cdp(result)
 
     async def request_database_names(
         self,
@@ -220,9 +220,9 @@ class IndexedDBClient:
         session_id: str | None = None,
     ) -> RequestDatabaseNamesResult:
         params = RequestDatabaseNamesParams(
-            securityOrigin=security_origin,
-            storageKey=storage_key,
-            storageBucket=storage_bucket,
+            security_origin=security_origin,
+            storage_key=storage_key,
+            storage_bucket=storage_bucket,
         )
 
         result = await self._client.send_raw(
@@ -230,4 +230,4 @@ class IndexedDBClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return RequestDatabaseNamesResult.model_validate(result)
+        return RequestDatabaseNamesResult.from_cdp(result)

@@ -3,8 +3,9 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import TYPE_CHECKING
+from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.domains.base import CDPModel
+from cdpify.domains.shared import CDPModel
 
 from .types import *
 
@@ -21,15 +22,17 @@ class CSSEvent(StrEnum):
     COMPUTED_STYLE_UPDATED = "CSS.computedStyleUpdated"
 
 
+@dataclass(kw_only=True)
 class FontsUpdatedEvent(CDPModel):
     """
     Fires whenever a web font is updated. A non-empty font parameter indicates a
     successfully loaded web font.
     """
 
-    font: FontFace | None = None
+    font: FontFace | None | None = None
 
 
+@dataclass(kw_only=True)
 class MediaQueryResultChangedEvent(CDPModel):
     """
     Fires whenever a MediaQuery result changes (for example, after a browser window has
@@ -40,6 +43,7 @@ class MediaQueryResultChangedEvent(CDPModel):
     pass
 
 
+@dataclass(kw_only=True)
 class StyleSheetAddedEvent(CDPModel):
     """
     Fired whenever an active document stylesheet is added.
@@ -48,6 +52,7 @@ class StyleSheetAddedEvent(CDPModel):
     header: CSSStyleSheetHeader
 
 
+@dataclass(kw_only=True)
 class StyleSheetChangedEvent(CDPModel):
     """
     Fired whenever a stylesheet is changed as a result of the client operation.
@@ -56,6 +61,7 @@ class StyleSheetChangedEvent(CDPModel):
     style_sheet_id: dom.StyleSheetId
 
 
+@dataclass(kw_only=True)
 class StyleSheetRemovedEvent(CDPModel):
     """
     Fired whenever an active document stylesheet is removed.
@@ -64,5 +70,6 @@ class StyleSheetRemovedEvent(CDPModel):
     style_sheet_id: dom.StyleSheetId
 
 
+@dataclass(kw_only=True)
 class ComputedStyleUpdatedEvent(CDPModel):
     node_id: dom.NodeId

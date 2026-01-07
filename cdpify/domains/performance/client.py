@@ -38,7 +38,7 @@ class PerformanceClient:
         time_domain: Literal["timeTicks", "threadTicks"] | None = None,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = EnableParams(timeDomain=time_domain)
+        params = EnableParams(time_domain=time_domain)
 
         result = await self._client.send_raw(
             method=PerformanceCommand.ENABLE,
@@ -53,7 +53,7 @@ class PerformanceClient:
         time_domain: Literal["timeTicks", "threadTicks"],
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = SetTimeDomainParams(timeDomain=time_domain)
+        params = SetTimeDomainParams(time_domain=time_domain)
 
         result = await self._client.send_raw(
             method=PerformanceCommand.SET_TIME_DOMAIN,
@@ -71,4 +71,4 @@ class PerformanceClient:
             params=None,
             session_id=session_id,
         )
-        return GetMetricsResult.model_validate(result)
+        return GetMetricsResult.from_cdp(result)

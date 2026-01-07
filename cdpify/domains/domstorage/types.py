@@ -3,18 +3,20 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Any
-from cdpify.domains.base import CDPModel
+from dataclasses import dataclass
+from cdpify.domains.shared import CDPModel
 
 SerializedStorageKey = str
 
 
+@dataclass(kw_only=True)
 class StorageId(CDPModel):
     """
     DOM Storage identifier.
     """
 
-    security_origin: str | None = None
-    storage_key: SerializedStorageKey | None = None
+    security_origin: str | None | None = None
+    storage_key: SerializedStorageKey | None | None = None
     is_local_storage: bool
 
 

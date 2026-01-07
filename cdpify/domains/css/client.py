@@ -91,10 +91,10 @@ class CSSClient:
         session_id: str | None = None,
     ) -> AddRuleResult:
         params = AddRuleParams(
-            styleSheetId=style_sheet_id,
-            ruleText=rule_text,
+            style_sheet_id=style_sheet_id,
+            rule_text=rule_text,
             location=location,
-            nodeForPropertySyntaxValidation=node_for_property_syntax_validation,
+            node_for_property_syntax_validation=node_for_property_syntax_validation,
         )
 
         result = await self._client.send_raw(
@@ -102,7 +102,7 @@ class CSSClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return AddRuleResult.model_validate(result)
+        return AddRuleResult.from_cdp(result)
 
     async def collect_class_names(
         self,
@@ -110,14 +110,14 @@ class CSSClient:
         style_sheet_id: DOM.StyleSheetId,
         session_id: str | None = None,
     ) -> CollectClassNamesResult:
-        params = CollectClassNamesParams(styleSheetId=style_sheet_id)
+        params = CollectClassNamesParams(style_sheet_id=style_sheet_id)
 
         result = await self._client.send_raw(
             method=CSSCommand.COLLECT_CLASS_NAMES,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return CollectClassNamesResult.model_validate(result)
+        return CollectClassNamesResult.from_cdp(result)
 
     async def create_style_sheet(
         self,
@@ -126,14 +126,14 @@ class CSSClient:
         force: bool | None = None,
         session_id: str | None = None,
     ) -> CreateStyleSheetResult:
-        params = CreateStyleSheetParams(frameId=frame_id, force=force)
+        params = CreateStyleSheetParams(frame_id=frame_id, force=force)
 
         result = await self._client.send_raw(
             method=CSSCommand.CREATE_STYLE_SHEET,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return CreateStyleSheetResult.model_validate(result)
+        return CreateStyleSheetResult.from_cdp(result)
 
     async def disable(
         self,
@@ -165,7 +165,7 @@ class CSSClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = ForcePseudoStateParams(
-            nodeId=node_id, forcedPseudoClasses=forced_pseudo_classes
+            node_id=node_id, forced_pseudo_classes=forced_pseudo_classes
         )
 
         result = await self._client.send_raw(
@@ -182,7 +182,7 @@ class CSSClient:
         forced: bool,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = ForceStartingStyleParams(nodeId=node_id, forced=forced)
+        params = ForceStartingStyleParams(node_id=node_id, forced=forced)
 
         result = await self._client.send_raw(
             method=CSSCommand.FORCE_STARTING_STYLE,
@@ -197,14 +197,14 @@ class CSSClient:
         node_id: DOM.NodeId,
         session_id: str | None = None,
     ) -> GetBackgroundColorsResult:
-        params = GetBackgroundColorsParams(nodeId=node_id)
+        params = GetBackgroundColorsParams(node_id=node_id)
 
         result = await self._client.send_raw(
             method=CSSCommand.GET_BACKGROUND_COLORS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetBackgroundColorsResult.model_validate(result)
+        return GetBackgroundColorsResult.from_cdp(result)
 
     async def get_computed_style_for_node(
         self,
@@ -212,14 +212,14 @@ class CSSClient:
         node_id: DOM.NodeId,
         session_id: str | None = None,
     ) -> GetComputedStyleForNodeResult:
-        params = GetComputedStyleForNodeParams(nodeId=node_id)
+        params = GetComputedStyleForNodeParams(node_id=node_id)
 
         result = await self._client.send_raw(
             method=CSSCommand.GET_COMPUTED_STYLE_FOR_NODE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetComputedStyleForNodeResult.model_validate(result)
+        return GetComputedStyleForNodeResult.from_cdp(result)
 
     async def resolve_values(
         self,
@@ -233,10 +233,10 @@ class CSSClient:
     ) -> ResolveValuesResult:
         params = ResolveValuesParams(
             values=values,
-            nodeId=node_id,
-            propertyName=property_name,
-            pseudoType=pseudo_type,
-            pseudoIdentifier=pseudo_identifier,
+            node_id=node_id,
+            property_name=property_name,
+            pseudo_type=pseudo_type,
+            pseudo_identifier=pseudo_identifier,
         )
 
         result = await self._client.send_raw(
@@ -244,7 +244,7 @@ class CSSClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return ResolveValuesResult.model_validate(result)
+        return ResolveValuesResult.from_cdp(result)
 
     async def get_longhand_properties(
         self,
@@ -253,14 +253,14 @@ class CSSClient:
         value: str,
         session_id: str | None = None,
     ) -> GetLonghandPropertiesResult:
-        params = GetLonghandPropertiesParams(shorthandName=shorthand_name, value=value)
+        params = GetLonghandPropertiesParams(shorthand_name=shorthand_name, value=value)
 
         result = await self._client.send_raw(
             method=CSSCommand.GET_LONGHAND_PROPERTIES,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetLonghandPropertiesResult.model_validate(result)
+        return GetLonghandPropertiesResult.from_cdp(result)
 
     async def get_inline_styles_for_node(
         self,
@@ -268,14 +268,14 @@ class CSSClient:
         node_id: DOM.NodeId,
         session_id: str | None = None,
     ) -> GetInlineStylesForNodeResult:
-        params = GetInlineStylesForNodeParams(nodeId=node_id)
+        params = GetInlineStylesForNodeParams(node_id=node_id)
 
         result = await self._client.send_raw(
             method=CSSCommand.GET_INLINE_STYLES_FOR_NODE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetInlineStylesForNodeResult.model_validate(result)
+        return GetInlineStylesForNodeResult.from_cdp(result)
 
     async def get_animated_styles_for_node(
         self,
@@ -283,14 +283,14 @@ class CSSClient:
         node_id: DOM.NodeId,
         session_id: str | None = None,
     ) -> GetAnimatedStylesForNodeResult:
-        params = GetAnimatedStylesForNodeParams(nodeId=node_id)
+        params = GetAnimatedStylesForNodeParams(node_id=node_id)
 
         result = await self._client.send_raw(
             method=CSSCommand.GET_ANIMATED_STYLES_FOR_NODE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetAnimatedStylesForNodeResult.model_validate(result)
+        return GetAnimatedStylesForNodeResult.from_cdp(result)
 
     async def get_matched_styles_for_node(
         self,
@@ -298,14 +298,14 @@ class CSSClient:
         node_id: DOM.NodeId,
         session_id: str | None = None,
     ) -> GetMatchedStylesForNodeResult:
-        params = GetMatchedStylesForNodeParams(nodeId=node_id)
+        params = GetMatchedStylesForNodeParams(node_id=node_id)
 
         result = await self._client.send_raw(
             method=CSSCommand.GET_MATCHED_STYLES_FOR_NODE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetMatchedStylesForNodeResult.model_validate(result)
+        return GetMatchedStylesForNodeResult.from_cdp(result)
 
     async def get_environment_variables(
         self,
@@ -316,7 +316,7 @@ class CSSClient:
             params=None,
             session_id=session_id,
         )
-        return GetEnvironmentVariablesResult.model_validate(result)
+        return GetEnvironmentVariablesResult.from_cdp(result)
 
     async def get_media_queries(
         self,
@@ -327,7 +327,7 @@ class CSSClient:
             params=None,
             session_id=session_id,
         )
-        return GetMediaQueriesResult.model_validate(result)
+        return GetMediaQueriesResult.from_cdp(result)
 
     async def get_platform_fonts_for_node(
         self,
@@ -335,14 +335,14 @@ class CSSClient:
         node_id: DOM.NodeId,
         session_id: str | None = None,
     ) -> GetPlatformFontsForNodeResult:
-        params = GetPlatformFontsForNodeParams(nodeId=node_id)
+        params = GetPlatformFontsForNodeParams(node_id=node_id)
 
         result = await self._client.send_raw(
             method=CSSCommand.GET_PLATFORM_FONTS_FOR_NODE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetPlatformFontsForNodeResult.model_validate(result)
+        return GetPlatformFontsForNodeResult.from_cdp(result)
 
     async def get_style_sheet_text(
         self,
@@ -350,14 +350,14 @@ class CSSClient:
         style_sheet_id: DOM.StyleSheetId,
         session_id: str | None = None,
     ) -> GetStyleSheetTextResult:
-        params = GetStyleSheetTextParams(styleSheetId=style_sheet_id)
+        params = GetStyleSheetTextParams(style_sheet_id=style_sheet_id)
 
         result = await self._client.send_raw(
             method=CSSCommand.GET_STYLE_SHEET_TEXT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetStyleSheetTextResult.model_validate(result)
+        return GetStyleSheetTextResult.from_cdp(result)
 
     async def get_layers_for_node(
         self,
@@ -365,14 +365,14 @@ class CSSClient:
         node_id: DOM.NodeId,
         session_id: str | None = None,
     ) -> GetLayersForNodeResult:
-        params = GetLayersForNodeParams(nodeId=node_id)
+        params = GetLayersForNodeParams(node_id=node_id)
 
         result = await self._client.send_raw(
             method=CSSCommand.GET_LAYERS_FOR_NODE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetLayersForNodeResult.model_validate(result)
+        return GetLayersForNodeResult.from_cdp(result)
 
     async def get_location_for_selector(
         self,
@@ -382,7 +382,7 @@ class CSSClient:
         session_id: str | None = None,
     ) -> GetLocationForSelectorResult:
         params = GetLocationForSelectorParams(
-            styleSheetId=style_sheet_id, selectorText=selector_text
+            style_sheet_id=style_sheet_id, selector_text=selector_text
         )
 
         result = await self._client.send_raw(
@@ -390,7 +390,7 @@ class CSSClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetLocationForSelectorResult.model_validate(result)
+        return GetLocationForSelectorResult.from_cdp(result)
 
     async def track_computed_style_updates_for_node(
         self,
@@ -398,7 +398,7 @@ class CSSClient:
         node_id: DOM.NodeId | None = None,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = TrackComputedStyleUpdatesForNodeParams(nodeId=node_id)
+        params = TrackComputedStyleUpdatesForNodeParams(node_id=node_id)
 
         result = await self._client.send_raw(
             method=CSSCommand.TRACK_COMPUTED_STYLE_UPDATES_FOR_NODE,
@@ -413,7 +413,9 @@ class CSSClient:
         properties_to_track: list[CSSComputedStyleProperty],
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = TrackComputedStyleUpdatesParams(propertiesToTrack=properties_to_track)
+        params = TrackComputedStyleUpdatesParams(
+            properties_to_track=properties_to_track
+        )
 
         result = await self._client.send_raw(
             method=CSSCommand.TRACK_COMPUTED_STYLE_UPDATES,
@@ -431,7 +433,7 @@ class CSSClient:
             params=None,
             session_id=session_id,
         )
-        return TakeComputedStyleUpdatesResult.model_validate(result)
+        return TakeComputedStyleUpdatesResult.from_cdp(result)
 
     async def set_effective_property_value_for_node(
         self,
@@ -442,7 +444,7 @@ class CSSClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = SetEffectivePropertyValueForNodeParams(
-            nodeId=node_id, propertyName=property_name, value=value
+            node_id=node_id, property_name=property_name, value=value
         )
 
         result = await self._client.send_raw(
@@ -461,7 +463,7 @@ class CSSClient:
         session_id: str | None = None,
     ) -> SetPropertyRulePropertyNameResult:
         params = SetPropertyRulePropertyNameParams(
-            styleSheetId=style_sheet_id, range=range, propertyName=property_name
+            style_sheet_id=style_sheet_id, range=range, property_name=property_name
         )
 
         result = await self._client.send_raw(
@@ -469,7 +471,7 @@ class CSSClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return SetPropertyRulePropertyNameResult.model_validate(result)
+        return SetPropertyRulePropertyNameResult.from_cdp(result)
 
     async def set_keyframe_key(
         self,
@@ -480,7 +482,7 @@ class CSSClient:
         session_id: str | None = None,
     ) -> SetKeyframeKeyResult:
         params = SetKeyframeKeyParams(
-            styleSheetId=style_sheet_id, range=range, keyText=key_text
+            style_sheet_id=style_sheet_id, range=range, key_text=key_text
         )
 
         result = await self._client.send_raw(
@@ -488,7 +490,7 @@ class CSSClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return SetKeyframeKeyResult.model_validate(result)
+        return SetKeyframeKeyResult.from_cdp(result)
 
     async def set_media_text(
         self,
@@ -498,14 +500,16 @@ class CSSClient:
         text: str,
         session_id: str | None = None,
     ) -> SetMediaTextResult:
-        params = SetMediaTextParams(styleSheetId=style_sheet_id, range=range, text=text)
+        params = SetMediaTextParams(
+            style_sheet_id=style_sheet_id, range=range, text=text
+        )
 
         result = await self._client.send_raw(
             method=CSSCommand.SET_MEDIA_TEXT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return SetMediaTextResult.model_validate(result)
+        return SetMediaTextResult.from_cdp(result)
 
     async def set_container_query_text(
         self,
@@ -516,7 +520,7 @@ class CSSClient:
         session_id: str | None = None,
     ) -> SetContainerQueryTextResult:
         params = SetContainerQueryTextParams(
-            styleSheetId=style_sheet_id, range=range, text=text
+            style_sheet_id=style_sheet_id, range=range, text=text
         )
 
         result = await self._client.send_raw(
@@ -524,7 +528,7 @@ class CSSClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return SetContainerQueryTextResult.model_validate(result)
+        return SetContainerQueryTextResult.from_cdp(result)
 
     async def set_supports_text(
         self,
@@ -535,7 +539,7 @@ class CSSClient:
         session_id: str | None = None,
     ) -> SetSupportsTextResult:
         params = SetSupportsTextParams(
-            styleSheetId=style_sheet_id, range=range, text=text
+            style_sheet_id=style_sheet_id, range=range, text=text
         )
 
         result = await self._client.send_raw(
@@ -543,7 +547,7 @@ class CSSClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return SetSupportsTextResult.model_validate(result)
+        return SetSupportsTextResult.from_cdp(result)
 
     async def set_scope_text(
         self,
@@ -553,14 +557,16 @@ class CSSClient:
         text: str,
         session_id: str | None = None,
     ) -> SetScopeTextResult:
-        params = SetScopeTextParams(styleSheetId=style_sheet_id, range=range, text=text)
+        params = SetScopeTextParams(
+            style_sheet_id=style_sheet_id, range=range, text=text
+        )
 
         result = await self._client.send_raw(
             method=CSSCommand.SET_SCOPE_TEXT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return SetScopeTextResult.model_validate(result)
+        return SetScopeTextResult.from_cdp(result)
 
     async def set_rule_selector(
         self,
@@ -571,7 +577,7 @@ class CSSClient:
         session_id: str | None = None,
     ) -> SetRuleSelectorResult:
         params = SetRuleSelectorParams(
-            styleSheetId=style_sheet_id, range=range, selector=selector
+            style_sheet_id=style_sheet_id, range=range, selector=selector
         )
 
         result = await self._client.send_raw(
@@ -579,7 +585,7 @@ class CSSClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return SetRuleSelectorResult.model_validate(result)
+        return SetRuleSelectorResult.from_cdp(result)
 
     async def set_style_sheet_text(
         self,
@@ -588,14 +594,14 @@ class CSSClient:
         text: str,
         session_id: str | None = None,
     ) -> SetStyleSheetTextResult:
-        params = SetStyleSheetTextParams(styleSheetId=style_sheet_id, text=text)
+        params = SetStyleSheetTextParams(style_sheet_id=style_sheet_id, text=text)
 
         result = await self._client.send_raw(
             method=CSSCommand.SET_STYLE_SHEET_TEXT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return SetStyleSheetTextResult.model_validate(result)
+        return SetStyleSheetTextResult.from_cdp(result)
 
     async def set_style_texts(
         self,
@@ -606,7 +612,7 @@ class CSSClient:
     ) -> SetStyleTextsResult:
         params = SetStyleTextsParams(
             edits=edits,
-            nodeForPropertySyntaxValidation=node_for_property_syntax_validation,
+            node_for_property_syntax_validation=node_for_property_syntax_validation,
         )
 
         result = await self._client.send_raw(
@@ -614,7 +620,7 @@ class CSSClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return SetStyleTextsResult.model_validate(result)
+        return SetStyleTextsResult.from_cdp(result)
 
     async def start_rule_usage_tracking(
         self,
@@ -636,7 +642,7 @@ class CSSClient:
             params=None,
             session_id=session_id,
         )
-        return StopRuleUsageTrackingResult.model_validate(result)
+        return StopRuleUsageTrackingResult.from_cdp(result)
 
     async def take_coverage_delta(
         self,
@@ -647,7 +653,7 @@ class CSSClient:
             params=None,
             session_id=session_id,
         )
-        return TakeCoverageDeltaResult.model_validate(result)
+        return TakeCoverageDeltaResult.from_cdp(result)
 
     async def set_local_fonts_enabled(
         self,

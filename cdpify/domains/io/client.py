@@ -57,7 +57,7 @@ class IOClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return ReadResult.model_validate(result)
+        return ReadResult.from_cdp(result)
 
     async def resolve_blob(
         self,
@@ -65,11 +65,11 @@ class IOClient:
         object_id: Runtime.RemoteObjectId,
         session_id: str | None = None,
     ) -> ResolveBlobResult:
-        params = ResolveBlobParams(objectId=object_id)
+        params = ResolveBlobParams(object_id=object_id)
 
         result = await self._client.send_raw(
             method=IOCommand.RESOLVE_BLOB,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return ResolveBlobResult.model_validate(result)
+        return ResolveBlobResult.from_cdp(result)

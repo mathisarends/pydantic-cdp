@@ -55,7 +55,7 @@ class ProfilerClient:
             params=None,
             session_id=session_id,
         )
-        return GetBestEffortCoverageResult.model_validate(result)
+        return GetBestEffortCoverageResult.from_cdp(result)
 
     async def set_sampling_interval(
         self,
@@ -92,9 +92,9 @@ class ProfilerClient:
         session_id: str | None = None,
     ) -> StartPreciseCoverageResult:
         params = StartPreciseCoverageParams(
-            callCount=call_count,
+            call_count=call_count,
             detailed=detailed,
-            allowTriggeredUpdates=allow_triggered_updates,
+            allow_triggered_updates=allow_triggered_updates,
         )
 
         result = await self._client.send_raw(
@@ -102,7 +102,7 @@ class ProfilerClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return StartPreciseCoverageResult.model_validate(result)
+        return StartPreciseCoverageResult.from_cdp(result)
 
     async def stop(
         self,
@@ -113,7 +113,7 @@ class ProfilerClient:
             params=None,
             session_id=session_id,
         )
-        return StopResult.model_validate(result)
+        return StopResult.from_cdp(result)
 
     async def stop_precise_coverage(
         self,
@@ -135,4 +135,4 @@ class ProfilerClient:
             params=None,
             session_id=session_id,
         )
-        return TakePreciseCoverageResult.model_validate(result)
+        return TakePreciseCoverageResult.from_cdp(result)

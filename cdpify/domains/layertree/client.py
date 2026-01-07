@@ -43,14 +43,14 @@ class LayerTreeClient:
         layer_id: LayerId,
         session_id: str | None = None,
     ) -> CompositingReasonsResult:
-        params = CompositingReasonsParams(layerId=layer_id)
+        params = CompositingReasonsParams(layer_id=layer_id)
 
         result = await self._client.send_raw(
             method=LayerTreeCommand.COMPOSITING_REASONS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return CompositingReasonsResult.model_validate(result)
+        return CompositingReasonsResult.from_cdp(result)
 
     async def disable(
         self,
@@ -87,7 +87,7 @@ class LayerTreeClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return LoadSnapshotResult.model_validate(result)
+        return LoadSnapshotResult.from_cdp(result)
 
     async def make_snapshot(
         self,
@@ -95,14 +95,14 @@ class LayerTreeClient:
         layer_id: LayerId,
         session_id: str | None = None,
     ) -> MakeSnapshotResult:
-        params = MakeSnapshotParams(layerId=layer_id)
+        params = MakeSnapshotParams(layer_id=layer_id)
 
         result = await self._client.send_raw(
             method=LayerTreeCommand.MAKE_SNAPSHOT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return MakeSnapshotResult.model_validate(result)
+        return MakeSnapshotResult.from_cdp(result)
 
     async def profile_snapshot(
         self,
@@ -114,10 +114,10 @@ class LayerTreeClient:
         session_id: str | None = None,
     ) -> ProfileSnapshotResult:
         params = ProfileSnapshotParams(
-            snapshotId=snapshot_id,
-            minRepeatCount=min_repeat_count,
-            minDuration=min_duration,
-            clipRect=clip_rect,
+            snapshot_id=snapshot_id,
+            min_repeat_count=min_repeat_count,
+            min_duration=min_duration,
+            clip_rect=clip_rect,
         )
 
         result = await self._client.send_raw(
@@ -125,7 +125,7 @@ class LayerTreeClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return ProfileSnapshotResult.model_validate(result)
+        return ProfileSnapshotResult.from_cdp(result)
 
     async def release_snapshot(
         self,
@@ -133,7 +133,7 @@ class LayerTreeClient:
         snapshot_id: SnapshotId,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = ReleaseSnapshotParams(snapshotId=snapshot_id)
+        params = ReleaseSnapshotParams(snapshot_id=snapshot_id)
 
         result = await self._client.send_raw(
             method=LayerTreeCommand.RELEASE_SNAPSHOT,
@@ -152,7 +152,7 @@ class LayerTreeClient:
         session_id: str | None = None,
     ) -> ReplaySnapshotResult:
         params = ReplaySnapshotParams(
-            snapshotId=snapshot_id, fromStep=from_step, toStep=to_step, scale=scale
+            snapshot_id=snapshot_id, from_step=from_step, to_step=to_step, scale=scale
         )
 
         result = await self._client.send_raw(
@@ -160,7 +160,7 @@ class LayerTreeClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return ReplaySnapshotResult.model_validate(result)
+        return ReplaySnapshotResult.from_cdp(result)
 
     async def snapshot_command_log(
         self,
@@ -168,11 +168,11 @@ class LayerTreeClient:
         snapshot_id: SnapshotId,
         session_id: str | None = None,
     ) -> SnapshotCommandLogResult:
-        params = SnapshotCommandLogParams(snapshotId=snapshot_id)
+        params = SnapshotCommandLogParams(snapshot_id=snapshot_id)
 
         result = await self._client.send_raw(
             method=LayerTreeCommand.SNAPSHOT_COMMAND_LOG,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return SnapshotCommandLogResult.model_validate(result)
+        return SnapshotCommandLogResult.from_cdp(result)

@@ -3,12 +3,14 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import TYPE_CHECKING
-from cdpify.domains.base import CDPModel
+from dataclasses import dataclass
+from cdpify.domains.shared import CDPModel
 
 if TYPE_CHECKING:
     from cdpify.domains import runtime
 
 
+@dataclass(kw_only=True)
 class ProfileNode(CDPModel):
     """
     Profile node. Holds callsite information, execution statistics and child nodes.
@@ -16,12 +18,13 @@ class ProfileNode(CDPModel):
 
     id: int
     call_frame: runtime.CallFrame
-    hit_count: int | None = None
-    children: list[int] | None = None
-    deopt_reason: str | None = None
-    position_ticks: list[PositionTickInfo] | None = None
+    hit_count: int | None | None = None
+    children: list[int] | None | None = None
+    deopt_reason: str | None | None = None
+    position_ticks: list[PositionTickInfo] | None | None = None
 
 
+@dataclass(kw_only=True)
 class Profile(CDPModel):
     """
     Profile.
@@ -30,10 +33,11 @@ class Profile(CDPModel):
     nodes: list[ProfileNode]
     start_time: float
     end_time: float
-    samples: list[int] | None = None
-    time_deltas: list[int] | None = None
+    samples: list[int] | None | None = None
+    time_deltas: list[int] | None | None = None
 
 
+@dataclass(kw_only=True)
 class PositionTickInfo(CDPModel):
     """
     Specifies a number of samples attributed to a certain source position.
@@ -43,6 +47,7 @@ class PositionTickInfo(CDPModel):
     ticks: int
 
 
+@dataclass(kw_only=True)
 class CoverageRange(CDPModel):
     """
     Coverage data for a source range.
@@ -53,6 +58,7 @@ class CoverageRange(CDPModel):
     count: int
 
 
+@dataclass(kw_only=True)
 class FunctionCoverage(CDPModel):
     """
     Coverage data for a JavaScript function.
@@ -63,6 +69,7 @@ class FunctionCoverage(CDPModel):
     is_block_coverage: bool
 
 
+@dataclass(kw_only=True)
 class ScriptCoverage(CDPModel):
     """
     Coverage data for a JavaScript script.

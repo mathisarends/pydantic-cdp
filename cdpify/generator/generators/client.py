@@ -203,10 +203,10 @@ class ClientGenerator(BaseGenerator):
 
     def _build_params_construction(self, command: Command) -> list[str]:
         param_class = f"{to_pascal_case(command.name)}Params"
-        param_mapping = self._build_param_name_mapping(command)
 
         constructor_args = ", ".join(
-            f"{cdp_name}={kwarg_name}" for cdp_name, kwarg_name in param_mapping.items()
+            f"{to_snake_case(param.name)}={self._resolve_param_name(command, param)}"
+            for param in command.parameters
         )
 
         return [f"params = {param_class}({constructor_args})"]
@@ -246,7 +246,7 @@ class ClientGenerator(BaseGenerator):
     def _build_return_statement(self, command: Command) -> list[str]:
         if command.returns:
             result_class = f"{to_pascal_case(command.name)}Result"
-            return [f"return {result_class}.model_validate(result)"]
+            return [f"return {result_class}.from_cdp(result)"]
         return ["return result"]
 
     def _get_return_type(self, command: Command) -> str:

@@ -35,7 +35,8 @@ class TypesGenerator(BaseGenerator):
         if typing_imports:
             lines.append(typing_imports)
 
-        lines.append("from cdpify.domains.base import CDPModel")
+        lines.append("from dataclasses import dataclass")
+        lines.append("from cdpify.domains.shared import CDPModel")
 
         return "\n".join(lines)
 
@@ -79,7 +80,8 @@ class TypesGenerator(BaseGenerator):
         return "\n".join(lines)
 
     def _create_object_model(self, type_def: TypeDefinition) -> str:
-        lines = [f"class {type_def.id}(CDPModel):"]
+        lines = ["@dataclass(kw_only=True)"]
+        lines.append(f"class {type_def.id}(CDPModel):")
 
         if type_def.description:
             doc = format_docstring(type_def.description, indent=4)
@@ -99,21 +101,18 @@ class TypesGenerator(BaseGenerator):
 
         self._track_type_usage(py_type)
 
-        return f"{field_name}: {py_type}" + (" = None" if param.optional else "")
+        if param.optional:
+            return f"{field_name}: {py_type} | None = None"
+        return f"{field_name}: {py_type}"
 
     def _resolve_type(self, param: Parameter) -> str:
         if param.ref and "." in param.ref:
             parts = param.ref.split(".")
             domain_lower = parts[0].lower()
             type_name = parts[1]
-            base_type = f"{domain_lower}.{type_name}"
-        else:
-            base_type = map_cdp_type(param)
+            return f"{domain_lower}.{type_name}"
 
-        if param.optional and " | None" not in base_type:
-            return f"{base_type} | None"
-
-        return base_type
+        return map_cdp_type(param)
 
     def _create_type_alias(self, type_def: TypeDefinition) -> str:
         lines = []

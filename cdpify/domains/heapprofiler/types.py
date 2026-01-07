@@ -3,7 +3,8 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import TYPE_CHECKING
-from cdpify.domains.base import CDPModel
+from dataclasses import dataclass
+from cdpify.domains.shared import CDPModel
 
 if TYPE_CHECKING:
     from cdpify.domains import runtime
@@ -14,6 +15,7 @@ Heap snapshot object id.
 HeapSnapshotObjectId = str
 
 
+@dataclass(kw_only=True)
 class SamplingHeapProfileNode(CDPModel):
     """
     Sampling Heap Profile node. Holds callsite information, allocation statistics and
@@ -26,6 +28,7 @@ class SamplingHeapProfileNode(CDPModel):
     children: list[SamplingHeapProfileNode]
 
 
+@dataclass(kw_only=True)
 class SamplingHeapProfileSample(CDPModel):
     """
     A single sample from a sampling profile.
@@ -36,6 +39,7 @@ class SamplingHeapProfileSample(CDPModel):
     ordinal: float
 
 
+@dataclass(kw_only=True)
 class SamplingHeapProfile(CDPModel):
     """
     Sampling profile.

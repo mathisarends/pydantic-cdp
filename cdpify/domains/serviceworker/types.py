@@ -3,7 +3,8 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Literal, TYPE_CHECKING
-from cdpify.domains.base import CDPModel
+from dataclasses import dataclass
+from cdpify.domains.shared import CDPModel
 
 if TYPE_CHECKING:
     from cdpify.domains import target
@@ -11,6 +12,7 @@ if TYPE_CHECKING:
 RegistrationID = str
 
 
+@dataclass(kw_only=True)
 class ServiceWorkerRegistration(CDPModel):
     """
     ServiceWorker registration.
@@ -30,6 +32,7 @@ ServiceWorkerVersionStatus = Literal[
 ]
 
 
+@dataclass(kw_only=True)
 class ServiceWorkerVersion(CDPModel):
     """
     ServiceWorker version.
@@ -40,13 +43,14 @@ class ServiceWorkerVersion(CDPModel):
     script_u_r_l: str
     running_status: ServiceWorkerVersionRunningStatus
     status: ServiceWorkerVersionStatus
-    script_last_modified: float | None = None
-    script_response_time: float | None = None
-    controlled_clients: list[target.TargetID] | None = None
+    script_last_modified: float | None | None = None
+    script_response_time: float | None | None = None
+    controlled_clients: list[target.TargetID] | None | None = None
     target_id: target.TargetID | None = None
-    router_rules: str | None = None
+    router_rules: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class ServiceWorkerErrorMessage(CDPModel):
     """
     ServiceWorker error message.

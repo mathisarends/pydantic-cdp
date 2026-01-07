@@ -3,7 +3,8 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Literal, TYPE_CHECKING
-from cdpify.domains.base import CDPModel
+from dataclasses import dataclass
+from cdpify.domains.shared import CDPModel
 
 if TYPE_CHECKING:
     from cdpify.domains import network, serviceworker
@@ -22,6 +23,7 @@ ServiceName = Literal[
 ]
 
 
+@dataclass(kw_only=True)
 class EventMetadata(CDPModel):
     """
     A key-value pair for additional event information to pass along.
@@ -31,6 +33,7 @@ class EventMetadata(CDPModel):
     value: str
 
 
+@dataclass(kw_only=True)
 class BackgroundServiceEvent(CDPModel):
     timestamp: network.TimeSinceEpoch
     origin: str

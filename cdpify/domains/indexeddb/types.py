@@ -3,12 +3,14 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Literal, TYPE_CHECKING
-from cdpify.domains.base import CDPModel
+from dataclasses import dataclass
+from cdpify.domains.shared import CDPModel
 
 if TYPE_CHECKING:
     from cdpify.domains import runtime
 
 
+@dataclass(kw_only=True)
 class DatabaseWithObjectStores(CDPModel):
     """
     Database with an array of object stores.
@@ -19,6 +21,7 @@ class DatabaseWithObjectStores(CDPModel):
     object_stores: list[ObjectStore]
 
 
+@dataclass(kw_only=True)
 class ObjectStore(CDPModel):
     """
     Object store.
@@ -30,6 +33,7 @@ class ObjectStore(CDPModel):
     indexes: list[ObjectStoreIndex]
 
 
+@dataclass(kw_only=True)
 class ObjectStoreIndex(CDPModel):
     """
     Object store index.
@@ -41,29 +45,32 @@ class ObjectStoreIndex(CDPModel):
     multi_entry: bool
 
 
+@dataclass(kw_only=True)
 class Key(CDPModel):
     """
     Key.
     """
 
     type: Literal["number", "string", "date", "array"]
-    number: float | None = None
-    string: str | None = None
-    date: float | None = None
-    array: list[Key] | None = None
+    number: float | None | None = None
+    string: str | None | None = None
+    date: float | None | None = None
+    array: list[Key] | None | None = None
 
 
+@dataclass(kw_only=True)
 class KeyRange(CDPModel):
     """
     Key range.
     """
 
-    lower: Key | None = None
-    upper: Key | None = None
+    lower: Key | None | None = None
+    upper: Key | None | None = None
     lower_open: bool
     upper_open: bool
 
 
+@dataclass(kw_only=True)
 class DataEntry(CDPModel):
     """
     Data entry.
@@ -74,11 +81,12 @@ class DataEntry(CDPModel):
     value: runtime.RemoteObject
 
 
+@dataclass(kw_only=True)
 class KeyPath(CDPModel):
     """
     Key path.
     """
 
     type: Literal["null", "string", "array"]
-    string: str | None = None
-    array: list[str] | None = None
+    string: str | None | None = None
+    array: list[str] | None | None = None

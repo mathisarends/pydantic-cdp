@@ -3,8 +3,9 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Any, TYPE_CHECKING
+from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.domains.base import CDPModel
+from cdpify.domains.shared import CDPModel
 
 from .types import *
 
@@ -58,6 +59,7 @@ class StorageCommand(StrEnum):
     SET_PROTECTED_AUDIENCE_K_ANONYMITY = "Storage.setProtectedAudienceKAnonymity"
 
 
+@dataclass(kw_only=True)
 class GetStorageKeyForFrameParams(CDPModel):
     """
     Returns a storage key given a frame id. Deprecated. Please use
@@ -67,10 +69,12 @@ class GetStorageKeyForFrameParams(CDPModel):
     frame_id: page.FrameId
 
 
+@dataclass(kw_only=True)
 class GetStorageKeyForFrameResult(CDPModel):
     storage_key: SerializedStorageKey
 
 
+@dataclass(kw_only=True)
 class GetStorageKeyParams(CDPModel):
     """
     Returns storage key for the given frame. If no frame ID is provided, the storage
@@ -80,10 +84,12 @@ class GetStorageKeyParams(CDPModel):
     frame_id: page.FrameId | None = None
 
 
+@dataclass(kw_only=True)
 class GetStorageKeyResult(CDPModel):
     storage_key: SerializedStorageKey
 
 
+@dataclass(kw_only=True)
 class ClearDataForOriginParams(CDPModel):
     """
     Clears storage for origin.
@@ -93,6 +99,7 @@ class ClearDataForOriginParams(CDPModel):
     storage_types: str
 
 
+@dataclass(kw_only=True)
 class ClearDataForStorageKeyParams(CDPModel):
     """
     Clears storage for storage key.
@@ -102,6 +109,7 @@ class ClearDataForStorageKeyParams(CDPModel):
     storage_types: str
 
 
+@dataclass(kw_only=True)
 class GetCookiesParams(CDPModel):
     """
     Returns all browser cookies.
@@ -110,10 +118,12 @@ class GetCookiesParams(CDPModel):
     browser_context_id: browser.BrowserContextID | None = None
 
 
+@dataclass(kw_only=True)
 class GetCookiesResult(CDPModel):
     cookies: list[network.Cookie]
 
 
+@dataclass(kw_only=True)
 class SetCookiesParams(CDPModel):
     """
     Sets given cookies.
@@ -123,6 +133,7 @@ class SetCookiesParams(CDPModel):
     browser_context_id: browser.BrowserContextID | None = None
 
 
+@dataclass(kw_only=True)
 class ClearCookiesParams(CDPModel):
     """
     Clears cookies.
@@ -131,6 +142,7 @@ class ClearCookiesParams(CDPModel):
     browser_context_id: browser.BrowserContextID | None = None
 
 
+@dataclass(kw_only=True)
 class GetUsageAndQuotaParams(CDPModel):
     """
     Returns usage and quota in bytes.
@@ -139,6 +151,7 @@ class GetUsageAndQuotaParams(CDPModel):
     origin: str
 
 
+@dataclass(kw_only=True)
 class GetUsageAndQuotaResult(CDPModel):
     usage: float
     quota: float
@@ -146,15 +159,17 @@ class GetUsageAndQuotaResult(CDPModel):
     usage_breakdown: list[UsageForType]
 
 
+@dataclass(kw_only=True)
 class OverrideQuotaForOriginParams(CDPModel):
     """
     Override quota for the specified origin
     """
 
     origin: str
-    quota_size: float | None = None
+    quota_size: float | None | None = None
 
 
+@dataclass(kw_only=True)
 class TrackCacheStorageForOriginParams(CDPModel):
     """
     Registers origin to be notified when an update occurs to its cache storage list.
@@ -163,6 +178,7 @@ class TrackCacheStorageForOriginParams(CDPModel):
     origin: str
 
 
+@dataclass(kw_only=True)
 class TrackCacheStorageForStorageKeyParams(CDPModel):
     """
     Registers storage key to be notified when an update occurs to its cache storage
@@ -172,6 +188,7 @@ class TrackCacheStorageForStorageKeyParams(CDPModel):
     storage_key: str
 
 
+@dataclass(kw_only=True)
 class TrackIndexedDBForOriginParams(CDPModel):
     """
     Registers origin to be notified when an update occurs to its IndexedDB.
@@ -180,6 +197,7 @@ class TrackIndexedDBForOriginParams(CDPModel):
     origin: str
 
 
+@dataclass(kw_only=True)
 class TrackIndexedDBForStorageKeyParams(CDPModel):
     """
     Registers storage key to be notified when an update occurs to its IndexedDB.
@@ -188,6 +206,7 @@ class TrackIndexedDBForStorageKeyParams(CDPModel):
     storage_key: str
 
 
+@dataclass(kw_only=True)
 class UntrackCacheStorageForOriginParams(CDPModel):
     """
     Unregisters origin from receiving notifications for cache storage.
@@ -196,6 +215,7 @@ class UntrackCacheStorageForOriginParams(CDPModel):
     origin: str
 
 
+@dataclass(kw_only=True)
 class UntrackCacheStorageForStorageKeyParams(CDPModel):
     """
     Unregisters storage key from receiving notifications for cache storage.
@@ -204,6 +224,7 @@ class UntrackCacheStorageForStorageKeyParams(CDPModel):
     storage_key: str
 
 
+@dataclass(kw_only=True)
 class UntrackIndexedDBForOriginParams(CDPModel):
     """
     Unregisters origin from receiving notifications for IndexedDB.
@@ -212,6 +233,7 @@ class UntrackIndexedDBForOriginParams(CDPModel):
     origin: str
 
 
+@dataclass(kw_only=True)
 class UntrackIndexedDBForStorageKeyParams(CDPModel):
     """
     Unregisters storage key from receiving notifications for IndexedDB.
@@ -220,10 +242,12 @@ class UntrackIndexedDBForStorageKeyParams(CDPModel):
     storage_key: str
 
 
+@dataclass(kw_only=True)
 class GetTrustTokensResult(CDPModel):
     tokens: list[TrustTokens]
 
 
+@dataclass(kw_only=True)
 class ClearTrustTokensParams(CDPModel):
     """
     Removes all Trust Tokens issued by the provided issuerOrigin. Leaves other stored
@@ -233,10 +257,12 @@ class ClearTrustTokensParams(CDPModel):
     issuer_origin: str
 
 
+@dataclass(kw_only=True)
 class ClearTrustTokensResult(CDPModel):
     did_delete_tokens: bool
 
 
+@dataclass(kw_only=True)
 class GetInterestGroupDetailsParams(CDPModel):
     """
     Gets details for a named interest group.
@@ -246,10 +272,12 @@ class GetInterestGroupDetailsParams(CDPModel):
     name: str
 
 
+@dataclass(kw_only=True)
 class GetInterestGroupDetailsResult(CDPModel):
     details: dict[str, Any]
 
 
+@dataclass(kw_only=True)
 class SetInterestGroupTrackingParams(CDPModel):
     """
     Enables/Disables issuing of interestGroupAccessed events.
@@ -258,6 +286,7 @@ class SetInterestGroupTrackingParams(CDPModel):
     enable: bool
 
 
+@dataclass(kw_only=True)
 class SetInterestGroupAuctionTrackingParams(CDPModel):
     """
     Enables/Disables issuing of interestGroupAuctionEventOccurred and
@@ -267,6 +296,7 @@ class SetInterestGroupAuctionTrackingParams(CDPModel):
     enable: bool
 
 
+@dataclass(kw_only=True)
 class GetSharedStorageMetadataParams(CDPModel):
     """
     Gets metadata for an origin's shared storage.
@@ -275,10 +305,12 @@ class GetSharedStorageMetadataParams(CDPModel):
     owner_origin: str
 
 
+@dataclass(kw_only=True)
 class GetSharedStorageMetadataResult(CDPModel):
     metadata: SharedStorageMetadata
 
 
+@dataclass(kw_only=True)
 class GetSharedStorageEntriesParams(CDPModel):
     """
     Gets the entries in an given origin's shared storage.
@@ -287,10 +319,12 @@ class GetSharedStorageEntriesParams(CDPModel):
     owner_origin: str
 
 
+@dataclass(kw_only=True)
 class GetSharedStorageEntriesResult(CDPModel):
     entries: list[SharedStorageEntry]
 
 
+@dataclass(kw_only=True)
 class SetSharedStorageEntryParams(CDPModel):
     """
     Sets entry with `key` and `value` for a given origin's shared storage.
@@ -299,9 +333,10 @@ class SetSharedStorageEntryParams(CDPModel):
     owner_origin: str
     key: str
     value: str
-    ignore_if_present: bool | None = None
+    ignore_if_present: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class DeleteSharedStorageEntryParams(CDPModel):
     """
     Deletes entry for `key` (if it exists) for a given origin's shared storage.
@@ -311,6 +346,7 @@ class DeleteSharedStorageEntryParams(CDPModel):
     key: str
 
 
+@dataclass(kw_only=True)
 class ClearSharedStorageEntriesParams(CDPModel):
     """
     Clears all entries for a given origin's shared storage.
@@ -319,6 +355,7 @@ class ClearSharedStorageEntriesParams(CDPModel):
     owner_origin: str
 
 
+@dataclass(kw_only=True)
 class ResetSharedStorageBudgetParams(CDPModel):
     """
     Resets the budget for `ownerOrigin` by clearing all budget withdrawals.
@@ -327,6 +364,7 @@ class ResetSharedStorageBudgetParams(CDPModel):
     owner_origin: str
 
 
+@dataclass(kw_only=True)
 class SetSharedStorageTrackingParams(CDPModel):
     """
     Enables/disables issuing of sharedStorageAccessed events.
@@ -335,6 +373,7 @@ class SetSharedStorageTrackingParams(CDPModel):
     enable: bool
 
 
+@dataclass(kw_only=True)
 class SetStorageBucketTrackingParams(CDPModel):
     """
     Set tracking for a storage key's buckets.
@@ -344,6 +383,7 @@ class SetStorageBucketTrackingParams(CDPModel):
     enable: bool
 
 
+@dataclass(kw_only=True)
 class DeleteStorageBucketParams(CDPModel):
     """
     Deletes the Storage Bucket with the given storage key and bucket name.
@@ -352,10 +392,12 @@ class DeleteStorageBucketParams(CDPModel):
     bucket: StorageBucket
 
 
+@dataclass(kw_only=True)
 class RunBounceTrackingMitigationsResult(CDPModel):
     deleted_sites: list[str]
 
 
+@dataclass(kw_only=True)
 class SetAttributionReportingLocalTestingModeParams(CDPModel):
     """
     https://wicg.github.io/attribution-reporting-api/
@@ -364,6 +406,7 @@ class SetAttributionReportingLocalTestingModeParams(CDPModel):
     enabled: bool
 
 
+@dataclass(kw_only=True)
 class SetAttributionReportingTrackingParams(CDPModel):
     """
     Enables/disables issuing of Attribution Reporting events.
@@ -372,14 +415,17 @@ class SetAttributionReportingTrackingParams(CDPModel):
     enable: bool
 
 
+@dataclass(kw_only=True)
 class SendPendingAttributionReportsResult(CDPModel):
     num_sent: int
 
 
+@dataclass(kw_only=True)
 class GetRelatedWebsiteSetsResult(CDPModel):
     sets: list[RelatedWebsiteSet]
 
 
+@dataclass(kw_only=True)
 class GetAffectedUrlsForThirdPartyCookieMetadataParams(CDPModel):
     """
     Returns the list of URLs from a page and its embedded resources that match existing
@@ -391,10 +437,12 @@ class GetAffectedUrlsForThirdPartyCookieMetadataParams(CDPModel):
     third_party_urls: list[str]
 
 
+@dataclass(kw_only=True)
 class GetAffectedUrlsForThirdPartyCookieMetadataResult(CDPModel):
     matched_urls: list[str]
 
 
+@dataclass(kw_only=True)
 class SetProtectedAudienceKAnonymityParams(CDPModel):
     owner: str
     name: str

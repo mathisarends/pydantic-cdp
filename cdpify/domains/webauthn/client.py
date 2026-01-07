@@ -45,7 +45,7 @@ class WebAuthnClient:
         enable_u_i: bool | None = None,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = EnableParams(enableUI=enable_u_i)
+        params = EnableParams(enable_u_i=enable_u_i)
 
         result = await self._client.send_raw(
             method=WebAuthnCommand.ENABLE,
@@ -78,7 +78,7 @@ class WebAuthnClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return AddVirtualAuthenticatorResult.model_validate(result)
+        return AddVirtualAuthenticatorResult.from_cdp(result)
 
     async def set_response_override_bits(
         self,
@@ -90,10 +90,10 @@ class WebAuthnClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = SetResponseOverrideBitsParams(
-            authenticatorId=authenticator_id,
-            isBogusSignature=is_bogus_signature,
-            isBadUV=is_bad_u_v,
-            isBadUP=is_bad_u_p,
+            authenticator_id=authenticator_id,
+            is_bogus_signature=is_bogus_signature,
+            is_bad_u_v=is_bad_u_v,
+            is_bad_u_p=is_bad_u_p,
         )
 
         result = await self._client.send_raw(
@@ -109,7 +109,7 @@ class WebAuthnClient:
         authenticator_id: AuthenticatorId,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = RemoveVirtualAuthenticatorParams(authenticatorId=authenticator_id)
+        params = RemoveVirtualAuthenticatorParams(authenticator_id=authenticator_id)
 
         result = await self._client.send_raw(
             method=WebAuthnCommand.REMOVE_VIRTUAL_AUTHENTICATOR,
@@ -126,7 +126,7 @@ class WebAuthnClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = AddCredentialParams(
-            authenticatorId=authenticator_id, credential=credential
+            authenticator_id=authenticator_id, credential=credential
         )
 
         result = await self._client.send_raw(
@@ -144,7 +144,7 @@ class WebAuthnClient:
         session_id: str | None = None,
     ) -> GetCredentialResult:
         params = GetCredentialParams(
-            authenticatorId=authenticator_id, credentialId=credential_id
+            authenticator_id=authenticator_id, credential_id=credential_id
         )
 
         result = await self._client.send_raw(
@@ -152,7 +152,7 @@ class WebAuthnClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetCredentialResult.model_validate(result)
+        return GetCredentialResult.from_cdp(result)
 
     async def get_credentials(
         self,
@@ -160,14 +160,14 @@ class WebAuthnClient:
         authenticator_id: AuthenticatorId,
         session_id: str | None = None,
     ) -> GetCredentialsResult:
-        params = GetCredentialsParams(authenticatorId=authenticator_id)
+        params = GetCredentialsParams(authenticator_id=authenticator_id)
 
         result = await self._client.send_raw(
             method=WebAuthnCommand.GET_CREDENTIALS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetCredentialsResult.model_validate(result)
+        return GetCredentialsResult.from_cdp(result)
 
     async def remove_credential(
         self,
@@ -177,7 +177,7 @@ class WebAuthnClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = RemoveCredentialParams(
-            authenticatorId=authenticator_id, credentialId=credential_id
+            authenticator_id=authenticator_id, credential_id=credential_id
         )
 
         result = await self._client.send_raw(
@@ -193,7 +193,7 @@ class WebAuthnClient:
         authenticator_id: AuthenticatorId,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = ClearCredentialsParams(authenticatorId=authenticator_id)
+        params = ClearCredentialsParams(authenticator_id=authenticator_id)
 
         result = await self._client.send_raw(
             method=WebAuthnCommand.CLEAR_CREDENTIALS,
@@ -210,7 +210,7 @@ class WebAuthnClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = SetUserVerifiedParams(
-            authenticatorId=authenticator_id, isUserVerified=is_user_verified
+            authenticator_id=authenticator_id, is_user_verified=is_user_verified
         )
 
         result = await self._client.send_raw(
@@ -228,7 +228,7 @@ class WebAuthnClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = SetAutomaticPresenceSimulationParams(
-            authenticatorId=authenticator_id, enabled=enabled
+            authenticator_id=authenticator_id, enabled=enabled
         )
 
         result = await self._client.send_raw(
@@ -248,10 +248,10 @@ class WebAuthnClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = SetCredentialPropertiesParams(
-            authenticatorId=authenticator_id,
-            credentialId=credential_id,
-            backupEligibility=backup_eligibility,
-            backupState=backup_state,
+            authenticator_id=authenticator_id,
+            credential_id=credential_id,
+            backup_eligibility=backup_eligibility,
+            backup_state=backup_state,
         )
 
         result = await self._client.send_raw(

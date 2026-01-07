@@ -89,7 +89,7 @@ class EmulationClient:
             params=None,
             session_id=session_id,
         )
-        return CanEmulateResult.model_validate(result)
+        return CanEmulateResult.from_cdp(result)
 
     async def clear_device_metrics_override(
         self,
@@ -221,18 +221,18 @@ class EmulationClient:
         params = SetDeviceMetricsOverrideParams(
             width=width,
             height=height,
-            deviceScaleFactor=device_scale_factor,
+            device_scale_factor=device_scale_factor,
             mobile=mobile,
             scale=scale,
-            screenWidth=screen_width,
-            screenHeight=screen_height,
-            positionX=position_x,
-            positionY=position_y,
-            dontSetVisibleSize=dont_set_visible_size,
-            screenOrientation=screen_orientation,
+            screen_width=screen_width,
+            screen_height=screen_height,
+            position_x=position_x,
+            position_y=position_y,
+            dont_set_visible_size=dont_set_visible_size,
+            screen_orientation=screen_orientation,
             viewport=viewport,
-            displayFeature=display_feature,
-            devicePosture=device_posture,
+            display_feature=display_feature,
+            device_posture=device_posture,
         )
 
         result = await self._client.send_raw(
@@ -413,7 +413,7 @@ class EmulationClient:
             longitude=longitude,
             accuracy=accuracy,
             altitude=altitude,
-            altitudeAccuracy=altitude_accuracy,
+            altitude_accuracy=altitude_accuracy,
             heading=heading,
             speed=speed,
         )
@@ -438,7 +438,7 @@ class EmulationClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetOverriddenSensorInformationResult.model_validate(result)
+        return GetOverriddenSensorInformationResult.from_cdp(result)
 
     async def set_sensor_override_enabled(
         self,
@@ -521,7 +521,7 @@ class EmulationClient:
         params = SetPressureDataOverrideParams(
             source=source,
             state=state,
-            ownContributionEstimate=own_contribution_estimate,
+            own_contribution_estimate=own_contribution_estimate,
         )
 
         result = await self._client.send_raw(
@@ -539,7 +539,7 @@ class EmulationClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = SetIdleOverrideParams(
-            isUserActive=is_user_active, isScreenUnlocked=is_screen_unlocked
+            is_user_active=is_user_active, is_screen_unlocked=is_screen_unlocked
         )
 
         result = await self._client.send_raw(
@@ -581,7 +581,7 @@ class EmulationClient:
         page_scale_factor: float,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = SetPageScaleFactorParams(pageScaleFactor=page_scale_factor)
+        params = SetPageScaleFactorParams(page_scale_factor=page_scale_factor)
 
         result = await self._client.send_raw(
             method=EmulationCommand.SET_PAGE_SCALE_FACTOR,
@@ -613,7 +613,7 @@ class EmulationClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = SetTouchEmulationEnabledParams(
-            enabled=enabled, maxTouchPoints=max_touch_points
+            enabled=enabled, max_touch_points=max_touch_points
         )
 
         result = await self._client.send_raw(
@@ -635,8 +635,8 @@ class EmulationClient:
         params = SetVirtualTimePolicyParams(
             policy=policy,
             budget=budget,
-            maxVirtualTimeTaskStarvationCount=max_virtual_time_task_starvation_count,
-            initialVirtualTime=initial_virtual_time,
+            max_virtual_time_task_starvation_count=max_virtual_time_task_starvation_count,
+            initial_virtual_time=initial_virtual_time,
         )
 
         result = await self._client.send_raw(
@@ -644,7 +644,7 @@ class EmulationClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return SetVirtualTimePolicyResult.model_validate(result)
+        return SetVirtualTimePolicyResult.from_cdp(result)
 
     async def set_locale_override(
         self,
@@ -667,7 +667,7 @@ class EmulationClient:
         timezone_id: str,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = SetTimezoneOverrideParams(timezoneId=timezone_id)
+        params = SetTimezoneOverrideParams(timezone_id=timezone_id)
 
         result = await self._client.send_raw(
             method=EmulationCommand.SET_TIMEZONE_OVERRIDE,
@@ -698,7 +698,7 @@ class EmulationClient:
         image_types: list[DisabledImageType],
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = SetDisabledImageTypesParams(imageTypes=image_types)
+        params = SetDisabledImageTypesParams(image_types=image_types)
 
         result = await self._client.send_raw(
             method=EmulationCommand.SET_DISABLED_IMAGE_TYPES,
@@ -713,7 +713,7 @@ class EmulationClient:
         data_saver_enabled: bool | None = None,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = SetDataSaverOverrideParams(dataSaverEnabled=data_saver_enabled)
+        params = SetDataSaverOverrideParams(data_saver_enabled=data_saver_enabled)
 
         result = await self._client.send_raw(
             method=EmulationCommand.SET_DATA_SAVER_OVERRIDE,
@@ -729,7 +729,7 @@ class EmulationClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = SetHardwareConcurrencyOverrideParams(
-            hardwareConcurrency=hardware_concurrency
+            hardware_concurrency=hardware_concurrency
         )
 
         result = await self._client.send_raw(
@@ -749,10 +749,10 @@ class EmulationClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = SetUserAgentOverrideParams(
-            userAgent=user_agent,
-            acceptLanguage=accept_language,
+            user_agent=user_agent,
+            accept_language=accept_language,
             platform=platform,
-            userAgentMetadata=user_agent_metadata,
+            user_agent_metadata=user_agent_metadata,
         )
 
         result = await self._client.send_raw(
@@ -801,7 +801,7 @@ class EmulationClient:
             params=None,
             session_id=session_id,
         )
-        return GetScreenInfosResult.model_validate(result)
+        return GetScreenInfosResult.from_cdp(result)
 
     async def add_screen(
         self,
@@ -823,12 +823,12 @@ class EmulationClient:
             top=top,
             width=width,
             height=height,
-            workAreaInsets=work_area_insets,
-            devicePixelRatio=device_pixel_ratio,
+            work_area_insets=work_area_insets,
+            device_pixel_ratio=device_pixel_ratio,
             rotation=rotation,
-            colorDepth=color_depth,
+            color_depth=color_depth,
             label=label,
-            isInternal=is_internal,
+            is_internal=is_internal,
         )
 
         result = await self._client.send_raw(
@@ -836,7 +836,7 @@ class EmulationClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return AddScreenResult.model_validate(result)
+        return AddScreenResult.from_cdp(result)
 
     async def remove_screen(
         self,
@@ -844,7 +844,7 @@ class EmulationClient:
         screen_id: ScreenId,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = RemoveScreenParams(screenId=screen_id)
+        params = RemoveScreenParams(screen_id=screen_id)
 
         result = await self._client.send_raw(
             method=EmulationCommand.REMOVE_SCREEN,

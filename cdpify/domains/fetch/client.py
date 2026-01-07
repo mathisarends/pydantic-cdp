@@ -54,7 +54,7 @@ class FetchClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = EnableParams(
-            patterns=patterns, handleAuthRequests=handle_auth_requests
+            patterns=patterns, handle_auth_requests=handle_auth_requests
         )
 
         result = await self._client.send_raw(
@@ -71,7 +71,7 @@ class FetchClient:
         error_reason: Network.ErrorReason,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = FailRequestParams(requestId=request_id, errorReason=error_reason)
+        params = FailRequestParams(request_id=request_id, error_reason=error_reason)
 
         result = await self._client.send_raw(
             method=FetchCommand.FAIL_REQUEST,
@@ -92,12 +92,12 @@ class FetchClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = FulfillRequestParams(
-            requestId=request_id,
-            responseCode=response_code,
-            responseHeaders=response_headers,
-            binaryResponseHeaders=binary_response_headers,
+            request_id=request_id,
+            response_code=response_code,
+            response_headers=response_headers,
+            binary_response_headers=binary_response_headers,
             body=body,
-            responsePhrase=response_phrase,
+            response_phrase=response_phrase,
         )
 
         result = await self._client.send_raw(
@@ -119,12 +119,12 @@ class FetchClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = ContinueRequestParams(
-            requestId=request_id,
+            request_id=request_id,
             url=url,
             method=method,
-            postData=post_data,
+            post_data=post_data,
             headers=headers,
-            interceptResponse=intercept_response,
+            intercept_response=intercept_response,
         )
 
         result = await self._client.send_raw(
@@ -142,7 +142,7 @@ class FetchClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = ContinueWithAuthParams(
-            requestId=request_id, authChallengeResponse=auth_challenge_response
+            request_id=request_id, auth_challenge_response=auth_challenge_response
         )
 
         result = await self._client.send_raw(
@@ -163,11 +163,11 @@ class FetchClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = ContinueResponseParams(
-            requestId=request_id,
-            responseCode=response_code,
-            responsePhrase=response_phrase,
-            responseHeaders=response_headers,
-            binaryResponseHeaders=binary_response_headers,
+            request_id=request_id,
+            response_code=response_code,
+            response_phrase=response_phrase,
+            response_headers=response_headers,
+            binary_response_headers=binary_response_headers,
         )
 
         result = await self._client.send_raw(
@@ -183,14 +183,14 @@ class FetchClient:
         request_id: RequestId,
         session_id: str | None = None,
     ) -> GetResponseBodyResult:
-        params = GetResponseBodyParams(requestId=request_id)
+        params = GetResponseBodyParams(request_id=request_id)
 
         result = await self._client.send_raw(
             method=FetchCommand.GET_RESPONSE_BODY,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetResponseBodyResult.model_validate(result)
+        return GetResponseBodyResult.from_cdp(result)
 
     async def take_response_body_as_stream(
         self,
@@ -198,11 +198,11 @@ class FetchClient:
         request_id: RequestId,
         session_id: str | None = None,
     ) -> TakeResponseBodyAsStreamResult:
-        params = TakeResponseBodyAsStreamParams(requestId=request_id)
+        params = TakeResponseBodyAsStreamParams(request_id=request_id)
 
         result = await self._client.send_raw(
             method=FetchCommand.TAKE_RESPONSE_BODY_AS_STREAM,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return TakeResponseBodyAsStreamResult.model_validate(result)
+        return TakeResponseBodyAsStreamResult.from_cdp(result)

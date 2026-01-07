@@ -59,7 +59,7 @@ class TargetClient:
         target_id: TargetID,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = ActivateTargetParams(targetId=target_id)
+        params = ActivateTargetParams(target_id=target_id)
 
         result = await self._client.send_raw(
             method=TargetCommand.ACTIVATE_TARGET,
@@ -75,14 +75,14 @@ class TargetClient:
         flatten: bool | None = None,
         session_id: str | None = None,
     ) -> AttachToTargetResult:
-        params = AttachToTargetParams(targetId=target_id, flatten=flatten)
+        params = AttachToTargetParams(target_id=target_id, flatten=flatten)
 
         result = await self._client.send_raw(
             method=TargetCommand.ATTACH_TO_TARGET,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return AttachToTargetResult.model_validate(result)
+        return AttachToTargetResult.from_cdp(result)
 
     async def attach_to_browser_target(
         self,
@@ -93,7 +93,7 @@ class TargetClient:
             params=None,
             session_id=session_id,
         )
-        return AttachToBrowserTargetResult.model_validate(result)
+        return AttachToBrowserTargetResult.from_cdp(result)
 
     async def close_target(
         self,
@@ -101,14 +101,14 @@ class TargetClient:
         target_id: TargetID,
         session_id: str | None = None,
     ) -> CloseTargetResult:
-        params = CloseTargetParams(targetId=target_id)
+        params = CloseTargetParams(target_id=target_id)
 
         result = await self._client.send_raw(
             method=TargetCommand.CLOSE_TARGET,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return CloseTargetResult.model_validate(result)
+        return CloseTargetResult.from_cdp(result)
 
     async def expose_dev_tools_protocol(
         self,
@@ -119,9 +119,9 @@ class TargetClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = ExposeDevToolsProtocolParams(
-            targetId=target_id,
-            bindingName=binding_name,
-            inheritPermissions=inherit_permissions,
+            target_id=target_id,
+            binding_name=binding_name,
+            inherit_permissions=inherit_permissions,
         )
 
         result = await self._client.send_raw(
@@ -141,10 +141,10 @@ class TargetClient:
         session_id: str | None = None,
     ) -> CreateBrowserContextResult:
         params = CreateBrowserContextParams(
-            disposeOnDetach=dispose_on_detach,
-            proxyServer=proxy_server,
-            proxyBypassList=proxy_bypass_list,
-            originsWithUniversalNetworkAccess=origins_with_universal_network_access,
+            dispose_on_detach=dispose_on_detach,
+            proxy_server=proxy_server,
+            proxy_bypass_list=proxy_bypass_list,
+            origins_with_universal_network_access=origins_with_universal_network_access,
         )
 
         result = await self._client.send_raw(
@@ -152,7 +152,7 @@ class TargetClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return CreateBrowserContextResult.model_validate(result)
+        return CreateBrowserContextResult.from_cdp(result)
 
     async def get_browser_contexts(
         self,
@@ -163,7 +163,7 @@ class TargetClient:
             params=None,
             session_id=session_id,
         )
-        return GetBrowserContextsResult.model_validate(result)
+        return GetBrowserContextsResult.from_cdp(result)
 
     async def create_target(
         self,
@@ -188,12 +188,12 @@ class TargetClient:
             top=top,
             width=width,
             height=height,
-            windowState=window_state,
-            browserContextId=browser_context_id,
-            enableBeginFrameControl=enable_begin_frame_control,
-            newWindow=new_window,
+            window_state=window_state,
+            browser_context_id=browser_context_id,
+            enable_begin_frame_control=enable_begin_frame_control,
+            new_window=new_window,
             background=background,
-            forTab=for_tab,
+            for_tab=for_tab,
             hidden=hidden,
         )
 
@@ -202,7 +202,7 @@ class TargetClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return CreateTargetResult.model_validate(result)
+        return CreateTargetResult.from_cdp(result)
 
     async def detach_from_target(
         self,
@@ -212,7 +212,7 @@ class TargetClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = DetachFromTargetParams(
-            sessionId=detach_from_target_session_id, targetId=target_id
+            session_id=detach_from_target_session_id, target_id=target_id
         )
 
         result = await self._client.send_raw(
@@ -228,7 +228,7 @@ class TargetClient:
         browser_context_id: Browser.BrowserContextID,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = DisposeBrowserContextParams(browserContextId=browser_context_id)
+        params = DisposeBrowserContextParams(browser_context_id=browser_context_id)
 
         result = await self._client.send_raw(
             method=TargetCommand.DISPOSE_BROWSER_CONTEXT,
@@ -243,14 +243,14 @@ class TargetClient:
         target_id: TargetID | None = None,
         session_id: str | None = None,
     ) -> GetTargetInfoResult:
-        params = GetTargetInfoParams(targetId=target_id)
+        params = GetTargetInfoParams(target_id=target_id)
 
         result = await self._client.send_raw(
             method=TargetCommand.GET_TARGET_INFO,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetTargetInfoResult.model_validate(result)
+        return GetTargetInfoResult.from_cdp(result)
 
     async def get_targets(
         self,
@@ -265,7 +265,7 @@ class TargetClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetTargetsResult.model_validate(result)
+        return GetTargetsResult.from_cdp(result)
 
     async def send_message_to_target(
         self,
@@ -277,8 +277,8 @@ class TargetClient:
     ) -> dict[str, Any]:
         params = SendMessageToTargetParams(
             message=message,
-            sessionId=send_message_to_target_session_id,
-            targetId=target_id,
+            session_id=send_message_to_target_session_id,
+            target_id=target_id,
         )
 
         result = await self._client.send_raw(
@@ -298,8 +298,8 @@ class TargetClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = SetAutoAttachParams(
-            autoAttach=auto_attach,
-            waitForDebuggerOnStart=wait_for_debugger_on_start,
+            auto_attach=auto_attach,
+            wait_for_debugger_on_start=wait_for_debugger_on_start,
             flatten=flatten,
             filter=filter,
         )
@@ -320,8 +320,8 @@ class TargetClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = AutoAttachRelatedParams(
-            targetId=target_id,
-            waitForDebuggerOnStart=wait_for_debugger_on_start,
+            target_id=target_id,
+            wait_for_debugger_on_start=wait_for_debugger_on_start,
             filter=filter,
         )
 
@@ -369,14 +369,14 @@ class TargetClient:
         target_id: TargetID,
         session_id: str | None = None,
     ) -> GetDevToolsTargetResult:
-        params = GetDevToolsTargetParams(targetId=target_id)
+        params = GetDevToolsTargetParams(target_id=target_id)
 
         result = await self._client.send_raw(
             method=TargetCommand.GET_DEV_TOOLS_TARGET,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetDevToolsTargetResult.model_validate(result)
+        return GetDevToolsTargetResult.from_cdp(result)
 
     async def open_dev_tools(
         self,
@@ -385,11 +385,11 @@ class TargetClient:
         panel_id: str | None = None,
         session_id: str | None = None,
     ) -> OpenDevToolsResult:
-        params = OpenDevToolsParams(targetId=target_id, panelId=panel_id)
+        params = OpenDevToolsParams(target_id=target_id, panel_id=panel_id)
 
         result = await self._client.send_raw(
             method=TargetCommand.OPEN_DEV_TOOLS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return OpenDevToolsResult.model_validate(result)
+        return OpenDevToolsResult.from_cdp(result)

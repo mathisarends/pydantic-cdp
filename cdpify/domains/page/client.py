@@ -99,14 +99,14 @@ class PageClient:
         script_source: str,
         session_id: str | None = None,
     ) -> AddScriptToEvaluateOnLoadResult:
-        params = AddScriptToEvaluateOnLoadParams(scriptSource=script_source)
+        params = AddScriptToEvaluateOnLoadParams(script_source=script_source)
 
         result = await self._client.send_raw(
             method=PageCommand.ADD_SCRIPT_TO_EVALUATE_ON_LOAD,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return AddScriptToEvaluateOnLoadResult.model_validate(result)
+        return AddScriptToEvaluateOnLoadResult.from_cdp(result)
 
     async def add_script_to_evaluate_on_new_document(
         self,
@@ -119,9 +119,9 @@ class PageClient:
     ) -> AddScriptToEvaluateOnNewDocumentResult:
         params = AddScriptToEvaluateOnNewDocumentParams(
             source=source,
-            worldName=world_name,
-            includeCommandLineAPI=include_command_line_a_p_i,
-            runImmediately=run_immediately,
+            world_name=world_name,
+            include_command_line_a_p_i=include_command_line_a_p_i,
+            run_immediately=run_immediately,
         )
 
         result = await self._client.send_raw(
@@ -129,7 +129,7 @@ class PageClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return AddScriptToEvaluateOnNewDocumentResult.model_validate(result)
+        return AddScriptToEvaluateOnNewDocumentResult.from_cdp(result)
 
     async def bring_to_front(
         self,
@@ -157,9 +157,9 @@ class PageClient:
             format=format,
             quality=quality,
             clip=clip,
-            fromSurface=from_surface,
-            captureBeyondViewport=capture_beyond_viewport,
-            optimizeForSpeed=optimize_for_speed,
+            from_surface=from_surface,
+            capture_beyond_viewport=capture_beyond_viewport,
+            optimize_for_speed=optimize_for_speed,
         )
 
         result = await self._client.send_raw(
@@ -167,7 +167,7 @@ class PageClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return CaptureScreenshotResult.model_validate(result)
+        return CaptureScreenshotResult.from_cdp(result)
 
     async def capture_snapshot(
         self,
@@ -182,7 +182,7 @@ class PageClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return CaptureSnapshotResult.model_validate(result)
+        return CaptureSnapshotResult.from_cdp(result)
 
     async def clear_device_metrics_override(
         self,
@@ -226,9 +226,9 @@ class PageClient:
         session_id: str | None = None,
     ) -> CreateIsolatedWorldResult:
         params = CreateIsolatedWorldParams(
-            frameId=frame_id,
-            worldName=world_name,
-            grantUniveralAccess=grant_univeral_access,
+            frame_id=frame_id,
+            world_name=world_name,
+            grant_univeral_access=grant_univeral_access,
         )
 
         result = await self._client.send_raw(
@@ -236,7 +236,7 @@ class PageClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return CreateIsolatedWorldResult.model_validate(result)
+        return CreateIsolatedWorldResult.from_cdp(result)
 
     async def delete_cookie(
         self,
@@ -245,7 +245,7 @@ class PageClient:
         url: str,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = DeleteCookieParams(cookieName=cookie_name, url=url)
+        params = DeleteCookieParams(cookie_name=cookie_name, url=url)
 
         result = await self._client.send_raw(
             method=PageCommand.DELETE_COOKIE,
@@ -272,7 +272,7 @@ class PageClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = EnableParams(
-            enableFileChooserOpenedEvent=enable_file_chooser_opened_event
+            enable_file_chooser_opened_event=enable_file_chooser_opened_event
         )
 
         result = await self._client.send_raw(
@@ -288,14 +288,14 @@ class PageClient:
         manifest_id: str | None = None,
         session_id: str | None = None,
     ) -> GetAppManifestResult:
-        params = GetAppManifestParams(manifestId=manifest_id)
+        params = GetAppManifestParams(manifest_id=manifest_id)
 
         result = await self._client.send_raw(
             method=PageCommand.GET_APP_MANIFEST,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetAppManifestResult.model_validate(result)
+        return GetAppManifestResult.from_cdp(result)
 
     async def get_installability_errors(
         self,
@@ -306,7 +306,7 @@ class PageClient:
             params=None,
             session_id=session_id,
         )
-        return GetInstallabilityErrorsResult.model_validate(result)
+        return GetInstallabilityErrorsResult.from_cdp(result)
 
     async def get_manifest_icons(
         self,
@@ -317,7 +317,7 @@ class PageClient:
             params=None,
             session_id=session_id,
         )
-        return GetManifestIconsResult.model_validate(result)
+        return GetManifestIconsResult.from_cdp(result)
 
     async def get_app_id(
         self,
@@ -328,7 +328,7 @@ class PageClient:
             params=None,
             session_id=session_id,
         )
-        return GetAppIdResult.model_validate(result)
+        return GetAppIdResult.from_cdp(result)
 
     async def get_ad_script_ancestry(
         self,
@@ -336,14 +336,14 @@ class PageClient:
         frame_id: FrameId,
         session_id: str | None = None,
     ) -> GetAdScriptAncestryResult:
-        params = GetAdScriptAncestryParams(frameId=frame_id)
+        params = GetAdScriptAncestryParams(frame_id=frame_id)
 
         result = await self._client.send_raw(
             method=PageCommand.GET_AD_SCRIPT_ANCESTRY,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetAdScriptAncestryResult.model_validate(result)
+        return GetAdScriptAncestryResult.from_cdp(result)
 
     async def get_frame_tree(
         self,
@@ -354,7 +354,7 @@ class PageClient:
             params=None,
             session_id=session_id,
         )
-        return GetFrameTreeResult.model_validate(result)
+        return GetFrameTreeResult.from_cdp(result)
 
     async def get_layout_metrics(
         self,
@@ -365,7 +365,7 @@ class PageClient:
             params=None,
             session_id=session_id,
         )
-        return GetLayoutMetricsResult.model_validate(result)
+        return GetLayoutMetricsResult.from_cdp(result)
 
     async def get_navigation_history(
         self,
@@ -376,7 +376,7 @@ class PageClient:
             params=None,
             session_id=session_id,
         )
-        return GetNavigationHistoryResult.model_validate(result)
+        return GetNavigationHistoryResult.from_cdp(result)
 
     async def reset_navigation_history(
         self,
@@ -396,14 +396,14 @@ class PageClient:
         url: str,
         session_id: str | None = None,
     ) -> GetResourceContentResult:
-        params = GetResourceContentParams(frameId=frame_id, url=url)
+        params = GetResourceContentParams(frame_id=frame_id, url=url)
 
         result = await self._client.send_raw(
             method=PageCommand.GET_RESOURCE_CONTENT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetResourceContentResult.model_validate(result)
+        return GetResourceContentResult.from_cdp(result)
 
     async def get_resource_tree(
         self,
@@ -414,7 +414,7 @@ class PageClient:
             params=None,
             session_id=session_id,
         )
-        return GetResourceTreeResult.model_validate(result)
+        return GetResourceTreeResult.from_cdp(result)
 
     async def handle_java_script_dialog(
         self,
@@ -423,7 +423,7 @@ class PageClient:
         prompt_text: str | None = None,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = HandleJavaScriptDialogParams(accept=accept, promptText=prompt_text)
+        params = HandleJavaScriptDialogParams(accept=accept, prompt_text=prompt_text)
 
         result = await self._client.send_raw(
             method=PageCommand.HANDLE_JAVA_SCRIPT_DIALOG,
@@ -445,9 +445,9 @@ class PageClient:
         params = NavigateParams(
             url=url,
             referrer=referrer,
-            transitionType=transition_type,
-            frameId=frame_id,
-            referrerPolicy=referrer_policy,
+            transition_type=transition_type,
+            frame_id=frame_id,
+            referrer_policy=referrer_policy,
         )
 
         result = await self._client.send_raw(
@@ -455,7 +455,7 @@ class PageClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return NavigateResult.model_validate(result)
+        return NavigateResult.from_cdp(result)
 
     async def navigate_to_history_entry(
         self,
@@ -463,7 +463,7 @@ class PageClient:
         entry_id: int,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = NavigateToHistoryEntryParams(entryId=entry_id)
+        params = NavigateToHistoryEntryParams(entry_id=entry_id)
 
         result = await self._client.send_raw(
             method=PageCommand.NAVIGATE_TO_HISTORY_ENTRY,
@@ -496,22 +496,22 @@ class PageClient:
     ) -> PrintToPDFResult:
         params = PrintToPDFParams(
             landscape=landscape,
-            displayHeaderFooter=display_header_footer,
-            printBackground=print_background,
+            display_header_footer=display_header_footer,
+            print_background=print_background,
             scale=scale,
-            paperWidth=paper_width,
-            paperHeight=paper_height,
-            marginTop=margin_top,
-            marginBottom=margin_bottom,
-            marginLeft=margin_left,
-            marginRight=margin_right,
-            pageRanges=page_ranges,
-            headerTemplate=header_template,
-            footerTemplate=footer_template,
-            preferCSSPageSize=prefer_c_s_s_page_size,
-            transferMode=transfer_mode,
-            generateTaggedPDF=generate_tagged_p_d_f,
-            generateDocumentOutline=generate_document_outline,
+            paper_width=paper_width,
+            paper_height=paper_height,
+            margin_top=margin_top,
+            margin_bottom=margin_bottom,
+            margin_left=margin_left,
+            margin_right=margin_right,
+            page_ranges=page_ranges,
+            header_template=header_template,
+            footer_template=footer_template,
+            prefer_c_s_s_page_size=prefer_c_s_s_page_size,
+            transfer_mode=transfer_mode,
+            generate_tagged_p_d_f=generate_tagged_p_d_f,
+            generate_document_outline=generate_document_outline,
         )
 
         result = await self._client.send_raw(
@@ -519,7 +519,7 @@ class PageClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return PrintToPDFResult.model_validate(result)
+        return PrintToPDFResult.from_cdp(result)
 
     async def reload(
         self,
@@ -530,9 +530,9 @@ class PageClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = ReloadParams(
-            ignoreCache=ignore_cache,
-            scriptToEvaluateOnLoad=script_to_evaluate_on_load,
-            loaderId=loader_id,
+            ignore_cache=ignore_cache,
+            script_to_evaluate_on_load=script_to_evaluate_on_load,
+            loader_id=loader_id,
         )
 
         result = await self._client.send_raw(
@@ -578,7 +578,7 @@ class PageClient:
         screencast_frame_ack_session_id: int,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = ScreencastFrameAckParams(sessionId=screencast_frame_ack_session_id)
+        params = ScreencastFrameAckParams(session_id=screencast_frame_ack_session_id)
 
         result = await self._client.send_raw(
             method=PageCommand.SCREENCAST_FRAME_ACK,
@@ -598,11 +598,11 @@ class PageClient:
         session_id: str | None = None,
     ) -> SearchInResourceResult:
         params = SearchInResourceParams(
-            frameId=frame_id,
+            frame_id=frame_id,
             url=url,
             query=query,
-            caseSensitive=case_sensitive,
-            isRegex=is_regex,
+            case_sensitive=case_sensitive,
+            is_regex=is_regex,
         )
 
         result = await self._client.send_raw(
@@ -610,7 +610,7 @@ class PageClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return SearchInResourceResult.model_validate(result)
+        return SearchInResourceResult.from_cdp(result)
 
     async def set_ad_blocking_enabled(
         self,
@@ -648,14 +648,14 @@ class PageClient:
         frame_id: FrameId,
         session_id: str | None = None,
     ) -> GetPermissionsPolicyStateResult:
-        params = GetPermissionsPolicyStateParams(frameId=frame_id)
+        params = GetPermissionsPolicyStateParams(frame_id=frame_id)
 
         result = await self._client.send_raw(
             method=PageCommand.GET_PERMISSIONS_POLICY_STATE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetPermissionsPolicyStateResult.model_validate(result)
+        return GetPermissionsPolicyStateResult.from_cdp(result)
 
     async def get_origin_trials(
         self,
@@ -663,14 +663,14 @@ class PageClient:
         frame_id: FrameId,
         session_id: str | None = None,
     ) -> GetOriginTrialsResult:
-        params = GetOriginTrialsParams(frameId=frame_id)
+        params = GetOriginTrialsParams(frame_id=frame_id)
 
         result = await self._client.send_raw(
             method=PageCommand.GET_ORIGIN_TRIALS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetOriginTrialsResult.model_validate(result)
+        return GetOriginTrialsResult.from_cdp(result)
 
     async def set_device_metrics_override(
         self,
@@ -692,15 +692,15 @@ class PageClient:
         params = SetDeviceMetricsOverrideParams(
             width=width,
             height=height,
-            deviceScaleFactor=device_scale_factor,
+            device_scale_factor=device_scale_factor,
             mobile=mobile,
             scale=scale,
-            screenWidth=screen_width,
-            screenHeight=screen_height,
-            positionX=position_x,
-            positionY=position_y,
-            dontSetVisibleSize=dont_set_visible_size,
-            screenOrientation=screen_orientation,
+            screen_width=screen_width,
+            screen_height=screen_height,
+            position_x=position_x,
+            position_y=position_y,
+            dont_set_visible_size=dont_set_visible_size,
+            screen_orientation=screen_orientation,
             viewport=viewport,
         )
 
@@ -736,7 +736,7 @@ class PageClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = SetFontFamiliesParams(
-            fontFamilies=font_families, forScripts=for_scripts
+            font_families=font_families, for_scripts=for_scripts
         )
 
         result = await self._client.send_raw(
@@ -752,7 +752,7 @@ class PageClient:
         font_sizes: FontSizes,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = SetFontSizesParams(fontSizes=font_sizes)
+        params = SetFontSizesParams(font_sizes=font_sizes)
 
         result = await self._client.send_raw(
             method=PageCommand.SET_FONT_SIZES,
@@ -768,7 +768,7 @@ class PageClient:
         html: str,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = SetDocumentContentParams(frameId=frame_id, html=html)
+        params = SetDocumentContentParams(frame_id=frame_id, html=html)
 
         result = await self._client.send_raw(
             method=PageCommand.SET_DOCUMENT_CONTENT,
@@ -785,7 +785,7 @@ class PageClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = SetDownloadBehaviorParams(
-            behavior=behavior, downloadPath=download_path
+            behavior=behavior, download_path=download_path
         )
 
         result = await self._client.send_raw(
@@ -860,9 +860,9 @@ class PageClient:
         params = StartScreencastParams(
             format=format,
             quality=quality,
-            maxWidth=max_width,
-            maxHeight=max_height,
-            everyNthFrame=every_nth_frame,
+            max_width=max_width,
+            max_height=max_height,
+            every_nth_frame=every_nth_frame,
         )
 
         result = await self._client.send_raw(
@@ -1058,7 +1058,7 @@ class PageClient:
         is_allowed: bool,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = SetPrerenderingAllowedParams(isAllowed=is_allowed)
+        params = SetPrerenderingAllowedParams(is_allowed=is_allowed)
 
         result = await self._client.send_raw(
             method=PageCommand.SET_PRERENDERING_ALLOWED,
@@ -1074,7 +1074,7 @@ class PageClient:
         session_id: str | None = None,
     ) -> GetAnnotatedPageContentResult:
         params = GetAnnotatedPageContentParams(
-            includeActionableInformation=include_actionable_information
+            include_actionable_information=include_actionable_information
         )
 
         result = await self._client.send_raw(
@@ -1082,4 +1082,4 @@ class PageClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetAnnotatedPageContentResult.model_validate(result)
+        return GetAnnotatedPageContentResult.from_cdp(result)

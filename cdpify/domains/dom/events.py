@@ -3,8 +3,9 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import TYPE_CHECKING
+from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.domains.base import CDPModel
+from cdpify.domains.shared import CDPModel
 
 from .types import *
 
@@ -33,6 +34,7 @@ class DOMEvent(StrEnum):
     SHADOW_ROOT_PUSHED = "DOM.shadowRootPushed"
 
 
+@dataclass(kw_only=True)
 class AttributeModifiedEvent(CDPModel):
     """
     Fired when `Element`'s attribute is modified.
@@ -43,6 +45,7 @@ class AttributeModifiedEvent(CDPModel):
     value: str
 
 
+@dataclass(kw_only=True)
 class AdoptedStyleSheetsModifiedEvent(CDPModel):
     """
     Fired when `Element`'s adoptedStyleSheets are modified.
@@ -52,6 +55,7 @@ class AdoptedStyleSheetsModifiedEvent(CDPModel):
     adopted_style_sheets: list[StyleSheetId]
 
 
+@dataclass(kw_only=True)
 class AttributeRemovedEvent(CDPModel):
     """
     Fired when `Element`'s attribute is removed.
@@ -61,6 +65,7 @@ class AttributeRemovedEvent(CDPModel):
     name: str
 
 
+@dataclass(kw_only=True)
 class CharacterDataModifiedEvent(CDPModel):
     """
     Mirrors `DOMCharacterDataModified` event.
@@ -70,6 +75,7 @@ class CharacterDataModifiedEvent(CDPModel):
     character_data: str
 
 
+@dataclass(kw_only=True)
 class ChildNodeCountUpdatedEvent(CDPModel):
     """
     Fired when `Container`'s child node count has changed.
@@ -79,6 +85,7 @@ class ChildNodeCountUpdatedEvent(CDPModel):
     child_node_count: int
 
 
+@dataclass(kw_only=True)
 class ChildNodeInsertedEvent(CDPModel):
     """
     Mirrors `DOMNodeInserted` event.
@@ -89,6 +96,7 @@ class ChildNodeInsertedEvent(CDPModel):
     node: Node
 
 
+@dataclass(kw_only=True)
 class ChildNodeRemovedEvent(CDPModel):
     """
     Mirrors `DOMNodeRemoved` event.
@@ -98,6 +106,7 @@ class ChildNodeRemovedEvent(CDPModel):
     node_id: NodeId
 
 
+@dataclass(kw_only=True)
 class DistributedNodesUpdatedEvent(CDPModel):
     """
     Called when distribution is changed.
@@ -107,6 +116,7 @@ class DistributedNodesUpdatedEvent(CDPModel):
     distributed_nodes: list[BackendNode]
 
 
+@dataclass(kw_only=True)
 class DocumentUpdatedEvent(CDPModel):
     """
     Fired when `Document` has been totally updated. Node ids are no longer valid.
@@ -115,6 +125,7 @@ class DocumentUpdatedEvent(CDPModel):
     pass
 
 
+@dataclass(kw_only=True)
 class InlineStyleInvalidatedEvent(CDPModel):
     """
     Fired when `Element`'s inline style is modified via a CSS property modification.
@@ -123,6 +134,7 @@ class InlineStyleInvalidatedEvent(CDPModel):
     node_ids: list[NodeId]
 
 
+@dataclass(kw_only=True)
 class PseudoElementAddedEvent(CDPModel):
     """
     Called when a pseudo element is added to an element.
@@ -132,6 +144,7 @@ class PseudoElementAddedEvent(CDPModel):
     pseudo_element: Node
 
 
+@dataclass(kw_only=True)
 class TopLayerElementsUpdatedEvent(CDPModel):
     """
     Called when top layer elements are changed.
@@ -140,6 +153,7 @@ class TopLayerElementsUpdatedEvent(CDPModel):
     pass
 
 
+@dataclass(kw_only=True)
 class ScrollableFlagUpdatedEvent(CDPModel):
     """
     Fired when a node's scrollability state changes.
@@ -149,6 +163,7 @@ class ScrollableFlagUpdatedEvent(CDPModel):
     is_scrollable: bool
 
 
+@dataclass(kw_only=True)
 class AffectedByStartingStylesFlagUpdatedEvent(CDPModel):
     """
     Fired when a node's starting styles changes.
@@ -158,6 +173,7 @@ class AffectedByStartingStylesFlagUpdatedEvent(CDPModel):
     affected_by_starting_styles: bool
 
 
+@dataclass(kw_only=True)
 class PseudoElementRemovedEvent(CDPModel):
     """
     Called when a pseudo element is removed from an element.
@@ -167,6 +183,7 @@ class PseudoElementRemovedEvent(CDPModel):
     pseudo_element_id: NodeId
 
 
+@dataclass(kw_only=True)
 class SetChildNodesEvent(CDPModel):
     """
     Fired when backend wants to provide client with the missing DOM structure. This
@@ -177,6 +194,7 @@ class SetChildNodesEvent(CDPModel):
     nodes: list[Node]
 
 
+@dataclass(kw_only=True)
 class ShadowRootPoppedEvent(CDPModel):
     """
     Called when shadow root is popped from the element.
@@ -186,6 +204,7 @@ class ShadowRootPoppedEvent(CDPModel):
     root_id: NodeId
 
 
+@dataclass(kw_only=True)
 class ShadowRootPushedEvent(CDPModel):
     """
     Called when shadow root is pushed into the element.

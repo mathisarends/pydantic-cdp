@@ -3,7 +3,8 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Literal, TYPE_CHECKING
-from cdpify.domains.base import CDPModel
+from dataclasses import dataclass
+from cdpify.domains.shared import CDPModel
 
 if TYPE_CHECKING:
     from cdpify.domains import dom, runtime
@@ -19,6 +20,7 @@ CSP Violation type.
 CSPViolationType = Literal["trustedtype-sink-violation", "trustedtype-policy-violation"]
 
 
+@dataclass(kw_only=True)
 class EventListener(CDPModel):
     """
     Object event listener.

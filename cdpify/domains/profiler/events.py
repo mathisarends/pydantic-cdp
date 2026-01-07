@@ -3,8 +3,9 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import TYPE_CHECKING
+from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.domains.base import CDPModel
+from cdpify.domains.shared import CDPModel
 
 from .types import *
 
@@ -18,13 +19,15 @@ class ProfilerEvent(StrEnum):
     PRECISE_COVERAGE_DELTA_UPDATE = "Profiler.preciseCoverageDeltaUpdate"
 
 
+@dataclass(kw_only=True)
 class ConsoleProfileFinishedEvent(CDPModel):
     id: str
     location: debugger.Location
     profile: Profile
-    title: str | None = None
+    title: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class ConsoleProfileStartedEvent(CDPModel):
     """
     Sent when new profile recording is started using console.profile() call.
@@ -32,9 +35,10 @@ class ConsoleProfileStartedEvent(CDPModel):
 
     id: str
     location: debugger.Location
-    title: str | None = None
+    title: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class PreciseCoverageDeltaUpdateEvent(CDPModel):
     """
     Reports coverage delta since the last poll (either from an event like this, or from

@@ -3,7 +3,8 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Literal, TYPE_CHECKING
-from cdpify.domains.base import CDPModel
+from dataclasses import dataclass
+from cdpify.domains.shared import CDPModel
 
 if TYPE_CHECKING:
     from cdpify.domains import storage
@@ -21,6 +22,7 @@ CachedResponseType = Literal[
 ]
 
 
+@dataclass(kw_only=True)
 class DataEntry(CDPModel):
     """
     Data entry.
@@ -36,6 +38,7 @@ class DataEntry(CDPModel):
     response_headers: list[Header]
 
 
+@dataclass(kw_only=True)
 class Cache(CDPModel):
     """
     Cache identifier.
@@ -48,11 +51,13 @@ class Cache(CDPModel):
     cache_name: str
 
 
+@dataclass(kw_only=True)
 class Header(CDPModel):
     name: str
     value: str
 
 
+@dataclass(kw_only=True)
 class CachedResponse(CDPModel):
     """
     Cached response

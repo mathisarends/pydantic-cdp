@@ -3,7 +3,8 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Literal, TYPE_CHECKING
-from cdpify.domains.base import CDPModel
+from dataclasses import dataclass
+from cdpify.domains.shared import CDPModel
 
 if TYPE_CHECKING:
     from cdpify.domains import network, target
@@ -30,6 +31,7 @@ StorageType = Literal[
 ]
 
 
+@dataclass(kw_only=True)
 class UsageForType(CDPModel):
     """
     Usage for a storage type.
@@ -39,6 +41,7 @@ class UsageForType(CDPModel):
     usage: float
 
 
+@dataclass(kw_only=True)
 class TrustTokens(CDPModel):
     """
     Pair of issuer origin and number of available (signed, but not used) Trust Tokens
@@ -112,6 +115,7 @@ SharedStorageAccessMethod = Literal[
 ]
 
 
+@dataclass(kw_only=True)
 class SharedStorageEntry(CDPModel):
     """
     Struct for a single key-value pair in an origin's shared storage.
@@ -121,6 +125,7 @@ class SharedStorageEntry(CDPModel):
     value: str
 
 
+@dataclass(kw_only=True)
 class SharedStorageMetadata(CDPModel):
     """
     Details for an origin's shared storage.
@@ -132,18 +137,20 @@ class SharedStorageMetadata(CDPModel):
     bytes_used: int
 
 
+@dataclass(kw_only=True)
 class SharedStoragePrivateAggregationConfig(CDPModel):
     """
     Represents a dictionary object passed in as privateAggregationConfig to run or
     selectURL.
     """
 
-    aggregation_coordinator_origin: str | None = None
-    context_id: str | None = None
+    aggregation_coordinator_origin: str | None | None = None
+    context_id: str | None | None = None
     filtering_id_max_bytes: int
-    max_contributions: int | None = None
+    max_contributions: int | None | None = None
 
 
+@dataclass(kw_only=True)
 class SharedStorageReportingMetadata(CDPModel):
     """
     Pair of reporting metadata details for a candidate URL for `selectURL()`.
@@ -153,6 +160,7 @@ class SharedStorageReportingMetadata(CDPModel):
     reporting_url: str
 
 
+@dataclass(kw_only=True)
 class SharedStorageUrlWithMetadata(CDPModel):
     """
     Bundles a candidate URL with its reporting metadata.
@@ -162,39 +170,44 @@ class SharedStorageUrlWithMetadata(CDPModel):
     reporting_metadata: list[SharedStorageReportingMetadata]
 
 
+@dataclass(kw_only=True)
 class SharedStorageAccessParams(CDPModel):
     """
     Bundles the parameters for shared storage access events whose presence/absence can
     vary according to SharedStorageAccessType.
     """
 
-    script_source_url: str | None = None
-    data_origin: str | None = None
-    operation_name: str | None = None
-    operation_id: str | None = None
-    keep_alive: bool | None = None
-    private_aggregation_config: SharedStoragePrivateAggregationConfig | None = None
-    serialized_data: str | None = None
-    urls_with_metadata: list[SharedStorageUrlWithMetadata] | None = None
-    urn_uuid: str | None = None
-    key: str | None = None
-    value: str | None = None
-    ignore_if_present: bool | None = None
-    worklet_ordinal: int | None = None
+    script_source_url: str | None | None = None
+    data_origin: str | None | None = None
+    operation_name: str | None | None = None
+    operation_id: str | None | None = None
+    keep_alive: bool | None | None = None
+    private_aggregation_config: SharedStoragePrivateAggregationConfig | None | None = (
+        None
+    )
+    serialized_data: str | None | None = None
+    urls_with_metadata: list[SharedStorageUrlWithMetadata] | None | None = None
+    urn_uuid: str | None | None = None
+    key: str | None | None = None
+    value: str | None | None = None
+    ignore_if_present: bool | None | None = None
+    worklet_ordinal: int | None | None = None
     worklet_target_id: target.TargetID | None = None
-    with_lock: str | None = None
-    batch_update_id: str | None = None
-    batch_size: int | None = None
+    with_lock: str | None | None = None
+    batch_update_id: str | None | None = None
+    batch_size: int | None | None = None
 
 
 StorageBucketsDurability = Literal["relaxed", "strict"]
 
 
+@dataclass(kw_only=True)
 class StorageBucket(CDPModel):
     storage_key: SerializedStorageKey
-    name: str | None = None
+    name: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class StorageBucketInfo(CDPModel):
     bucket: StorageBucket
     id: str
@@ -213,26 +226,31 @@ UnsignedInt128AsBase16 = str
 SignedInt64AsBase10 = str
 
 
+@dataclass(kw_only=True)
 class AttributionReportingFilterDataEntry(CDPModel):
     key: str
     values: list[str]
 
 
+@dataclass(kw_only=True)
 class AttributionReportingFilterConfig(CDPModel):
     filter_values: list[AttributionReportingFilterDataEntry]
-    lookback_window: int | None = None
+    lookback_window: int | None | None = None
 
 
+@dataclass(kw_only=True)
 class AttributionReportingFilterPair(CDPModel):
     filters: list[AttributionReportingFilterConfig]
     not_filters: list[AttributionReportingFilterConfig]
 
 
+@dataclass(kw_only=True)
 class AttributionReportingAggregationKeysEntry(CDPModel):
     key: str
     value: UnsignedInt128AsBase16
 
 
+@dataclass(kw_only=True)
 class AttributionReportingEventReportWindows(CDPModel):
     start: int
     ends: list[int]
@@ -241,30 +259,35 @@ class AttributionReportingEventReportWindows(CDPModel):
 AttributionReportingTriggerDataMatching = Literal["exact", "modulus"]
 
 
+@dataclass(kw_only=True)
 class AttributionReportingAggregatableDebugReportingData(CDPModel):
     key_piece: UnsignedInt128AsBase16
     value: float
     types: list[str]
 
 
+@dataclass(kw_only=True)
 class AttributionReportingAggregatableDebugReportingConfig(CDPModel):
-    budget: float | None = None
+    budget: float | None | None = None
     key_piece: UnsignedInt128AsBase16
     debug_data: list[AttributionReportingAggregatableDebugReportingData]
-    aggregation_coordinator_origin: str | None = None
+    aggregation_coordinator_origin: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class AttributionScopesData(CDPModel):
     values: list[str]
     limit: float
     max_event_states: float
 
 
+@dataclass(kw_only=True)
 class AttributionReportingNamedBudgetDef(CDPModel):
     name: str
     budget: int
 
 
+@dataclass(kw_only=True)
 class AttributionReportingSourceRegistration(CDPModel):
     time: network.TimeSinceEpoch
     expiry: int
@@ -279,13 +302,13 @@ class AttributionReportingSourceRegistration(CDPModel):
     priority: SignedInt64AsBase10
     filter_data: list[AttributionReportingFilterDataEntry]
     aggregation_keys: list[AttributionReportingAggregationKeysEntry]
-    debug_key: UnsignedInt64AsBase10 | None = None
+    debug_key: UnsignedInt64AsBase10 | None | None = None
     trigger_data_matching: AttributionReportingTriggerDataMatching
     destination_limit_priority: SignedInt64AsBase10
     aggregatable_debug_reporting_config: (
         AttributionReportingAggregatableDebugReportingConfig
     )
-    scopes_data: AttributionScopesData | None = None
+    scopes_data: AttributionScopesData | None | None = None
     max_event_level_reports: int
     named_budgets: list[AttributionReportingNamedBudgetDef]
     debug_reporting: bool
@@ -314,52 +337,59 @@ AttributionReportingSourceRegistrationResult = Literal[
 AttributionReportingSourceRegistrationTimeConfig = Literal["include", "exclude"]
 
 
+@dataclass(kw_only=True)
 class AttributionReportingAggregatableValueDictEntry(CDPModel):
     key: str
     value: float
     filtering_id: UnsignedInt64AsBase10
 
 
+@dataclass(kw_only=True)
 class AttributionReportingAggregatableValueEntry(CDPModel):
     values: list[AttributionReportingAggregatableValueDictEntry]
     filters: AttributionReportingFilterPair
 
 
+@dataclass(kw_only=True)
 class AttributionReportingEventTriggerData(CDPModel):
     data: UnsignedInt64AsBase10
     priority: SignedInt64AsBase10
-    dedup_key: UnsignedInt64AsBase10 | None = None
+    dedup_key: UnsignedInt64AsBase10 | None | None = None
     filters: AttributionReportingFilterPair
 
 
+@dataclass(kw_only=True)
 class AttributionReportingAggregatableTriggerData(CDPModel):
     key_piece: UnsignedInt128AsBase16
     source_keys: list[str]
     filters: AttributionReportingFilterPair
 
 
+@dataclass(kw_only=True)
 class AttributionReportingAggregatableDedupKey(CDPModel):
-    dedup_key: UnsignedInt64AsBase10 | None = None
+    dedup_key: UnsignedInt64AsBase10 | None | None = None
     filters: AttributionReportingFilterPair
 
 
+@dataclass(kw_only=True)
 class AttributionReportingNamedBudgetCandidate(CDPModel):
-    name: str | None = None
+    name: str | None | None = None
     filters: AttributionReportingFilterPair
 
 
+@dataclass(kw_only=True)
 class AttributionReportingTriggerRegistration(CDPModel):
     filters: AttributionReportingFilterPair
-    debug_key: UnsignedInt64AsBase10 | None = None
+    debug_key: UnsignedInt64AsBase10 | None | None = None
     aggregatable_dedup_keys: list[AttributionReportingAggregatableDedupKey]
     event_trigger_data: list[AttributionReportingEventTriggerData]
     aggregatable_trigger_data: list[AttributionReportingAggregatableTriggerData]
     aggregatable_values: list[AttributionReportingAggregatableValueEntry]
     aggregatable_filtering_id_max_bytes: int
     debug_reporting: bool
-    aggregation_coordinator_origin: str | None = None
+    aggregation_coordinator_origin: str | None | None = None
     source_registration_time_config: AttributionReportingSourceRegistrationTimeConfig
-    trigger_context_id: str | None = None
+    trigger_context_id: str | None | None = None
     aggregatable_debug_reporting_config: (
         AttributionReportingAggregatableDebugReportingConfig
     )
@@ -412,6 +442,7 @@ AttributionReportingReportResult = Literal[
 ]
 
 
+@dataclass(kw_only=True)
 class RelatedWebsiteSet(CDPModel):
     """
     A single Related Website Set object.

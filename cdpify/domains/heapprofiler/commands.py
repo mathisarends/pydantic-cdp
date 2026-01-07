@@ -3,8 +3,9 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import TYPE_CHECKING
+from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.domains.base import CDPModel
+from cdpify.domains.shared import CDPModel
 
 from .types import *
 
@@ -26,6 +27,7 @@ class HeapProfilerCommand(StrEnum):
     TAKE_HEAP_SNAPSHOT = "HeapProfiler.takeHeapSnapshot"
 
 
+@dataclass(kw_only=True)
 class AddInspectedHeapObjectParams(CDPModel):
     """
     Enables console to refer to the node with given id via $x (see Command Line API for
@@ -35,51 +37,61 @@ class AddInspectedHeapObjectParams(CDPModel):
     heap_object_id: HeapSnapshotObjectId
 
 
+@dataclass(kw_only=True)
 class GetHeapObjectIdParams(CDPModel):
     object_id: runtime.RemoteObjectId
 
 
+@dataclass(kw_only=True)
 class GetHeapObjectIdResult(CDPModel):
     heap_snapshot_object_id: HeapSnapshotObjectId
 
 
+@dataclass(kw_only=True)
 class GetObjectByHeapObjectIdParams(CDPModel):
     object_id: HeapSnapshotObjectId
-    object_group: str | None = None
+    object_group: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class GetObjectByHeapObjectIdResult(CDPModel):
     result: runtime.RemoteObject
 
 
+@dataclass(kw_only=True)
 class GetSamplingProfileResult(CDPModel):
     profile: SamplingHeapProfile
 
 
+@dataclass(kw_only=True)
 class StartSamplingParams(CDPModel):
-    sampling_interval: float | None = None
-    stack_depth: float | None = None
-    include_objects_collected_by_major_g_c: bool | None = None
-    include_objects_collected_by_minor_g_c: bool | None = None
+    sampling_interval: float | None | None = None
+    stack_depth: float | None | None = None
+    include_objects_collected_by_major_g_c: bool | None | None = None
+    include_objects_collected_by_minor_g_c: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class StartTrackingHeapObjectsParams(CDPModel):
-    track_allocations: bool | None = None
+    track_allocations: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class StopSamplingResult(CDPModel):
     profile: SamplingHeapProfile
 
 
+@dataclass(kw_only=True)
 class StopTrackingHeapObjectsParams(CDPModel):
-    report_progress: bool | None = None
-    treat_global_objects_as_roots: bool | None = None
-    capture_numeric_value: bool | None = None
-    expose_internals: bool | None = None
+    report_progress: bool | None | None = None
+    treat_global_objects_as_roots: bool | None | None = None
+    capture_numeric_value: bool | None | None = None
+    expose_internals: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class TakeHeapSnapshotParams(CDPModel):
-    report_progress: bool | None = None
-    treat_global_objects_as_roots: bool | None = None
-    capture_numeric_value: bool | None = None
-    expose_internals: bool | None = None
+    report_progress: bool | None | None = None
+    treat_global_objects_as_roots: bool | None | None = None
+    capture_numeric_value: bool | None | None = None
+    expose_internals: bool | None | None = None

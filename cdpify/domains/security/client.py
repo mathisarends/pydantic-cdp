@@ -69,7 +69,7 @@ class SecurityClient:
         action: CertificateErrorAction,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = HandleCertificateErrorParams(eventId=event_id, action=action)
+        params = HandleCertificateErrorParams(event_id=event_id, action=action)
 
         result = await self._client.send_raw(
             method=SecurityCommand.HANDLE_CERTIFICATE_ERROR,

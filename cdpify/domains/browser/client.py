@@ -64,8 +64,8 @@ class BrowserClient:
             permission=permission,
             setting=setting,
             origin=origin,
-            embeddedOrigin=embedded_origin,
-            browserContextId=browser_context_id,
+            embedded_origin=embedded_origin,
+            browser_context_id=browser_context_id,
         )
 
         result = await self._client.send_raw(
@@ -84,7 +84,9 @@ class BrowserClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         params = GrantPermissionsParams(
-            permissions=permissions, origin=origin, browserContextId=browser_context_id
+            permissions=permissions,
+            origin=origin,
+            browser_context_id=browser_context_id,
         )
 
         result = await self._client.send_raw(
@@ -100,7 +102,7 @@ class BrowserClient:
         browser_context_id: BrowserContextID | None = None,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = ResetPermissionsParams(browserContextId=browser_context_id)
+        params = ResetPermissionsParams(browser_context_id=browser_context_id)
 
         result = await self._client.send_raw(
             method=BrowserCommand.RESET_PERMISSIONS,
@@ -120,9 +122,9 @@ class BrowserClient:
     ) -> dict[str, Any]:
         params = SetDownloadBehaviorParams(
             behavior=behavior,
-            browserContextId=browser_context_id,
-            downloadPath=download_path,
-            eventsEnabled=events_enabled,
+            browser_context_id=browser_context_id,
+            download_path=download_path,
+            events_enabled=events_enabled,
         )
 
         result = await self._client.send_raw(
@@ -139,7 +141,7 @@ class BrowserClient:
         browser_context_id: BrowserContextID | None = None,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = CancelDownloadParams(guid=guid, browserContextId=browser_context_id)
+        params = CancelDownloadParams(guid=guid, browser_context_id=browser_context_id)
 
         result = await self._client.send_raw(
             method=BrowserCommand.CANCEL_DOWNLOAD,
@@ -190,7 +192,7 @@ class BrowserClient:
             params=None,
             session_id=session_id,
         )
-        return GetVersionResult.model_validate(result)
+        return GetVersionResult.from_cdp(result)
 
     async def get_browser_command_line(
         self,
@@ -201,7 +203,7 @@ class BrowserClient:
             params=None,
             session_id=session_id,
         )
-        return GetBrowserCommandLineResult.model_validate(result)
+        return GetBrowserCommandLineResult.from_cdp(result)
 
     async def get_histograms(
         self,
@@ -217,7 +219,7 @@ class BrowserClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetHistogramsResult.model_validate(result)
+        return GetHistogramsResult.from_cdp(result)
 
     async def get_histogram(
         self,
@@ -233,7 +235,7 @@ class BrowserClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetHistogramResult.model_validate(result)
+        return GetHistogramResult.from_cdp(result)
 
     async def get_window_bounds(
         self,
@@ -241,14 +243,14 @@ class BrowserClient:
         window_id: WindowID,
         session_id: str | None = None,
     ) -> GetWindowBoundsResult:
-        params = GetWindowBoundsParams(windowId=window_id)
+        params = GetWindowBoundsParams(window_id=window_id)
 
         result = await self._client.send_raw(
             method=BrowserCommand.GET_WINDOW_BOUNDS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetWindowBoundsResult.model_validate(result)
+        return GetWindowBoundsResult.from_cdp(result)
 
     async def get_window_for_target(
         self,
@@ -256,14 +258,14 @@ class BrowserClient:
         target_id: Target.TargetID | None = None,
         session_id: str | None = None,
     ) -> GetWindowForTargetResult:
-        params = GetWindowForTargetParams(targetId=target_id)
+        params = GetWindowForTargetParams(target_id=target_id)
 
         result = await self._client.send_raw(
             method=BrowserCommand.GET_WINDOW_FOR_TARGET,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return GetWindowForTargetResult.model_validate(result)
+        return GetWindowForTargetResult.from_cdp(result)
 
     async def set_window_bounds(
         self,
@@ -272,7 +274,7 @@ class BrowserClient:
         bounds: Bounds,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = SetWindowBoundsParams(windowId=window_id, bounds=bounds)
+        params = SetWindowBoundsParams(window_id=window_id, bounds=bounds)
 
         result = await self._client.send_raw(
             method=BrowserCommand.SET_WINDOW_BOUNDS,
@@ -289,7 +291,7 @@ class BrowserClient:
         height: int | None = None,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = SetContentsSizeParams(windowId=window_id, width=width, height=height)
+        params = SetContentsSizeParams(window_id=window_id, width=width, height=height)
 
         result = await self._client.send_raw(
             method=BrowserCommand.SET_CONTENTS_SIZE,
@@ -305,7 +307,7 @@ class BrowserClient:
         image: str | None = None,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = SetDockTileParams(badgeLabel=badge_label, image=image)
+        params = SetDockTileParams(badge_label=badge_label, image=image)
 
         result = await self._client.send_raw(
             method=BrowserCommand.SET_DOCK_TILE,
@@ -320,7 +322,7 @@ class BrowserClient:
         command_id: BrowserCommandId,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = ExecuteBrowserCommandParams(commandId=command_id)
+        params = ExecuteBrowserCommandParams(command_id=command_id)
 
         result = await self._client.send_raw(
             method=BrowserCommand.EXECUTE_BROWSER_COMMAND,
@@ -355,9 +357,9 @@ class BrowserClient:
     ) -> dict[str, Any]:
         params = AddPrivacySandboxCoordinatorKeyConfigParams(
             api=api,
-            coordinatorOrigin=coordinator_origin,
-            keyConfig=key_config,
-            browserContextId=browser_context_id,
+            coordinator_origin=coordinator_origin,
+            key_config=key_config,
+            browser_context_id=browser_context_id,
         )
 
         result = await self._client.send_raw(

@@ -3,8 +3,9 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Literal, TYPE_CHECKING
+from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.domains.base import CDPModel
+from cdpify.domains.shared import CDPModel
 
 from .types import *
 
@@ -43,10 +44,12 @@ class PageEvent(StrEnum):
     COMPILATION_CACHE_PRODUCED = "Page.compilationCacheProduced"
 
 
+@dataclass(kw_only=True)
 class DomContentEventFiredEvent(CDPModel):
     timestamp: network.MonotonicTime
 
 
+@dataclass(kw_only=True)
 class FileChooserOpenedEvent(CDPModel):
     """
     Emitted only when `page.interceptFileChooser` is enabled.
@@ -57,6 +60,7 @@ class FileChooserOpenedEvent(CDPModel):
     backend_node_id: dom.BackendNodeId | None = None
 
 
+@dataclass(kw_only=True)
 class FrameAttachedEvent(CDPModel):
     """
     Fired when frame has been attached to its parent.
@@ -67,6 +71,7 @@ class FrameAttachedEvent(CDPModel):
     stack: runtime.StackTrace | None = None
 
 
+@dataclass(kw_only=True)
 class FrameClearedScheduledNavigationEvent(CDPModel):
     """
     Fired when frame no longer has a scheduled navigation.
@@ -75,6 +80,7 @@ class FrameClearedScheduledNavigationEvent(CDPModel):
     frame_id: FrameId
 
 
+@dataclass(kw_only=True)
 class FrameDetachedEvent(CDPModel):
     """
     Fired when frame has been detached from its parent.
@@ -84,6 +90,7 @@ class FrameDetachedEvent(CDPModel):
     reason: Literal["remove", "swap"]
 
 
+@dataclass(kw_only=True)
 class FrameSubtreeWillBeDetachedEvent(CDPModel):
     """
     Fired before frame subtree is detached. Emitted before any frame of the subtree is
@@ -93,6 +100,7 @@ class FrameSubtreeWillBeDetachedEvent(CDPModel):
     frame_id: FrameId
 
 
+@dataclass(kw_only=True)
 class FrameNavigatedEvent(CDPModel):
     """
     Fired once navigation of the frame has completed. Frame is now associated with the
@@ -103,6 +111,7 @@ class FrameNavigatedEvent(CDPModel):
     type: NavigationType
 
 
+@dataclass(kw_only=True)
 class DocumentOpenedEvent(CDPModel):
     """
     Fired when opening document to write to.
@@ -111,10 +120,12 @@ class DocumentOpenedEvent(CDPModel):
     frame: Frame
 
 
+@dataclass(kw_only=True)
 class FrameResizedEvent(CDPModel):
     pass
 
 
+@dataclass(kw_only=True)
 class FrameStartedNavigatingEvent(CDPModel):
     """
     Fired when a navigation starts. This event is fired for both renderer-initiated and
@@ -140,6 +151,7 @@ class FrameStartedNavigatingEvent(CDPModel):
     ]
 
 
+@dataclass(kw_only=True)
 class FrameRequestedNavigationEvent(CDPModel):
     """
     Fired when a renderer-initiated navigation is requested. Navigation may still be
@@ -152,6 +164,7 @@ class FrameRequestedNavigationEvent(CDPModel):
     disposition: ClientNavigationDisposition
 
 
+@dataclass(kw_only=True)
 class FrameScheduledNavigationEvent(CDPModel):
     """
     Fired when frame schedules a potential navigation.
@@ -163,6 +176,7 @@ class FrameScheduledNavigationEvent(CDPModel):
     url: str
 
 
+@dataclass(kw_only=True)
 class FrameStartedLoadingEvent(CDPModel):
     """
     Fired when frame has started loading.
@@ -171,6 +185,7 @@ class FrameStartedLoadingEvent(CDPModel):
     frame_id: FrameId
 
 
+@dataclass(kw_only=True)
 class FrameStoppedLoadingEvent(CDPModel):
     """
     Fired when frame has stopped loading.
@@ -179,6 +194,7 @@ class FrameStoppedLoadingEvent(CDPModel):
     frame_id: FrameId
 
 
+@dataclass(kw_only=True)
 class DownloadWillBeginEvent(CDPModel):
     """
     Fired when page is about to start a download. Deprecated. Use
@@ -191,6 +207,7 @@ class DownloadWillBeginEvent(CDPModel):
     suggested_filename: str
 
 
+@dataclass(kw_only=True)
 class DownloadProgressEvent(CDPModel):
     """
     Fired when download makes progress. Last call has |done| == true. Deprecated. Use
@@ -203,6 +220,7 @@ class DownloadProgressEvent(CDPModel):
     state: Literal["inProgress", "completed", "canceled"]
 
 
+@dataclass(kw_only=True)
 class InterstitialHiddenEvent(CDPModel):
     """
     Fired when interstitial page was hidden
@@ -211,6 +229,7 @@ class InterstitialHiddenEvent(CDPModel):
     pass
 
 
+@dataclass(kw_only=True)
 class InterstitialShownEvent(CDPModel):
     """
     Fired when interstitial page was shown
@@ -219,6 +238,7 @@ class InterstitialShownEvent(CDPModel):
     pass
 
 
+@dataclass(kw_only=True)
 class JavascriptDialogClosedEvent(CDPModel):
     """
     Fired when a JavaScript initiated dialog (alert, confirm, prompt, or
@@ -230,6 +250,7 @@ class JavascriptDialogClosedEvent(CDPModel):
     user_input: str
 
 
+@dataclass(kw_only=True)
 class JavascriptDialogOpeningEvent(CDPModel):
     """
     Fired when a JavaScript initiated dialog (alert, confirm, prompt, or
@@ -241,9 +262,10 @@ class JavascriptDialogOpeningEvent(CDPModel):
     message: str
     type: DialogType
     has_browser_handler: bool
-    default_prompt: str | None = None
+    default_prompt: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class LifecycleEventEvent(CDPModel):
     """
     Fired for lifecycle events (navigation, load, paint, etc) in the current target
@@ -256,6 +278,7 @@ class LifecycleEventEvent(CDPModel):
     timestamp: network.MonotonicTime
 
 
+@dataclass(kw_only=True)
 class BackForwardCacheNotUsedEvent(CDPModel):
     """
     Fired for failed bfcache history navigations if BackForwardCache feature is
@@ -268,14 +291,16 @@ class BackForwardCacheNotUsedEvent(CDPModel):
     frame_id: FrameId
     not_restored_explanations: list[BackForwardCacheNotRestoredExplanation]
     not_restored_explanations_tree: (
-        BackForwardCacheNotRestoredExplanationTree | None
+        BackForwardCacheNotRestoredExplanationTree | None | None
     ) = None
 
 
+@dataclass(kw_only=True)
 class LoadEventFiredEvent(CDPModel):
     timestamp: network.MonotonicTime
 
 
+@dataclass(kw_only=True)
 class NavigatedWithinDocumentEvent(CDPModel):
     """
     Fired when same-document navigation happens, e.g. due to history API usage or
@@ -287,6 +312,7 @@ class NavigatedWithinDocumentEvent(CDPModel):
     navigation_type: Literal["fragment", "historyApi", "other"]
 
 
+@dataclass(kw_only=True)
 class ScreencastFrameEvent(CDPModel):
     """
     Compressed image data requested by the `startScreencast`.
@@ -297,6 +323,7 @@ class ScreencastFrameEvent(CDPModel):
     session_id: int
 
 
+@dataclass(kw_only=True)
 class ScreencastVisibilityChangedEvent(CDPModel):
     """
     Fired when the page with currently enabled screencast was shown or hidden `.
@@ -305,6 +332,7 @@ class ScreencastVisibilityChangedEvent(CDPModel):
     visible: bool
 
 
+@dataclass(kw_only=True)
 class WindowOpenEvent(CDPModel):
     """
     Fired when a new window is going to be opened, via window.open(), link click, form
@@ -317,6 +345,7 @@ class WindowOpenEvent(CDPModel):
     user_gesture: bool
 
 
+@dataclass(kw_only=True)
 class CompilationCacheProducedEvent(CDPModel):
     """
     Issued for every compilation cache generated.

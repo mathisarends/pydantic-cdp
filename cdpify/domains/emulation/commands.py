@@ -3,8 +3,9 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Literal, TYPE_CHECKING
+from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.domains.base import CDPModel
+from cdpify.domains.shared import CDPModel
 
 from .types import *
 
@@ -66,10 +67,12 @@ class EmulationCommand(StrEnum):
     REMOVE_SCREEN = "Emulation.removeScreen"
 
 
+@dataclass(kw_only=True)
 class CanEmulateResult(CDPModel):
     result: bool
 
 
+@dataclass(kw_only=True)
 class SetFocusEmulationEnabledParams(CDPModel):
     """
     Enables or disables simulating a focused and active page.
@@ -78,14 +81,16 @@ class SetFocusEmulationEnabledParams(CDPModel):
     enabled: bool
 
 
+@dataclass(kw_only=True)
 class SetAutoDarkModeOverrideParams(CDPModel):
     """
     Automatically render all web contents using a dark theme.
     """
 
-    enabled: bool | None = None
+    enabled: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetCPUThrottlingRateParams(CDPModel):
     """
     Enables CPU throttling to emulate slow CPUs.
@@ -94,6 +99,7 @@ class SetCPUThrottlingRateParams(CDPModel):
     rate: float
 
 
+@dataclass(kw_only=True)
 class SetDefaultBackgroundColorOverrideParams(CDPModel):
     """
     Sets or clears an override of the default background color of the frame. This
@@ -103,6 +109,7 @@ class SetDefaultBackgroundColorOverrideParams(CDPModel):
     color: dom.RGBA | None = None
 
 
+@dataclass(kw_only=True)
 class SetSafeAreaInsetsOverrideParams(CDPModel):
     """
     Overrides the values for env(safe-area-inset-*) and env(safe-area-max-inset-*).
@@ -113,6 +120,7 @@ class SetSafeAreaInsetsOverrideParams(CDPModel):
     insets: SafeAreaInsets
 
 
+@dataclass(kw_only=True)
 class SetDeviceMetricsOverrideParams(CDPModel):
     """
     Overrides the values of device screen dimensions (window.screen.width,
@@ -124,18 +132,19 @@ class SetDeviceMetricsOverrideParams(CDPModel):
     height: int
     device_scale_factor: float
     mobile: bool
-    scale: float | None = None
-    screen_width: int | None = None
-    screen_height: int | None = None
-    position_x: int | None = None
-    position_y: int | None = None
-    dont_set_visible_size: bool | None = None
-    screen_orientation: ScreenOrientation | None = None
+    scale: float | None | None = None
+    screen_width: int | None | None = None
+    screen_height: int | None | None = None
+    position_x: int | None | None = None
+    position_y: int | None | None = None
+    dont_set_visible_size: bool | None | None = None
+    screen_orientation: ScreenOrientation | None | None = None
     viewport: page.Viewport | None = None
-    display_feature: DisplayFeature | None = None
-    device_posture: DevicePosture | None = None
+    display_feature: DisplayFeature | None | None = None
+    device_posture: DevicePosture | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetDevicePostureOverrideParams(CDPModel):
     """
     Start reporting the given posture value to the Device Posture API. This override
@@ -145,6 +154,7 @@ class SetDevicePostureOverrideParams(CDPModel):
     posture: DevicePosture
 
 
+@dataclass(kw_only=True)
 class SetDisplayFeaturesOverrideParams(CDPModel):
     """
     Start using the given display features to pupulate the Viewport Segments API. This
@@ -154,28 +164,33 @@ class SetDisplayFeaturesOverrideParams(CDPModel):
     features: list[DisplayFeature]
 
 
+@dataclass(kw_only=True)
 class SetScrollbarsHiddenParams(CDPModel):
     hidden: bool
 
 
+@dataclass(kw_only=True)
 class SetDocumentCookieDisabledParams(CDPModel):
     disabled: bool
 
 
+@dataclass(kw_only=True)
 class SetEmitTouchEventsForMouseParams(CDPModel):
     enabled: bool
-    configuration: Literal["mobile", "desktop"] | None = None
+    configuration: Literal["mobile", "desktop"] | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetEmulatedMediaParams(CDPModel):
     """
     Emulates the given media type or media feature for CSS media queries.
     """
 
-    media: str | None = None
-    features: list[MediaFeature] | None = None
+    media: str | None | None = None
+    features: list[MediaFeature] | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetEmulatedVisionDeficiencyParams(CDPModel):
     """
     Emulates the given vision deficiency.
@@ -192,37 +207,42 @@ class SetEmulatedVisionDeficiencyParams(CDPModel):
     ]
 
 
+@dataclass(kw_only=True)
 class SetEmulatedOSTextScaleParams(CDPModel):
     """
     Emulates the given OS text scale.
     """
 
-    scale: float | None = None
+    scale: float | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetGeolocationOverrideParams(CDPModel):
     """
     Overrides the Geolocation Position or Error. Omitting latitude, longitude or
     accuracy emulates position unavailable.
     """
 
-    latitude: float | None = None
-    longitude: float | None = None
-    accuracy: float | None = None
-    altitude: float | None = None
-    altitude_accuracy: float | None = None
-    heading: float | None = None
-    speed: float | None = None
+    latitude: float | None | None = None
+    longitude: float | None | None = None
+    accuracy: float | None | None = None
+    altitude: float | None | None = None
+    altitude_accuracy: float | None | None = None
+    heading: float | None | None = None
+    speed: float | None | None = None
 
 
+@dataclass(kw_only=True)
 class GetOverriddenSensorInformationParams(CDPModel):
     type: SensorType
 
 
+@dataclass(kw_only=True)
 class GetOverriddenSensorInformationResult(CDPModel):
     requested_sampling_frequency: float
 
 
+@dataclass(kw_only=True)
 class SetSensorOverrideEnabledParams(CDPModel):
     """
     Overrides a platform sensor of a given type. If |enabled| is true, calls to
@@ -234,9 +254,10 @@ class SetSensorOverrideEnabledParams(CDPModel):
 
     enabled: bool
     type: SensorType
-    metadata: SensorMetadata | None = None
+    metadata: SensorMetadata | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetSensorOverrideReadingsParams(CDPModel):
     """
     Updates the sensor readings reported by a sensor type previously overridden by
@@ -247,6 +268,7 @@ class SetSensorOverrideReadingsParams(CDPModel):
     reading: SensorReading
 
 
+@dataclass(kw_only=True)
 class SetPressureSourceOverrideEnabledParams(CDPModel):
     """
     Overrides a pressure source of a given type, as used by the Compute Pressure API,
@@ -257,9 +279,10 @@ class SetPressureSourceOverrideEnabledParams(CDPModel):
 
     enabled: bool
     source: PressureSource
-    metadata: PressureMetadata | None = None
+    metadata: PressureMetadata | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetPressureStateOverrideParams(CDPModel):
     """
     TODO: OBSOLETE: To remove when setPressureDataOverride is merged. Provides a given
@@ -272,6 +295,7 @@ class SetPressureStateOverrideParams(CDPModel):
     state: PressureState
 
 
+@dataclass(kw_only=True)
 class SetPressureDataOverrideParams(CDPModel):
     """
     Provides a given pressure data set that will be processed and eventually be
@@ -281,9 +305,10 @@ class SetPressureDataOverrideParams(CDPModel):
 
     source: PressureSource
     state: PressureState
-    own_contribution_estimate: float | None = None
+    own_contribution_estimate: float | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetIdleOverrideParams(CDPModel):
     """
     Overrides the Idle state.
@@ -293,6 +318,7 @@ class SetIdleOverrideParams(CDPModel):
     is_screen_unlocked: bool
 
 
+@dataclass(kw_only=True)
 class SetNavigatorOverridesParams(CDPModel):
     """
     Overrides value returned by the javascript navigator object.
@@ -301,6 +327,7 @@ class SetNavigatorOverridesParams(CDPModel):
     platform: str
 
 
+@dataclass(kw_only=True)
 class SetPageScaleFactorParams(CDPModel):
     """
     Sets a specified page scale factor.
@@ -309,6 +336,7 @@ class SetPageScaleFactorParams(CDPModel):
     page_scale_factor: float
 
 
+@dataclass(kw_only=True)
 class SetScriptExecutionDisabledParams(CDPModel):
     """
     Switches script execution in the page.
@@ -317,15 +345,17 @@ class SetScriptExecutionDisabledParams(CDPModel):
     value: bool
 
 
+@dataclass(kw_only=True)
 class SetTouchEmulationEnabledParams(CDPModel):
     """
     Enables touch on platforms which do not support them.
     """
 
     enabled: bool
-    max_touch_points: int | None = None
+    max_touch_points: int | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetVirtualTimePolicyParams(CDPModel):
     """
     Turns on virtual time for all frames (replacing real-time with a synthetic time
@@ -334,23 +364,26 @@ class SetVirtualTimePolicyParams(CDPModel):
     """
 
     policy: VirtualTimePolicy
-    budget: float | None = None
-    max_virtual_time_task_starvation_count: int | None = None
+    budget: float | None | None = None
+    max_virtual_time_task_starvation_count: int | None | None = None
     initial_virtual_time: network.TimeSinceEpoch | None = None
 
 
+@dataclass(kw_only=True)
 class SetVirtualTimePolicyResult(CDPModel):
     virtual_time_ticks_base: float
 
 
+@dataclass(kw_only=True)
 class SetLocaleOverrideParams(CDPModel):
     """
     Overrides default host system locale with the specified one.
     """
 
-    locale: str | None = None
+    locale: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetTimezoneOverrideParams(CDPModel):
     """
     Overrides default host system timezone with the specified one.
@@ -359,6 +392,7 @@ class SetTimezoneOverrideParams(CDPModel):
     timezone_id: str
 
 
+@dataclass(kw_only=True)
 class SetVisibleSizeParams(CDPModel):
     """
     Resizes the frame/viewport of the page. Note that this does not affect the frame's
@@ -370,22 +404,26 @@ class SetVisibleSizeParams(CDPModel):
     height: int
 
 
+@dataclass(kw_only=True)
 class SetDisabledImageTypesParams(CDPModel):
     image_types: list[DisabledImageType]
 
 
+@dataclass(kw_only=True)
 class SetDataSaverOverrideParams(CDPModel):
     """
     Override the value of navigator.connection.saveData
     """
 
-    data_saver_enabled: bool | None = None
+    data_saver_enabled: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetHardwareConcurrencyOverrideParams(CDPModel):
     hardware_concurrency: int
 
 
+@dataclass(kw_only=True)
 class SetUserAgentOverrideParams(CDPModel):
     """
     Allows overriding user agent with the given string. `userAgentMetadata` must be set
@@ -393,11 +431,12 @@ class SetUserAgentOverrideParams(CDPModel):
     """
 
     user_agent: str
-    accept_language: str | None = None
-    platform: str | None = None
-    user_agent_metadata: UserAgentMetadata | None = None
+    accept_language: str | None | None = None
+    platform: str | None | None = None
+    user_agent_metadata: UserAgentMetadata | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetAutomationOverrideParams(CDPModel):
     """
     Allows overriding the automation flag.
@@ -406,6 +445,7 @@ class SetAutomationOverrideParams(CDPModel):
     enabled: bool
 
 
+@dataclass(kw_only=True)
 class SetSmallViewportHeightDifferenceOverrideParams(CDPModel):
     """
     Allows overriding the difference between the small and large viewport sizes, which
@@ -416,10 +456,12 @@ class SetSmallViewportHeightDifferenceOverrideParams(CDPModel):
     difference: int
 
 
+@dataclass(kw_only=True)
 class GetScreenInfosResult(CDPModel):
     screen_infos: list[ScreenInfo]
 
 
+@dataclass(kw_only=True)
 class AddScreenParams(CDPModel):
     """
     Add a new screen to the device. Only supported in headless mode.
@@ -429,18 +471,20 @@ class AddScreenParams(CDPModel):
     top: int
     width: int
     height: int
-    work_area_insets: WorkAreaInsets | None = None
-    device_pixel_ratio: float | None = None
-    rotation: int | None = None
-    color_depth: int | None = None
-    label: str | None = None
-    is_internal: bool | None = None
+    work_area_insets: WorkAreaInsets | None | None = None
+    device_pixel_ratio: float | None | None = None
+    rotation: int | None | None = None
+    color_depth: int | None | None = None
+    label: str | None | None = None
+    is_internal: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class AddScreenResult(CDPModel):
     screen_info: ScreenInfo
 
 
+@dataclass(kw_only=True)
 class RemoveScreenParams(CDPModel):
     """
     Remove screen from the device. Only supported in headless mode.

@@ -3,8 +3,9 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import TYPE_CHECKING
+from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.domains.base import CDPModel
+from cdpify.domains.shared import CDPModel
 
 from .types import *
 
@@ -17,6 +18,7 @@ class IOCommand(StrEnum):
     RESOLVE_BLOB = "IO.resolveBlob"
 
 
+@dataclass(kw_only=True)
 class CloseParams(CDPModel):
     """
     Close the stream, discard any temporary backing storage.
@@ -25,22 +27,25 @@ class CloseParams(CDPModel):
     handle: StreamHandle
 
 
+@dataclass(kw_only=True)
 class ReadParams(CDPModel):
     """
     Read a chunk of the stream
     """
 
     handle: StreamHandle
-    offset: int | None = None
-    size: int | None = None
+    offset: int | None | None = None
+    size: int | None | None = None
 
 
+@dataclass(kw_only=True)
 class ReadResult(CDPModel):
-    base64_encoded: bool | None = None
+    base64_encoded: bool | None | None = None
     data: str
     eof: bool
 
 
+@dataclass(kw_only=True)
 class ResolveBlobParams(CDPModel):
     """
     Return UUID of Blob object specified by a remote object id.
@@ -49,5 +54,6 @@ class ResolveBlobParams(CDPModel):
     object_id: runtime.RemoteObjectId
 
 
+@dataclass(kw_only=True)
 class ResolveBlobResult(CDPModel):
     uuid: str

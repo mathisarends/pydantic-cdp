@@ -3,8 +3,9 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Literal, TYPE_CHECKING
+from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.domains.base import CDPModel
+from cdpify.domains.shared import CDPModel
 
 from .types import *
 
@@ -66,6 +67,7 @@ class NetworkEvent(StrEnum):
     DEVICE_BOUND_SESSIONS_ADDED = "Network.deviceBoundSessionsAdded"
 
 
+@dataclass(kw_only=True)
 class DataReceivedEvent(CDPModel):
     """
     Fired when data chunk was received over the network.
@@ -75,9 +77,10 @@ class DataReceivedEvent(CDPModel):
     timestamp: MonotonicTime
     data_length: int
     encoded_data_length: int
-    data: str | None = None
+    data: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class EventSourceMessageReceivedEvent(CDPModel):
     """
     Fired when EventSource message is received.
@@ -90,6 +93,7 @@ class EventSourceMessageReceivedEvent(CDPModel):
     data: str
 
 
+@dataclass(kw_only=True)
 class LoadingFailedEvent(CDPModel):
     """
     Fired when HTTP request has failed to load.
@@ -99,11 +103,12 @@ class LoadingFailedEvent(CDPModel):
     timestamp: MonotonicTime
     type: ResourceType
     error_text: str
-    canceled: bool | None = None
-    blocked_reason: BlockedReason | None = None
-    cors_error_status: CorsErrorStatus | None = None
+    canceled: bool | None | None = None
+    blocked_reason: BlockedReason | None | None = None
+    cors_error_status: CorsErrorStatus | None | None = None
 
 
+@dataclass(kw_only=True)
 class LoadingFinishedEvent(CDPModel):
     """
     Fired when HTTP request has finished loading.
@@ -114,6 +119,7 @@ class LoadingFinishedEvent(CDPModel):
     encoded_data_length: float
 
 
+@dataclass(kw_only=True)
 class RequestInterceptedEvent(CDPModel):
     """
     Details of an intercepted HTTP request, which must be either allowed, blocked,
@@ -125,15 +131,16 @@ class RequestInterceptedEvent(CDPModel):
     frame_id: page.FrameId
     resource_type: ResourceType
     is_navigation_request: bool
-    is_download: bool | None = None
-    redirect_url: str | None = None
-    auth_challenge: AuthChallenge | None = None
-    response_error_reason: ErrorReason | None = None
-    response_status_code: int | None = None
-    response_headers: Headers | None = None
-    request_id: RequestId | None = None
+    is_download: bool | None | None = None
+    redirect_url: str | None | None = None
+    auth_challenge: AuthChallenge | None | None = None
+    response_error_reason: ErrorReason | None | None = None
+    response_status_code: int | None | None = None
+    response_headers: Headers | None | None = None
+    request_id: RequestId | None | None = None
 
 
+@dataclass(kw_only=True)
 class RequestServedFromCacheEvent(CDPModel):
     """
     Fired if request ended up loading from cache.
@@ -142,6 +149,7 @@ class RequestServedFromCacheEvent(CDPModel):
     request_id: RequestId
 
 
+@dataclass(kw_only=True)
 class RequestWillBeSentEvent(CDPModel):
     """
     Fired when page is about to send HTTP request.
@@ -155,13 +163,14 @@ class RequestWillBeSentEvent(CDPModel):
     wall_time: TimeSinceEpoch
     initiator: Initiator
     redirect_has_extra_info: bool
-    redirect_response: Response | None = None
-    type: ResourceType | None = None
+    redirect_response: Response | None | None = None
+    type: ResourceType | None | None = None
     frame_id: page.FrameId | None = None
-    has_user_gesture: bool | None = None
-    render_blocking_behavior: RenderBlockingBehavior | None = None
+    has_user_gesture: bool | None | None = None
+    render_blocking_behavior: RenderBlockingBehavior | None | None = None
 
 
+@dataclass(kw_only=True)
 class ResourceChangedPriorityEvent(CDPModel):
     """
     Fired when resource loading priority is changed
@@ -172,6 +181,7 @@ class ResourceChangedPriorityEvent(CDPModel):
     timestamp: MonotonicTime
 
 
+@dataclass(kw_only=True)
 class SignedExchangeReceivedEvent(CDPModel):
     """
     Fired when a signed exchange was received over the network
@@ -181,6 +191,7 @@ class SignedExchangeReceivedEvent(CDPModel):
     info: SignedExchangeInfo
 
 
+@dataclass(kw_only=True)
 class ResponseReceivedEvent(CDPModel):
     """
     Fired when HTTP response is available.
@@ -195,6 +206,7 @@ class ResponseReceivedEvent(CDPModel):
     frame_id: page.FrameId | None = None
 
 
+@dataclass(kw_only=True)
 class WebSocketClosedEvent(CDPModel):
     """
     Fired when WebSocket is closed.
@@ -204,6 +216,7 @@ class WebSocketClosedEvent(CDPModel):
     timestamp: MonotonicTime
 
 
+@dataclass(kw_only=True)
 class WebSocketCreatedEvent(CDPModel):
     """
     Fired upon WebSocket creation.
@@ -211,9 +224,10 @@ class WebSocketCreatedEvent(CDPModel):
 
     request_id: RequestId
     url: str
-    initiator: Initiator | None = None
+    initiator: Initiator | None | None = None
 
 
+@dataclass(kw_only=True)
 class WebSocketFrameErrorEvent(CDPModel):
     """
     Fired when WebSocket message error occurs.
@@ -224,6 +238,7 @@ class WebSocketFrameErrorEvent(CDPModel):
     error_message: str
 
 
+@dataclass(kw_only=True)
 class WebSocketFrameReceivedEvent(CDPModel):
     """
     Fired when WebSocket message is received.
@@ -234,6 +249,7 @@ class WebSocketFrameReceivedEvent(CDPModel):
     response: WebSocketFrame
 
 
+@dataclass(kw_only=True)
 class WebSocketFrameSentEvent(CDPModel):
     """
     Fired when WebSocket message is sent.
@@ -244,6 +260,7 @@ class WebSocketFrameSentEvent(CDPModel):
     response: WebSocketFrame
 
 
+@dataclass(kw_only=True)
 class WebSocketHandshakeResponseReceivedEvent(CDPModel):
     """
     Fired when WebSocket handshake response becomes available.
@@ -254,6 +271,7 @@ class WebSocketHandshakeResponseReceivedEvent(CDPModel):
     response: WebSocketResponse
 
 
+@dataclass(kw_only=True)
 class WebSocketWillSendHandshakeRequestEvent(CDPModel):
     """
     Fired when WebSocket is about to initiate handshake.
@@ -265,6 +283,7 @@ class WebSocketWillSendHandshakeRequestEvent(CDPModel):
     request: WebSocketRequest
 
 
+@dataclass(kw_only=True)
 class WebTransportCreatedEvent(CDPModel):
     """
     Fired upon WebTransport creation.
@@ -273,9 +292,10 @@ class WebTransportCreatedEvent(CDPModel):
     transport_id: RequestId
     url: str
     timestamp: MonotonicTime
-    initiator: Initiator | None = None
+    initiator: Initiator | None | None = None
 
 
+@dataclass(kw_only=True)
 class WebTransportConnectionEstablishedEvent(CDPModel):
     """
     Fired when WebTransport handshake is finished.
@@ -285,6 +305,7 @@ class WebTransportConnectionEstablishedEvent(CDPModel):
     timestamp: MonotonicTime
 
 
+@dataclass(kw_only=True)
 class WebTransportClosedEvent(CDPModel):
     """
     Fired when WebTransport is disposed.
@@ -294,6 +315,7 @@ class WebTransportClosedEvent(CDPModel):
     timestamp: MonotonicTime
 
 
+@dataclass(kw_only=True)
 class DirectTCPSocketCreatedEvent(CDPModel):
     """
     Fired upon direct_socket.TCPSocket creation.
@@ -304,9 +326,10 @@ class DirectTCPSocketCreatedEvent(CDPModel):
     remote_port: int
     options: DirectTCPSocketOptions
     timestamp: MonotonicTime
-    initiator: Initiator | None = None
+    initiator: Initiator | None | None = None
 
 
+@dataclass(kw_only=True)
 class DirectTCPSocketOpenedEvent(CDPModel):
     """
     Fired when direct_socket.TCPSocket connection is opened.
@@ -316,10 +339,11 @@ class DirectTCPSocketOpenedEvent(CDPModel):
     remote_addr: str
     remote_port: int
     timestamp: MonotonicTime
-    local_addr: str | None = None
-    local_port: int | None = None
+    local_addr: str | None | None = None
+    local_port: int | None | None = None
 
 
+@dataclass(kw_only=True)
 class DirectTCPSocketAbortedEvent(CDPModel):
     """
     Fired when direct_socket.TCPSocket is aborted.
@@ -330,6 +354,7 @@ class DirectTCPSocketAbortedEvent(CDPModel):
     timestamp: MonotonicTime
 
 
+@dataclass(kw_only=True)
 class DirectTCPSocketClosedEvent(CDPModel):
     """
     Fired when direct_socket.TCPSocket is closed.
@@ -339,6 +364,7 @@ class DirectTCPSocketClosedEvent(CDPModel):
     timestamp: MonotonicTime
 
 
+@dataclass(kw_only=True)
 class DirectTCPSocketChunkSentEvent(CDPModel):
     """
     Fired when data is sent to tcp direct socket stream.
@@ -349,6 +375,7 @@ class DirectTCPSocketChunkSentEvent(CDPModel):
     timestamp: MonotonicTime
 
 
+@dataclass(kw_only=True)
 class DirectTCPSocketChunkReceivedEvent(CDPModel):
     """
     Fired when data is received from tcp direct socket stream.
@@ -359,16 +386,19 @@ class DirectTCPSocketChunkReceivedEvent(CDPModel):
     timestamp: MonotonicTime
 
 
+@dataclass(kw_only=True)
 class DirectUDPSocketJoinedMulticastGroupEvent(CDPModel):
     identifier: RequestId
     i_p_address: str
 
 
+@dataclass(kw_only=True)
 class DirectUDPSocketLeftMulticastGroupEvent(CDPModel):
     identifier: RequestId
     i_p_address: str
 
 
+@dataclass(kw_only=True)
 class DirectUDPSocketCreatedEvent(CDPModel):
     """
     Fired upon direct_socket.UDPSocket creation.
@@ -377,9 +407,10 @@ class DirectUDPSocketCreatedEvent(CDPModel):
     identifier: RequestId
     options: DirectUDPSocketOptions
     timestamp: MonotonicTime
-    initiator: Initiator | None = None
+    initiator: Initiator | None | None = None
 
 
+@dataclass(kw_only=True)
 class DirectUDPSocketOpenedEvent(CDPModel):
     """
     Fired when direct_socket.UDPSocket connection is opened.
@@ -389,10 +420,11 @@ class DirectUDPSocketOpenedEvent(CDPModel):
     local_addr: str
     local_port: int
     timestamp: MonotonicTime
-    remote_addr: str | None = None
-    remote_port: int | None = None
+    remote_addr: str | None | None = None
+    remote_port: int | None | None = None
 
 
+@dataclass(kw_only=True)
 class DirectUDPSocketAbortedEvent(CDPModel):
     """
     Fired when direct_socket.UDPSocket is aborted.
@@ -403,6 +435,7 @@ class DirectUDPSocketAbortedEvent(CDPModel):
     timestamp: MonotonicTime
 
 
+@dataclass(kw_only=True)
 class DirectUDPSocketClosedEvent(CDPModel):
     """
     Fired when direct_socket.UDPSocket is closed.
@@ -412,6 +445,7 @@ class DirectUDPSocketClosedEvent(CDPModel):
     timestamp: MonotonicTime
 
 
+@dataclass(kw_only=True)
 class DirectUDPSocketChunkSentEvent(CDPModel):
     """
     Fired when message is sent to udp direct socket stream.
@@ -422,6 +456,7 @@ class DirectUDPSocketChunkSentEvent(CDPModel):
     timestamp: MonotonicTime
 
 
+@dataclass(kw_only=True)
 class DirectUDPSocketChunkReceivedEvent(CDPModel):
     """
     Fired when message is received from udp direct socket stream.
@@ -432,6 +467,7 @@ class DirectUDPSocketChunkReceivedEvent(CDPModel):
     timestamp: MonotonicTime
 
 
+@dataclass(kw_only=True)
 class RequestWillBeSentExtraInfoEvent(CDPModel):
     """
     Fired when additional information about a requestWillBeSent event is available from
@@ -445,11 +481,12 @@ class RequestWillBeSentExtraInfoEvent(CDPModel):
     associated_cookies: list[AssociatedCookie]
     headers: Headers
     connect_timing: ConnectTiming
-    client_security_state: ClientSecurityState | None = None
-    site_has_cookie_in_other_partition: bool | None = None
-    applied_network_conditions_id: str | None = None
+    client_security_state: ClientSecurityState | None | None = None
+    site_has_cookie_in_other_partition: bool | None | None = None
+    applied_network_conditions_id: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class ResponseReceivedExtraInfoEvent(CDPModel):
     """
     Fired when additional information about a responseReceived event is available from
@@ -463,12 +500,13 @@ class ResponseReceivedExtraInfoEvent(CDPModel):
     headers: Headers
     resource_i_p_address_space: IPAddressSpace
     status_code: int
-    headers_text: str | None = None
-    cookie_partition_key: CookiePartitionKey | None = None
-    cookie_partition_key_opaque: bool | None = None
-    exempted_cookies: list[ExemptedSetCookieWithReason] | None = None
+    headers_text: str | None | None = None
+    cookie_partition_key: CookiePartitionKey | None | None = None
+    cookie_partition_key_opaque: bool | None | None = None
+    exempted_cookies: list[ExemptedSetCookieWithReason] | None | None = None
 
 
+@dataclass(kw_only=True)
 class ResponseReceivedEarlyHintsEvent(CDPModel):
     """
     Fired when 103 Early Hints headers is received in addition to the common response.
@@ -480,6 +518,7 @@ class ResponseReceivedEarlyHintsEvent(CDPModel):
     headers: Headers
 
 
+@dataclass(kw_only=True)
 class TrustTokenOperationDoneEvent(CDPModel):
     """
     Fired exactly once for each Trust Token operation. Depending on the type of the
@@ -504,11 +543,12 @@ class TrustTokenOperationDoneEvent(CDPModel):
     ]
     type: TrustTokenOperationType
     request_id: RequestId
-    top_level_origin: str | None = None
-    issuer_origin: str | None = None
-    issued_token_count: int | None = None
+    top_level_origin: str | None | None = None
+    issuer_origin: str | None | None = None
+    issued_token_count: int | None | None = None
 
 
+@dataclass(kw_only=True)
 class PolicyUpdatedEvent(CDPModel):
     """
     Fired once security policy has been updated.
@@ -517,6 +557,7 @@ class PolicyUpdatedEvent(CDPModel):
     pass
 
 
+@dataclass(kw_only=True)
 class ReportingApiReportAddedEvent(CDPModel):
     """
     Is sent whenever a new report is added. And after 'enableReportingApi' for all
@@ -526,15 +567,18 @@ class ReportingApiReportAddedEvent(CDPModel):
     report: ReportingApiReport
 
 
+@dataclass(kw_only=True)
 class ReportingApiReportUpdatedEvent(CDPModel):
     report: ReportingApiReport
 
 
+@dataclass(kw_only=True)
 class ReportingApiEndpointsChangedForOriginEvent(CDPModel):
     origin: str
     endpoints: list[ReportingApiEndpoint]
 
 
+@dataclass(kw_only=True)
 class DeviceBoundSessionsAddedEvent(CDPModel):
     """
     Triggered when the initial set of device bound sessions is added.

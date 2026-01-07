@@ -3,8 +3,9 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Literal, TYPE_CHECKING
+from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.domains.base import CDPModel
+from cdpify.domains.shared import CDPModel
 
 from .types import *
 
@@ -69,6 +70,7 @@ class DOMCommand(StrEnum):
     FORCE_SHOW_POPOVER = "DOM.forceShowPopover"
 
 
+@dataclass(kw_only=True)
 class CollectClassNamesFromSubtreeParams(CDPModel):
     """
     Collects class names for the node with given id and all of it's child nodes.
@@ -77,10 +79,12 @@ class CollectClassNamesFromSubtreeParams(CDPModel):
     node_id: NodeId
 
 
+@dataclass(kw_only=True)
 class CollectClassNamesFromSubtreeResult(CDPModel):
     class_names: list[str]
 
 
+@dataclass(kw_only=True)
 class CopyToParams(CDPModel):
     """
     Creates a deep copy of the specified node and places it into the target container
@@ -89,30 +93,34 @@ class CopyToParams(CDPModel):
 
     node_id: NodeId
     target_node_id: NodeId
-    insert_before_node_id: NodeId | None = None
+    insert_before_node_id: NodeId | None | None = None
 
 
+@dataclass(kw_only=True)
 class CopyToResult(CDPModel):
     node_id: NodeId
 
 
+@dataclass(kw_only=True)
 class DescribeNodeParams(CDPModel):
     """
     Describes node given its id, does not require domain to be enabled. Does not start
     tracking any objects, can be used for automation.
     """
 
-    node_id: NodeId | None = None
-    backend_node_id: BackendNodeId | None = None
+    node_id: NodeId | None | None = None
+    backend_node_id: BackendNodeId | None | None = None
     object_id: runtime.RemoteObjectId | None = None
-    depth: int | None = None
-    pierce: bool | None = None
+    depth: int | None | None = None
+    pierce: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class DescribeNodeResult(CDPModel):
     node: Node
 
 
+@dataclass(kw_only=True)
 class ScrollIntoViewIfNeededParams(CDPModel):
     """
     Scrolls the specified rect of the given node into view if not already visible.
@@ -120,12 +128,13 @@ class ScrollIntoViewIfNeededParams(CDPModel):
     identify the node.
     """
 
-    node_id: NodeId | None = None
-    backend_node_id: BackendNodeId | None = None
+    node_id: NodeId | None | None = None
+    backend_node_id: BackendNodeId | None | None = None
     object_id: runtime.RemoteObjectId | None = None
-    rect: Rect | None = None
+    rect: Rect | None | None = None
 
 
+@dataclass(kw_only=True)
 class DiscardSearchResultsParams(CDPModel):
     """
     Discards search results from the session with the given id. `getSearchResults`
@@ -135,24 +144,27 @@ class DiscardSearchResultsParams(CDPModel):
     search_id: str
 
 
+@dataclass(kw_only=True)
 class EnableParams(CDPModel):
     """
     Enables DOM agent for the given page.
     """
 
-    include_whitespace: Literal["none", "all"] | None = None
+    include_whitespace: Literal["none", "all"] | None | None = None
 
 
+@dataclass(kw_only=True)
 class FocusParams(CDPModel):
     """
     Focuses the given element.
     """
 
-    node_id: NodeId | None = None
-    backend_node_id: BackendNodeId | None = None
+    node_id: NodeId | None | None = None
+    backend_node_id: BackendNodeId | None | None = None
     object_id: runtime.RemoteObjectId | None = None
 
 
+@dataclass(kw_only=True)
 class GetAttributesParams(CDPModel):
     """
     Returns attributes for the specified node.
@@ -161,53 +173,61 @@ class GetAttributesParams(CDPModel):
     node_id: NodeId
 
 
+@dataclass(kw_only=True)
 class GetAttributesResult(CDPModel):
     attributes: list[str]
 
 
+@dataclass(kw_only=True)
 class GetBoxModelParams(CDPModel):
     """
     Returns boxes for the given node.
     """
 
-    node_id: NodeId | None = None
-    backend_node_id: BackendNodeId | None = None
+    node_id: NodeId | None | None = None
+    backend_node_id: BackendNodeId | None | None = None
     object_id: runtime.RemoteObjectId | None = None
 
 
+@dataclass(kw_only=True)
 class GetBoxModelResult(CDPModel):
     model: BoxModel
 
 
+@dataclass(kw_only=True)
 class GetContentQuadsParams(CDPModel):
     """
     Returns quads that describe node position on the page. This method might return
     multiple quads for inline nodes.
     """
 
-    node_id: NodeId | None = None
-    backend_node_id: BackendNodeId | None = None
+    node_id: NodeId | None | None = None
+    backend_node_id: BackendNodeId | None | None = None
     object_id: runtime.RemoteObjectId | None = None
 
 
+@dataclass(kw_only=True)
 class GetContentQuadsResult(CDPModel):
     quads: list[Quad]
 
 
+@dataclass(kw_only=True)
 class GetDocumentParams(CDPModel):
     """
     Returns the root DOM node (and optionally the subtree) to the caller. Implicitly
     enables the DOM domain events for the current target.
     """
 
-    depth: int | None = None
-    pierce: bool | None = None
+    depth: int | None | None = None
+    pierce: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class GetDocumentResult(CDPModel):
     root: Node
 
 
+@dataclass(kw_only=True)
 class GetFlattenedDocumentParams(CDPModel):
     """
     Returns the root DOM node (and optionally the subtree) to the caller. Deprecated,
@@ -215,14 +235,16 @@ class GetFlattenedDocumentParams(CDPModel):
     DOMSnapshot.captureSnapshot instead.
     """
 
-    depth: int | None = None
-    pierce: bool | None = None
+    depth: int | None | None = None
+    pierce: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class GetFlattenedDocumentResult(CDPModel):
     nodes: list[Node]
 
 
+@dataclass(kw_only=True)
 class GetNodesForSubtreeByStyleParams(CDPModel):
     """
     Finds nodes with a given computed style in a subtree.
@@ -230,13 +252,15 @@ class GetNodesForSubtreeByStyleParams(CDPModel):
 
     node_id: NodeId
     computed_styles: list[CSSComputedStyleProperty]
-    pierce: bool | None = None
+    pierce: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class GetNodesForSubtreeByStyleResult(CDPModel):
     node_ids: list[NodeId]
 
 
+@dataclass(kw_only=True)
 class GetNodeForLocationParams(CDPModel):
     """
     Returns node id at given location. Depending on whether DOM domain is enabled,
@@ -245,31 +269,35 @@ class GetNodeForLocationParams(CDPModel):
 
     x: int
     y: int
-    include_user_agent_shadow_d_o_m: bool | None = None
-    ignore_pointer_events_none: bool | None = None
+    include_user_agent_shadow_d_o_m: bool | None | None = None
+    ignore_pointer_events_none: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class GetNodeForLocationResult(CDPModel):
     backend_node_id: BackendNodeId
     frame_id: page.FrameId
-    node_id: NodeId | None = None
+    node_id: NodeId | None | None = None
 
 
+@dataclass(kw_only=True)
 class GetOuterHTMLParams(CDPModel):
     """
     Returns node's HTML markup.
     """
 
-    node_id: NodeId | None = None
-    backend_node_id: BackendNodeId | None = None
+    node_id: NodeId | None | None = None
+    backend_node_id: BackendNodeId | None | None = None
     object_id: runtime.RemoteObjectId | None = None
-    include_shadow_d_o_m: bool | None = None
+    include_shadow_d_o_m: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class GetOuterHTMLResult(CDPModel):
     outer_h_t_m_l: str
 
 
+@dataclass(kw_only=True)
 class GetRelayoutBoundaryParams(CDPModel):
     """
     Returns the id of the nearest ancestor that is a relayout boundary.
@@ -278,10 +306,12 @@ class GetRelayoutBoundaryParams(CDPModel):
     node_id: NodeId
 
 
+@dataclass(kw_only=True)
 class GetRelayoutBoundaryResult(CDPModel):
     node_id: NodeId
 
 
+@dataclass(kw_only=True)
 class GetSearchResultsParams(CDPModel):
     """
     Returns search results from given `fromIndex` to given `toIndex` from the search
@@ -293,10 +323,12 @@ class GetSearchResultsParams(CDPModel):
     to_index: int
 
 
+@dataclass(kw_only=True)
 class GetSearchResultsResult(CDPModel):
     node_ids: list[NodeId]
 
 
+@dataclass(kw_only=True)
 class MoveToParams(CDPModel):
     """
     Moves node into the new container, places it before the given anchor.
@@ -304,13 +336,15 @@ class MoveToParams(CDPModel):
 
     node_id: NodeId
     target_node_id: NodeId
-    insert_before_node_id: NodeId | None = None
+    insert_before_node_id: NodeId | None | None = None
 
 
+@dataclass(kw_only=True)
 class MoveToResult(CDPModel):
     node_id: NodeId
 
 
+@dataclass(kw_only=True)
 class PerformSearchParams(CDPModel):
     """
     Searches for a given string in the DOM tree. Use `getSearchResults` to access
@@ -318,14 +352,16 @@ class PerformSearchParams(CDPModel):
     """
 
     query: str
-    include_user_agent_shadow_d_o_m: bool | None = None
+    include_user_agent_shadow_d_o_m: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class PerformSearchResult(CDPModel):
     search_id: str
     result_count: int
 
 
+@dataclass(kw_only=True)
 class PushNodeByPathToFrontendParams(CDPModel):
     """
     Requests that the node is sent to the caller given its path. // FIXME, use XPath
@@ -334,10 +370,12 @@ class PushNodeByPathToFrontendParams(CDPModel):
     path: str
 
 
+@dataclass(kw_only=True)
 class PushNodeByPathToFrontendResult(CDPModel):
     node_id: NodeId
 
 
+@dataclass(kw_only=True)
 class PushNodesByBackendIdsToFrontendParams(CDPModel):
     """
     Requests that a batch of nodes is sent to the caller given their backend node ids.
@@ -346,10 +384,12 @@ class PushNodesByBackendIdsToFrontendParams(CDPModel):
     backend_node_ids: list[BackendNodeId]
 
 
+@dataclass(kw_only=True)
 class PushNodesByBackendIdsToFrontendResult(CDPModel):
     node_ids: list[NodeId]
 
 
+@dataclass(kw_only=True)
 class QuerySelectorParams(CDPModel):
     """
     Executes `querySelector` on a given node.
@@ -359,10 +399,12 @@ class QuerySelectorParams(CDPModel):
     selector: str
 
 
+@dataclass(kw_only=True)
 class QuerySelectorResult(CDPModel):
     node_id: NodeId
 
 
+@dataclass(kw_only=True)
 class QuerySelectorAllParams(CDPModel):
     """
     Executes `querySelectorAll` on a given node.
@@ -372,14 +414,17 @@ class QuerySelectorAllParams(CDPModel):
     selector: str
 
 
+@dataclass(kw_only=True)
 class QuerySelectorAllResult(CDPModel):
     node_ids: list[NodeId]
 
 
+@dataclass(kw_only=True)
 class GetTopLayerElementsResult(CDPModel):
     node_ids: list[NodeId]
 
 
+@dataclass(kw_only=True)
 class GetElementByRelationParams(CDPModel):
     """
     Returns the NodeId of the matched element according to certain relations.
@@ -389,10 +434,12 @@ class GetElementByRelationParams(CDPModel):
     relation: Literal["PopoverTarget", "InterestTarget", "CommandFor"]
 
 
+@dataclass(kw_only=True)
 class GetElementByRelationResult(CDPModel):
     node_id: NodeId
 
 
+@dataclass(kw_only=True)
 class RemoveAttributeParams(CDPModel):
     """
     Removes attribute with given name from an element with given id.
@@ -402,6 +449,7 @@ class RemoveAttributeParams(CDPModel):
     name: str
 
 
+@dataclass(kw_only=True)
 class RemoveNodeParams(CDPModel):
     """
     Removes node with given id.
@@ -410,6 +458,7 @@ class RemoveNodeParams(CDPModel):
     node_id: NodeId
 
 
+@dataclass(kw_only=True)
 class RequestChildNodesParams(CDPModel):
     """
     Requests that children of the node with given id are returned to the caller in form
@@ -418,10 +467,11 @@ class RequestChildNodesParams(CDPModel):
     """
 
     node_id: NodeId
-    depth: int | None = None
-    pierce: bool | None = None
+    depth: int | None | None = None
+    pierce: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class RequestNodeParams(CDPModel):
     """
     Requests that the node is sent to the caller given the JavaScript node object
@@ -432,25 +482,29 @@ class RequestNodeParams(CDPModel):
     object_id: runtime.RemoteObjectId
 
 
+@dataclass(kw_only=True)
 class RequestNodeResult(CDPModel):
     node_id: NodeId
 
 
+@dataclass(kw_only=True)
 class ResolveNodeParams(CDPModel):
     """
     Resolves the JavaScript node object for a given NodeId or BackendNodeId.
     """
 
-    node_id: NodeId | None = None
+    node_id: NodeId | None | None = None
     backend_node_id: dom.BackendNodeId | None = None
-    object_group: str | None = None
+    object_group: str | None | None = None
     execution_context_id: runtime.ExecutionContextId | None = None
 
 
+@dataclass(kw_only=True)
 class ResolveNodeResult(CDPModel):
     object: runtime.RemoteObject
 
 
+@dataclass(kw_only=True)
 class SetAttributeValueParams(CDPModel):
     """
     Sets attribute for an element with given id.
@@ -461,6 +515,7 @@ class SetAttributeValueParams(CDPModel):
     value: str
 
 
+@dataclass(kw_only=True)
 class SetAttributesAsTextParams(CDPModel):
     """
     Sets attributes on element with given id. This method is useful when user edits
@@ -469,20 +524,22 @@ class SetAttributesAsTextParams(CDPModel):
 
     node_id: NodeId
     text: str
-    name: str | None = None
+    name: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetFileInputFilesParams(CDPModel):
     """
     Sets files for the given file input element.
     """
 
     files: list[str]
-    node_id: NodeId | None = None
-    backend_node_id: BackendNodeId | None = None
+    node_id: NodeId | None | None = None
+    backend_node_id: BackendNodeId | None | None = None
     object_id: runtime.RemoteObjectId | None = None
 
 
+@dataclass(kw_only=True)
 class SetNodeStackTracesEnabledParams(CDPModel):
     """
     Sets if stack traces should be captured for Nodes. See `Node.getNodeStackTraces`.
@@ -492,6 +549,7 @@ class SetNodeStackTracesEnabledParams(CDPModel):
     enable: bool
 
 
+@dataclass(kw_only=True)
 class GetNodeStackTracesParams(CDPModel):
     """
     Gets stack traces associated with a Node. As of now, only provides stack trace for
@@ -501,10 +559,12 @@ class GetNodeStackTracesParams(CDPModel):
     node_id: NodeId
 
 
+@dataclass(kw_only=True)
 class GetNodeStackTracesResult(CDPModel):
     creation: runtime.StackTrace | None = None
 
 
+@dataclass(kw_only=True)
 class GetFileInfoParams(CDPModel):
     """
     Returns file information for the given File wrapper.
@@ -513,14 +573,17 @@ class GetFileInfoParams(CDPModel):
     object_id: runtime.RemoteObjectId
 
 
+@dataclass(kw_only=True)
 class GetFileInfoResult(CDPModel):
     path: str
 
 
+@dataclass(kw_only=True)
 class GetDetachedDomNodesResult(CDPModel):
     detached_nodes: list[DetachedElementInfo]
 
 
+@dataclass(kw_only=True)
 class SetInspectedNodeParams(CDPModel):
     """
     Enables console to refer to the node with given id via $x (see Command Line API for
@@ -530,6 +593,7 @@ class SetInspectedNodeParams(CDPModel):
     node_id: NodeId
 
 
+@dataclass(kw_only=True)
 class SetNodeNameParams(CDPModel):
     """
     Sets node name for a node with given id.
@@ -539,10 +603,12 @@ class SetNodeNameParams(CDPModel):
     name: str
 
 
+@dataclass(kw_only=True)
 class SetNodeNameResult(CDPModel):
     node_id: NodeId
 
 
+@dataclass(kw_only=True)
 class SetNodeValueParams(CDPModel):
     """
     Sets node value for a node with given id.
@@ -552,6 +618,7 @@ class SetNodeValueParams(CDPModel):
     value: str
 
 
+@dataclass(kw_only=True)
 class SetOuterHTMLParams(CDPModel):
     """
     Sets node HTML markup, returns new node id.
@@ -561,6 +628,7 @@ class SetOuterHTMLParams(CDPModel):
     outer_h_t_m_l: str
 
 
+@dataclass(kw_only=True)
 class GetFrameOwnerParams(CDPModel):
     """
     Returns iframe node that owns iframe with the given domain.
@@ -569,11 +637,13 @@ class GetFrameOwnerParams(CDPModel):
     frame_id: page.FrameId
 
 
+@dataclass(kw_only=True)
 class GetFrameOwnerResult(CDPModel):
     backend_node_id: BackendNodeId
-    node_id: NodeId | None = None
+    node_id: NodeId | None | None = None
 
 
+@dataclass(kw_only=True)
 class GetContainerForNodeParams(CDPModel):
     """
     Returns the query container of the given node based on container query conditions:
@@ -584,17 +654,19 @@ class GetContainerForNodeParams(CDPModel):
     """
 
     node_id: NodeId
-    container_name: str | None = None
-    physical_axes: PhysicalAxes | None = None
-    logical_axes: LogicalAxes | None = None
-    queries_scroll_state: bool | None = None
-    queries_anchored: bool | None = None
+    container_name: str | None | None = None
+    physical_axes: PhysicalAxes | None | None = None
+    logical_axes: LogicalAxes | None | None = None
+    queries_scroll_state: bool | None | None = None
+    queries_anchored: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class GetContainerForNodeResult(CDPModel):
-    node_id: NodeId | None = None
+    node_id: NodeId | None | None = None
 
 
+@dataclass(kw_only=True)
 class GetQueryingDescendantsForContainerParams(CDPModel):
     """
     Returns the descendants of a container query container that have container queries
@@ -604,10 +676,12 @@ class GetQueryingDescendantsForContainerParams(CDPModel):
     node_id: NodeId
 
 
+@dataclass(kw_only=True)
 class GetQueryingDescendantsForContainerResult(CDPModel):
     node_ids: list[NodeId]
 
 
+@dataclass(kw_only=True)
 class GetAnchorElementParams(CDPModel):
     """
     Returns the target anchor element of the given anchor query according to
@@ -615,13 +689,15 @@ class GetAnchorElementParams(CDPModel):
     """
 
     node_id: NodeId
-    anchor_specifier: str | None = None
+    anchor_specifier: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class GetAnchorElementResult(CDPModel):
     node_id: NodeId
 
 
+@dataclass(kw_only=True)
 class ForceShowPopoverParams(CDPModel):
     """
     When enabling, this API force-opens the popover identified by nodeId and keeps it
@@ -632,5 +708,6 @@ class ForceShowPopoverParams(CDPModel):
     enable: bool
 
 
+@dataclass(kw_only=True)
 class ForceShowPopoverResult(CDPModel):
     node_ids: list[NodeId]

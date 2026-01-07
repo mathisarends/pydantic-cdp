@@ -3,12 +3,14 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Literal, TYPE_CHECKING
-from cdpify.domains.base import CDPModel
+from dataclasses import dataclass
+from cdpify.domains.shared import CDPModel
 
 if TYPE_CHECKING:
     from cdpify.domains import dom, network, page, runtime
 
 
+@dataclass(kw_only=True)
 class AffectedCookie(CDPModel):
     """
     Information about a cookie that is affected by an inspector issue.
@@ -19,6 +21,7 @@ class AffectedCookie(CDPModel):
     domain: str
 
 
+@dataclass(kw_only=True)
 class AffectedRequest(CDPModel):
     """
     Information about a request that is affected by an inspector issue.
@@ -28,6 +31,7 @@ class AffectedRequest(CDPModel):
     url: str
 
 
+@dataclass(kw_only=True)
 class AffectedFrame(CDPModel):
     """
     Information about the frame affected by an inspector issue.
@@ -75,15 +79,17 @@ Represents the category of insight that a cookie issue falls under.
 InsightType = Literal["GitHubResource", "GracePeriod", "Heuristics"]
 
 
+@dataclass(kw_only=True)
 class CookieIssueInsight(CDPModel):
     """
     Information about the suggested solution to a cookie issue.
     """
 
     type: InsightType
-    table_entry_url: str | None = None
+    table_entry_url: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class CookieIssueDetails(CDPModel):
     """
     This information is currently necessary, as the front-end has a difficult time
@@ -91,15 +97,15 @@ class CookieIssueDetails(CDPModel):
     without the cookie.
     """
 
-    cookie: AffectedCookie | None = None
-    raw_cookie_line: str | None = None
+    cookie: AffectedCookie | None | None = None
+    raw_cookie_line: str | None | None = None
     cookie_warning_reasons: list[CookieWarningReason]
     cookie_exclusion_reasons: list[CookieExclusionReason]
     operation: CookieOperation
-    site_for_cookies: str | None = None
-    cookie_url: str | None = None
-    request: AffectedRequest | None = None
-    insight: CookieIssueInsight | None = None
+    site_for_cookies: str | None | None = None
+    cookie_url: str | None | None = None
+    request: AffectedRequest | None | None = None
+    insight: CookieIssueInsight | None | None = None
 
 
 MixedContentResolutionStatus = Literal[
@@ -139,13 +145,14 @@ MixedContentResourceType = Literal[
 ]
 
 
+@dataclass(kw_only=True)
 class MixedContentIssueDetails(CDPModel):
-    resource_type: MixedContentResourceType | None = None
+    resource_type: MixedContentResourceType | None | None = None
     resolution_status: MixedContentResolutionStatus
     insecure_u_r_l: str
     main_resource_u_r_l: str
-    request: AffectedRequest | None = None
-    frame: AffectedFrame | None = None
+    request: AffectedRequest | None | None = None
+    frame: AffectedFrame | None | None = None
 
 
 """
@@ -164,6 +171,7 @@ BlockedByResponseReason = Literal[
 ]
 
 
+@dataclass(kw_only=True)
 class BlockedByResponseIssueDetails(CDPModel):
     """
     Details for a request that has been blocked with the BLOCKED_BY_RESPONSE code.
@@ -172,8 +180,8 @@ class BlockedByResponseIssueDetails(CDPModel):
     """
 
     request: AffectedRequest
-    parent_frame: AffectedFrame | None = None
-    blocked_frame: AffectedFrame | None = None
+    parent_frame: AffectedFrame | None | None = None
+    blocked_frame: AffectedFrame | None | None = None
     reason: BlockedByResponseReason
 
 
@@ -182,6 +190,7 @@ HeavyAdResolutionStatus = Literal["HeavyAdBlocked", "HeavyAdWarning"]
 HeavyAdReason = Literal["NetworkTotalLimit", "CpuTotalLimit", "CpuPeakLimit"]
 
 
+@dataclass(kw_only=True)
 class HeavyAdIssueDetails(CDPModel):
     resolution: HeavyAdResolutionStatus
     reason: HeavyAdReason
@@ -199,6 +208,7 @@ ContentSecurityPolicyViolationType = Literal[
 ]
 
 
+@dataclass(kw_only=True)
 class SourceCodeLocation(CDPModel):
     script_id: runtime.ScriptId | None = None
     url: str
@@ -206,19 +216,21 @@ class SourceCodeLocation(CDPModel):
     column_number: int
 
 
+@dataclass(kw_only=True)
 class ContentSecurityPolicyIssueDetails(CDPModel):
-    blocked_u_r_l: str | None = None
+    blocked_u_r_l: str | None | None = None
     violated_directive: str
     is_report_only: bool
     content_security_policy_violation_type: ContentSecurityPolicyViolationType
-    frame_ancestor: AffectedFrame | None = None
-    source_code_location: SourceCodeLocation | None = None
+    frame_ancestor: AffectedFrame | None | None = None
+    source_code_location: SourceCodeLocation | None | None = None
     violating_node_id: dom.BackendNodeId | None = None
 
 
 SharedArrayBufferIssueType = Literal["TransferIssue", "CreationIssue"]
 
 
+@dataclass(kw_only=True)
 class SharedArrayBufferIssueDetails(CDPModel):
     """
     Details for a issue arising from an SAB being instantiated in, or transferred to a
@@ -230,6 +242,7 @@ class SharedArrayBufferIssueDetails(CDPModel):
     type: SharedArrayBufferIssueType
 
 
+@dataclass(kw_only=True)
 class LowTextContrastIssueDetails(CDPModel):
     violating_node_id: dom.BackendNodeId
     violating_node_selector: str
@@ -240,6 +253,7 @@ class LowTextContrastIssueDetails(CDPModel):
     font_weight: str
 
 
+@dataclass(kw_only=True)
 class CorsIssueDetails(CDPModel):
     """
     Details for a CORS related issue, e.g. a warning or error related to CORS RFC1918
@@ -249,8 +263,8 @@ class CorsIssueDetails(CDPModel):
     cors_error_status: network.CorsErrorStatus
     is_warning: bool
     request: AffectedRequest
-    location: SourceCodeLocation | None = None
-    initiator_origin: str | None = None
+    location: SourceCodeLocation | None | None = None
+    initiator_origin: str | None | None = None
     resource_i_p_address_space: network.IPAddressSpace | None = None
     client_security_state: network.ClientSecurityState | None = None
 
@@ -339,6 +353,7 @@ UnencodedDigestError = Literal[
 ]
 
 
+@dataclass(kw_only=True)
 class AttributionReportingIssueDetails(CDPModel):
     """
     Details for issues around "Attribution Reporting API" usage. Explainer:
@@ -346,11 +361,12 @@ class AttributionReportingIssueDetails(CDPModel):
     """
 
     violation_type: AttributionReportingIssueType
-    request: AffectedRequest | None = None
+    request: AffectedRequest | None | None = None
     violating_node_id: dom.BackendNodeId | None = None
-    invalid_parameter: str | None = None
+    invalid_parameter: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class QuirksModeIssueDetails(CDPModel):
     """
     Details for issues about documents in Quirks Mode or Limited Quirks Mode that
@@ -364,16 +380,19 @@ class QuirksModeIssueDetails(CDPModel):
     loader_id: network.LoaderId
 
 
+@dataclass(kw_only=True)
 class NavigatorUserAgentIssueDetails(CDPModel):
     url: str
-    location: SourceCodeLocation | None = None
+    location: SourceCodeLocation | None | None = None
 
 
+@dataclass(kw_only=True)
 class SharedDictionaryIssueDetails(CDPModel):
     shared_dictionary_error: SharedDictionaryError
     request: AffectedRequest
 
 
+@dataclass(kw_only=True)
 class SRIMessageSignatureIssueDetails(CDPModel):
     error: SRIMessageSignatureError
     signature_base: str
@@ -381,6 +400,7 @@ class SRIMessageSignatureIssueDetails(CDPModel):
     request: AffectedRequest
 
 
+@dataclass(kw_only=True)
 class UnencodedDigestIssueDetails(CDPModel):
     error: UnencodedDigestError
     request: AffectedRequest
@@ -405,6 +425,7 @@ GenericIssueErrorType = Literal[
 ]
 
 
+@dataclass(kw_only=True)
 class GenericIssueDetails(CDPModel):
     """
     Depending on the concrete errorType, different properties are set.
@@ -413,21 +434,23 @@ class GenericIssueDetails(CDPModel):
     error_type: GenericIssueErrorType
     frame_id: page.FrameId | None = None
     violating_node_id: dom.BackendNodeId | None = None
-    violating_node_attribute: str | None = None
-    request: AffectedRequest | None = None
+    violating_node_attribute: str | None | None = None
+    request: AffectedRequest | None | None = None
 
 
+@dataclass(kw_only=True)
 class DeprecationIssueDetails(CDPModel):
     """
     This issue tracks information needed to print a deprecation message.
     https://source.chromium.org/chromium/chromium/src/+/main:third_party/blink/renderer/core/frame/third_party/blink/renderer/core/frame/deprecation/README.md
     """
 
-    affected_frame: AffectedFrame | None = None
+    affected_frame: AffectedFrame | None | None = None
     source_code_location: SourceCodeLocation
     type: str
 
 
+@dataclass(kw_only=True)
 class BounceTrackingIssueDetails(CDPModel):
     """
     This issue warns about sites in the redirect chain of a finished navigation that
@@ -440,6 +463,7 @@ class BounceTrackingIssueDetails(CDPModel):
     tracking_sites: list[str]
 
 
+@dataclass(kw_only=True)
 class CookieDeprecationMetadataIssueDetails(CDPModel):
     """
     This issue warns about third-party sites that are accessing cookies on the current
@@ -458,6 +482,7 @@ class CookieDeprecationMetadataIssueDetails(CDPModel):
 ClientHintIssueReason = Literal["MetaTagAllowListInvalidOrigin", "MetaTagModifiedHTML"]
 
 
+@dataclass(kw_only=True)
 class FederatedAuthRequestIssueDetails(CDPModel):
     federated_auth_request_issue_reason: FederatedAuthRequestIssueReason
 
@@ -520,6 +545,7 @@ FederatedAuthRequestIssueReason = Literal[
 ]
 
 
+@dataclass(kw_only=True)
 class FederatedAuthUserInfoRequestIssueDetails(CDPModel):
     federated_auth_user_info_request_issue_reason: (
         FederatedAuthUserInfoRequestIssueReason
@@ -544,6 +570,7 @@ FederatedAuthUserInfoRequestIssueReason = Literal[
 ]
 
 
+@dataclass(kw_only=True)
 class ClientHintIssueDetails(CDPModel):
     """
     This issue tracks client hints related issues. It's used to deprecate old features,
@@ -554,6 +581,7 @@ class ClientHintIssueDetails(CDPModel):
     client_hint_issue_reason: ClientHintIssueReason
 
 
+@dataclass(kw_only=True)
 class FailedRequestInfo(CDPModel):
     url: str
     failure_message: str
@@ -565,6 +593,7 @@ PartitioningBlobURLInfo = Literal[
 ]
 
 
+@dataclass(kw_only=True)
 class PartitioningBlobURLIssueDetails(CDPModel):
     url: str
     partitioning_blob_u_r_l_info: PartitioningBlobURLInfo
@@ -580,6 +609,7 @@ ElementAccessibilityIssueReason = Literal[
 ]
 
 
+@dataclass(kw_only=True)
 class ElementAccessibilityIssueDetails(CDPModel):
     """
     This issue warns about errors in the select or summary element content model.
@@ -593,6 +623,7 @@ class ElementAccessibilityIssueDetails(CDPModel):
 StyleSheetLoadingIssueReason = Literal["LateImportRule", "RequestFailed"]
 
 
+@dataclass(kw_only=True)
 class StylesheetLoadingIssueDetails(CDPModel):
     """
     This issue warns when a referenced stylesheet couldn't be loaded.
@@ -600,7 +631,7 @@ class StylesheetLoadingIssueDetails(CDPModel):
 
     source_code_location: SourceCodeLocation
     style_sheet_loading_issue_reason: StyleSheetLoadingIssueReason
-    failed_request_info: FailedRequestInfo | None = None
+    failed_request_info: FailedRequestInfo | None | None = None
 
 
 PropertyRuleIssueReason = Literal[
@@ -608,6 +639,7 @@ PropertyRuleIssueReason = Literal[
 ]
 
 
+@dataclass(kw_only=True)
 class PropertyRuleIssueDetails(CDPModel):
     """
     This issue warns about errors in property rules that lead to property registrations
@@ -616,7 +648,7 @@ class PropertyRuleIssueDetails(CDPModel):
 
     source_code_location: SourceCodeLocation
     property_rule_issue_reason: PropertyRuleIssueReason
-    property_value: str | None = None
+    property_value: str | None | None = None
 
 
 UserReidentificationIssueType = Literal[
@@ -624,6 +656,7 @@ UserReidentificationIssueType = Literal[
 ]
 
 
+@dataclass(kw_only=True)
 class UserReidentificationIssueDetails(CDPModel):
     """
     This issue warns about uses of APIs that may be considered misuse to re-identify
@@ -631,8 +664,8 @@ class UserReidentificationIssueDetails(CDPModel):
     """
 
     type: UserReidentificationIssueType
-    request: AffectedRequest | None = None
-    source_code_location: SourceCodeLocation | None = None
+    request: AffectedRequest | None | None = None
+    source_code_location: SourceCodeLocation | None | None = None
 
 
 PermissionElementIssueType = Literal[
@@ -660,19 +693,20 @@ PermissionElementIssueType = Literal[
 ]
 
 
+@dataclass(kw_only=True)
 class PermissionElementIssueDetails(CDPModel):
     """
     This issue warns about improper usage of the <permission> element.
     """
 
     issue_type: PermissionElementIssueType
-    type: str | None = None
+    type: str | None | None = None
     node_id: dom.BackendNodeId | None = None
-    is_warning: bool | None = None
-    permission_name: str | None = None
-    occluder_node_info: str | None = None
-    occluder_parent_node_info: str | None = None
-    disable_reason: str | None = None
+    is_warning: bool | None | None = None
+    permission_name: str | None | None = None
+    occluder_node_info: str | None | None = None
+    occluder_parent_node_info: str | None | None = None
+    disable_reason: str | None | None = None
 
 
 """
@@ -710,6 +744,7 @@ InspectorIssueCode = Literal[
 ]
 
 
+@dataclass(kw_only=True)
 class InspectorIssueDetails(CDPModel):
     """
     This struct holds a list of optional fields with additional information specific to
@@ -717,39 +752,57 @@ class InspectorIssueDetails(CDPModel):
     field to this type.
     """
 
-    cookie_issue_details: CookieIssueDetails | None = None
-    mixed_content_issue_details: MixedContentIssueDetails | None = None
-    blocked_by_response_issue_details: BlockedByResponseIssueDetails | None = None
-    heavy_ad_issue_details: HeavyAdIssueDetails | None = None
-    content_security_policy_issue_details: ContentSecurityPolicyIssueDetails | None = (
+    cookie_issue_details: CookieIssueDetails | None | None = None
+    mixed_content_issue_details: MixedContentIssueDetails | None | None = None
+    blocked_by_response_issue_details: BlockedByResponseIssueDetails | None | None = (
         None
     )
-    shared_array_buffer_issue_details: SharedArrayBufferIssueDetails | None = None
-    low_text_contrast_issue_details: LowTextContrastIssueDetails | None = None
-    cors_issue_details: CorsIssueDetails | None = None
-    attribution_reporting_issue_details: AttributionReportingIssueDetails | None = None
-    quirks_mode_issue_details: QuirksModeIssueDetails | None = None
-    partitioning_blob_u_r_l_issue_details: PartitioningBlobURLIssueDetails | None = None
-    navigator_user_agent_issue_details: NavigatorUserAgentIssueDetails | None = None
-    generic_issue_details: GenericIssueDetails | None = None
-    deprecation_issue_details: DeprecationIssueDetails | None = None
-    client_hint_issue_details: ClientHintIssueDetails | None = None
-    federated_auth_request_issue_details: FederatedAuthRequestIssueDetails | None = None
-    bounce_tracking_issue_details: BounceTrackingIssueDetails | None = None
+    heavy_ad_issue_details: HeavyAdIssueDetails | None | None = None
+    content_security_policy_issue_details: (
+        ContentSecurityPolicyIssueDetails | None | None
+    ) = None
+    shared_array_buffer_issue_details: SharedArrayBufferIssueDetails | None | None = (
+        None
+    )
+    low_text_contrast_issue_details: LowTextContrastIssueDetails | None | None = None
+    cors_issue_details: CorsIssueDetails | None | None = None
+    attribution_reporting_issue_details: (
+        AttributionReportingIssueDetails | None | None
+    ) = None
+    quirks_mode_issue_details: QuirksModeIssueDetails | None | None = None
+    partitioning_blob_u_r_l_issue_details: (
+        PartitioningBlobURLIssueDetails | None | None
+    ) = None
+    navigator_user_agent_issue_details: NavigatorUserAgentIssueDetails | None | None = (
+        None
+    )
+    generic_issue_details: GenericIssueDetails | None | None = None
+    deprecation_issue_details: DeprecationIssueDetails | None | None = None
+    client_hint_issue_details: ClientHintIssueDetails | None | None = None
+    federated_auth_request_issue_details: (
+        FederatedAuthRequestIssueDetails | None | None
+    ) = None
+    bounce_tracking_issue_details: BounceTrackingIssueDetails | None | None = None
     cookie_deprecation_metadata_issue_details: (
-        CookieDeprecationMetadataIssueDetails | None
+        CookieDeprecationMetadataIssueDetails | None | None
     ) = None
-    stylesheet_loading_issue_details: StylesheetLoadingIssueDetails | None = None
-    property_rule_issue_details: PropertyRuleIssueDetails | None = None
+    stylesheet_loading_issue_details: StylesheetLoadingIssueDetails | None | None = None
+    property_rule_issue_details: PropertyRuleIssueDetails | None | None = None
     federated_auth_user_info_request_issue_details: (
-        FederatedAuthUserInfoRequestIssueDetails | None
+        FederatedAuthUserInfoRequestIssueDetails | None | None
     ) = None
-    shared_dictionary_issue_details: SharedDictionaryIssueDetails | None = None
-    element_accessibility_issue_details: ElementAccessibilityIssueDetails | None = None
-    sri_message_signature_issue_details: SRIMessageSignatureIssueDetails | None = None
-    unencoded_digest_issue_details: UnencodedDigestIssueDetails | None = None
-    user_reidentification_issue_details: UserReidentificationIssueDetails | None = None
-    permission_element_issue_details: PermissionElementIssueDetails | None = None
+    shared_dictionary_issue_details: SharedDictionaryIssueDetails | None | None = None
+    element_accessibility_issue_details: (
+        ElementAccessibilityIssueDetails | None | None
+    ) = None
+    sri_message_signature_issue_details: (
+        SRIMessageSignatureIssueDetails | None | None
+    ) = None
+    unencoded_digest_issue_details: UnencodedDigestIssueDetails | None | None = None
+    user_reidentification_issue_details: (
+        UserReidentificationIssueDetails | None | None
+    ) = None
+    permission_element_issue_details: PermissionElementIssueDetails | None | None = None
 
 
 """
@@ -759,6 +812,7 @@ message, console messages, etc.) to reference an issue.
 IssueId = str
 
 
+@dataclass(kw_only=True)
 class InspectorIssue(CDPModel):
     """
     An inspector issue reported from the back-end.
@@ -766,4 +820,4 @@ class InspectorIssue(CDPModel):
 
     code: InspectorIssueCode
     details: InspectorIssueDetails
-    issue_id: IssueId | None = None
+    issue_id: IssueId | None | None = None

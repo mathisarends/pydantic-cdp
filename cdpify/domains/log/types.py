@@ -3,12 +3,14 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Literal, TYPE_CHECKING
-from cdpify.domains.base import CDPModel
+from dataclasses import dataclass
+from cdpify.domains.shared import CDPModel
 
 if TYPE_CHECKING:
     from cdpify.domains import network, runtime
 
 
+@dataclass(kw_only=True)
 class LogEntry(CDPModel):
     """
     Log entry.
@@ -31,16 +33,17 @@ class LogEntry(CDPModel):
     ]
     level: Literal["verbose", "info", "warning", "error"]
     text: str
-    category: Literal["cors"] | None = None
+    category: Literal["cors"] | None | None = None
     timestamp: runtime.Timestamp
-    url: str | None = None
-    line_number: int | None = None
+    url: str | None | None = None
+    line_number: int | None | None = None
     stack_trace: runtime.StackTrace | None = None
     network_request_id: network.RequestId | None = None
-    worker_id: str | None = None
-    args: list[runtime.RemoteObject] | None = None
+    worker_id: str | None | None = None
+    args: list[runtime.RemoteObject] | None | None = None
 
 
+@dataclass(kw_only=True)
 class ViolationSetting(CDPModel):
     """
     Violation configuration setting.

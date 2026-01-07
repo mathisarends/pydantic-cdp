@@ -3,8 +3,9 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Any, TYPE_CHECKING
+from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.domains.base import CDPModel
+from cdpify.domains.shared import CDPModel
 
 from .types import *
 
@@ -40,6 +41,7 @@ class StorageEvent(StrEnum):
     )
 
 
+@dataclass(kw_only=True)
 class CacheStorageContentUpdatedEvent(CDPModel):
     """
     A cache's contents have been modified.
@@ -51,6 +53,7 @@ class CacheStorageContentUpdatedEvent(CDPModel):
     cache_name: str
 
 
+@dataclass(kw_only=True)
 class CacheStorageListUpdatedEvent(CDPModel):
     """
     A cache has been added/deleted.
@@ -61,6 +64,7 @@ class CacheStorageListUpdatedEvent(CDPModel):
     bucket_id: str
 
 
+@dataclass(kw_only=True)
 class IndexedDBContentUpdatedEvent(CDPModel):
     """
     The origin's IndexedDB object store has been modified.
@@ -73,6 +77,7 @@ class IndexedDBContentUpdatedEvent(CDPModel):
     object_store_name: str
 
 
+@dataclass(kw_only=True)
 class IndexedDBListUpdatedEvent(CDPModel):
     """
     The origin's IndexedDB database list has been modified.
@@ -83,6 +88,7 @@ class IndexedDBListUpdatedEvent(CDPModel):
     bucket_id: str
 
 
+@dataclass(kw_only=True)
 class InterestGroupAccessedEvent(CDPModel):
     """
     One of the interest groups was accessed. Note that these events are global to all
@@ -93,12 +99,13 @@ class InterestGroupAccessedEvent(CDPModel):
     type: InterestGroupAccessType
     owner_origin: str
     name: str
-    component_seller_origin: str | None = None
-    bid: float | None = None
-    bid_currency: str | None = None
-    unique_auction_id: InterestGroupAuctionId | None = None
+    component_seller_origin: str | None | None = None
+    bid: float | None | None = None
+    bid_currency: str | None | None = None
+    unique_auction_id: InterestGroupAuctionId | None | None = None
 
 
+@dataclass(kw_only=True)
 class InterestGroupAuctionEventOccurredEvent(CDPModel):
     """
     An auction involving interest groups is taking place. These events are
@@ -108,10 +115,11 @@ class InterestGroupAuctionEventOccurredEvent(CDPModel):
     event_time: network.TimeSinceEpoch
     type: InterestGroupAuctionEventType
     unique_auction_id: InterestGroupAuctionId
-    parent_auction_id: InterestGroupAuctionId | None = None
-    auction_config: dict[str, Any] | None = None
+    parent_auction_id: InterestGroupAuctionId | None | None = None
+    auction_config: dict[str, Any] | None | None = None
 
 
+@dataclass(kw_only=True)
 class InterestGroupAuctionNetworkRequestCreatedEvent(CDPModel):
     """
     Specifies which auctions a particular network fetch may be related to, and in what
@@ -124,6 +132,7 @@ class InterestGroupAuctionNetworkRequestCreatedEvent(CDPModel):
     auctions: list[InterestGroupAuctionId]
 
 
+@dataclass(kw_only=True)
 class SharedStorageAccessedEvent(CDPModel):
     """
     Shared storage was accessed by the associated page. The following parameters are
@@ -139,6 +148,7 @@ class SharedStorageAccessedEvent(CDPModel):
     params: SharedStorageAccessParams
 
 
+@dataclass(kw_only=True)
 class SharedStorageWorkletOperationExecutionFinishedEvent(CDPModel):
     """
     A shared storage run or selectURL operation finished its execution. The following
@@ -154,37 +164,43 @@ class SharedStorageWorkletOperationExecutionFinishedEvent(CDPModel):
     owner_origin: str
 
 
+@dataclass(kw_only=True)
 class StorageBucketCreatedOrUpdatedEvent(CDPModel):
     bucket_info: StorageBucketInfo
 
 
+@dataclass(kw_only=True)
 class StorageBucketDeletedEvent(CDPModel):
     bucket_id: str
 
 
+@dataclass(kw_only=True)
 class AttributionReportingSourceRegisteredEvent(CDPModel):
     registration: AttributionReportingSourceRegistration
     result: AttributionReportingSourceRegistrationResult
 
 
+@dataclass(kw_only=True)
 class AttributionReportingTriggerRegisteredEvent(CDPModel):
     registration: AttributionReportingTriggerRegistration
     event_level: AttributionReportingEventLevelResult
     aggregatable: AttributionReportingAggregatableResult
 
 
+@dataclass(kw_only=True)
 class AttributionReportingReportSentEvent(CDPModel):
     url: str
     body: dict[str, Any]
     result: AttributionReportingReportResult
-    net_error: int | None = None
-    net_error_name: str | None = None
-    http_status_code: int | None = None
+    net_error: int | None | None = None
+    net_error_name: str | None | None = None
+    http_status_code: int | None | None = None
 
 
+@dataclass(kw_only=True)
 class AttributionReportingVerboseDebugReportSentEvent(CDPModel):
     url: str
-    body: list[dict[str, Any]] | None = None
-    net_error: int | None = None
-    net_error_name: str | None = None
-    http_status_code: int | None = None
+    body: list[dict[str, Any]] | None | None = None
+    net_error: int | None | None = None
+    net_error_name: str | None | None = None
+    http_status_code: int | None | None = None

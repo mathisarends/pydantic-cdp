@@ -3,7 +3,8 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import Literal, TYPE_CHECKING
-from cdpify.domains.base import CDPModel
+from dataclasses import dataclass
+from cdpify.domains.shared import CDPModel
 
 if TYPE_CHECKING:
     from cdpify.domains import network
@@ -27,6 +28,7 @@ SecurityState = Literal[
 ]
 
 
+@dataclass(kw_only=True)
 class CertificateSecurityState(CDPModel):
     """
     Details about the security state of the page certificate.
@@ -34,15 +36,15 @@ class CertificateSecurityState(CDPModel):
 
     protocol: str
     key_exchange: str
-    key_exchange_group: str | None = None
+    key_exchange_group: str | None | None = None
     cipher: str
-    mac: str | None = None
+    mac: str | None | None = None
     certificate: list[str]
     subject_name: str
     issuer: str
     valid_from: network.TimeSinceEpoch
     valid_to: network.TimeSinceEpoch
-    certificate_network_error: str | None = None
+    certificate_network_error: str | None | None = None
     certificate_has_weak_signature: bool
     certificate_has_sha1_signature: bool
     modern_s_s_l: bool
@@ -55,22 +57,25 @@ class CertificateSecurityState(CDPModel):
 SafetyTipStatus = Literal["badReputation", "lookalike"]
 
 
+@dataclass(kw_only=True)
 class SafetyTipInfo(CDPModel):
     safety_tip_status: SafetyTipStatus
-    safe_url: str | None = None
+    safe_url: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class VisibleSecurityState(CDPModel):
     """
     Security state information about the page.
     """
 
     security_state: SecurityState
-    certificate_security_state: CertificateSecurityState | None = None
-    safety_tip_info: SafetyTipInfo | None = None
+    certificate_security_state: CertificateSecurityState | None | None = None
+    safety_tip_info: SafetyTipInfo | None | None = None
     security_state_issue_ids: list[str]
 
 
+@dataclass(kw_only=True)
 class SecurityStateExplanation(CDPModel):
     """
     An explanation of an factor contributing to the security state.
@@ -82,9 +87,10 @@ class SecurityStateExplanation(CDPModel):
     description: str
     mixed_content_type: MixedContentType
     certificate: list[str]
-    recommendations: list[str] | None = None
+    recommendations: list[str] | None | None = None
 
 
+@dataclass(kw_only=True)
 class InsecureContentStatus(CDPModel):
     """
     Information about insecure content on the page.

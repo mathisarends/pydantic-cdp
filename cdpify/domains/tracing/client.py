@@ -52,7 +52,7 @@ class TracingClient:
             params=None,
             session_id=session_id,
         )
-        return GetCategoriesResult.model_validate(result)
+        return GetCategoriesResult.from_cdp(result)
 
     async def get_track_event_descriptor(
         self,
@@ -63,7 +63,7 @@ class TracingClient:
             params=None,
             session_id=session_id,
         )
-        return GetTrackEventDescriptorResult.model_validate(result)
+        return GetTrackEventDescriptorResult.from_cdp(result)
 
     async def record_clock_sync_marker(
         self,
@@ -71,7 +71,7 @@ class TracingClient:
         sync_id: str,
         session_id: str | None = None,
     ) -> dict[str, Any]:
-        params = RecordClockSyncMarkerParams(syncId=sync_id)
+        params = RecordClockSyncMarkerParams(sync_id=sync_id)
 
         result = await self._client.send_raw(
             method=TracingCommand.RECORD_CLOCK_SYNC_MARKER,
@@ -88,7 +88,7 @@ class TracingClient:
         session_id: str | None = None,
     ) -> RequestMemoryDumpResult:
         params = RequestMemoryDumpParams(
-            deterministic=deterministic, levelOfDetail=level_of_detail
+            deterministic=deterministic, level_of_detail=level_of_detail
         )
 
         result = await self._client.send_raw(
@@ -96,7 +96,7 @@ class TracingClient:
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return RequestMemoryDumpResult.model_validate(result)
+        return RequestMemoryDumpResult.from_cdp(result)
 
     async def start(
         self,
@@ -115,13 +115,13 @@ class TracingClient:
         params = StartParams(
             categories=categories,
             options=options,
-            bufferUsageReportingInterval=buffer_usage_reporting_interval,
-            transferMode=transfer_mode,
-            streamFormat=stream_format,
-            streamCompression=stream_compression,
-            traceConfig=trace_config,
-            perfettoConfig=perfetto_config,
-            tracingBackend=tracing_backend,
+            buffer_usage_reporting_interval=buffer_usage_reporting_interval,
+            transfer_mode=transfer_mode,
+            stream_format=stream_format,
+            stream_compression=stream_compression,
+            trace_config=trace_config,
+            perfetto_config=perfetto_config,
+            tracing_backend=tracing_backend,
         )
 
         result = await self._client.send_raw(

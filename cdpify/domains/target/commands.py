@@ -3,8 +3,9 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from typing import TYPE_CHECKING
+from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.domains.base import CDPModel
+from cdpify.domains.shared import CDPModel
 
 from .types import *
 
@@ -33,6 +34,7 @@ class TargetCommand(StrEnum):
     OPEN_DEV_TOOLS = "Target.openDevTools"
 
 
+@dataclass(kw_only=True)
 class ActivateTargetParams(CDPModel):
     """
     Activates (focuses) the target.
@@ -41,23 +43,27 @@ class ActivateTargetParams(CDPModel):
     target_id: TargetID
 
 
+@dataclass(kw_only=True)
 class AttachToTargetParams(CDPModel):
     """
     Attaches to the target with given id.
     """
 
     target_id: TargetID
-    flatten: bool | None = None
+    flatten: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class AttachToTargetResult(CDPModel):
     session_id: SessionID
 
 
+@dataclass(kw_only=True)
 class AttachToBrowserTargetResult(CDPModel):
     session_id: SessionID
 
 
+@dataclass(kw_only=True)
 class CloseTargetParams(CDPModel):
     """
     Closes the target. If the target is a page that gets closed too.
@@ -66,10 +72,12 @@ class CloseTargetParams(CDPModel):
     target_id: TargetID
 
 
+@dataclass(kw_only=True)
 class CloseTargetResult(CDPModel):
     success: bool
 
 
+@dataclass(kw_only=True)
 class ExposeDevToolsProtocolParams(CDPModel):
     """
     Inject object to the target's main frame that provides a communication channel with
@@ -81,63 +89,70 @@ class ExposeDevToolsProtocolParams(CDPModel):
     """
 
     target_id: TargetID
-    binding_name: str | None = None
-    inherit_permissions: bool | None = None
+    binding_name: str | None | None = None
+    inherit_permissions: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class CreateBrowserContextParams(CDPModel):
     """
     Creates a new empty BrowserContext. Similar to an incognito profile but you can
     have more than one.
     """
 
-    dispose_on_detach: bool | None = None
-    proxy_server: str | None = None
-    proxy_bypass_list: str | None = None
-    origins_with_universal_network_access: list[str] | None = None
+    dispose_on_detach: bool | None | None = None
+    proxy_server: str | None | None = None
+    proxy_bypass_list: str | None | None = None
+    origins_with_universal_network_access: list[str] | None | None = None
 
 
+@dataclass(kw_only=True)
 class CreateBrowserContextResult(CDPModel):
     browser_context_id: browser.BrowserContextID
 
 
+@dataclass(kw_only=True)
 class GetBrowserContextsResult(CDPModel):
     browser_context_ids: list[browser.BrowserContextID]
     default_browser_context_id: browser.BrowserContextID | None = None
 
 
+@dataclass(kw_only=True)
 class CreateTargetParams(CDPModel):
     """
     Creates a new page.
     """
 
     url: str
-    left: int | None = None
-    top: int | None = None
-    width: int | None = None
-    height: int | None = None
-    window_state: WindowState | None = None
+    left: int | None | None = None
+    top: int | None | None = None
+    width: int | None | None = None
+    height: int | None | None = None
+    window_state: WindowState | None | None = None
     browser_context_id: browser.BrowserContextID | None = None
-    enable_begin_frame_control: bool | None = None
-    new_window: bool | None = None
-    background: bool | None = None
-    for_tab: bool | None = None
-    hidden: bool | None = None
+    enable_begin_frame_control: bool | None | None = None
+    new_window: bool | None | None = None
+    background: bool | None | None = None
+    for_tab: bool | None | None = None
+    hidden: bool | None | None = None
 
 
+@dataclass(kw_only=True)
 class CreateTargetResult(CDPModel):
     target_id: TargetID
 
 
+@dataclass(kw_only=True)
 class DetachFromTargetParams(CDPModel):
     """
     Detaches session with given id.
     """
 
-    session_id: SessionID | None = None
-    target_id: TargetID | None = None
+    session_id: SessionID | None | None = None
+    target_id: TargetID | None | None = None
 
 
+@dataclass(kw_only=True)
 class DisposeBrowserContextParams(CDPModel):
     """
     Deletes a BrowserContext. All the belonging pages will be closed without calling
@@ -147,30 +162,35 @@ class DisposeBrowserContextParams(CDPModel):
     browser_context_id: browser.BrowserContextID
 
 
+@dataclass(kw_only=True)
 class GetTargetInfoParams(CDPModel):
     """
     Returns information about a target.
     """
 
-    target_id: TargetID | None = None
+    target_id: TargetID | None | None = None
 
 
+@dataclass(kw_only=True)
 class GetTargetInfoResult(CDPModel):
     target_info: TargetInfo
 
 
+@dataclass(kw_only=True)
 class GetTargetsParams(CDPModel):
     """
     Retrieves a list of available targets.
     """
 
-    filter: TargetFilter | None = None
+    filter: TargetFilter | None | None = None
 
 
+@dataclass(kw_only=True)
 class GetTargetsResult(CDPModel):
     target_infos: list[TargetInfo]
 
 
+@dataclass(kw_only=True)
 class SendMessageToTargetParams(CDPModel):
     """
     Sends protocol message over session with given id. Consider using flat mode
@@ -178,10 +198,11 @@ class SendMessageToTargetParams(CDPModel):
     """
 
     message: str
-    session_id: SessionID | None = None
-    target_id: TargetID | None = None
+    session_id: SessionID | None | None = None
+    target_id: TargetID | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetAutoAttachParams(CDPModel):
     """
     Controls whether to automatically attach to new targets which are considered to be
@@ -195,10 +216,11 @@ class SetAutoAttachParams(CDPModel):
 
     auto_attach: bool
     wait_for_debugger_on_start: bool
-    flatten: bool | None = None
-    filter: TargetFilter | None = None
+    flatten: bool | None | None = None
+    filter: TargetFilter | None | None = None
 
 
+@dataclass(kw_only=True)
 class AutoAttachRelatedParams(CDPModel):
     """
     Adds the specified target to the list of targets that will be monitored for any
@@ -210,9 +232,10 @@ class AutoAttachRelatedParams(CDPModel):
 
     target_id: TargetID
     wait_for_debugger_on_start: bool
-    filter: TargetFilter | None = None
+    filter: TargetFilter | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetDiscoverTargetsParams(CDPModel):
     """
     Controls whether to discover available targets and notify via
@@ -220,9 +243,10 @@ class SetDiscoverTargetsParams(CDPModel):
     """
 
     discover: bool
-    filter: TargetFilter | None = None
+    filter: TargetFilter | None | None = None
 
 
+@dataclass(kw_only=True)
 class SetRemoteLocationsParams(CDPModel):
     """
     Enables target discovery for the specified locations, when `setDiscoverTargets` was
@@ -232,6 +256,7 @@ class SetRemoteLocationsParams(CDPModel):
     locations: list[RemoteLocation]
 
 
+@dataclass(kw_only=True)
 class GetDevToolsTargetParams(CDPModel):
     """
     Gets the targetId of the DevTools page target opened for the given target (if any).
@@ -240,18 +265,21 @@ class GetDevToolsTargetParams(CDPModel):
     target_id: TargetID
 
 
+@dataclass(kw_only=True)
 class GetDevToolsTargetResult(CDPModel):
-    target_id: TargetID | None = None
+    target_id: TargetID | None | None = None
 
 
+@dataclass(kw_only=True)
 class OpenDevToolsParams(CDPModel):
     """
     Opens a DevTools window for the target.
     """
 
     target_id: TargetID
-    panel_id: str | None = None
+    panel_id: str | None | None = None
 
 
+@dataclass(kw_only=True)
 class OpenDevToolsResult(CDPModel):
     target_id: TargetID
