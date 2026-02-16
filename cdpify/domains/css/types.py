@@ -27,7 +27,11 @@ class PseudoElementMatches(CDPModel):
 
     pseudo_type: dom.PseudoType
     pseudo_identifier: str | None = None
+<<<<<<< HEAD
     matches: list[Any]
+=======
+    matches: list[RuleMatch]
+>>>>>>> dbc9f52 (Defer typing import)
 
 
 @dataclass(kw_only=True)
@@ -47,7 +51,11 @@ class InheritedStyleEntry(CDPModel):
     """
 
     inline_style: CSSStyle | None = None
+<<<<<<< HEAD
     matched_css_rules: list[Any]
+=======
+    matched_css_rules: list[RuleMatch]
+>>>>>>> dbc9f52 (Defer typing import)
 
 
 @dataclass(kw_only=True)
@@ -56,7 +64,11 @@ class InheritedAnimatedStyleEntry(CDPModel):
     Inherited CSS style collection for animated styles from ancestor node.
     """
 
+<<<<<<< HEAD
     animation_styles: list[Any] | None = None
+=======
+    animation_styles: list[CSSAnimationStyle] | None = None
+>>>>>>> dbc9f52 (Defer typing import)
     transitions_style: CSSStyle | None = None
 
 
@@ -145,6 +157,7 @@ class CSSRule(CDPModel):
 
     style_sheet_id: dom.StyleSheetId | None = None
     selector_list: SelectorList
+<<<<<<< HEAD
     nesting_selectors: list[Any] | None = None
     origin: StyleSheetOrigin
     style: CSSStyle
@@ -157,6 +170,19 @@ class CSSRule(CDPModel):
     rule_types: list[Any] | None = None
     starting_styles: list[Any] | None = None
     navigations: list[Any] | None = None
+=======
+    nesting_selectors: list[str] | None = None
+    origin: StyleSheetOrigin
+    style: CSSStyle
+    origin_tree_scope_node_id: dom.BackendNodeId | None = None
+    media: list[CSSMedia] | None = None
+    container_queries: list[CSSContainerQuery] | None = None
+    supports: list[CSSSupports] | None = None
+    layers: list[CSSLayer] | None = None
+    scopes: list[CSSScope] | None = None
+    rule_types: list[CSSRuleType] | None = None
+    starting_styles: list[CSSStartingStyle] | None = None
+>>>>>>> dbc9f52 (Defer typing import)
 
 
 """
@@ -225,8 +251,13 @@ class CSSStyle(CDPModel):
     """
 
     style_sheet_id: dom.StyleSheetId | None = None
+<<<<<<< HEAD
     css_properties: list[Any]
     shorthand_entries: list[Any]
+=======
+    css_properties: list[CSSProperty]
+    shorthand_entries: list[ShorthandEntry]
+>>>>>>> dbc9f52 (Defer typing import)
     css_text: str | None = None
     range: SourceRange | None = None
 
@@ -245,7 +276,11 @@ class CSSProperty(CDPModel):
     parsed_ok: bool | None = None
     disabled: bool | None = None
     range: SourceRange | None = None
+<<<<<<< HEAD
     longhand_properties: list[Any] | None = None
+=======
+    longhand_properties: list[CSSProperty] | None = None
+>>>>>>> dbc9f52 (Defer typing import)
 
 
 @dataclass(kw_only=True)
@@ -255,11 +290,19 @@ class CSSMedia(CDPModel):
     """
 
     text: str
+<<<<<<< HEAD
     source: str
     source_url: str | None = None
     range: SourceRange | None = None
     style_sheet_id: dom.StyleSheetId | None = None
     media_list: list[Any] | None = None
+=======
+    source: Literal["mediaRule", "importRule", "linkedSheet", "inlineSheet"]
+    source_url: str | None = None
+    range: SourceRange | None = None
+    style_sheet_id: dom.StyleSheetId | None = None
+    media_list: list[MediaQuery] | None = None
+>>>>>>> dbc9f52 (Defer typing import)
 
 
 @dataclass(kw_only=True)
@@ -310,6 +353,7 @@ class CSSSupports(CDPModel):
     text: str
     active: bool
     range: SourceRange | None = None
+<<<<<<< HEAD
     style_sheet_id: dom.StyleSheetId | None = None
 
 
@@ -322,6 +366,8 @@ class CSSNavigation(CDPModel):
     text: str
     active: bool | None = None
     range: SourceRange | None = None
+=======
+>>>>>>> dbc9f52 (Defer typing import)
     style_sheet_id: dom.StyleSheetId | None = None
 
 
@@ -364,7 +410,11 @@ class CSSLayerData(CDPModel):
     """
 
     name: str
+<<<<<<< HEAD
     sub_layers: list[Any] | None = None
+=======
+    sub_layers: list[CSSLayerData] | None = None
+>>>>>>> dbc9f52 (Defer typing import)
     order: float
 
 
@@ -410,7 +460,11 @@ class FontFace(CDPModel):
     unicode_range: str
     src: str
     platform_font_family: str
+<<<<<<< HEAD
     font_variation_axes: list[Any] | None = None
+=======
+    font_variation_axes: list[FontVariationAxis] | None = None
+>>>>>>> dbc9f52 (Defer typing import)
 
 
 @dataclass(kw_only=True)
@@ -465,8 +519,23 @@ class CSSAtRule(CDPModel):
     CSS generic @rule representation.
     """
 
+<<<<<<< HEAD
     type: str
     subsection: str | None = None
+=======
+    type: Literal["font-face", "font-feature-values", "font-palette-values"]
+    subsection: (
+        Literal[
+            "swash",
+            "annotation",
+            "ornaments",
+            "stylistic",
+            "styleset",
+            "character-variant",
+        ]
+        | None
+    ) = None
+>>>>>>> dbc9f52 (Defer typing import)
     name: Value | None = None
     style_sheet_id: dom.StyleSheetId | None = None
     origin: StyleSheetOrigin
@@ -504,8 +573,12 @@ class CSSFunctionConditionNode(CDPModel):
     media: CSSMedia | None = None
     container_queries: CSSContainerQuery | None = None
     supports: CSSSupports | None = None
+<<<<<<< HEAD
     navigation: CSSNavigation | None = None
     children: list[Any]
+=======
+    children: list[CSSFunctionNode]
+>>>>>>> dbc9f52 (Defer typing import)
     condition_text: str
 
 

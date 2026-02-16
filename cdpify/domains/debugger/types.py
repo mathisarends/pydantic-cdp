@@ -99,7 +99,11 @@ class BreakLocation(CDPModel):
     script_id: runtime.ScriptId
     line_number: int
     column_number: int | None = None
+<<<<<<< HEAD
     type: str | None = None
+=======
+    type: Literal["debuggerStatement", "call", "return"] | None = None
+>>>>>>> dbc9f52 (Defer typing import)
 
 
 @dataclass(kw_only=True)
@@ -120,7 +124,11 @@ class DebugSymbols(CDPModel):
     Debug symbols available for a wasm script.
     """
 
+<<<<<<< HEAD
     type: str
+=======
+    type: Literal["SourceMap", "EmbeddedDWARF", "ExternalDWARF"]
+>>>>>>> dbc9f52 (Defer typing import)
     external_url: str | None = None
 
 

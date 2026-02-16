@@ -25,7 +25,11 @@ class Animation(CDPModel):
     playback_rate: float
     start_time: float
     current_time: float
+<<<<<<< HEAD
     type: str
+=======
+    type: Literal["CSSTransition", "CSSAnimation", "WebAnimation"]
+>>>>>>> dbc9f52 (Defer typing import)
     source: AnimationEffect | None = None
     css_id: str | None = None
     view_or_scroll_timeline: ViewOrScrollTimeline | None = None
@@ -69,7 +73,11 @@ class KeyframesRule(CDPModel):
     """
 
     name: str | None = None
+<<<<<<< HEAD
     keyframes: list[Any]
+=======
+    keyframes: list[KeyframeStyle]
+>>>>>>> dbc9f52 (Defer typing import)
 
 
 @dataclass(kw_only=True)

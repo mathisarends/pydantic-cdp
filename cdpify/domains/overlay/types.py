@@ -84,7 +84,11 @@ class LineStyle(CDPModel):
     """
 
     color: dom.RGBA | None = None
+<<<<<<< HEAD
     pattern: str | None = None
+=======
+    pattern: Literal["dashed", "dotted"] | None = None
+>>>>>>> dbc9f52 (Defer typing import)
 
 
 @dataclass(kw_only=True)

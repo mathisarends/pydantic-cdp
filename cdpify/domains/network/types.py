@@ -189,10 +189,26 @@ class Request(CDPModel):
     headers: Headers
     post_data: str | None = None
     has_post_data: bool | None = None
+<<<<<<< HEAD
     post_data_entries: list[Any] | None = None
     mixed_content_type: security.MixedContentType | None = None
     initial_priority: ResourcePriority
     referrer_policy: str
+=======
+    post_data_entries: list[PostDataEntry] | None = None
+    mixed_content_type: security.MixedContentType | None = None
+    initial_priority: ResourcePriority
+    referrer_policy: Literal[
+        "unsafe-url",
+        "no-referrer-when-downgrade",
+        "no-referrer",
+        "origin",
+        "origin-when-cross-origin",
+        "same-origin",
+        "strict-origin",
+        "strict-origin-when-cross-origin",
+    ]
+>>>>>>> dbc9f52 (Defer typing import)
     is_link_preload: bool | None = None
     trust_token_params: TrustTokenParams | None = None
     is_same_site: bool | None = None
@@ -323,8 +339,13 @@ class TrustTokenParams(CDPModel):
     """
 
     operation: TrustTokenOperationType
+<<<<<<< HEAD
     refresh_policy: str
     issuers: list[Any] | None = None
+=======
+    refresh_policy: Literal["UseCached", "Refresh"]
+    issuers: list[str] | None = None
+>>>>>>> dbc9f52 (Defer typing import)
 
 
 TrustTokenOperationType = Literal["Issuance", "Redemption", "Signing"]
@@ -594,7 +615,11 @@ class AssociatedCookie(CDPModel):
     """
 
     cookie: Cookie
+<<<<<<< HEAD
     blocked_reasons: list[Any]
+=======
+    blocked_reasons: list[CookieBlockedReason]
+>>>>>>> dbc9f52 (Defer typing import)
     exemption_reason: CookieExemptionReason | None = None
 
 
@@ -625,7 +650,11 @@ class AuthChallenge(CDPModel):
     Authorization challenge for HTTP status code 401 or 407.
     """
 
+<<<<<<< HEAD
     source: str | None = None
+=======
+    source: Literal["Server", "Proxy"] | None = None
+>>>>>>> dbc9f52 (Defer typing import)
     origin: str
     scheme: str
     realm: str
@@ -637,7 +666,11 @@ class AuthChallengeResponse(CDPModel):
     Response to an AuthChallenge.
     """
 
+<<<<<<< HEAD
     response: str
+=======
+    response: Literal["Default", "CancelAuth", "ProvideCredentials"]
+>>>>>>> dbc9f52 (Defer typing import)
     username: str | None = None
     password: str | None = None
 
@@ -675,7 +708,11 @@ class SignedExchangeSignature(CDPModel):
     validity_url: str
     date: int
     expires: int
+<<<<<<< HEAD
     certificates: list[Any] | None = None
+=======
+    certificates: list[str] | None = None
+>>>>>>> dbc9f52 (Defer typing import)
 
 
 @dataclass(kw_only=True)
@@ -726,7 +763,11 @@ class SignedExchangeInfo(CDPModel):
     has_extra_info: bool
     header: SignedExchangeHeader | None = None
     security_details: SecurityDetails | None = None
+<<<<<<< HEAD
     errors: list[Any] | None = None
+=======
+    errors: list[SignedExchangeError] | None = None
+>>>>>>> dbc9f52 (Defer typing import)
 
 
 """
@@ -878,7 +919,11 @@ class ContentSecurityPolicyStatus(CDPModel):
 class SecurityIsolationStatus(CDPModel):
     coop: CrossOriginOpenerPolicyStatus | None = None
     coep: CrossOriginEmbedderPolicyStatus | None = None
+<<<<<<< HEAD
     csp: list[Any] | None = None
+=======
+    csp: list[ContentSecurityPolicyStatus] | None = None
+>>>>>>> dbc9f52 (Defer typing import)
 
 
 """
@@ -980,7 +1025,11 @@ class DeviceBoundSession(CDPModel):
     cookie_cravings: list[Any]
     expiry_date: network.TimeSinceEpoch
     cached_challenge: str | None = None
+<<<<<<< HEAD
     allowed_refresh_initiators: list[Any]
+=======
+    allowed_refresh_initiators: list[str]
+>>>>>>> dbc9f52 (Defer typing import)
 
 
 """
@@ -1083,7 +1132,10 @@ class CreationEventDetails(CDPModel):
 
     fetch_result: DeviceBoundSessionFetchResult
     new_session: DeviceBoundSession | None = None
+<<<<<<< HEAD
     failed_request: DeviceBoundSessionFailedRequest | None = None
+=======
+>>>>>>> dbc9f52 (Defer typing import)
 
 
 @dataclass(kw_only=True)
@@ -1092,7 +1144,19 @@ class RefreshEventDetails(CDPModel):
     Session event details specific to refresh.
     """
 
+<<<<<<< HEAD
     refresh_result: str
+=======
+    refresh_result: Literal[
+        "Refreshed",
+        "InitializedService",
+        "Unreachable",
+        "ServerError",
+        "RefreshQuotaExceeded",
+        "FatalError",
+        "SigningQuotaExceeded",
+    ]
+>>>>>>> dbc9f52 (Defer typing import)
     fetch_result: DeviceBoundSessionFetchResult | None = None
     new_session: DeviceBoundSession | None = None
     was_fully_proactive_refresh: bool

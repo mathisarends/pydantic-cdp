@@ -102,8 +102,13 @@ class AXValue(CDPModel):
 
     type: AXValueType
     value: Any | None = None
+<<<<<<< HEAD
     related_nodes: list[Any] | None = None
     sources: list[Any] | None = None
+=======
+    related_nodes: list[AXRelatedNode] | None = None
+    sources: list[AXValueSource] | None = None
+>>>>>>> dbc9f52 (Defer typing import)
 
 
 """
@@ -184,14 +189,24 @@ class AXNode(CDPModel):
 
     node_id: AXNodeId
     ignored: bool
+<<<<<<< HEAD
     ignored_reasons: list[Any] | None = None
+=======
+    ignored_reasons: list[AXProperty] | None = None
+>>>>>>> dbc9f52 (Defer typing import)
     role: AXValue | None = None
     chrome_role: AXValue | None = None
     name: AXValue | None = None
     description: AXValue | None = None
     value: AXValue | None = None
+<<<<<<< HEAD
     properties: list[Any] | None = None
     parent_id: AXNodeId | None = None
     child_ids: list[Any] | None = None
+=======
+    properties: list[AXProperty] | None = None
+    parent_id: AXNodeId | None = None
+    child_ids: list[AXNodeId] | None = None
+>>>>>>> dbc9f52 (Defer typing import)
     backend_dom_node_id: dom.BackendNodeId | None = None
     frame_id: page.FrameId | None = None

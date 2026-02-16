@@ -2284,8 +2284,12 @@
             "ConnectionAllowlistIssue",
             "UserReidentificationIssue",
             "PermissionElementIssue",
+<<<<<<< HEAD
             "PerformanceIssue",
             "SelectivePermissionsInterventionIssue"
+=======
+            "PerformanceIssue"
+>>>>>>> dbc9f52 (Defer typing import)
           ]
         },
         {
@@ -2433,11 +2437,14 @@
               "name": "performanceIssueDetails",
               "optional": true,
               "$ref": "PerformanceIssueDetails"
+<<<<<<< HEAD
             },
             {
               "name": "selectivePermissionsInterventionIssueDetails",
               "optional": true,
               "$ref": "SelectivePermissionsInterventionIssueDetails"
+=======
+>>>>>>> dbc9f52 (Defer typing import)
             }
           ]
         },

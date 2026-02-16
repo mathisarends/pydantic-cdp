@@ -186,7 +186,11 @@ class SharedStorageAccessParams(CDPModel):
     keep_alive: bool | None = None
     private_aggregation_config: SharedStoragePrivateAggregationConfig | None = None
     serialized_data: str | None = None
+<<<<<<< HEAD
     urls_with_metadata: list[Any] | None = None
+=======
+    urls_with_metadata: list[SharedStorageUrlWithMetadata] | None = None
+>>>>>>> dbc9f52 (Defer typing import)
     urn_uuid: str | None = None
     key: str | None = None
     value: str | None = None
@@ -234,7 +238,11 @@ class AttributionReportingFilterDataEntry(CDPModel):
 
 @dataclass(kw_only=True)
 class AttributionReportingFilterConfig(CDPModel):
+<<<<<<< HEAD
     filter_values: list[Any]
+=======
+    filter_values: list[AttributionReportingFilterDataEntry]
+>>>>>>> dbc9f52 (Defer typing import)
     lookback_window: int | None = None
 
 
@@ -270,7 +278,11 @@ class AttributionReportingAggregatableDebugReportingData(CDPModel):
 class AttributionReportingAggregatableDebugReportingConfig(CDPModel):
     budget: float | None = None
     key_piece: UnsignedInt128AsBase16
+<<<<<<< HEAD
     debug_data: list[Any]
+=======
+    debug_data: list[AttributionReportingAggregatableDebugReportingData]
+>>>>>>> dbc9f52 (Defer typing import)
     aggregation_coordinator_origin: str | None = None
 
 
@@ -300,8 +312,13 @@ class AttributionReportingSourceRegistration(CDPModel):
     destination_sites: list[Any]
     event_id: UnsignedInt64AsBase10
     priority: SignedInt64AsBase10
+<<<<<<< HEAD
     filter_data: list[Any]
     aggregation_keys: list[Any]
+=======
+    filter_data: list[AttributionReportingFilterDataEntry]
+    aggregation_keys: list[AttributionReportingAggregationKeysEntry]
+>>>>>>> dbc9f52 (Defer typing import)
     debug_key: UnsignedInt64AsBase10 | None = None
     trigger_data_matching: AttributionReportingTriggerDataMatching
     destination_limit_priority: SignedInt64AsBase10
@@ -381,10 +398,17 @@ class AttributionReportingNamedBudgetCandidate(CDPModel):
 class AttributionReportingTriggerRegistration(CDPModel):
     filters: AttributionReportingFilterPair
     debug_key: UnsignedInt64AsBase10 | None = None
+<<<<<<< HEAD
     aggregatable_dedup_keys: list[Any]
     event_trigger_data: list[Any]
     aggregatable_trigger_data: list[Any]
     aggregatable_values: list[Any]
+=======
+    aggregatable_dedup_keys: list[AttributionReportingAggregatableDedupKey]
+    event_trigger_data: list[AttributionReportingEventTriggerData]
+    aggregatable_trigger_data: list[AttributionReportingAggregatableTriggerData]
+    aggregatable_values: list[AttributionReportingAggregatableValueEntry]
+>>>>>>> dbc9f52 (Defer typing import)
     aggregatable_filtering_id_max_bytes: int
     debug_reporting: bool
     aggregation_coordinator_origin: str | None = None

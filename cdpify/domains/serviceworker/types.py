@@ -47,7 +47,11 @@ class ServiceWorkerVersion(CDPModel):
     status: ServiceWorkerVersionStatus
     script_last_modified: float | None = None
     script_response_time: float | None = None
+<<<<<<< HEAD
     controlled_clients: list[Any] | None = None
+=======
+    controlled_clients: list[target.TargetID] | None = None
+>>>>>>> dbc9f52 (Defer typing import)
     target_id: target.TargetID | None = None
     router_rules: str | None = None
 

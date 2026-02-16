@@ -21,9 +21,15 @@ class ProfileNode(CDPModel):
     id: int
     call_frame: runtime.CallFrame
     hit_count: int | None = None
+<<<<<<< HEAD
     children: list[Any] | None = None
     deopt_reason: str | None = None
     position_ticks: list[Any] | None = None
+=======
+    children: list[int] | None = None
+    deopt_reason: str | None = None
+    position_ticks: list[PositionTickInfo] | None = None
+>>>>>>> dbc9f52 (Defer typing import)
 
 
 @dataclass(kw_only=True)
@@ -35,8 +41,13 @@ class Profile(CDPModel):
     nodes: list[Any]
     start_time: float
     end_time: float
+<<<<<<< HEAD
     samples: list[Any] | None = None
     time_deltas: list[Any] | None = None
+=======
+    samples: list[int] | None = None
+    time_deltas: list[int] | None = None
+>>>>>>> dbc9f52 (Defer typing import)
 
 
 @dataclass(kw_only=True)

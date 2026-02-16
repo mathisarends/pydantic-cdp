@@ -68,14 +68,22 @@ class Layer(CDPModel):
     offset_y: float
     width: float
     height: float
+<<<<<<< HEAD
     transform: list[Any] | None = None
+=======
+    transform: list[float] | None = None
+>>>>>>> dbc9f52 (Defer typing import)
     anchor_x: float | None = None
     anchor_y: float | None = None
     anchor_z: float | None = None
     paint_count: int
     draws_content: bool
     invisible: bool | None = None
+<<<<<<< HEAD
     scroll_rects: list[Any] | None = None
+=======
+    scroll_rects: list[ScrollRect] | None = None
+>>>>>>> dbc9f52 (Defer typing import)
     sticky_position_constraint: StickyPositionConstraint | None = None
 
 

@@ -41,7 +41,11 @@ class CertificateSecurityState(CDPModel):
     key_exchange_group: str | None = None
     cipher: str
     mac: str | None = None
+<<<<<<< HEAD
     certificate: list[Any]
+=======
+    certificate: list[str]
+>>>>>>> dbc9f52 (Defer typing import)
     subject_name: str
     issuer: str
     valid_from: network.TimeSinceEpoch
@@ -74,7 +78,11 @@ class VisibleSecurityState(CDPModel):
     security_state: SecurityState
     certificate_security_state: CertificateSecurityState | None = None
     safety_tip_info: SafetyTipInfo | None = None
+<<<<<<< HEAD
     security_state_issue_ids: list[Any]
+=======
+    security_state_issue_ids: list[str]
+>>>>>>> dbc9f52 (Defer typing import)
 
 
 @dataclass(kw_only=True)
@@ -88,8 +96,13 @@ class SecurityStateExplanation(CDPModel):
     summary: str
     description: str
     mixed_content_type: MixedContentType
+<<<<<<< HEAD
     certificate: list[Any]
     recommendations: list[Any] | None = None
+=======
+    certificate: list[str]
+    recommendations: list[str] | None = None
+>>>>>>> dbc9f52 (Defer typing import)
 
 
 @dataclass(kw_only=True)

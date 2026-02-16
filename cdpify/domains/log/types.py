@@ -21,14 +21,22 @@ class LogEntry(CDPModel):
     source: str
     level: str
     text: str
+<<<<<<< HEAD
     category: str | None = None
+=======
+    category: Literal["cors"] | None = None
+>>>>>>> dbc9f52 (Defer typing import)
     timestamp: runtime.Timestamp
     url: str | None = None
     line_number: int | None = None
     stack_trace: runtime.StackTrace | None = None
     network_request_id: network.RequestId | None = None
     worker_id: str | None = None
+<<<<<<< HEAD
     args: list[Any] | None = None
+=======
+    args: list[runtime.RemoteObject] | None = None
+>>>>>>> dbc9f52 (Defer typing import)
 
 
 @dataclass(kw_only=True)

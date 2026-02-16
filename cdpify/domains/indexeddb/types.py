@@ -53,11 +53,19 @@ class Key(CDPModel):
     Key.
     """
 
+<<<<<<< HEAD
     type: str
     number: float | None = None
     string: str | None = None
     date: float | None = None
     array: list[Any] | None = None
+=======
+    type: Literal["number", "string", "date", "array"]
+    number: float | None = None
+    string: str | None = None
+    date: float | None = None
+    array: list[Key] | None = None
+>>>>>>> dbc9f52 (Defer typing import)
 
 
 @dataclass(kw_only=True)
@@ -89,6 +97,12 @@ class KeyPath(CDPModel):
     Key path.
     """
 
+<<<<<<< HEAD
     type: str
     string: str | None = None
     array: list[Any] | None = None
+=======
+    type: Literal["null", "string", "array"]
+    string: str | None = None
+    array: list[str] | None = None
+>>>>>>> dbc9f52 (Defer typing import)

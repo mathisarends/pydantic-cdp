@@ -6,7 +6,6 @@ from cdpify.generator.generators.utils import (
 )
 from cdpify.generator.models import Domain, Parameter, TypeDefinition
 
-
 class TypesGenerator(BaseGenerator):
     OPTIONAL_OVERRIDES: dict[str, set[str]] = {
         "DocumentSnapshot": {
@@ -41,9 +40,8 @@ class TypesGenerator(BaseGenerator):
 
         lines = []
 
-        if self._uses_type_checking:
-            lines.append("from __future__ import annotations")
-            lines.append("")
+        lines.append("from __future__ import annotations")
+        lines.append("")
 
         typing_imports = self._build_typing_imports()
         if typing_imports:
@@ -115,12 +113,18 @@ class TypesGenerator(BaseGenerator):
 
         self._track_type_usage(py_type)
 
+<<<<<<< HEAD
         should_override = (
             type_id in self.OPTIONAL_OVERRIDES
             and param.name in self.OPTIONAL_OVERRIDES[type_id]
         )
 
         if param.optional or should_override:
+=======
+        if param.optional:
+            if py_type.endswith(" | None"):
+                return f"{field_name}: {py_type} = None"
+>>>>>>> dbc9f52 (Defer typing import)
             return f"{field_name}: {py_type} | None = None"
         return f"{field_name}: {py_type}"
 

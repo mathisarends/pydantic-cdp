@@ -26,9 +26,15 @@ class DOMNode(CDPModel):
     input_checked: bool | None = None
     option_selected: bool | None = None
     backend_node_id: dom.BackendNodeId
+<<<<<<< HEAD
     child_node_indexes: list[Any] | None = None
     attributes: list[Any] | None = None
     pseudo_element_indexes: list[Any] | None = None
+=======
+    child_node_indexes: list[int] | None = None
+    attributes: list[NameValue] | None = None
+    pseudo_element_indexes: list[int] | None = None
+>>>>>>> dbc9f52 (Defer typing import)
     layout_node_index: int | None = None
     document_url: str | None = None
     base_url: str | None = None
@@ -41,7 +47,11 @@ class DOMNode(CDPModel):
     pseudo_type: dom.PseudoType | None = None
     shadow_root_type: dom.ShadowRootType | None = None
     is_clickable: bool | None = None
+<<<<<<< HEAD
     event_listeners: list[Any] | None = None
+=======
+    event_listeners: list[domdebugger.EventListener] | None = None
+>>>>>>> dbc9f52 (Defer typing import)
     current_source_url: str | None = None
     origin_url: str | None = None
     scroll_offset_x: float | None = None
@@ -69,7 +79,11 @@ class LayoutTreeNode(CDPModel):
     dom_node_index: int
     bounding_box: dom.Rect
     layout_text: str | None = None
+<<<<<<< HEAD
     inline_text_nodes: list[Any] | None = None
+=======
+    inline_text_nodes: list[InlineTextBox] | None = None
+>>>>>>> dbc9f52 (Defer typing import)
     style_index: int | None = None
     paint_order: int | None = None
     is_stacking_context: bool | None = None
@@ -158,6 +172,7 @@ class NodeTreeSnapshot(CDPModel):
     Table containing nodes.
     """
 
+<<<<<<< HEAD
     parent_index: list[Any] | None = None
     node_type: list[Any] | None = None
     shadow_root_type: RareStringData | None = None
@@ -165,6 +180,15 @@ class NodeTreeSnapshot(CDPModel):
     node_value: list[Any] | None = None
     backend_node_id: list[Any] | None = None
     attributes: list[Any] | None = None
+=======
+    parent_index: list[int] | None = None
+    node_type: list[int] | None = None
+    shadow_root_type: RareStringData | None = None
+    node_name: list[StringIndex] | None = None
+    node_value: list[StringIndex] | None = None
+    backend_node_id: list[dom.BackendNodeId] | None = None
+    attributes: list[ArrayOfStrings] | None = None
+>>>>>>> dbc9f52 (Defer typing import)
     text_value: RareStringData | None = None
     input_value: RareStringData | None = None
     input_checked: RareBooleanData | None = None
@@ -188,12 +212,21 @@ class LayoutTreeSnapshot(CDPModel):
     bounds: list[Any]
     text: list[Any]
     stacking_contexts: RareBooleanData
+<<<<<<< HEAD
     paint_orders: list[Any] | None = None
     offset_rects: list[Any] | None = None
     scroll_rects: list[Any] | None = None
     client_rects: list[Any] | None = None
     blended_background_colors: list[Any] | None = None
     text_color_opacities: list[Any] | None = None
+=======
+    paint_orders: list[int] | None = None
+    offset_rects: list[Rectangle] | None = None
+    scroll_rects: list[Rectangle] | None = None
+    client_rects: list[Rectangle] | None = None
+    blended_background_colors: list[StringIndex] | None = None
+    text_color_opacities: list[float] | None = None
+>>>>>>> dbc9f52 (Defer typing import)
 
 
 @dataclass(kw_only=True)
