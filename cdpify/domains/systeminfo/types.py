@@ -15,8 +15,8 @@ class GPUDevice(CDPModel):
 
     vendor_id: float
     device_id: float
-    sub_sys_id: float | None | None = None
-    revision: float | None | None = None
+    sub_sys_id: float | None = None
+    revision: float | None = None
     vendor_string: str
     device_string: str
     driver_vendor: str
@@ -75,12 +75,12 @@ class GPUInfo(CDPModel):
     Provides information about the GPU(s) on the system.
     """
 
-    devices: list[GPUDevice]
-    aux_attributes: dict[str, Any] | None | None = None
-    feature_status: dict[str, Any] | None | None = None
-    driver_bug_workarounds: list[str]
-    video_decoding: list[VideoDecodeAcceleratorCapability]
-    video_encoding: list[VideoEncodeAcceleratorCapability]
+    devices: list[Any]
+    aux_attributes: dict[str, Any] | None = None
+    feature_status: dict[str, Any] | None = None
+    driver_bug_workarounds: list[Any]
+    video_decoding: list[Any]
+    video_encoding: list[Any]
 
 
 @dataclass(kw_only=True)

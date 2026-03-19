@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import Literal, TYPE_CHECKING
+from typing import Any, Literal, TYPE_CHECKING
 from dataclasses import dataclass
 from cdpify.shared.models import CDPModel
 
@@ -43,5 +43,5 @@ class BackgroundServiceEvent(CDPModel):
     service: ServiceName
     event_name: str
     instance_id: str
-    event_metadata: list[EventMetadata]
+    event_metadata: list[Any]
     storage_key: str

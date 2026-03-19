@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Literal, TYPE_CHECKING
+from typing import Any, TYPE_CHECKING
 from dataclasses import dataclass
 from cdpify.shared.models import CDPModel
 
@@ -25,7 +25,7 @@ class PlayerMessage(CDPModel):
     Have one type per entry in MediaLogRecord::Type Corresponds to kMessage
     """
 
-    level: Literal["error", "warning", "info", "debug"]
+    level: str
     message: str
 
 
@@ -68,8 +68,8 @@ class PlayerError(CDPModel):
 
     error_type: str
     code: int
-    stack: list[PlayerErrorSourceLocation]
-    cause: list[PlayerError]
+    stack: list[Any]
+    cause: list[Any]
     data: dict[str, Any]
 
 

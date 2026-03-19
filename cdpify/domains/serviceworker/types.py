@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import Literal, TYPE_CHECKING
+from typing import Any, Literal, TYPE_CHECKING
 from dataclasses import dataclass
 from cdpify.shared.models import CDPModel
 
@@ -45,11 +45,11 @@ class ServiceWorkerVersion(CDPModel):
     script_url: str
     running_status: ServiceWorkerVersionRunningStatus
     status: ServiceWorkerVersionStatus
-    script_last_modified: float | None | None = None
-    script_response_time: float | None | None = None
-    controlled_clients: list[target.TargetID] | None | None = None
+    script_last_modified: float | None = None
+    script_response_time: float | None = None
+    controlled_clients: list[Any] | None = None
     target_id: target.TargetID | None = None
-    router_rules: str | None | None = None
+    router_rules: str | None = None
 
 
 @dataclass(kw_only=True)

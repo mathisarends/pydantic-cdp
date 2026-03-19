@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import Literal, TYPE_CHECKING
+from typing import Any, TYPE_CHECKING
 from dataclasses import dataclass
 from cdpify.shared.models import CDPModel
 
@@ -18,31 +18,17 @@ class LogEntry(CDPModel):
     Log entry.
     """
 
-    source: Literal[
-        "xml",
-        "javascript",
-        "network",
-        "storage",
-        "appcache",
-        "rendering",
-        "security",
-        "deprecation",
-        "worker",
-        "violation",
-        "intervention",
-        "recommendation",
-        "other",
-    ]
-    level: Literal["verbose", "info", "warning", "error"]
+    source: str
+    level: str
     text: str
-    category: Literal["cors"] | None | None = None
+    category: str | None = None
     timestamp: runtime.Timestamp
-    url: str | None | None = None
-    line_number: int | None | None = None
+    url: str | None = None
+    line_number: int | None = None
     stack_trace: runtime.StackTrace | None = None
     network_request_id: network.RequestId | None = None
-    worker_id: str | None | None = None
-    args: list[runtime.RemoteObject] | None | None = None
+    worker_id: str | None = None
+    args: list[Any] | None = None
 
 
 @dataclass(kw_only=True)
@@ -51,13 +37,5 @@ class ViolationSetting(CDPModel):
     Violation configuration setting.
     """
 
-    name: Literal[
-        "longTask",
-        "longLayout",
-        "blockedEvent",
-        "blockedParser",
-        "discouragedAPIUse",
-        "handler",
-        "recurringHandler",
-    ]
+    name: str
     threshold: float

@@ -10,8 +10,8 @@ from cdpify.generator.models import Domain, Parameter, TypeDefinition
 class TypesGenerator(BaseGenerator):
     OPTIONAL_OVERRIDES: dict[str, set[str]] = {
         "DocumentSnapshot": {
-            "documentUrl",
-            "baseUrl",
+            "documentURL",
+            "baseURL",
         },  # chrome does not mark these as optional, but they are not always present
     }
 
@@ -108,7 +108,7 @@ class TypesGenerator(BaseGenerator):
 
     def _create_field(self, param: Parameter, type_id: str = "") -> str:
         field_name = to_snake_case(param.name)
-        py_type = self._resolve_type(param)
+        py_type = self._resolve_type(param)  # always returns bare type, no | None
 
         if param.ref and "." in param.ref:
             self._cross_domain_refs.add(param.ref)
@@ -131,7 +131,10 @@ class TypesGenerator(BaseGenerator):
             type_name = parts[1]
             return f"{domain_lower}.{type_name}"
 
-        return map_cdp_type(param)
+        # Strip optionality here — _create_field is the single place that adds | None
+        return map_cdp_type(
+            Parameter(name=param.name, type=param.type, ref=param.ref, optional=False)
+        )
 
     def _create_type_alias(self, type_def: TypeDefinition) -> str:
         lines = []

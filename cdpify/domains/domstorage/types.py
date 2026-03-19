@@ -15,8 +15,8 @@ class StorageId(CDPModel):
     DOM Storage identifier.
     """
 
-    security_origin: str | None | None = None
-    storage_key: SerializedStorageKey | None | None = None
+    security_origin: str | None = None
+    storage_key: SerializedStorageKey | None = None
     is_local_storage: bool
 
 

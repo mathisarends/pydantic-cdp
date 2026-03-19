@@ -68,7 +68,7 @@ class BaseAudioContext(CDPModel):
     context_id: GraphObjectId
     context_type: ContextType
     context_state: ContextState
-    realtime_data: ContextRealtimeData | None | None = None
+    realtime_data: ContextRealtimeData | None = None
     callback_buffer_size: float
     max_output_channel_count: float
     sample_rate: float

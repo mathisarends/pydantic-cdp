@@ -10,4 +10,4 @@ from cdpify.shared.models import CDPModel
 class Sink(CDPModel):
     name: str
     id: str
-    session: str | None | None = None
+    session: str | None = None
