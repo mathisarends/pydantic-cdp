@@ -18,7 +18,6 @@ class AuditsCommand(StrEnum):
     GET_ENCODED_RESPONSE = "Audits.getEncodedResponse"
     DISABLE = "Audits.disable"
     ENABLE = "Audits.enable"
-    CHECK_CONTRAST = "Audits.checkContrast"
     CHECK_FORMS_ISSUES = "Audits.checkFormsIssues"
 
 
@@ -40,16 +39,6 @@ class GetEncodedResponseResult(CDPModel):
     body: str | None | None = None
     original_size: int
     encoded_size: int
-
-
-@dataclass(kw_only=True)
-class CheckContrastParams(CDPModel):
-    """
-    Runs the contrast check for the target page. Found issues are reported using
-    Audits.issueAdded event.
-    """
-
-    report_aaa: bool | None | None = None
 
 
 @dataclass(kw_only=True)

@@ -157,7 +157,7 @@ Loading priority of a resource request.
 ResourcePriority = Literal["VeryLow", "Low", "Medium", "High", "VeryHigh"]
 
 """
-The render blocking behavior of a resource request.
+The render-blocking behavior of a resource request.
 """
 RenderBlockingBehavior = Literal[
     "Blocking",
@@ -820,6 +820,31 @@ class ClientSecurityState(CDPModel):
     local_network_access_request_policy: LocalNetworkAccessRequestPolicy
 
 
+@dataclass(kw_only=True)
+class AdScriptIdentifier(CDPModel):
+    """
+    Identifies the script on the stack that caused a resource or element to be labeled
+    as an ad. For resources, this indicates the context that triggered the fetch. For
+    elements, this indicates the context that caused the element to be appended to the
+    DOM.
+    """
+
+    script_id: runtime.ScriptId
+    debugger_id: runtime.UniqueDebuggerId
+    name: str
+
+
+@dataclass(kw_only=True)
+class AdAncestry(CDPModel):
+    """
+    Encapsulates the script ancestry and the root script filter list rule that caused
+    the resource or element to be labeled as an ad.
+    """
+
+    ancestry_chain: list[AdScriptIdentifier]
+    root_script_filterlist_rule: str | None | None = None
+
+
 CrossOriginOpenerPolicyValue = Literal[
     "SameOrigin",
     "SameOriginAllowPopups",
@@ -1057,6 +1082,18 @@ DeviceBoundSessionFetchResult = Literal[
 
 
 @dataclass(kw_only=True)
+class DeviceBoundSessionFailedRequest(CDPModel):
+    """
+    Details about a failed device bound session network request.
+    """
+
+    request_url: str
+    net_error: str | None | None = None
+    response_error: int | None | None = None
+    response_error_body: str | None | None = None
+
+
+@dataclass(kw_only=True)
 class CreationEventDetails(CDPModel):
     """
     Session event details specific to creation.
@@ -1064,6 +1101,7 @@ class CreationEventDetails(CDPModel):
 
     fetch_result: DeviceBoundSessionFetchResult
     new_session: DeviceBoundSession | None | None = None
+    failed_request: DeviceBoundSessionFailedRequest | None | None = None
 
 
 @dataclass(kw_only=True)
@@ -1084,6 +1122,7 @@ class RefreshEventDetails(CDPModel):
     fetch_result: DeviceBoundSessionFetchResult | None | None = None
     new_session: DeviceBoundSession | None | None = None
     was_fully_proactive_refresh: bool
+    failed_request: DeviceBoundSessionFailedRequest | None | None = None
 
 
 @dataclass(kw_only=True)

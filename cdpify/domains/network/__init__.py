@@ -69,6 +69,8 @@ from .types import (
     IPAddressSpace,
     ConnectTiming,
     ClientSecurityState,
+    AdScriptIdentifier,
+    AdAncestry,
     CrossOriginOpenerPolicyValue,
     CrossOriginOpenerPolicyStatus,
     CrossOriginEmbedderPolicyValue,
@@ -88,6 +90,7 @@ from .types import (
     DeviceBoundSession,
     DeviceBoundSessionEventId,
     DeviceBoundSessionFetchResult,
+    DeviceBoundSessionFailedRequest,
     CreationEventDetails,
     RefreshEventDetails,
     TerminationEventDetails,
@@ -200,6 +203,8 @@ from .events import (
 from .client import NetworkClient
 
 __all__ = [
+    "AdAncestry",
+    "AdScriptIdentifier",
     "AlternateProtocolUsage",
     "AssociatedCookie",
     "AuthChallenge",
@@ -242,6 +247,7 @@ __all__ = [
     "DeviceBoundSessionCookieCraving",
     "DeviceBoundSessionEventId",
     "DeviceBoundSessionEventOccurredEvent",
+    "DeviceBoundSessionFailedRequest",
     "DeviceBoundSessionFetchResult",
     "DeviceBoundSessionInclusionRules",
     "DeviceBoundSessionKey",

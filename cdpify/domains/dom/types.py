@@ -48,6 +48,7 @@ PseudoType = Literal[
     "checkmark",
     "before",
     "after",
+    "expand-icon",
     "picker-icon",
     "interest-hint",
     "marker",
@@ -152,6 +153,7 @@ class Node(CDPModel):
     is_scrollable: bool | None | None = None
     affected_by_starting_styles: bool | None | None = None
     adopted_style_sheets: list[StyleSheetId] | None | None = None
+    is_ad_related: bool | None | None = None
 
 
 @dataclass(kw_only=True)

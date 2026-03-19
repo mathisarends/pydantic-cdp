@@ -189,4 +189,4 @@ class ScreenInfo(CDPModel):
 """
 Enum of image types that can be disabled.
 """
-DisabledImageType = Literal["avif", "webp"]
+DisabledImageType = Literal["avif", "jxl", "webp"]

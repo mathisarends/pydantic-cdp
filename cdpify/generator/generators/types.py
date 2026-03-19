@@ -8,6 +8,13 @@ from cdpify.generator.models import Domain, Parameter, TypeDefinition
 
 
 class TypesGenerator(BaseGenerator):
+    OPTIONAL_OVERRIDES: dict[str, set[str]] = {
+        "DocumentSnapshot": {
+            "documentUrl",
+            "baseUrl",
+        },  # chrome does not mark these as optional, but they are not always present
+    }
+
     def generate(self, domain: Domain) -> str:
         self._reset_tracking()
 
@@ -95,11 +102,11 @@ class TypesGenerator(BaseGenerator):
             lines.extend(doc.rstrip().splitlines())
 
         for prop in type_def.properties:
-            lines.append(f"    {self._create_field(prop)}")
+            lines.append(f"    {self._create_field(prop, type_def.id)}")
 
         return "\n".join(lines)
 
-    def _create_field(self, param: Parameter) -> str:
+    def _create_field(self, param: Parameter, type_id: str = "") -> str:
         field_name = to_snake_case(param.name)
         py_type = self._resolve_type(param)
 
@@ -108,7 +115,12 @@ class TypesGenerator(BaseGenerator):
 
         self._track_type_usage(py_type)
 
-        if param.optional:
+        should_override = (
+            type_id in self.OPTIONAL_OVERRIDES
+            and param.name in self.OPTIONAL_OVERRIDES[type_id]
+        )
+
+        if param.optional or should_override:
             return f"{field_name}: {py_type} | None = None"
         return f"{field_name}: {py_type}"
 
