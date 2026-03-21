@@ -102,7 +102,9 @@ class CDPModel:
 
     @classmethod
     def _to_snake(cls, s: str) -> str:
-        return re.sub(r"(?<!^)(?=[A-Z])", "_", s).lower()
+        s = re.sub(r"([a-z\d])([A-Z])", r"\1_\2", s)
+        s = re.sub(r"([A-Z]+)([A-Z][a-z])", r"\1_\2", s)
+        return s.lower()
 
     @classmethod
     def _deserialize_field(cls, value: Any, field_type: type) -> Any:
