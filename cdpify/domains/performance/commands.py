@@ -25,7 +25,7 @@ class EnableParams(CDPModel):
     Enable collecting and reporting metrics.
     """
 
-    time_domain: Literal["timeTicks", "threadTicks"] | None | None = None
+    time_domain: Literal["timeTicks", "threadTicks"] | None = None
 
 
 @dataclass(kw_only=True)

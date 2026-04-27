@@ -104,7 +104,7 @@ class CopyToParams(CDPModel):
 
     node_id: NodeId
     target_node_id: NodeId
-    insert_before_node_id: NodeId | None | None = None
+    insert_before_node_id: NodeId | None = None
 
 
 @dataclass(kw_only=True)
@@ -119,11 +119,11 @@ class DescribeNodeParams(CDPModel):
     tracking any objects, can be used for automation.
     """
 
-    node_id: NodeId | None | None = None
-    backend_node_id: BackendNodeId | None | None = None
+    node_id: NodeId | None = None
+    backend_node_id: BackendNodeId | None = None
     object_id: runtime.RemoteObjectId | None = None
-    depth: int | None | None = None
-    pierce: bool | None | None = None
+    depth: int | None = None
+    pierce: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -139,10 +139,10 @@ class ScrollIntoViewIfNeededParams(CDPModel):
     identify the node.
     """
 
-    node_id: NodeId | None | None = None
-    backend_node_id: BackendNodeId | None | None = None
+    node_id: NodeId | None = None
+    backend_node_id: BackendNodeId | None = None
     object_id: runtime.RemoteObjectId | None = None
-    rect: Rect | None | None = None
+    rect: Rect | None = None
 
 
 @dataclass(kw_only=True)
@@ -161,7 +161,7 @@ class EnableParams(CDPModel):
     Enables DOM agent for the given page.
     """
 
-    include_whitespace: Literal["none", "all"] | None | None = None
+    include_whitespace: Literal["none", "all"] | None = None
 
 
 @dataclass(kw_only=True)
@@ -170,8 +170,8 @@ class FocusParams(CDPModel):
     Focuses the given element.
     """
 
-    node_id: NodeId | None | None = None
-    backend_node_id: BackendNodeId | None | None = None
+    node_id: NodeId | None = None
+    backend_node_id: BackendNodeId | None = None
     object_id: runtime.RemoteObjectId | None = None
 
 
@@ -195,8 +195,8 @@ class GetBoxModelParams(CDPModel):
     Returns boxes for the given node.
     """
 
-    node_id: NodeId | None | None = None
-    backend_node_id: BackendNodeId | None | None = None
+    node_id: NodeId | None = None
+    backend_node_id: BackendNodeId | None = None
     object_id: runtime.RemoteObjectId | None = None
 
 
@@ -212,8 +212,8 @@ class GetContentQuadsParams(CDPModel):
     multiple quads for inline nodes.
     """
 
-    node_id: NodeId | None | None = None
-    backend_node_id: BackendNodeId | None | None = None
+    node_id: NodeId | None = None
+    backend_node_id: BackendNodeId | None = None
     object_id: runtime.RemoteObjectId | None = None
 
 
@@ -229,8 +229,8 @@ class GetDocumentParams(CDPModel):
     enables the DOM domain events for the current target.
     """
 
-    depth: int | None | None = None
-    pierce: bool | None | None = None
+    depth: int | None = None
+    pierce: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -246,8 +246,8 @@ class GetFlattenedDocumentParams(CDPModel):
     DOMSnapshot.captureSnapshot instead.
     """
 
-    depth: int | None | None = None
-    pierce: bool | None | None = None
+    depth: int | None = None
+    pierce: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -263,7 +263,7 @@ class GetNodesForSubtreeByStyleParams(CDPModel):
 
     node_id: NodeId
     computed_styles: list[CSSComputedStyleProperty]
-    pierce: bool | None | None = None
+    pierce: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -280,15 +280,15 @@ class GetNodeForLocationParams(CDPModel):
 
     x: int
     y: int
-    include_user_agent_shadow_dom: bool | None | None = None
-    ignore_pointer_events_none: bool | None | None = None
+    include_user_agent_shadow_dom: bool | None = None
+    ignore_pointer_events_none: bool | None = None
 
 
 @dataclass(kw_only=True)
 class GetNodeForLocationResult(CDPModel):
     backend_node_id: BackendNodeId
     frame_id: page.FrameId
-    node_id: NodeId | None | None = None
+    node_id: NodeId | None = None
 
 
 @dataclass(kw_only=True)
@@ -297,10 +297,10 @@ class GetOuterHTMLParams(CDPModel):
     Returns node's HTML markup.
     """
 
-    node_id: NodeId | None | None = None
-    backend_node_id: BackendNodeId | None | None = None
+    node_id: NodeId | None = None
+    backend_node_id: BackendNodeId | None = None
     object_id: runtime.RemoteObjectId | None = None
-    include_shadow_dom: bool | None | None = None
+    include_shadow_dom: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -347,7 +347,7 @@ class MoveToParams(CDPModel):
 
     node_id: NodeId
     target_node_id: NodeId
-    insert_before_node_id: NodeId | None | None = None
+    insert_before_node_id: NodeId | None = None
 
 
 @dataclass(kw_only=True)
@@ -363,7 +363,7 @@ class PerformSearchParams(CDPModel):
     """
 
     query: str
-    include_user_agent_shadow_dom: bool | None | None = None
+    include_user_agent_shadow_dom: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -478,8 +478,8 @@ class RequestChildNodesParams(CDPModel):
     """
 
     node_id: NodeId
-    depth: int | None | None = None
-    pierce: bool | None | None = None
+    depth: int | None = None
+    pierce: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -504,9 +504,9 @@ class ResolveNodeParams(CDPModel):
     Resolves the JavaScript node object for a given NodeId or BackendNodeId.
     """
 
-    node_id: NodeId | None | None = None
+    node_id: NodeId | None = None
     backend_node_id: dom.BackendNodeId | None = None
-    object_group: str | None | None = None
+    object_group: str | None = None
     execution_context_id: runtime.ExecutionContextId | None = None
 
 
@@ -535,7 +535,7 @@ class SetAttributesAsTextParams(CDPModel):
 
     node_id: NodeId
     text: str
-    name: str | None | None = None
+    name: str | None = None
 
 
 @dataclass(kw_only=True)
@@ -545,8 +545,8 @@ class SetFileInputFilesParams(CDPModel):
     """
 
     files: list[str]
-    node_id: NodeId | None | None = None
-    backend_node_id: BackendNodeId | None | None = None
+    node_id: NodeId | None = None
+    backend_node_id: BackendNodeId | None = None
     object_id: runtime.RemoteObjectId | None = None
 
 
@@ -651,7 +651,7 @@ class GetFrameOwnerParams(CDPModel):
 @dataclass(kw_only=True)
 class GetFrameOwnerResult(CDPModel):
     backend_node_id: BackendNodeId
-    node_id: NodeId | None | None = None
+    node_id: NodeId | None = None
 
 
 @dataclass(kw_only=True)
@@ -665,16 +665,16 @@ class GetContainerForNodeParams(CDPModel):
     """
 
     node_id: NodeId
-    container_name: str | None | None = None
-    physical_axes: PhysicalAxes | None | None = None
-    logical_axes: LogicalAxes | None | None = None
-    queries_scroll_state: bool | None | None = None
-    queries_anchored: bool | None | None = None
+    container_name: str | None = None
+    physical_axes: PhysicalAxes | None = None
+    logical_axes: LogicalAxes | None = None
+    queries_scroll_state: bool | None = None
+    queries_anchored: bool | None = None
 
 
 @dataclass(kw_only=True)
 class GetContainerForNodeResult(CDPModel):
-    node_id: NodeId | None | None = None
+    node_id: NodeId | None = None
 
 
 @dataclass(kw_only=True)
@@ -700,7 +700,7 @@ class GetAnchorElementParams(CDPModel):
     """
 
     node_id: NodeId
-    anchor_specifier: str | None | None = None
+    anchor_specifier: str | None = None
 
 
 @dataclass(kw_only=True)

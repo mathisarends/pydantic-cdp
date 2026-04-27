@@ -166,7 +166,7 @@ class OverrideQuotaForOriginParams(CDPModel):
     """
 
     origin: str
-    quota_size: float | None | None = None
+    quota_size: float | None = None
 
 
 @dataclass(kw_only=True)
@@ -333,7 +333,7 @@ class SetSharedStorageEntryParams(CDPModel):
     owner_origin: str
     key: str
     value: str
-    ignore_if_present: bool | None | None = None
+    ignore_if_present: bool | None = None
 
 
 @dataclass(kw_only=True)

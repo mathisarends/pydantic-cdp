@@ -33,8 +33,8 @@ class ClearObjectStoreParams(CDPModel):
     Clears all entries from an object store.
     """
 
-    security_origin: str | None | None = None
-    storage_key: str | None | None = None
+    security_origin: str | None = None
+    storage_key: str | None = None
     storage_bucket: storage.StorageBucket | None = None
     database_name: str
     object_store_name: str
@@ -46,8 +46,8 @@ class DeleteDatabaseParams(CDPModel):
     Deletes a database.
     """
 
-    security_origin: str | None | None = None
-    storage_key: str | None | None = None
+    security_origin: str | None = None
+    storage_key: str | None = None
     storage_bucket: storage.StorageBucket | None = None
     database_name: str
 
@@ -58,8 +58,8 @@ class DeleteObjectStoreEntriesParams(CDPModel):
     Delete a range of entries from an object store
     """
 
-    security_origin: str | None | None = None
-    storage_key: str | None | None = None
+    security_origin: str | None = None
+    storage_key: str | None = None
     storage_bucket: storage.StorageBucket | None = None
     database_name: str
     object_store_name: str
@@ -72,15 +72,15 @@ class RequestDataParams(CDPModel):
     Requests data from object store or index.
     """
 
-    security_origin: str | None | None = None
-    storage_key: str | None | None = None
+    security_origin: str | None = None
+    storage_key: str | None = None
     storage_bucket: storage.StorageBucket | None = None
     database_name: str
     object_store_name: str
-    index_name: str | None | None = None
+    index_name: str | None = None
     skip_count: int
     page_size: int
-    key_range: KeyRange | None | None = None
+    key_range: KeyRange | None = None
 
 
 @dataclass(kw_only=True)
@@ -95,8 +95,8 @@ class GetMetadataParams(CDPModel):
     Gets metadata of an object store.
     """
 
-    security_origin: str | None | None = None
-    storage_key: str | None | None = None
+    security_origin: str | None = None
+    storage_key: str | None = None
     storage_bucket: storage.StorageBucket | None = None
     database_name: str
     object_store_name: str
@@ -114,8 +114,8 @@ class RequestDatabaseParams(CDPModel):
     Requests database with given name in given frame.
     """
 
-    security_origin: str | None | None = None
-    storage_key: str | None | None = None
+    security_origin: str | None = None
+    storage_key: str | None = None
     storage_bucket: storage.StorageBucket | None = None
     database_name: str
 
@@ -131,8 +131,8 @@ class RequestDatabaseNamesParams(CDPModel):
     Requests database names for given security origin.
     """
 
-    security_origin: str | None | None = None
-    storage_key: str | None | None = None
+    security_origin: str | None = None
+    storage_key: str | None = None
     storage_bucket: storage.StorageBucket | None = None
 
 

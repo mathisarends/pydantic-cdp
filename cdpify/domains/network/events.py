@@ -119,7 +119,7 @@ class DataReceivedEvent(CDPModel):
     timestamp: MonotonicTime
     data_length: int
     encoded_data_length: int
-    data: str | None | None = None
+    data: str | None = None
 
 
 @dataclass(kw_only=True)
@@ -145,9 +145,9 @@ class LoadingFailedEvent(CDPModel):
     timestamp: MonotonicTime
     type: ResourceType
     error_text: str
-    canceled: bool | None | None = None
-    blocked_reason: BlockedReason | None | None = None
-    cors_error_status: CorsErrorStatus | None | None = None
+    canceled: bool | None = None
+    blocked_reason: BlockedReason | None = None
+    cors_error_status: CorsErrorStatus | None = None
 
 
 @dataclass(kw_only=True)
@@ -173,13 +173,13 @@ class RequestInterceptedEvent(CDPModel):
     frame_id: page.FrameId
     resource_type: ResourceType
     is_navigation_request: bool
-    is_download: bool | None | None = None
-    redirect_url: str | None | None = None
-    auth_challenge: AuthChallenge | None | None = None
-    response_error_reason: ErrorReason | None | None = None
-    response_status_code: int | None | None = None
-    response_headers: Headers | None | None = None
-    request_id: RequestId | None | None = None
+    is_download: bool | None = None
+    redirect_url: str | None = None
+    auth_challenge: AuthChallenge | None = None
+    response_error_reason: ErrorReason | None = None
+    response_status_code: int | None = None
+    response_headers: Headers | None = None
+    request_id: RequestId | None = None
 
 
 @dataclass(kw_only=True)
@@ -205,11 +205,11 @@ class RequestWillBeSentEvent(CDPModel):
     wall_time: TimeSinceEpoch
     initiator: Initiator
     redirect_has_extra_info: bool
-    redirect_response: Response | None | None = None
-    type: ResourceType | None | None = None
+    redirect_response: Response | None = None
+    type: ResourceType | None = None
     frame_id: page.FrameId | None = None
-    has_user_gesture: bool | None | None = None
-    render_blocking_behavior: RenderBlockingBehavior | None | None = None
+    has_user_gesture: bool | None = None
+    render_blocking_behavior: RenderBlockingBehavior | None = None
 
 
 @dataclass(kw_only=True)
@@ -266,7 +266,7 @@ class WebSocketCreatedEvent(CDPModel):
 
     request_id: RequestId
     url: str
-    initiator: Initiator | None | None = None
+    initiator: Initiator | None = None
 
 
 @dataclass(kw_only=True)
@@ -334,7 +334,7 @@ class WebTransportCreatedEvent(CDPModel):
     transport_id: RequestId
     url: str
     timestamp: MonotonicTime
-    initiator: Initiator | None | None = None
+    initiator: Initiator | None = None
 
 
 @dataclass(kw_only=True)
@@ -368,7 +368,7 @@ class DirectTCPSocketCreatedEvent(CDPModel):
     remote_port: int
     options: DirectTCPSocketOptions
     timestamp: MonotonicTime
-    initiator: Initiator | None | None = None
+    initiator: Initiator | None = None
 
 
 @dataclass(kw_only=True)
@@ -381,8 +381,8 @@ class DirectTCPSocketOpenedEvent(CDPModel):
     remote_addr: str
     remote_port: int
     timestamp: MonotonicTime
-    local_addr: str | None | None = None
-    local_port: int | None | None = None
+    local_addr: str | None = None
+    local_port: int | None = None
 
 
 @dataclass(kw_only=True)
@@ -449,7 +449,7 @@ class DirectUDPSocketCreatedEvent(CDPModel):
     identifier: RequestId
     options: DirectUDPSocketOptions
     timestamp: MonotonicTime
-    initiator: Initiator | None | None = None
+    initiator: Initiator | None = None
 
 
 @dataclass(kw_only=True)
@@ -462,8 +462,8 @@ class DirectUDPSocketOpenedEvent(CDPModel):
     local_addr: str
     local_port: int
     timestamp: MonotonicTime
-    remote_addr: str | None | None = None
-    remote_port: int | None | None = None
+    remote_addr: str | None = None
+    remote_port: int | None = None
 
 
 @dataclass(kw_only=True)
@@ -523,10 +523,10 @@ class RequestWillBeSentExtraInfoEvent(CDPModel):
     associated_cookies: list[AssociatedCookie]
     headers: Headers
     connect_timing: ConnectTiming
-    device_bound_session_usages: list[DeviceBoundSessionWithUsage] | None | None = None
-    client_security_state: ClientSecurityState | None | None = None
-    site_has_cookie_in_other_partition: bool | None | None = None
-    applied_network_conditions_id: str | None | None = None
+    device_bound_session_usages: list[DeviceBoundSessionWithUsage] | None = None
+    client_security_state: ClientSecurityState | None = None
+    site_has_cookie_in_other_partition: bool | None = None
+    applied_network_conditions_id: str | None = None
 
 
 @dataclass(kw_only=True)
@@ -543,10 +543,10 @@ class ResponseReceivedExtraInfoEvent(CDPModel):
     headers: Headers
     resource_ip_address_space: IPAddressSpace
     status_code: int
-    headers_text: str | None | None = None
-    cookie_partition_key: CookiePartitionKey | None | None = None
-    cookie_partition_key_opaque: bool | None | None = None
-    exempted_cookies: list[ExemptedSetCookieWithReason] | None | None = None
+    headers_text: str | None = None
+    cookie_partition_key: CookiePartitionKey | None = None
+    cookie_partition_key_opaque: bool | None = None
+    exempted_cookies: list[ExemptedSetCookieWithReason] | None = None
 
 
 @dataclass(kw_only=True)
@@ -586,9 +586,9 @@ class TrustTokenOperationDoneEvent(CDPModel):
     ]
     type: TrustTokenOperationType
     request_id: RequestId
-    top_level_origin: str | None | None = None
-    issuer_origin: str | None | None = None
-    issued_token_count: int | None | None = None
+    top_level_origin: str | None = None
+    issuer_origin: str | None = None
+    issued_token_count: int | None = None
 
 
 @dataclass(kw_only=True)
@@ -639,8 +639,8 @@ class DeviceBoundSessionEventOccurredEvent(CDPModel):
     event_id: DeviceBoundSessionEventId
     site: str
     succeeded: bool
-    session_id: str | None | None = None
-    creation_event_details: CreationEventDetails | None | None = None
-    refresh_event_details: RefreshEventDetails | None | None = None
-    termination_event_details: TerminationEventDetails | None | None = None
-    challenge_event_details: ChallengeEventDetails | None | None = None
+    session_id: str | None = None
+    creation_event_details: CreationEventDetails | None = None
+    refresh_event_details: RefreshEventDetails | None = None
+    termination_event_details: TerminationEventDetails | None = None
+    challenge_event_details: ChallengeEventDetails | None = None

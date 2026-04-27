@@ -50,8 +50,8 @@ class RequestCacheNamesParams(CDPModel):
     Requests cache names.
     """
 
-    security_origin: str | None | None = None
-    storage_key: str | None | None = None
+    security_origin: str | None = None
+    storage_key: str | None = None
     storage_bucket: storage.StorageBucket | None = None
 
 
@@ -83,9 +83,9 @@ class RequestEntriesParams(CDPModel):
     """
 
     cache_id: CacheId
-    skip_count: int | None | None = None
-    page_size: int | None | None = None
-    path_filter: str | None | None = None
+    skip_count: int | None = None
+    page_size: int | None = None
+    path_filter: str | None = None
 
 
 @dataclass(kw_only=True)

@@ -34,7 +34,7 @@ class FontsUpdatedEvent(CDPModel):
     successfully loaded web font.
     """
 
-    font: FontFace | None | None = None
+    font: FontFace | None = None
 
 
 @dataclass(kw_only=True)

@@ -29,7 +29,7 @@ class ConsoleProfileFinishedEvent(CDPModel):
     id: str
     location: debugger.Location
     profile: Profile
-    title: str | None | None = None
+    title: str | None = None
 
 
 @dataclass(kw_only=True)
@@ -40,7 +40,7 @@ class ConsoleProfileStartedEvent(CDPModel):
 
     id: str
     location: debugger.Location
-    title: str | None | None = None
+    title: str | None = None
 
 
 @dataclass(kw_only=True)

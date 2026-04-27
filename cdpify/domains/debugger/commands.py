@@ -65,7 +65,7 @@ class ContinueToLocationParams(CDPModel):
     """
 
     location: Location
-    target_call_frames: Literal["any", "current"] | None | None = None
+    target_call_frames: Literal["any", "current"] | None = None
 
 
 @dataclass(kw_only=True)
@@ -75,7 +75,7 @@ class EnableParams(CDPModel):
     has been enabled until the result for this command is received.
     """
 
-    max_scripts_cache_size: float | None | None = None
+    max_scripts_cache_size: float | None = None
 
 
 @dataclass(kw_only=True)
@@ -91,12 +91,12 @@ class EvaluateOnCallFrameParams(CDPModel):
 
     call_frame_id: CallFrameId
     expression: str
-    object_group: str | None | None = None
-    include_command_line_api: bool | None | None = None
-    silent: bool | None | None = None
-    return_by_value: bool | None | None = None
-    generate_preview: bool | None | None = None
-    throw_on_side_effect: bool | None | None = None
+    object_group: str | None = None
+    include_command_line_api: bool | None = None
+    silent: bool | None = None
+    return_by_value: bool | None = None
+    generate_preview: bool | None = None
+    throw_on_side_effect: bool | None = None
     timeout: runtime.TimeDelta | None = None
 
 
@@ -114,8 +114,8 @@ class GetPossibleBreakpointsParams(CDPModel):
     """
 
     start: Location
-    end: Location | None | None = None
-    restrict_to_function: bool | None | None = None
+    end: Location | None = None
+    restrict_to_function: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -135,7 +135,7 @@ class GetScriptSourceParams(CDPModel):
 @dataclass(kw_only=True)
 class GetScriptSourceResult(CDPModel):
     script_source: str
-    bytecode: str | None | None = None
+    bytecode: str | None = None
 
 
 @dataclass(kw_only=True)
@@ -145,7 +145,7 @@ class DisassembleWasmModuleParams(CDPModel):
 
 @dataclass(kw_only=True)
 class DisassembleWasmModuleResult(CDPModel):
-    stream_id: str | None | None = None
+    stream_id: str | None = None
     total_number_of_lines: int
     function_body_offsets: list[int]
     chunk: WasmDisassemblyChunk
@@ -224,7 +224,7 @@ class RestartFrameParams(CDPModel):
     """
 
     call_frame_id: CallFrameId
-    mode: Literal["StepInto"] | None | None = None
+    mode: Literal["StepInto"] | None = None
 
 
 @dataclass(kw_only=True)
@@ -240,7 +240,7 @@ class ResumeParams(CDPModel):
     Resumes JavaScript execution.
     """
 
-    terminate_on_resume: bool | None | None = None
+    terminate_on_resume: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -251,8 +251,8 @@ class SearchInContentParams(CDPModel):
 
     script_id: runtime.ScriptId
     query: str
-    case_sensitive: bool | None | None = None
-    is_regex: bool | None | None = None
+    case_sensitive: bool | None = None
+    is_regex: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -291,7 +291,7 @@ class SetBlackboxPatternsParams(CDPModel):
     """
 
     patterns: list[str]
-    skip_anonymous: bool | None | None = None
+    skip_anonymous: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -314,7 +314,7 @@ class SetBreakpointParams(CDPModel):
     """
 
     location: Location
-    condition: str | None | None = None
+    condition: str | None = None
 
 
 @dataclass(kw_only=True)
@@ -350,11 +350,11 @@ class SetBreakpointByUrlParams(CDPModel):
     """
 
     line_number: int
-    url: str | None | None = None
-    url_regex: str | None | None = None
-    script_hash: str | None | None = None
-    column_number: int | None | None = None
-    condition: str | None | None = None
+    url: str | None = None
+    url_regex: str | None = None
+    script_hash: str | None = None
+    column_number: int | None = None
+    condition: str | None = None
 
 
 @dataclass(kw_only=True)
@@ -372,7 +372,7 @@ class SetBreakpointOnFunctionCallParams(CDPModel):
     """
 
     object_id: runtime.RemoteObjectId
-    condition: str | None | None = None
+    condition: str | None = None
 
 
 @dataclass(kw_only=True)
@@ -421,14 +421,14 @@ class SetScriptSourceParams(CDPModel):
 
     script_id: runtime.ScriptId
     script_source: str
-    dry_run: bool | None | None = None
-    allow_top_frame_editing: bool | None | None = None
+    dry_run: bool | None = None
+    allow_top_frame_editing: bool | None = None
 
 
 @dataclass(kw_only=True)
 class SetScriptSourceResult(CDPModel):
-    call_frames: list[CallFrame] | None | None = None
-    stack_changed: bool | None | None = None
+    call_frames: list[CallFrame] | None = None
+    stack_changed: bool | None = None
     async_stack_trace: runtime.StackTrace | None = None
     async_stack_trace_id: runtime.StackTraceId | None = None
     status: Literal[
@@ -469,8 +469,8 @@ class StepIntoParams(CDPModel):
     Steps into the function call.
     """
 
-    break_on_async_call: bool | None | None = None
-    skip_list: list[LocationRange] | None | None = None
+    break_on_async_call: bool | None = None
+    skip_list: list[LocationRange] | None = None
 
 
 @dataclass(kw_only=True)
@@ -479,4 +479,4 @@ class StepOverParams(CDPModel):
     Steps over the statement.
     """
 
-    skip_list: list[LocationRange] | None | None = None
+    skip_list: list[LocationRange] | None = None
