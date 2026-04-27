@@ -119,13 +119,13 @@ class ContinueInterceptedRequestParams(CDPModel):
     """
 
     interception_id: InterceptionId
-    error_reason: ErrorReason | None | None = None
-    raw_response: str | None | None = None
-    url: str | None | None = None
-    method: str | None | None = None
-    post_data: str | None | None = None
-    headers: Headers | None | None = None
-    auth_challenge_response: AuthChallengeResponse | None | None = None
+    error_reason: ErrorReason | None = None
+    raw_response: str | None = None
+    url: str | None = None
+    method: str | None = None
+    post_data: str | None = None
+    headers: Headers | None = None
+    auth_challenge_response: AuthChallengeResponse | None = None
 
 
 @dataclass(kw_only=True)
@@ -136,10 +136,10 @@ class DeleteCookiesParams(CDPModel):
     """
 
     name: str
-    url: str | None | None = None
-    domain: str | None | None = None
-    path: str | None | None = None
-    partition_key: CookiePartitionKey | None | None = None
+    url: str | None = None
+    domain: str | None = None
+    path: str | None = None
+    partition_key: CookiePartitionKey | None = None
 
 
 @dataclass(kw_only=True)
@@ -154,10 +154,10 @@ class EmulateNetworkConditionsParams(CDPModel):
     latency: float
     download_throughput: float
     upload_throughput: float
-    connection_type: ConnectionType | None | None = None
-    packet_loss: float | None | None = None
-    packet_queue_length: int | None | None = None
-    packet_reordering: bool | None | None = None
+    connection_type: ConnectionType | None = None
+    packet_loss: float | None = None
+    packet_queue_length: int | None = None
+    packet_reordering: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -169,8 +169,8 @@ class EmulateNetworkConditionsByRuleParams(CDPModel):
     `navigator` behavior.
     """
 
-    offline: bool | None | None = None
-    emulate_offline_service_worker: bool | None | None = None
+    offline: bool | None = None
+    emulate_offline_service_worker: bool | None = None
     matched_network_conditions: list[NetworkConditions]
 
 
@@ -189,7 +189,7 @@ class OverrideNetworkStateParams(CDPModel):
     latency: float
     download_throughput: float
     upload_throughput: float
-    connection_type: ConnectionType | None | None = None
+    connection_type: ConnectionType | None = None
 
 
 @dataclass(kw_only=True)
@@ -198,11 +198,11 @@ class EnableParams(CDPModel):
     Enables network tracking, network events will now be delivered to the client.
     """
 
-    max_total_buffer_size: int | None | None = None
-    max_resource_buffer_size: int | None | None = None
-    max_post_data_size: int | None | None = None
-    report_direct_socket_traffic: bool | None | None = None
-    enable_durable_messages: bool | None | None = None
+    max_total_buffer_size: int | None = None
+    max_resource_buffer_size: int | None = None
+    max_post_data_size: int | None = None
+    report_direct_socket_traffic: bool | None = None
+    enable_durable_messages: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -213,8 +213,8 @@ class ConfigureDurableMessagesParams(CDPModel):
     disabled.
     """
 
-    max_total_buffer_size: int | None | None = None
-    max_resource_buffer_size: int | None | None = None
+    max_total_buffer_size: int | None = None
+    max_resource_buffer_size: int | None = None
 
 
 @dataclass(kw_only=True)
@@ -243,7 +243,7 @@ class GetCookiesParams(CDPModel):
     will return detailed cookie information in the `cookies` field.
     """
 
-    urls: list[str] | None | None = None
+    urls: list[str] | None = None
 
 
 @dataclass(kw_only=True)
@@ -333,8 +333,8 @@ class SearchInResponseBodyParams(CDPModel):
 
     request_id: RequestId
     query: str
-    case_sensitive: bool | None | None = None
-    is_regex: bool | None | None = None
+    case_sensitive: bool | None = None
+    is_regex: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -348,8 +348,8 @@ class SetBlockedURLsParams(CDPModel):
     Blocks URLs from loading.
     """
 
-    url_patterns: list[BlockPattern] | None | None = None
-    urls: list[str] | None | None = None
+    url_patterns: list[BlockPattern] | None = None
+    urls: list[str] | None = None
 
 
 @dataclass(kw_only=True)
@@ -379,17 +379,17 @@ class SetCookieParams(CDPModel):
 
     name: str
     value: str
-    url: str | None | None = None
-    domain: str | None | None = None
-    path: str | None | None = None
-    secure: bool | None | None = None
-    http_only: bool | None | None = None
-    same_site: CookieSameSite | None | None = None
-    expires: TimeSinceEpoch | None | None = None
-    priority: CookiePriority | None | None = None
-    source_scheme: CookieSourceScheme | None | None = None
-    source_port: int | None | None = None
-    partition_key: CookiePartitionKey | None | None = None
+    url: str | None = None
+    domain: str | None = None
+    path: str | None = None
+    secure: bool | None = None
+    http_only: bool | None = None
+    same_site: CookieSameSite | None = None
+    expires: TimeSinceEpoch | None = None
+    priority: CookiePriority | None = None
+    source_scheme: CookieSourceScheme | None = None
+    source_port: int | None = None
+    partition_key: CookiePartitionKey | None = None
 
 
 @dataclass(kw_only=True)
@@ -442,8 +442,8 @@ class SetUserAgentOverrideParams(CDPModel):
     """
 
     user_agent: str
-    accept_language: str | None | None = None
-    platform: str | None | None = None
+    accept_language: str | None = None
+    platform: str | None = None
     user_agent_metadata: emulation.UserAgentMetadata | None = None
 
 

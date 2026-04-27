@@ -40,4 +40,4 @@ class DownloadProgressEvent(CDPModel):
     total_bytes: float
     received_bytes: float
     state: Literal["inProgress", "completed", "canceled"]
-    file_path: str | None | None = None
+    file_path: str | None = None

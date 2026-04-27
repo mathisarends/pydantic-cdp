@@ -107,8 +107,6 @@ class TypesGenerator(BaseGenerator):
         self._track_type_usage(py_type)
 
         if param.optional:
-            if py_type.endswith(" | None"):
-                return f"{field_name}: {py_type} = None"
             return f"{field_name}: {py_type} | None = None"
         return f"{field_name}: {py_type}"
 

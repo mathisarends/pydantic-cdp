@@ -75,8 +75,8 @@ class MakeSnapshotResult(CDPModel):
 @dataclass(kw_only=True)
 class ProfileSnapshotParams(CDPModel):
     snapshot_id: SnapshotId
-    min_repeat_count: int | None | None = None
-    min_duration: float | None | None = None
+    min_repeat_count: int | None = None
+    min_duration: float | None = None
     clip_rect: dom.Rect | None = None
 
 
@@ -101,9 +101,9 @@ class ReplaySnapshotParams(CDPModel):
     """
 
     snapshot_id: SnapshotId
-    from_step: int | None | None = None
-    to_step: int | None | None = None
-    scale: float | None | None = None
+    from_step: int | None = None
+    to_step: int | None = None
+    scale: float | None = None
 
 
 @dataclass(kw_only=True)

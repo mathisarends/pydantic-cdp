@@ -126,25 +126,25 @@ class TestMapCdpType:
         result = map_cdp_type(param)
         assert result == "Any"
 
-    def test_map_cdp_type_optional_string_returns_optional_type(self) -> None:
+    def test_map_cdp_type_optional_string_returns_base_type(self) -> None:
         param = Parameter(name="test", type="string", optional=True)
         result = map_cdp_type(param)
-        assert result == "str | None"
+        assert result == "str"
 
-    def test_map_cdp_type_optional_object_returns_optional_dict(self) -> None:
+    def test_map_cdp_type_optional_object_returns_base_dict(self) -> None:
         param = Parameter(name="test", type="object", optional=True)
         result = map_cdp_type(param)
-        assert result == "dict[str, Any] | None"
+        assert result == "dict[str, Any]"
 
     def test_map_cdp_type_with_ref_returns_ref_name(self) -> None:
         param = Parameter(name="test", ref="CustomType", optional=False)
         result = map_cdp_type(param)
         assert result == "CustomType"
 
-    def test_map_cdp_type_with_optional_ref_returns_optional_ref(self) -> None:
+    def test_map_cdp_type_with_optional_ref_returns_base_ref(self) -> None:
         param = Parameter(name="test", ref="CustomType", optional=True)
         result = map_cdp_type(param)
-        assert result == "CustomType | None"
+        assert result == "CustomType"
 
     def test_map_cdp_type_array_without_items_returns_list_any(self) -> None:
         param = Parameter(name="test", type="array", optional=False)
@@ -177,12 +177,12 @@ class TestMapCdpType:
         result = map_cdp_type(param)
         assert result == "list[int]"
 
-    def test_map_cdp_type_optional_array_returns_optional_list(self) -> None:
+    def test_map_cdp_type_optional_array_returns_base_list(self) -> None:
         param = Parameter(
             name="test", type="array", items={"type": "string"}, optional=True
         )
         result = map_cdp_type(param)
-        assert result == "list[str] | None"
+        assert result == "list[str]"
 
     def test_map_cdp_type_enum_returns_literal_type(self) -> None:
         param = Parameter(
@@ -194,7 +194,7 @@ class TestMapCdpType:
         result = map_cdp_type(param)
         assert result == 'Literal["value1", "value2", "value3"]'
 
-    def test_map_cdp_type_optional_enum_returns_optional_literal(self) -> None:
+    def test_map_cdp_type_optional_enum_returns_base_literal(self) -> None:
         param = Parameter(
             name="test",
             type="string",
@@ -202,7 +202,7 @@ class TestMapCdpType:
             optional=True,
         )
         result = map_cdp_type(param)
-        assert result == 'Literal["active", "inactive"] | None'
+        assert result == 'Literal["active", "inactive"]'
 
     def test_map_cdp_type_unknown_type_returns_any(self) -> None:
         param = Parameter(name="test", type="unknown_type", optional=False)

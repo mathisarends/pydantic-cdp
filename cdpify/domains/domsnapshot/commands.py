@@ -31,9 +31,9 @@ class GetSnapshotParams(CDPModel):
     """
 
     computed_style_whitelist: list[str]
-    include_event_listeners: bool | None | None = None
-    include_paint_order: bool | None | None = None
-    include_user_agent_shadow_tree: bool | None | None = None
+    include_event_listeners: bool | None = None
+    include_paint_order: bool | None = None
+    include_user_agent_shadow_tree: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -53,10 +53,10 @@ class CaptureSnapshotParams(CDPModel):
     """
 
     computed_styles: list[str]
-    include_paint_order: bool | None | None = None
-    include_dom_rects: bool | None | None = None
-    include_blended_background_colors: bool | None | None = None
-    include_text_color_opacities: bool | None | None = None
+    include_paint_order: bool | None = None
+    include_dom_rects: bool | None = None
+    include_blended_background_colors: bool | None = None
+    include_text_color_opacities: bool | None = None
 
 
 @dataclass(kw_only=True)

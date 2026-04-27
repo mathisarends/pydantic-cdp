@@ -100,10 +100,10 @@ class InterestGroupAccessedEvent(CDPModel):
     type: InterestGroupAccessType
     owner_origin: str
     name: str
-    component_seller_origin: str | None | None = None
-    bid: float | None | None = None
-    bid_currency: str | None | None = None
-    unique_auction_id: InterestGroupAuctionId | None | None = None
+    component_seller_origin: str | None = None
+    bid: float | None = None
+    bid_currency: str | None = None
+    unique_auction_id: InterestGroupAuctionId | None = None
 
 
 @dataclass(kw_only=True)
@@ -116,8 +116,8 @@ class InterestGroupAuctionEventOccurredEvent(CDPModel):
     event_time: network.TimeSinceEpoch
     type: InterestGroupAuctionEventType
     unique_auction_id: InterestGroupAuctionId
-    parent_auction_id: InterestGroupAuctionId | None | None = None
-    auction_config: dict[str, Any] | None | None = None
+    parent_auction_id: InterestGroupAuctionId | None = None
+    auction_config: dict[str, Any] | None = None
 
 
 @dataclass(kw_only=True)

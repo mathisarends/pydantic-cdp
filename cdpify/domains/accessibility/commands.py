@@ -37,7 +37,7 @@ class GetPartialAXTreeParams(CDPModel):
     node_id: dom.NodeId | None = None
     backend_node_id: dom.BackendNodeId | None = None
     object_id: runtime.RemoteObjectId | None = None
-    fetch_relatives: bool | None | None = None
+    fetch_relatives: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -51,7 +51,7 @@ class GetFullAXTreeParams(CDPModel):
     Fetches the entire accessibility tree for the root Document
     """
 
-    depth: int | None | None = None
+    depth: int | None = None
     frame_id: page.FrameId | None = None
 
 
@@ -121,8 +121,8 @@ class QueryAXTreeParams(CDPModel):
     node_id: dom.NodeId | None = None
     backend_node_id: dom.BackendNodeId | None = None
     object_id: runtime.RemoteObjectId | None = None
-    accessible_name: str | None | None = None
-    role: str | None | None = None
+    accessible_name: str | None = None
+    role: str | None = None
 
 
 @dataclass(kw_only=True)

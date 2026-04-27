@@ -25,7 +25,7 @@ class EnableParams(CDPModel):
     removed, an |issueUpdated| event is fired.
     """
 
-    presentation_url: str | None | None = None
+    presentation_url: str | None = None
 
 
 @dataclass(kw_only=True)
