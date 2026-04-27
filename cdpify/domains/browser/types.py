@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Literal
+from typing import Literal
 from dataclasses import dataclass
 from cdpify.shared.models import CDPModel
 
@@ -117,7 +117,7 @@ class Histogram(CDPModel):
     name: str
     sum: int
     count: int
-    buckets: list[Any]
+    buckets: list[Bucket]
 
 
 PrivacySandboxAPI = Literal["BiddingAndAuctionServices", "TrustedKeyValue"]

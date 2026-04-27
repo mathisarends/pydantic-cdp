@@ -77,12 +77,12 @@ class GPUInfo(CDPModel):
     Provides information about the GPU(s) on the system.
     """
 
-    devices: list[Any]
+    devices: list[GPUDevice]
     aux_attributes: dict[str, Any] | None = None
     feature_status: dict[str, Any] | None = None
-    driver_bug_workarounds: list[Any]
-    video_decoding: list[Any]
-    video_encoding: list[Any]
+    driver_bug_workarounds: list[str]
+    video_decoding: list[VideoDecodeAcceleratorCapability]
+    video_encoding: list[VideoEncodeAcceleratorCapability]
 
 
 @dataclass(kw_only=True)

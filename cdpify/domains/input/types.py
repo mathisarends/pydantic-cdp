@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Literal
+from typing import Literal
 from dataclasses import dataclass
 from cdpify.shared.models import CDPModel
 
@@ -44,6 +44,6 @@ class DragDataItem(CDPModel):
 
 @dataclass(kw_only=True)
 class DragData(CDPModel):
-    items: list[Any]
-    files: list[Any] | None = None
+    items: list[DragDataItem]
+    files: list[str] | None = None
     drag_operations_mask: int

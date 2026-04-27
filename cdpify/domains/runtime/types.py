@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Literal
 from dataclasses import dataclass
 from cdpify.shared.models import CDPModel
 
@@ -21,7 +21,7 @@ class SerializationOptions(CDPModel):
     `returnByValue`.
     """
 
-    serialization: str
+    serialization: Literal["deep", "json", "idOnly"]
     max_depth: int | None = None
     additional_parameters: dict[str, Any] | None = None
 
@@ -32,7 +32,32 @@ class DeepSerializedValue(CDPModel):
     Represents deep serialized value.
     """
 
-    type: str
+    type: Literal[
+        "undefined",
+        "null",
+        "string",
+        "number",
+        "boolean",
+        "bigint",
+        "regexp",
+        "date",
+        "symbol",
+        "array",
+        "object",
+        "function",
+        "map",
+        "set",
+        "weakmap",
+        "weakset",
+        "error",
+        "proxy",
+        "promise",
+        "typedarray",
+        "arraybuffer",
+        "node",
+        "window",
+        "generator",
+    ]
     value: Any | None = None
     object_id: str | None = None
     weak_local_object_reference: int | None = None
@@ -56,8 +81,41 @@ class RemoteObject(CDPModel):
     Mirror object referencing original JavaScript object.
     """
 
-    type: str
-    subtype: str | None = None
+    type: Literal[
+        "object",
+        "function",
+        "undefined",
+        "string",
+        "number",
+        "boolean",
+        "symbol",
+        "bigint",
+    ]
+    subtype: (
+        Literal[
+            "array",
+            "null",
+            "node",
+            "regexp",
+            "date",
+            "map",
+            "set",
+            "weakmap",
+            "weakset",
+            "iterator",
+            "generator",
+            "error",
+            "proxy",
+            "promise",
+            "typedarray",
+            "arraybuffer",
+            "dataview",
+            "webassemblymemory",
+            "wasmvalue",
+            "trustedtype",
+        ]
+        | None
+    ) = None
     class_name: str | None = None
     value: Any | None = None
     unserializable_value: UnserializableValue | None = None
@@ -80,21 +138,88 @@ class ObjectPreview(CDPModel):
     Object containing abbreviated remote object value.
     """
 
-    type: str
-    subtype: str | None = None
+    type: Literal[
+        "object",
+        "function",
+        "undefined",
+        "string",
+        "number",
+        "boolean",
+        "symbol",
+        "bigint",
+    ]
+    subtype: (
+        Literal[
+            "array",
+            "null",
+            "node",
+            "regexp",
+            "date",
+            "map",
+            "set",
+            "weakmap",
+            "weakset",
+            "iterator",
+            "generator",
+            "error",
+            "proxy",
+            "promise",
+            "typedarray",
+            "arraybuffer",
+            "dataview",
+            "webassemblymemory",
+            "wasmvalue",
+            "trustedtype",
+        ]
+        | None
+    ) = None
     description: str | None = None
     overflow: bool
-    properties: list[Any]
-    entries: list[Any] | None = None
+    properties: list[PropertyPreview]
+    entries: list[EntryPreview] | None = None
 
 
 @dataclass(kw_only=True)
 class PropertyPreview(CDPModel):
     name: str
-    type: str
+    type: Literal[
+        "object",
+        "function",
+        "undefined",
+        "string",
+        "number",
+        "boolean",
+        "symbol",
+        "accessor",
+        "bigint",
+    ]
     value: str | None = None
     value_preview: ObjectPreview | None = None
-    subtype: str | None = None
+    subtype: (
+        Literal[
+            "array",
+            "null",
+            "node",
+            "regexp",
+            "date",
+            "map",
+            "set",
+            "weakmap",
+            "weakset",
+            "iterator",
+            "generator",
+            "error",
+            "proxy",
+            "promise",
+            "typedarray",
+            "arraybuffer",
+            "dataview",
+            "webassemblymemory",
+            "wasmvalue",
+            "trustedtype",
+        ]
+        | None
+    ) = None
 
 
 @dataclass(kw_only=True)
@@ -226,7 +351,7 @@ class StackTrace(CDPModel):
     """
 
     description: str | None = None
-    call_frames: list[Any]
+    call_frames: list[CallFrame]
     parent: StackTrace | None = None
     parent_id: StackTraceId | None = None
 

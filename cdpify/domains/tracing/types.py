@@ -16,14 +16,22 @@ MemoryDumpConfig = dict[str, Any]
 
 @dataclass(kw_only=True)
 class TraceConfig(CDPModel):
-    record_mode: str | None = None
+    record_mode: (
+        Literal[
+            "recordUntilFull",
+            "recordContinuously",
+            "recordAsMuchAsPossible",
+            "echoToConsole",
+        ]
+        | None
+    ) = None
     trace_buffer_size_in_kb: float | None = None
     enable_sampling: bool | None = None
     enable_systrace: bool | None = None
     enable_argument_filter: bool | None = None
-    included_categories: list[Any] | None = None
-    excluded_categories: list[Any] | None = None
-    synthetic_delays: list[Any] | None = None
+    included_categories: list[str] | None = None
+    excluded_categories: list[str] | None = None
+    synthetic_delays: list[str] | None = None
     memory_dump_config: MemoryDumpConfig | None = None
 
 

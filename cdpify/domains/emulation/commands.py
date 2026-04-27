@@ -107,7 +107,7 @@ class SetAutoDarkModeOverrideParams(CDPModel):
     Automatically render all web contents using a dark theme.
     """
 
-    enabled: bool | None | None = None
+    enabled: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -152,18 +152,18 @@ class SetDeviceMetricsOverrideParams(CDPModel):
     height: int
     device_scale_factor: float
     mobile: bool
-    scale: float | None | None = None
-    screen_width: int | None | None = None
-    screen_height: int | None | None = None
-    position_x: int | None | None = None
-    position_y: int | None | None = None
-    dont_set_visible_size: bool | None | None = None
-    screen_orientation: ScreenOrientation | None | None = None
+    scale: float | None = None
+    screen_width: int | None = None
+    screen_height: int | None = None
+    position_x: int | None = None
+    position_y: int | None = None
+    dont_set_visible_size: bool | None = None
+    screen_orientation: ScreenOrientation | None = None
     viewport: page.Viewport | None = None
-    display_feature: DisplayFeature | None | None = None
-    device_posture: DevicePosture | None | None = None
-    scrollbar_type: Literal["overlay", "default"] | None | None = None
-    screen_orientation_lock_emulation: bool | None | None = None
+    display_feature: DisplayFeature | None = None
+    device_posture: DevicePosture | None = None
+    scrollbar_type: Literal["overlay", "default"] | None = None
+    screen_orientation_lock_emulation: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -199,7 +199,7 @@ class SetDocumentCookieDisabledParams(CDPModel):
 @dataclass(kw_only=True)
 class SetEmitTouchEventsForMouseParams(CDPModel):
     enabled: bool
-    configuration: Literal["mobile", "desktop"] | None | None = None
+    configuration: Literal["mobile", "desktop"] | None = None
 
 
 @dataclass(kw_only=True)
@@ -208,8 +208,8 @@ class SetEmulatedMediaParams(CDPModel):
     Emulates the given media type or media feature for CSS media queries.
     """
 
-    media: str | None | None = None
-    features: list[MediaFeature] | None | None = None
+    media: str | None = None
+    features: list[MediaFeature] | None = None
 
 
 @dataclass(kw_only=True)
@@ -235,7 +235,7 @@ class SetEmulatedOSTextScaleParams(CDPModel):
     Emulates the given OS text scale.
     """
 
-    scale: float | None | None = None
+    scale: float | None = None
 
 
 @dataclass(kw_only=True)
@@ -245,13 +245,13 @@ class SetGeolocationOverrideParams(CDPModel):
     accuracy emulates position unavailable.
     """
 
-    latitude: float | None | None = None
-    longitude: float | None | None = None
-    accuracy: float | None | None = None
-    altitude: float | None | None = None
-    altitude_accuracy: float | None | None = None
-    heading: float | None | None = None
-    speed: float | None | None = None
+    latitude: float | None = None
+    longitude: float | None = None
+    accuracy: float | None = None
+    altitude: float | None = None
+    altitude_accuracy: float | None = None
+    heading: float | None = None
+    speed: float | None = None
 
 
 @dataclass(kw_only=True)
@@ -276,7 +276,7 @@ class SetSensorOverrideEnabledParams(CDPModel):
 
     enabled: bool
     type: SensorType
-    metadata: SensorMetadata | None | None = None
+    metadata: SensorMetadata | None = None
 
 
 @dataclass(kw_only=True)
@@ -301,7 +301,7 @@ class SetPressureSourceOverrideEnabledParams(CDPModel):
 
     enabled: bool
     source: PressureSource
-    metadata: PressureMetadata | None | None = None
+    metadata: PressureMetadata | None = None
 
 
 @dataclass(kw_only=True)
@@ -327,7 +327,7 @@ class SetPressureDataOverrideParams(CDPModel):
 
     source: PressureSource
     state: PressureState
-    own_contribution_estimate: float | None | None = None
+    own_contribution_estimate: float | None = None
 
 
 @dataclass(kw_only=True)
@@ -374,7 +374,7 @@ class SetTouchEmulationEnabledParams(CDPModel):
     """
 
     enabled: bool
-    max_touch_points: int | None | None = None
+    max_touch_points: int | None = None
 
 
 @dataclass(kw_only=True)
@@ -386,8 +386,8 @@ class SetVirtualTimePolicyParams(CDPModel):
     """
 
     policy: VirtualTimePolicy
-    budget: float | None | None = None
-    max_virtual_time_task_starvation_count: int | None | None = None
+    budget: float | None = None
+    max_virtual_time_task_starvation_count: int | None = None
     initial_virtual_time: network.TimeSinceEpoch | None = None
 
 
@@ -402,7 +402,7 @@ class SetLocaleOverrideParams(CDPModel):
     Overrides default host system locale with the specified one.
     """
 
-    locale: str | None | None = None
+    locale: str | None = None
 
 
 @dataclass(kw_only=True)
@@ -437,7 +437,7 @@ class SetDataSaverOverrideParams(CDPModel):
     Override the value of navigator.connection.saveData
     """
 
-    data_saver_enabled: bool | None | None = None
+    data_saver_enabled: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -453,9 +453,9 @@ class SetUserAgentOverrideParams(CDPModel):
     """
 
     user_agent: str
-    accept_language: str | None | None = None
-    platform: str | None | None = None
-    user_agent_metadata: UserAgentMetadata | None | None = None
+    accept_language: str | None = None
+    platform: str | None = None
+    user_agent_metadata: UserAgentMetadata | None = None
 
 
 @dataclass(kw_only=True)
@@ -493,12 +493,12 @@ class AddScreenParams(CDPModel):
     top: int
     width: int
     height: int
-    work_area_insets: WorkAreaInsets | None | None = None
-    device_pixel_ratio: float | None | None = None
-    rotation: int | None | None = None
-    color_depth: int | None | None = None
-    label: str | None | None = None
-    is_internal: bool | None | None = None
+    work_area_insets: WorkAreaInsets | None = None
+    device_pixel_ratio: float | None = None
+    rotation: int | None = None
+    color_depth: int | None = None
+    label: str | None = None
+    is_internal: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -513,16 +513,16 @@ class UpdateScreenParams(CDPModel):
     """
 
     screen_id: ScreenId
-    left: int | None | None = None
-    top: int | None | None = None
-    width: int | None | None = None
-    height: int | None | None = None
-    work_area_insets: WorkAreaInsets | None | None = None
-    device_pixel_ratio: float | None | None = None
-    rotation: int | None | None = None
-    color_depth: int | None | None = None
-    label: str | None | None = None
-    is_internal: bool | None | None = None
+    left: int | None = None
+    top: int | None = None
+    width: int | None = None
+    height: int | None = None
+    work_area_insets: WorkAreaInsets | None = None
+    device_pixel_ratio: float | None = None
+    rotation: int | None = None
+    color_depth: int | None = None
+    label: str | None = None
+    is_internal: bool | None = None
 
 
 @dataclass(kw_only=True)

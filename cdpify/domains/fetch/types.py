@@ -48,7 +48,7 @@ class AuthChallenge(CDPModel):
     Authorization challenge for HTTP status code 401 or 407.
     """
 
-    source: str | None = None
+    source: Literal["Server", "Proxy"] | None = None
     origin: str
     scheme: str
     realm: str
@@ -60,6 +60,6 @@ class AuthChallengeResponse(CDPModel):
     Response to an AuthChallenge.
     """
 
-    response: str
+    response: Literal["Default", "CancelAuth", "ProvideCredentials"]
     username: str | None = None
     password: str | None = None

@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Literal, TYPE_CHECKING
+from typing import Literal, TYPE_CHECKING
 from dataclasses import dataclass
 from cdpify.shared.models import CDPModel
 
@@ -169,7 +169,7 @@ class SharedStorageUrlWithMetadata(CDPModel):
     """
 
     url: str
-    reporting_metadata: list[Any]
+    reporting_metadata: list[SharedStorageReportingMetadata]
 
 
 @dataclass(kw_only=True)
@@ -186,7 +186,7 @@ class SharedStorageAccessParams(CDPModel):
     keep_alive: bool | None = None
     private_aggregation_config: SharedStoragePrivateAggregationConfig | None = None
     serialized_data: str | None = None
-    urls_with_metadata: list[Any] | None = None
+    urls_with_metadata: list[SharedStorageUrlWithMetadata] | None = None
     urn_uuid: str | None = None
     key: str | None = None
     value: str | None = None
@@ -223,6 +223,6 @@ class RelatedWebsiteSet(CDPModel):
     A single Related Website Set object.
     """
 
-    primary_sites: list[Any]
-    associated_sites: list[Any]
-    service_sites: list[Any]
+    primary_sites: list[str]
+    associated_sites: list[str]
+    service_sites: list[str]

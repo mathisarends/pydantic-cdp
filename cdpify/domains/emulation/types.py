@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Literal
+from typing import Literal
 from dataclasses import dataclass
 from cdpify.shared.models import CDPModel
 
@@ -27,20 +27,22 @@ class ScreenOrientation(CDPModel):
     Screen orientation.
     """
 
-    type: str
+    type: Literal[
+        "portraitPrimary", "portraitSecondary", "landscapePrimary", "landscapeSecondary"
+    ]
     angle: int
 
 
 @dataclass(kw_only=True)
 class DisplayFeature(CDPModel):
-    orientation: str
+    orientation: Literal["vertical", "horizontal"]
     offset: int
     mask_length: int
 
 
 @dataclass(kw_only=True)
 class DevicePosture(CDPModel):
-    type: str
+    type: Literal["continuous", "folded"]
 
 
 @dataclass(kw_only=True)
@@ -77,8 +79,8 @@ class UserAgentMetadata(CDPModel):
     the target with what it would normally use.
     """
 
-    brands: list[Any] | None = None
-    full_version_list: list[Any] | None = None
+    brands: list[UserAgentBrandVersion] | None = None
+    full_version_list: list[UserAgentBrandVersion] | None = None
     full_version: str | None = None
     platform: str
     platform_version: str
@@ -87,7 +89,7 @@ class UserAgentMetadata(CDPModel):
     mobile: bool
     bitness: str | None = None
     wow64: bool | None = None
-    form_factors: list[Any] | None = None
+    form_factors: list[str] | None = None
 
 
 """

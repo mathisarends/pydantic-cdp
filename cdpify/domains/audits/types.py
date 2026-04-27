@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Literal, TYPE_CHECKING
+from typing import Literal, TYPE_CHECKING
 from dataclasses import dataclass
 from cdpify.shared.models import CDPModel
 
@@ -99,8 +99,8 @@ class CookieIssueDetails(CDPModel):
 
     cookie: AffectedCookie | None = None
     raw_cookie_line: str | None = None
-    cookie_warning_reasons: list[Any]
-    cookie_exclusion_reasons: list[Any]
+    cookie_warning_reasons: list[CookieWarningReason]
+    cookie_exclusion_reasons: list[CookieExclusionReason]
     operation: CookieOperation
     site_for_cookies: str | None = None
     cookie_url: str | None = None
@@ -407,7 +407,7 @@ class SharedDictionaryIssueDetails(CDPModel):
 class SRIMessageSignatureIssueDetails(CDPModel):
     error: SRIMessageSignatureError
     signature_base: str
-    integrity_assertions: list[Any]
+    integrity_assertions: list[str]
     request: AffectedRequest
 
 
@@ -482,7 +482,7 @@ class BounceTrackingIssueDetails(CDPModel):
     be `example.test`.
     """
 
-    tracking_sites: list[Any]
+    tracking_sites: list[str]
 
 
 @dataclass(kw_only=True)
@@ -495,7 +495,7 @@ class CookieDeprecationMetadataIssueDetails(CDPModel):
     `example.test`.
     """
 
-    allowed_sites: list[Any]
+    allowed_sites: list[str]
     opt_out_percentage: float
     is_opt_out_top_level: bool
     operation: CookieOperation

@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Literal
+from typing import Literal
 from dataclasses import dataclass
 from cdpify.shared.models import CDPModel
 
@@ -22,7 +22,7 @@ class SamplingProfileNode(CDPModel):
 
     size: float
     total: float
-    stack: list[Any]
+    stack: list[str]
 
 
 @dataclass(kw_only=True)
@@ -31,8 +31,8 @@ class SamplingProfile(CDPModel):
     Array of heap profile samples.
     """
 
-    samples: list[Any]
-    modules: list[Any]
+    samples: list[SamplingProfileNode]
+    modules: list[Module]
 
 
 @dataclass(kw_only=True)

@@ -130,9 +130,15 @@ class TypesGenerator(BaseGenerator):
             type_name = parts[1]
             return f"{domain_lower}.{type_name}"
 
-        # Strip optionality here — _create_field is the single place that adds | None
         return map_cdp_type(
-            Parameter(name=param.name, type=param.type, ref=param.ref, optional=False)
+            Parameter(
+                name=param.name,
+                type=param.type,
+                ref=param.ref,
+                optional=False,
+                items=param.items,
+                enum=param.enum,
+            )
         )
 
     def _create_type_alias(self, type_def: TypeDefinition) -> str:

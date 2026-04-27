@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Literal, TYPE_CHECKING
+from typing import Literal, TYPE_CHECKING
 from dataclasses import dataclass
 from cdpify.shared.models import CDPModel
 
@@ -31,7 +31,7 @@ class AdFrameStatus(CDPModel):
     """
 
     ad_frame_type: AdFrameType
-    explanations: list[Any] | None = None
+    explanations: list[AdFrameExplanation] | None = None
 
 
 """
@@ -243,7 +243,7 @@ class OriginTrialTokenWithStatus(CDPModel):
 class OriginTrial(CDPModel):
     trial_name: str
     status: OriginTrialStatus
-    tokens_with_status: list[Any]
+    tokens_with_status: list[OriginTrialTokenWithStatus]
 
 
 @dataclass(kw_only=True)
@@ -275,7 +275,7 @@ class Frame(CDPModel):
     ad_frame_status: AdFrameStatus | None = None
     secure_context_type: SecureContextType
     cross_origin_isolated_context_type: CrossOriginIsolatedContextType
-    gated_api_features: list[Any]
+    gated_api_features: list[GatedAPIFeatures]
 
 
 @dataclass(kw_only=True)
@@ -300,8 +300,8 @@ class FrameResourceTree(CDPModel):
     """
 
     frame: Frame
-    child_frames: list[Any] | None = None
-    resources: list[Any]
+    child_frames: list[FrameResourceTree] | None = None
+    resources: list[FrameResource]
 
 
 @dataclass(kw_only=True)
@@ -311,7 +311,7 @@ class FrameTree(CDPModel):
     """
 
     frame: Frame
-    child_frames: list[Any] | None = None
+    child_frames: list[FrameTree] | None = None
 
 
 """
@@ -499,7 +499,7 @@ class InstallabilityError(CDPModel):
     """
 
     error_id: str
-    error_arguments: list[Any]
+    error_arguments: list[InstallabilityErrorArgument]
 
 
 """
@@ -530,15 +530,15 @@ class CompilationCacheParams(CDPModel):
 @dataclass(kw_only=True)
 class FileFilter(CDPModel):
     name: str | None = None
-    accepts: list[Any] | None = None
+    accepts: list[str] | None = None
 
 
 @dataclass(kw_only=True)
 class FileHandler(CDPModel):
     action: str
     name: str
-    icons: list[Any] | None = None
-    accepts: list[Any] | None = None
+    icons: list[ImageResource] | None = None
+    accepts: list[FileFilter] | None = None
     launch_type: str
 
 
@@ -591,7 +591,7 @@ class ShareTarget(CDPModel):
     title: str | None = None
     text: str | None = None
     url: str | None = None
-    files: list[Any] | None = None
+    files: list[FileFilter] | None = None
 
 
 @dataclass(kw_only=True)
@@ -606,23 +606,23 @@ class WebAppManifest(CDPModel):
     description: str | None = None
     dir: str | None = None
     display: str | None = None
-    display_overrides: list[Any] | None = None
-    file_handlers: list[Any] | None = None
-    icons: list[Any] | None = None
+    display_overrides: list[str] | None = None
+    file_handlers: list[FileHandler] | None = None
+    icons: list[ImageResource] | None = None
     id: str | None = None
     lang: str | None = None
     launch_handler: LaunchHandler | None = None
     name: str | None = None
     orientation: str | None = None
     prefer_related_applications: bool | None = None
-    protocol_handlers: list[Any] | None = None
-    related_applications: list[Any] | None = None
+    protocol_handlers: list[ProtocolHandler] | None = None
+    related_applications: list[RelatedApplication] | None = None
     scope: str | None = None
-    scope_extensions: list[Any] | None = None
-    screenshots: list[Any] | None = None
+    scope_extensions: list[ScopeExtension] | None = None
+    screenshots: list[Screenshot] | None = None
     share_target: ShareTarget | None = None
     short_name: str | None = None
-    shortcuts: list[Any] | None = None
+    shortcuts: list[Shortcut] | None = None
     start_url: str | None = None
     theme_color: str | None = None
 
@@ -807,11 +807,11 @@ class BackForwardCacheNotRestoredExplanation(CDPModel):
     type: BackForwardCacheNotRestoredReasonType
     reason: BackForwardCacheNotRestoredReason
     context: str | None = None
-    details: list[Any] | None = None
+    details: list[BackForwardCacheBlockingDetails] | None = None
 
 
 @dataclass(kw_only=True)
 class BackForwardCacheNotRestoredExplanationTree(CDPModel):
     url: str
-    explanations: list[Any]
-    children: list[Any]
+    explanations: list[BackForwardCacheNotRestoredExplanation]
+    children: list[BackForwardCacheNotRestoredExplanationTree]
