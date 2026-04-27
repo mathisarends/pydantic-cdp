@@ -12,7 +12,10 @@ class TypesGenerator(BaseGenerator):
         "DocumentSnapshot": {
             "documentURL",
             "baseURL",
-        },  # chrome does not mark these as optional, but they are not always present
+        },
+        "AXRelatedNode": {
+            "backendDOMNodeId",
+        },
     }
 
     def generate(self, domain: Domain) -> str:
