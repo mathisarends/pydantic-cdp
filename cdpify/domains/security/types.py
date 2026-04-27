@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import Literal, TYPE_CHECKING
+from typing import Any, Literal, TYPE_CHECKING
 from dataclasses import dataclass
 from cdpify.shared.models import CDPModel
 
@@ -41,7 +41,7 @@ class CertificateSecurityState(CDPModel):
     key_exchange_group: str | None = None
     cipher: str
     mac: str | None = None
-    certificate: list[str]
+    certificate: list[Any]
     subject_name: str
     issuer: str
     valid_from: network.TimeSinceEpoch
@@ -74,7 +74,7 @@ class VisibleSecurityState(CDPModel):
     security_state: SecurityState
     certificate_security_state: CertificateSecurityState | None = None
     safety_tip_info: SafetyTipInfo | None = None
-    security_state_issue_ids: list[str]
+    security_state_issue_ids: list[Any]
 
 
 @dataclass(kw_only=True)
@@ -88,8 +88,8 @@ class SecurityStateExplanation(CDPModel):
     summary: str
     description: str
     mixed_content_type: MixedContentType
-    certificate: list[str]
-    recommendations: list[str] | None = None
+    certificate: list[Any]
+    recommendations: list[Any] | None = None
 
 
 @dataclass(kw_only=True)

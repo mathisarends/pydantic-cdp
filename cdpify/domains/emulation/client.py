@@ -44,6 +44,7 @@ from .commands import (
     SetPressureDataOverrideParams,
     SetPressureSourceOverrideEnabledParams,
     SetPressureStateOverrideParams,
+    SetPrimaryScreenParams,
     SetSafeAreaInsetsOverrideParams,
     SetScriptExecutionDisabledParams,
     SetScrollbarsHiddenParams,
@@ -56,6 +57,8 @@ from .commands import (
     SetVirtualTimePolicyParams,
     SetVirtualTimePolicyResult,
     SetVisibleSizeParams,
+    UpdateScreenParams,
+    UpdateScreenResult,
 )
 
 from .types import (
@@ -252,6 +255,8 @@ class EmulationClient:
         viewport: page.Viewport | None = None,
         display_feature: DisplayFeature | None = None,
         device_posture: DevicePosture | None = None,
+        scrollbar_type: Literal["overlay", "default"] | None = None,
+        screen_orientation_lock_emulation: bool | None = None,
         session_id: str | None = None,
     ) -> dict[str, Any]:
         """
@@ -274,6 +279,8 @@ class EmulationClient:
             viewport=viewport,
             display_feature=display_feature,
             device_posture=device_posture,
+            scrollbar_type=scrollbar_type,
+            screen_orientation_lock_emulation=screen_orientation_lock_emulation,
         )
 
         result = await self._client.send_raw(
@@ -997,6 +1004,46 @@ class EmulationClient:
         )
         return AddScreenResult.from_cdp(result)
 
+    async def update_screen(
+        self,
+        *,
+        screen_id: ScreenId,
+        left: int | None = None,
+        top: int | None = None,
+        width: int | None = None,
+        height: int | None = None,
+        work_area_insets: WorkAreaInsets | None = None,
+        device_pixel_ratio: float | None = None,
+        rotation: int | None = None,
+        color_depth: int | None = None,
+        label: str | None = None,
+        is_internal: bool | None = None,
+        session_id: str | None = None,
+    ) -> UpdateScreenResult:
+        """
+        Updates specified screen parameters. Only supported in headless mode.
+        """
+        params = UpdateScreenParams(
+            screen_id=screen_id,
+            left=left,
+            top=top,
+            width=width,
+            height=height,
+            work_area_insets=work_area_insets,
+            device_pixel_ratio=device_pixel_ratio,
+            rotation=rotation,
+            color_depth=color_depth,
+            label=label,
+            is_internal=is_internal,
+        )
+
+        result = await self._client.send_raw(
+            method=EmulationCommand.UPDATE_SCREEN,
+            params=params.to_cdp_params(),
+            session_id=session_id,
+        )
+        return UpdateScreenResult.from_cdp(result)
+
     async def remove_screen(
         self,
         *,
@@ -1010,6 +1057,26 @@ class EmulationClient:
 
         result = await self._client.send_raw(
             method=EmulationCommand.REMOVE_SCREEN,
+            params=params.to_cdp_params(),
+            session_id=session_id,
+        )
+        return result
+
+    async def set_primary_screen(
+        self,
+        *,
+        screen_id: ScreenId,
+        session_id: str | None = None,
+    ) -> dict[str, Any]:
+        """
+        Set primary screen. Only supported in headless mode. Note that this changes the
+        coordinate system origin to the top-left of the new primary screen, updating the
+        bounds and work areas of all existing screens accordingly.
+        """
+        params = SetPrimaryScreenParams(screen_id=screen_id)
+
+        result = await self._client.send_raw(
+            method=EmulationCommand.SET_PRIMARY_SCREEN,
             params=params.to_cdp_params(),
             session_id=session_id,
         )

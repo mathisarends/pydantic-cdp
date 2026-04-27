@@ -12,7 +12,7 @@ AuthenticatorId = str
 
 AuthenticatorProtocol = Literal["u2f", "ctap2"]
 
-Ctap2Version = Literal["ctap2_0", "ctap2_1"]
+Ctap2Version = Literal["ctap2_0", "ctap2_1", "ctap2_2"]
 
 AuthenticatorTransport = Literal["usb", "nfc", "ble", "cable", "internal"]
 
@@ -28,6 +28,8 @@ class VirtualAuthenticatorOptions(CDPModel):
     has_cred_blob: bool | None = None
     has_min_pin_length: bool | None = None
     has_prf: bool | None = None
+    has_hmac_secret: bool | None = None
+    has_hmac_secret_mc: bool | None = None
     automatic_presence_simulation: bool | None = None
     is_user_verified: bool | None = None
     default_backup_eligibility: bool | None = None

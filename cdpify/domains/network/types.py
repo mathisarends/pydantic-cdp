@@ -157,7 +157,7 @@ Loading priority of a resource request.
 ResourcePriority = Literal["VeryLow", "Low", "Medium", "High", "VeryHigh"]
 
 """
-The render blocking behavior of a resource request.
+The render-blocking behavior of a resource request.
 """
 RenderBlockingBehavior = Literal[
     "Blocking",
@@ -189,19 +189,10 @@ class Request(CDPModel):
     headers: Headers
     post_data: str | None = None
     has_post_data: bool | None = None
-    post_data_entries: list[PostDataEntry] | None = None
+    post_data_entries: list[Any] | None = None
     mixed_content_type: security.MixedContentType | None = None
     initial_priority: ResourcePriority
-    referrer_policy: Literal[
-        "unsafe-url",
-        "no-referrer-when-downgrade",
-        "no-referrer",
-        "origin",
-        "origin-when-cross-origin",
-        "same-origin",
-        "strict-origin",
-        "strict-origin-when-cross-origin",
-    ]
+    referrer_policy: str
     is_link_preload: bool | None = None
     trust_token_params: TrustTokenParams | None = None
     is_same_site: bool | None = None
@@ -237,11 +228,11 @@ class SecurityDetails(CDPModel):
     mac: str | None = None
     certificate_id: security.CertificateId
     subject_name: str
-    san_list: list[str]
+    san_list: list[Any]
     issuer: str
     valid_from: TimeSinceEpoch
     valid_to: TimeSinceEpoch
-    signed_certificate_timestamp_list: list[SignedCertificateTimestamp]
+    signed_certificate_timestamp_list: list[Any]
     certificate_transparency_compliance: CertificateTransparencyCompliance
     server_signature_algorithm: int | None = None
     encrypted_client_hello: bool
@@ -332,8 +323,8 @@ class TrustTokenParams(CDPModel):
     """
 
     operation: TrustTokenOperationType
-    refresh_policy: Literal["UseCached", "Refresh"]
-    issuers: list[str] | None = None
+    refresh_policy: str
+    issuers: list[Any] | None = None
 
 
 TrustTokenOperationType = Literal["Issuance", "Redemption", "Signing"]
@@ -459,9 +450,7 @@ class Initiator(CDPModel):
     Information about the request initiator.
     """
 
-    type: Literal[
-        "parser", "script", "preload", "SignedExchange", "preflight", "FedCM", "other"
-    ]
+    type: str
     stack: runtime.StackTrace | None = None
     url: str | None = None
     line_number: float | None = None
@@ -579,7 +568,7 @@ class BlockedSetCookieWithReason(CDPModel):
     A cookie which was not stored from a response with the corresponding reason.
     """
 
-    blocked_reasons: list[SetCookieBlockedReason]
+    blocked_reasons: list[Any]
     cookie_line: str
     cookie: Cookie | None = None
 
@@ -605,7 +594,7 @@ class AssociatedCookie(CDPModel):
     """
 
     cookie: Cookie
-    blocked_reasons: list[CookieBlockedReason]
+    blocked_reasons: list[Any]
     exemption_reason: CookieExemptionReason | None = None
 
 
@@ -636,7 +625,7 @@ class AuthChallenge(CDPModel):
     Authorization challenge for HTTP status code 401 or 407.
     """
 
-    source: Literal["Server", "Proxy"] | None = None
+    source: str | None = None
     origin: str
     scheme: str
     realm: str
@@ -648,7 +637,7 @@ class AuthChallengeResponse(CDPModel):
     Response to an AuthChallenge.
     """
 
-    response: Literal["Default", "CancelAuth", "ProvideCredentials"]
+    response: str
     username: str | None = None
     password: str | None = None
 
@@ -686,7 +675,7 @@ class SignedExchangeSignature(CDPModel):
     validity_url: str
     date: int
     expires: int
-    certificates: list[str] | None = None
+    certificates: list[Any] | None = None
 
 
 @dataclass(kw_only=True)
@@ -699,7 +688,7 @@ class SignedExchangeHeader(CDPModel):
     request_url: str
     response_code: int
     response_headers: Headers
-    signatures: list[SignedExchangeSignature]
+    signatures: list[Any]
     header_integrity: str
 
 
@@ -737,7 +726,7 @@ class SignedExchangeInfo(CDPModel):
     has_extra_info: bool
     header: SignedExchangeHeader | None = None
     security_details: SecurityDetails | None = None
-    errors: list[SignedExchangeError] | None = None
+    errors: list[Any] | None = None
 
 
 """
@@ -756,6 +745,7 @@ class NetworkConditions(CDPModel):
     packet_loss: float | None = None
     packet_queue_length: int | None = None
     packet_reordering: bool | None = None
+    offline: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -820,6 +810,46 @@ class ClientSecurityState(CDPModel):
     local_network_access_request_policy: LocalNetworkAccessRequestPolicy
 
 
+@dataclass(kw_only=True)
+class AdScriptIdentifier(CDPModel):
+    """
+    Identifies the script on the stack that caused a resource or element to be labeled
+    as an ad. For resources, this indicates the context that triggered the fetch. For
+    elements, this indicates the context that caused the element to be appended to the
+    DOM.
+    """
+
+    script_id: runtime.ScriptId
+    debugger_id: runtime.UniqueDebuggerId
+    name: str
+
+
+@dataclass(kw_only=True)
+class AdAncestry(CDPModel):
+    """
+    Encapsulates the script ancestry and the root script filter list rule that caused
+    the resource or element to be labeled as an ad.
+    """
+
+    ancestry_chain: list[Any]
+    root_script_filterlist_rule: str | None = None
+
+
+@dataclass(kw_only=True)
+class AdProvenance(CDPModel):
+    """
+    Represents the provenance of an ad resource or element. Only one of
+    `filterlistRule` or `adScriptAncestry` can be set. If `filterlistRule` is provided,
+    the resource URL directly matches a filter list rule. If `adScriptAncestry` is
+    provided, an ad script initiated the resource fetch or appended the element to the
+    DOM. If neither is provided, the entity is known to be an ad, but provenance
+    tracking information is unavailable.
+    """
+
+    filterlist_rule: str | None = None
+    ad_script_ancestry: AdAncestry | None = None
+
+
 CrossOriginOpenerPolicyValue = Literal[
     "SameOrigin",
     "SameOriginAllowPopups",
@@ -864,7 +894,7 @@ class ContentSecurityPolicyStatus(CDPModel):
 class SecurityIsolationStatus(CDPModel):
     coop: CrossOriginOpenerPolicyStatus | None = None
     coep: CrossOriginEmbedderPolicyStatus | None = None
-    csp: list[ContentSecurityPolicyStatus] | None = None
+    csp: list[Any] | None = None
 
 
 """
@@ -915,14 +945,7 @@ class DeviceBoundSessionWithUsage(CDPModel):
     """
 
     session_key: DeviceBoundSessionKey
-    usage: Literal[
-        "NotInScope",
-        "InScopeRefreshNotYetNeeded",
-        "InScopeRefreshNotAllowed",
-        "ProactiveRefreshNotPossible",
-        "ProactiveRefreshAttempted",
-        "Deferred",
-    ]
+    usage: str
 
 
 @dataclass(kw_only=True)
@@ -945,7 +968,7 @@ class DeviceBoundSessionUrlRule(CDPModel):
     A device bound session's inclusion URL rule.
     """
 
-    rule_type: Literal["Exclude", "Include"]
+    rule_type: str
     host_pattern: str
     path_prefix: str
 
@@ -958,7 +981,7 @@ class DeviceBoundSessionInclusionRules(CDPModel):
 
     origin: str
     include_site: bool
-    url_rules: list[DeviceBoundSessionUrlRule]
+    url_rules: list[Any]
 
 
 @dataclass(kw_only=True)
@@ -970,10 +993,10 @@ class DeviceBoundSession(CDPModel):
     key: DeviceBoundSessionKey
     refresh_url: str
     inclusion_rules: DeviceBoundSessionInclusionRules
-    cookie_cravings: list[DeviceBoundSessionCookieCraving]
+    cookie_cravings: list[Any]
     expiry_date: network.TimeSinceEpoch
     cached_challenge: str | None = None
-    allowed_refresh_initiators: list[str]
+    allowed_refresh_initiators: list[Any]
 
 
 """
@@ -1057,6 +1080,18 @@ DeviceBoundSessionFetchResult = Literal[
 
 
 @dataclass(kw_only=True)
+class DeviceBoundSessionFailedRequest(CDPModel):
+    """
+    Details about a failed device bound session network request.
+    """
+
+    request_url: str
+    net_error: str | None = None
+    response_error: int | None = None
+    response_error_body: str | None = None
+
+
+@dataclass(kw_only=True)
 class CreationEventDetails(CDPModel):
     """
     Session event details specific to creation.
@@ -1064,6 +1099,7 @@ class CreationEventDetails(CDPModel):
 
     fetch_result: DeviceBoundSessionFetchResult
     new_session: DeviceBoundSession | None = None
+    failed_request: DeviceBoundSessionFailedRequest | None = None
 
 
 @dataclass(kw_only=True)
@@ -1072,18 +1108,11 @@ class RefreshEventDetails(CDPModel):
     Session event details specific to refresh.
     """
 
-    refresh_result: Literal[
-        "Refreshed",
-        "InitializedService",
-        "Unreachable",
-        "ServerError",
-        "RefreshQuotaExceeded",
-        "FatalError",
-        "SigningQuotaExceeded",
-    ]
+    refresh_result: str
     fetch_result: DeviceBoundSessionFetchResult | None = None
     new_session: DeviceBoundSession | None = None
     was_fully_proactive_refresh: bool
+    failed_request: DeviceBoundSessionFailedRequest | None = None
 
 
 @dataclass(kw_only=True)
@@ -1092,16 +1121,7 @@ class TerminationEventDetails(CDPModel):
     Session event details specific to termination.
     """
 
-    deletion_reason: Literal[
-        "Expired",
-        "FailedToRestoreKey",
-        "FailedToUnwrapKey",
-        "StoragePartitionCleared",
-        "ClearBrowsingData",
-        "ServerRequested",
-        "InvalidSessionParams",
-        "RefreshFatalError",
-    ]
+    deletion_reason: str
 
 
 @dataclass(kw_only=True)
@@ -1110,9 +1130,7 @@ class ChallengeEventDetails(CDPModel):
     Session event details specific to challenges.
     """
 
-    challenge_result: Literal[
-        "Success", "NoSessionId", "NoSessionMatch", "CantSetBoundCookie"
-    ]
+    challenge_result: str
     challenge: str
 
 

@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import Literal, TYPE_CHECKING
+from typing import Any, TYPE_CHECKING
 from dataclasses import dataclass
 from cdpify.shared.models import CDPModel
 
@@ -25,7 +25,7 @@ class Animation(CDPModel):
     playback_rate: float
     start_time: float
     current_time: float
-    type: Literal["CSSTransition", "CSSAnimation", "WebAnimation"]
+    type: str
     source: AnimationEffect | None = None
     css_id: str | None = None
     view_or_scroll_timeline: ViewOrScrollTimeline | None = None
@@ -69,7 +69,7 @@ class KeyframesRule(CDPModel):
     """
 
     name: str | None = None
-    keyframes: list[KeyframeStyle]
+    keyframes: list[Any]
 
 
 @dataclass(kw_only=True)

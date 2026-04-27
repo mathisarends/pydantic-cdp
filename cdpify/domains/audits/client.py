@@ -11,7 +11,6 @@ if TYPE_CHECKING:
 
 from .commands import (
     AuditsCommand,
-    CheckContrastParams,
     CheckFormsIssuesResult,
     GetEncodedResponseParams,
     GetEncodedResponseResult,
@@ -78,25 +77,6 @@ class AuditsClient:
         result = await self._client.send_raw(
             method=AuditsCommand.ENABLE,
             params=None,
-            session_id=session_id,
-        )
-        return result
-
-    async def check_contrast(
-        self,
-        *,
-        report_aaa: bool | None = None,
-        session_id: str | None = None,
-    ) -> dict[str, Any]:
-        """
-        Runs the contrast check for the target page. Found issues are reported using
-        Audits.issueAdded event.
-        """
-        params = CheckContrastParams(report_aaa=report_aaa)
-
-        result = await self._client.send_raw(
-            method=AuditsCommand.CHECK_CONTRAST,
-            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result

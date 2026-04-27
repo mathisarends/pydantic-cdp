@@ -6,9 +6,14 @@ from dataclasses import dataclass
 from enum import StrEnum
 from cdpify.shared.models import CDPModel
 
+from .types import (
+    ScreenOrientation,
+)
+
 
 class EmulationEvent(StrEnum):
     VIRTUAL_TIME_BUDGET_EXPIRED = "Emulation.virtualTimeBudgetExpired"
+    SCREEN_ORIENTATION_LOCK_CHANGED = "Emulation.screenOrientationLockChanged"
 
 
 @dataclass(kw_only=True)
@@ -19,3 +24,15 @@ class VirtualTimeBudgetExpiredEvent(CDPModel):
     """
 
     pass
+
+
+@dataclass(kw_only=True)
+class ScreenOrientationLockChangedEvent(CDPModel):
+    """
+    Fired when a page calls screen.orientation.lock() or screen.orientation.unlock()
+    while device emulation is enabled. This allows the DevTools frontend to update the
+    emulated device orientation accordingly.
+    """
+
+    locked: bool
+    orientation: ScreenOrientation | None | None = None

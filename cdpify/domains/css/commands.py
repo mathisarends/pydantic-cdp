@@ -16,6 +16,7 @@ from .types import (
     CSSKeyframesRule,
     CSSLayerData,
     CSSMedia,
+    CSSNavigation,
     CSSPositionTryRule,
     CSSProperty,
     CSSPropertyRegistration,
@@ -72,6 +73,7 @@ class CSSCommand(StrEnum):
     SET_MEDIA_TEXT = "CSS.setMediaText"
     SET_CONTAINER_QUERY_TEXT = "CSS.setContainerQueryText"
     SET_SUPPORTS_TEXT = "CSS.setSupportsText"
+    SET_NAVIGATION_TEXT = "CSS.setNavigationText"
     SET_SCOPE_TEXT = "CSS.setScopeText"
     SET_RULE_SELECTOR = "CSS.setRuleSelector"
     SET_STYLE_SHEET_TEXT = "CSS.setStyleSheetText"
@@ -469,6 +471,22 @@ class SetSupportsTextParams(CDPModel):
 @dataclass(kw_only=True)
 class SetSupportsTextResult(CDPModel):
     supports: CSSSupports
+
+
+@dataclass(kw_only=True)
+class SetNavigationTextParams(CDPModel):
+    """
+    Modifies the expression of a navigation at-rule.
+    """
+
+    style_sheet_id: dom.StyleSheetId
+    range: SourceRange
+    text: str
+
+
+@dataclass(kw_only=True)
+class SetNavigationTextResult(CDPModel):
+    navigation: CSSNavigation
 
 
 @dataclass(kw_only=True)

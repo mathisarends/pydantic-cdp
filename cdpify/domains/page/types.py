@@ -4,12 +4,12 @@
 
 from __future__ import annotations
 
-from typing import Literal, TYPE_CHECKING
+from typing import Any, Literal, TYPE_CHECKING
 from dataclasses import dataclass
 from cdpify.shared.models import CDPModel
 
 if TYPE_CHECKING:
-    from cdpify.domains import network, runtime
+    from cdpify.domains import network
 
 """
 Unique frame identifier.
@@ -31,28 +31,7 @@ class AdFrameStatus(CDPModel):
     """
 
     ad_frame_type: AdFrameType
-    explanations: list[AdFrameExplanation] | None = None
-
-
-@dataclass(kw_only=True)
-class AdScriptId(CDPModel):
-    """
-    Identifies the script which caused a script or frame to be labelled as an ad.
-    """
-
-    script_id: runtime.ScriptId
-    debugger_id: runtime.UniqueDebuggerId
-
-
-@dataclass(kw_only=True)
-class AdScriptAncestry(CDPModel):
-    """
-    Encapsulates the script ancestry and the root script filterlist rule that caused
-    the frame to be labelled as an ad. Only created when `ancestryChain` is not empty.
-    """
-
-    ancestry_chain: list[AdScriptId]
-    root_script_filterlist_rule: str | None = None
+    explanations: list[Any] | None = None
 
 
 """
@@ -135,7 +114,6 @@ PermissionsPolicyFeature = Literal[
     "encrypted-media",
     "execution-while-out-of-viewport",
     "execution-while-not-rendered",
-    "fenced-unpartitioned-storage-read",
     "focus-without-user-activation",
     "fullscreen",
     "frobulate",
@@ -265,7 +243,7 @@ class OriginTrialTokenWithStatus(CDPModel):
 class OriginTrial(CDPModel):
     trial_name: str
     status: OriginTrialStatus
-    tokens_with_status: list[OriginTrialTokenWithStatus]
+    tokens_with_status: list[Any]
 
 
 @dataclass(kw_only=True)
@@ -297,7 +275,7 @@ class Frame(CDPModel):
     ad_frame_status: AdFrameStatus | None = None
     secure_context_type: SecureContextType
     cross_origin_isolated_context_type: CrossOriginIsolatedContextType
-    gated_api_features: list[GatedAPIFeatures]
+    gated_api_features: list[Any]
 
 
 @dataclass(kw_only=True)
@@ -322,8 +300,8 @@ class FrameResourceTree(CDPModel):
     """
 
     frame: Frame
-    child_frames: list[FrameResourceTree] | None = None
-    resources: list[FrameResource]
+    child_frames: list[Any] | None = None
+    resources: list[Any]
 
 
 @dataclass(kw_only=True)
@@ -333,7 +311,7 @@ class FrameTree(CDPModel):
     """
 
     frame: Frame
-    child_frames: list[FrameTree] | None = None
+    child_frames: list[Any] | None = None
 
 
 """
@@ -521,7 +499,7 @@ class InstallabilityError(CDPModel):
     """
 
     error_id: str
-    error_arguments: list[InstallabilityErrorArgument]
+    error_arguments: list[Any]
 
 
 """
@@ -552,15 +530,15 @@ class CompilationCacheParams(CDPModel):
 @dataclass(kw_only=True)
 class FileFilter(CDPModel):
     name: str | None = None
-    accepts: list[str] | None = None
+    accepts: list[Any] | None = None
 
 
 @dataclass(kw_only=True)
 class FileHandler(CDPModel):
     action: str
     name: str
-    icons: list[ImageResource] | None = None
-    accepts: list[FileFilter] | None = None
+    icons: list[Any] | None = None
+    accepts: list[Any] | None = None
     launch_type: str
 
 
@@ -613,7 +591,7 @@ class ShareTarget(CDPModel):
     title: str | None = None
     text: str | None = None
     url: str | None = None
-    files: list[FileFilter] | None = None
+    files: list[Any] | None = None
 
 
 @dataclass(kw_only=True)
@@ -628,23 +606,23 @@ class WebAppManifest(CDPModel):
     description: str | None = None
     dir: str | None = None
     display: str | None = None
-    display_overrides: list[str] | None = None
-    file_handlers: list[FileHandler] | None = None
-    icons: list[ImageResource] | None = None
+    display_overrides: list[Any] | None = None
+    file_handlers: list[Any] | None = None
+    icons: list[Any] | None = None
     id: str | None = None
     lang: str | None = None
     launch_handler: LaunchHandler | None = None
     name: str | None = None
     orientation: str | None = None
     prefer_related_applications: bool | None = None
-    protocol_handlers: list[ProtocolHandler] | None = None
-    related_applications: list[RelatedApplication] | None = None
+    protocol_handlers: list[Any] | None = None
+    related_applications: list[Any] | None = None
     scope: str | None = None
-    scope_extensions: list[ScopeExtension] | None = None
-    screenshots: list[Screenshot] | None = None
+    scope_extensions: list[Any] | None = None
+    screenshots: list[Any] | None = None
     share_target: ShareTarget | None = None
     short_name: str | None = None
-    shortcuts: list[Shortcut] | None = None
+    shortcuts: list[Any] | None = None
     start_url: str | None = None
     theme_color: str | None = None
 
@@ -698,6 +676,7 @@ BackForwardCacheNotRestoredReason = Literal[
     "BackForwardCacheDisabledForPrerender",
     "UserAgentOverrideDiffers",
     "ForegroundCacheLimit",
+    "ForwardCacheDisabled",
     "BrowsingInstanceNotSwapped",
     "BackForwardCacheDisabledForDelegate",
     "UnloadHandlerExistsInMainFrame",
@@ -799,6 +778,7 @@ BackForwardCacheNotRestoredReason = Literal[
     "EmbedderExtensionMessaging",
     "EmbedderExtensionMessagingForOpenPort",
     "EmbedderExtensionSentMessageToCachedFrame",
+    "EmbedderExtensionFrame",
     "RequestedByWebViewClient",
     "PostMessageByWebViewClient",
     "CacheControlNoStoreDeviceBoundSessionTerminated",
@@ -827,11 +807,11 @@ class BackForwardCacheNotRestoredExplanation(CDPModel):
     type: BackForwardCacheNotRestoredReasonType
     reason: BackForwardCacheNotRestoredReason
     context: str | None = None
-    details: list[BackForwardCacheBlockingDetails] | None = None
+    details: list[Any] | None = None
 
 
 @dataclass(kw_only=True)
 class BackForwardCacheNotRestoredExplanationTree(CDPModel):
     url: str
-    explanations: list[BackForwardCacheNotRestoredExplanation]
-    children: list[BackForwardCacheNotRestoredExplanationTree]
+    explanations: list[Any]
+    children: list[Any]

@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import Literal, TYPE_CHECKING
+from typing import Any, Literal, TYPE_CHECKING
 from dataclasses import dataclass
 from cdpify.shared.models import CDPModel
 
@@ -27,7 +27,7 @@ class PseudoElementMatches(CDPModel):
 
     pseudo_type: dom.PseudoType
     pseudo_identifier: str | None = None
-    matches: list[RuleMatch]
+    matches: list[Any]
 
 
 @dataclass(kw_only=True)
@@ -47,7 +47,7 @@ class InheritedStyleEntry(CDPModel):
     """
 
     inline_style: CSSStyle | None = None
-    matched_css_rules: list[RuleMatch]
+    matched_css_rules: list[Any]
 
 
 @dataclass(kw_only=True)
@@ -56,7 +56,7 @@ class InheritedAnimatedStyleEntry(CDPModel):
     Inherited CSS style collection for animated styles from ancestor node.
     """
 
-    animation_styles: list[CSSAnimationStyle] | None = None
+    animation_styles: list[Any] | None = None
     transitions_style: CSSStyle | None = None
 
 
@@ -66,7 +66,7 @@ class InheritedPseudoElementMatches(CDPModel):
     Inherited pseudo element matches from pseudos of an ancestor node.
     """
 
-    pseudo_elements: list[PseudoElementMatches]
+    pseudo_elements: list[Any]
 
 
 @dataclass(kw_only=True)
@@ -76,7 +76,7 @@ class RuleMatch(CDPModel):
     """
 
     rule: CSSRule
-    matching_selectors: list[int]
+    matching_selectors: list[Any]
 
 
 @dataclass(kw_only=True)
@@ -107,7 +107,7 @@ class SelectorList(CDPModel):
     Selector list data.
     """
 
-    selectors: list[Value]
+    selectors: list[Any]
     text: str
 
 
@@ -145,17 +145,18 @@ class CSSRule(CDPModel):
 
     style_sheet_id: dom.StyleSheetId | None = None
     selector_list: SelectorList
-    nesting_selectors: list[str] | None = None
+    nesting_selectors: list[Any] | None = None
     origin: StyleSheetOrigin
     style: CSSStyle
     origin_tree_scope_node_id: dom.BackendNodeId | None = None
-    media: list[CSSMedia] | None = None
-    container_queries: list[CSSContainerQuery] | None = None
-    supports: list[CSSSupports] | None = None
-    layers: list[CSSLayer] | None = None
-    scopes: list[CSSScope] | None = None
-    rule_types: list[CSSRuleType] | None = None
-    starting_styles: list[CSSStartingStyle] | None = None
+    media: list[Any] | None = None
+    container_queries: list[Any] | None = None
+    supports: list[Any] | None = None
+    layers: list[Any] | None = None
+    scopes: list[Any] | None = None
+    rule_types: list[Any] | None = None
+    starting_styles: list[Any] | None = None
+    navigations: list[Any] | None = None
 
 
 """
@@ -171,6 +172,7 @@ CSSRuleType = Literal[
     "ScopeRule",
     "StyleRule",
     "StartingStyleRule",
+    "NavigationRule",
 ]
 
 
@@ -223,8 +225,8 @@ class CSSStyle(CDPModel):
     """
 
     style_sheet_id: dom.StyleSheetId | None = None
-    css_properties: list[CSSProperty]
-    shorthand_entries: list[ShorthandEntry]
+    css_properties: list[Any]
+    shorthand_entries: list[Any]
     css_text: str | None = None
     range: SourceRange | None = None
 
@@ -243,7 +245,7 @@ class CSSProperty(CDPModel):
     parsed_ok: bool | None = None
     disabled: bool | None = None
     range: SourceRange | None = None
-    longhand_properties: list[CSSProperty] | None = None
+    longhand_properties: list[Any] | None = None
 
 
 @dataclass(kw_only=True)
@@ -253,11 +255,11 @@ class CSSMedia(CDPModel):
     """
 
     text: str
-    source: Literal["mediaRule", "importRule", "linkedSheet", "inlineSheet"]
+    source: str
     source_url: str | None = None
     range: SourceRange | None = None
     style_sheet_id: dom.StyleSheetId | None = None
-    media_list: list[MediaQuery] | None = None
+    media_list: list[Any] | None = None
 
 
 @dataclass(kw_only=True)
@@ -266,7 +268,7 @@ class MediaQuery(CDPModel):
     Media query descriptor.
     """
 
-    expressions: list[MediaQueryExpression]
+    expressions: list[Any]
     active: bool
 
 
@@ -312,6 +314,18 @@ class CSSSupports(CDPModel):
 
 
 @dataclass(kw_only=True)
+class CSSNavigation(CDPModel):
+    """
+    CSS Navigation at-rule descriptor.
+    """
+
+    text: str
+    active: bool | None = None
+    range: SourceRange | None = None
+    style_sheet_id: dom.StyleSheetId | None = None
+
+
+@dataclass(kw_only=True)
 class CSSScope(CDPModel):
     """
     CSS Scope at-rule descriptor.
@@ -350,7 +364,7 @@ class CSSLayerData(CDPModel):
     """
 
     name: str
-    sub_layers: list[CSSLayerData] | None = None
+    sub_layers: list[Any] | None = None
     order: float
 
 
@@ -396,7 +410,7 @@ class FontFace(CDPModel):
     unicode_range: str
     src: str
     platform_font_family: str
-    font_variation_axes: list[FontVariationAxis] | None = None
+    font_variation_axes: list[Any] | None = None
 
 
 @dataclass(kw_only=True)
@@ -430,7 +444,7 @@ class CSSKeyframesRule(CDPModel):
     """
 
     animation_name: Value
-    keyframes: list[CSSKeyframeRule]
+    keyframes: list[Any]
 
 
 @dataclass(kw_only=True)
@@ -451,18 +465,8 @@ class CSSAtRule(CDPModel):
     CSS generic @rule representation.
     """
 
-    type: Literal["font-face", "font-feature-values", "font-palette-values"]
-    subsection: (
-        Literal[
-            "swash",
-            "annotation",
-            "ornaments",
-            "stylistic",
-            "styleset",
-            "character-variant",
-        ]
-        | None
-    ) = None
+    type: str
+    subsection: str | None = None
     name: Value | None = None
     style_sheet_id: dom.StyleSheetId | None = None
     origin: StyleSheetOrigin
@@ -500,7 +504,8 @@ class CSSFunctionConditionNode(CDPModel):
     media: CSSMedia | None = None
     container_queries: CSSContainerQuery | None = None
     supports: CSSSupports | None = None
-    children: list[CSSFunctionNode]
+    navigation: CSSNavigation | None = None
+    children: list[Any]
     condition_text: str
 
 
@@ -523,8 +528,9 @@ class CSSFunctionRule(CDPModel):
     name: Value
     style_sheet_id: dom.StyleSheetId | None = None
     origin: StyleSheetOrigin
-    parameters: list[CSSFunctionParameter]
-    children: list[CSSFunctionNode]
+    parameters: list[Any]
+    children: list[Any]
+    origin_tree_scope_node_id: dom.BackendNodeId | None = None
 
 
 @dataclass(kw_only=True)

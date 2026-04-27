@@ -84,7 +84,7 @@ class LineStyle(CDPModel):
     """
 
     color: dom.RGBA | None = None
-    pattern: Literal["dashed", "dotted"] | None = None
+    pattern: str | None = None
 
 
 @dataclass(kw_only=True)

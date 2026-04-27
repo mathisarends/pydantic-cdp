@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Literal, TYPE_CHECKING
+from typing import Any, TYPE_CHECKING
 from dataclasses import dataclass
 from cdpify.shared.models import CDPModel
 
@@ -29,7 +29,7 @@ class ScrollRect(CDPModel):
     """
 
     rect: dom.Rect
-    type: Literal["RepaintsOnScroll", "TouchEventHandler", "WheelEventHandler"]
+    type: str
 
 
 @dataclass(kw_only=True)
@@ -68,14 +68,14 @@ class Layer(CDPModel):
     offset_y: float
     width: float
     height: float
-    transform: list[float] | None = None
+    transform: list[Any] | None = None
     anchor_x: float | None = None
     anchor_y: float | None = None
     anchor_z: float | None = None
     paint_count: int
     draws_content: bool
     invisible: bool | None = None
-    scroll_rects: list[ScrollRect] | None = None
+    scroll_rects: list[Any] | None = None
     sticky_position_constraint: StickyPositionConstraint | None = None
 
 

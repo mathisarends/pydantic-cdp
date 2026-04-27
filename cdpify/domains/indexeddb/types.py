@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import Literal, TYPE_CHECKING
+from typing import Any, TYPE_CHECKING
 from dataclasses import dataclass
 from cdpify.shared.models import CDPModel
 
@@ -20,7 +20,7 @@ class DatabaseWithObjectStores(CDPModel):
 
     name: str
     version: float
-    object_stores: list[ObjectStore]
+    object_stores: list[Any]
 
 
 @dataclass(kw_only=True)
@@ -32,7 +32,7 @@ class ObjectStore(CDPModel):
     name: str
     key_path: KeyPath
     auto_increment: bool
-    indexes: list[ObjectStoreIndex]
+    indexes: list[Any]
 
 
 @dataclass(kw_only=True)
@@ -53,11 +53,11 @@ class Key(CDPModel):
     Key.
     """
 
-    type: Literal["number", "string", "date", "array"]
+    type: str
     number: float | None = None
     string: str | None = None
     date: float | None = None
-    array: list[Key] | None = None
+    array: list[Any] | None = None
 
 
 @dataclass(kw_only=True)
@@ -89,6 +89,6 @@ class KeyPath(CDPModel):
     Key path.
     """
 
-    type: Literal["null", "string", "array"]
+    type: str
     string: str | None = None
-    array: list[str] | None = None
+    array: list[Any] | None = None

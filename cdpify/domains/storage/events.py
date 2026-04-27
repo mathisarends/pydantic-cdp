@@ -10,12 +10,6 @@ from enum import StrEnum
 from cdpify.shared.models import CDPModel
 
 from .types import (
-    AttributionReportingAggregatableResult,
-    AttributionReportingEventLevelResult,
-    AttributionReportingReportResult,
-    AttributionReportingSourceRegistration,
-    AttributionReportingSourceRegistrationResult,
-    AttributionReportingTriggerRegistration,
     InterestGroupAccessType,
     InterestGroupAuctionEventType,
     InterestGroupAuctionFetchType,
@@ -46,16 +40,6 @@ class StorageEvent(StrEnum):
     )
     STORAGE_BUCKET_CREATED_OR_UPDATED = "Storage.storageBucketCreatedOrUpdated"
     STORAGE_BUCKET_DELETED = "Storage.storageBucketDeleted"
-    ATTRIBUTION_REPORTING_SOURCE_REGISTERED = (
-        "Storage.attributionReportingSourceRegistered"
-    )
-    ATTRIBUTION_REPORTING_TRIGGER_REGISTERED = (
-        "Storage.attributionReportingTriggerRegistered"
-    )
-    ATTRIBUTION_REPORTING_REPORT_SENT = "Storage.attributionReportingReportSent"
-    ATTRIBUTION_REPORTING_VERBOSE_DEBUG_REPORT_SENT = (
-        "Storage.attributionReportingVerboseDebugReportSent"
-    )
 
 
 @dataclass(kw_only=True)
@@ -189,35 +173,3 @@ class StorageBucketCreatedOrUpdatedEvent(CDPModel):
 @dataclass(kw_only=True)
 class StorageBucketDeletedEvent(CDPModel):
     bucket_id: str
-
-
-@dataclass(kw_only=True)
-class AttributionReportingSourceRegisteredEvent(CDPModel):
-    registration: AttributionReportingSourceRegistration
-    result: AttributionReportingSourceRegistrationResult
-
-
-@dataclass(kw_only=True)
-class AttributionReportingTriggerRegisteredEvent(CDPModel):
-    registration: AttributionReportingTriggerRegistration
-    event_level: AttributionReportingEventLevelResult
-    aggregatable: AttributionReportingAggregatableResult
-
-
-@dataclass(kw_only=True)
-class AttributionReportingReportSentEvent(CDPModel):
-    url: str
-    body: dict[str, Any]
-    result: AttributionReportingReportResult
-    net_error: int | None | None = None
-    net_error_name: str | None | None = None
-    http_status_code: int | None | None = None
-
-
-@dataclass(kw_only=True)
-class AttributionReportingVerboseDebugReportSentEvent(CDPModel):
-    url: str
-    body: list[dict[str, Any]] | None | None = None
-    net_error: int | None | None = None
-    net_error_name: str | None | None = None
-    http_status_code: int | None | None = None

@@ -17,7 +17,7 @@ from .types import (
 )
 
 if TYPE_CHECKING:
-    from cdpify.domains import dom
+    from cdpify.domains import dom, network
 
 
 class DOMEvent(StrEnum):
@@ -34,6 +34,7 @@ class DOMEvent(StrEnum):
     PSEUDO_ELEMENT_ADDED = "DOM.pseudoElementAdded"
     TOP_LAYER_ELEMENTS_UPDATED = "DOM.topLayerElementsUpdated"
     SCROLLABLE_FLAG_UPDATED = "DOM.scrollableFlagUpdated"
+    AD_RELATED_STATE_UPDATED = "DOM.adRelatedStateUpdated"
     AFFECTED_BY_STARTING_STYLES_FLAG_UPDATED = "DOM.affectedByStartingStylesFlagUpdated"
     PSEUDO_ELEMENT_REMOVED = "DOM.pseudoElementRemoved"
     SET_CHILD_NODES = "DOM.setChildNodes"
@@ -168,6 +169,16 @@ class ScrollableFlagUpdatedEvent(CDPModel):
 
     node_id: dom.NodeId
     is_scrollable: bool
+
+
+@dataclass(kw_only=True)
+class AdRelatedStateUpdatedEvent(CDPModel):
+    """
+    Fired when a node's ad related state changes.
+    """
+
+    node_id: dom.NodeId
+    ad_provenance: network.AdProvenance | None = None
 
 
 @dataclass(kw_only=True)
