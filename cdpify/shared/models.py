@@ -60,13 +60,17 @@ class CDPModel:
         try:
             return cls(**converted)
         except TypeError as e:
+            model_fields = {f.name for f in fields(cls)}
+            missing = [f.name for f in fields(cls) if f.name not in converted]
+            
             logger.warning(
-                "CDP spec mismatch for %s: %s. Data keys: %s",
+                "CDP spec mismatch for %s: %s. Missing fields: %s. Data keys: %s",
                 cls.__name__,
                 e,
+                missing,
                 list(data.keys()),
             )
-            model_fields = {f.name for f in fields(cls)}
+            
             for field in fields(cls):
                 if field.name not in converted:
                     converted[field.name] = None

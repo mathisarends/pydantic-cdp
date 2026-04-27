@@ -83,7 +83,7 @@ class AXValueSource(CDPModel):
 
 @dataclass(kw_only=True)
 class AXRelatedNode(CDPModel):
-    backend_dom_node_id: dom.BackendNodeId
+    backend_dom_node_id: dom.BackendNodeId | None = None
     idref: str | None = None
     text: str | None = None
 
