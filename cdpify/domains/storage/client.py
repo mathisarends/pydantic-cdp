@@ -21,8 +21,6 @@ from .commands import (
     ClearTrustTokensResult,
     DeleteSharedStorageEntryParams,
     DeleteStorageBucketParams,
-    GetAffectedUrlsForThirdPartyCookieMetadataParams,
-    GetAffectedUrlsForThirdPartyCookieMetadataResult,
     GetCookiesParams,
     GetCookiesResult,
     GetInterestGroupDetailsParams,
@@ -42,9 +40,6 @@ from .commands import (
     OverrideQuotaForOriginParams,
     ResetSharedStorageBudgetParams,
     RunBounceTrackingMitigationsResult,
-    SendPendingAttributionReportsResult,
-    SetAttributionReportingLocalTestingModeParams,
-    SetAttributionReportingTrackingParams,
     SetCookiesParams,
     SetInterestGroupAuctionTrackingParams,
     SetInterestGroupTrackingParams,
@@ -669,57 +664,6 @@ class StorageClient:
         )
         return RunBounceTrackingMitigationsResult.from_cdp(result)
 
-    async def set_attribution_reporting_local_testing_mode(
-        self,
-        *,
-        enabled: bool,
-        session_id: str | None = None,
-    ) -> dict[str, Any]:
-        """
-        https://wicg.github.io/attribution-reporting-api/
-        """
-        params = SetAttributionReportingLocalTestingModeParams(enabled=enabled)
-
-        result = await self._client.send_raw(
-            method=StorageCommand.SET_ATTRIBUTION_REPORTING_LOCAL_TESTING_MODE,
-            params=params.to_cdp_params(),
-            session_id=session_id,
-        )
-        return result
-
-    async def set_attribution_reporting_tracking(
-        self,
-        *,
-        enable: bool,
-        session_id: str | None = None,
-    ) -> dict[str, Any]:
-        """
-        Enables/disables issuing of Attribution Reporting events.
-        """
-        params = SetAttributionReportingTrackingParams(enable=enable)
-
-        result = await self._client.send_raw(
-            method=StorageCommand.SET_ATTRIBUTION_REPORTING_TRACKING,
-            params=params.to_cdp_params(),
-            session_id=session_id,
-        )
-        return result
-
-    async def send_pending_attribution_reports(
-        self,
-        session_id: str | None = None,
-    ) -> SendPendingAttributionReportsResult:
-        """
-        Sends all pending Attribution Reports immediately, regardless of their
-        scheduled report time.
-        """
-        result = await self._client.send_raw(
-            method=StorageCommand.SEND_PENDING_ATTRIBUTION_REPORTS,
-            params=None,
-            session_id=session_id,
-        )
-        return SendPendingAttributionReportsResult.from_cdp(result)
-
     async def get_related_website_sets(
         self,
         session_id: str | None = None,
@@ -735,29 +679,6 @@ class StorageClient:
             session_id=session_id,
         )
         return GetRelatedWebsiteSetsResult.from_cdp(result)
-
-    async def get_affected_urls_for_third_party_cookie_metadata(
-        self,
-        *,
-        first_party_url: str,
-        third_party_urls: list[str],
-        session_id: str | None = None,
-    ) -> GetAffectedUrlsForThirdPartyCookieMetadataResult:
-        """
-        Returns the list of URLs from a page and its embedded resources that match
-        existing grace period URL pattern rules.
-        https://developers.google.com/privacy-sandbox/cookies/temporary-exceptions/grace-period
-        """
-        params = GetAffectedUrlsForThirdPartyCookieMetadataParams(
-            first_party_url=first_party_url, third_party_urls=third_party_urls
-        )
-
-        result = await self._client.send_raw(
-            method=StorageCommand.GET_AFFECTED_URLS_FOR_THIRD_PARTY_COOKIE_METADATA,
-            params=params.to_cdp_params(),
-            session_id=session_id,
-        )
-        return GetAffectedUrlsForThirdPartyCookieMetadataResult.from_cdp(result)
 
     async def set_protected_audience_k_anonymity(
         self,

@@ -189,12 +189,6 @@ class Request(CDPModel):
     headers: Headers
     post_data: str | None = None
     has_post_data: bool | None = None
-<<<<<<< HEAD
-    post_data_entries: list[Any] | None = None
-    mixed_content_type: security.MixedContentType | None = None
-    initial_priority: ResourcePriority
-    referrer_policy: str
-=======
     post_data_entries: list[PostDataEntry] | None = None
     mixed_content_type: security.MixedContentType | None = None
     initial_priority: ResourcePriority
@@ -208,7 +202,6 @@ class Request(CDPModel):
         "strict-origin",
         "strict-origin-when-cross-origin",
     ]
->>>>>>> dbc9f52 (Defer typing import)
     is_link_preload: bool | None = None
     trust_token_params: TrustTokenParams | None = None
     is_same_site: bool | None = None
@@ -244,11 +237,11 @@ class SecurityDetails(CDPModel):
     mac: str | None = None
     certificate_id: security.CertificateId
     subject_name: str
-    san_list: list[Any]
+    san_list: list[str]
     issuer: str
     valid_from: TimeSinceEpoch
     valid_to: TimeSinceEpoch
-    signed_certificate_timestamp_list: list[Any]
+    signed_certificate_timestamp_list: list[SignedCertificateTimestamp]
     certificate_transparency_compliance: CertificateTransparencyCompliance
     server_signature_algorithm: int | None = None
     encrypted_client_hello: bool
@@ -339,13 +332,8 @@ class TrustTokenParams(CDPModel):
     """
 
     operation: TrustTokenOperationType
-<<<<<<< HEAD
-    refresh_policy: str
-    issuers: list[Any] | None = None
-=======
     refresh_policy: Literal["UseCached", "Refresh"]
     issuers: list[str] | None = None
->>>>>>> dbc9f52 (Defer typing import)
 
 
 TrustTokenOperationType = Literal["Issuance", "Redemption", "Signing"]
@@ -471,7 +459,9 @@ class Initiator(CDPModel):
     Information about the request initiator.
     """
 
-    type: str
+    type: Literal[
+        "parser", "script", "preload", "SignedExchange", "preflight", "FedCM", "other"
+    ]
     stack: runtime.StackTrace | None = None
     url: str | None = None
     line_number: float | None = None
@@ -589,7 +579,7 @@ class BlockedSetCookieWithReason(CDPModel):
     A cookie which was not stored from a response with the corresponding reason.
     """
 
-    blocked_reasons: list[Any]
+    blocked_reasons: list[SetCookieBlockedReason]
     cookie_line: str
     cookie: Cookie | None = None
 
@@ -615,11 +605,7 @@ class AssociatedCookie(CDPModel):
     """
 
     cookie: Cookie
-<<<<<<< HEAD
-    blocked_reasons: list[Any]
-=======
     blocked_reasons: list[CookieBlockedReason]
->>>>>>> dbc9f52 (Defer typing import)
     exemption_reason: CookieExemptionReason | None = None
 
 
@@ -650,11 +636,7 @@ class AuthChallenge(CDPModel):
     Authorization challenge for HTTP status code 401 or 407.
     """
 
-<<<<<<< HEAD
-    source: str | None = None
-=======
     source: Literal["Server", "Proxy"] | None = None
->>>>>>> dbc9f52 (Defer typing import)
     origin: str
     scheme: str
     realm: str
@@ -666,11 +648,7 @@ class AuthChallengeResponse(CDPModel):
     Response to an AuthChallenge.
     """
 
-<<<<<<< HEAD
-    response: str
-=======
     response: Literal["Default", "CancelAuth", "ProvideCredentials"]
->>>>>>> dbc9f52 (Defer typing import)
     username: str | None = None
     password: str | None = None
 
@@ -708,11 +686,7 @@ class SignedExchangeSignature(CDPModel):
     validity_url: str
     date: int
     expires: int
-<<<<<<< HEAD
-    certificates: list[Any] | None = None
-=======
     certificates: list[str] | None = None
->>>>>>> dbc9f52 (Defer typing import)
 
 
 @dataclass(kw_only=True)
@@ -725,7 +699,7 @@ class SignedExchangeHeader(CDPModel):
     request_url: str
     response_code: int
     response_headers: Headers
-    signatures: list[Any]
+    signatures: list[SignedExchangeSignature]
     header_integrity: str
 
 
@@ -763,11 +737,7 @@ class SignedExchangeInfo(CDPModel):
     has_extra_info: bool
     header: SignedExchangeHeader | None = None
     security_details: SecurityDetails | None = None
-<<<<<<< HEAD
-    errors: list[Any] | None = None
-=======
     errors: list[SignedExchangeError] | None = None
->>>>>>> dbc9f52 (Defer typing import)
 
 
 """
@@ -786,6 +756,7 @@ class NetworkConditions(CDPModel):
     packet_loss: float | None = None
     packet_queue_length: int | None = None
     packet_reordering: bool | None = None
+    offline: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -871,8 +842,23 @@ class AdAncestry(CDPModel):
     the resource or element to be labeled as an ad.
     """
 
-    ancestry_chain: list[Any]
+    ancestry_chain: list[AdScriptIdentifier]
     root_script_filterlist_rule: str | None = None
+
+
+@dataclass(kw_only=True)
+class AdProvenance(CDPModel):
+    """
+    Represents the provenance of an ad resource or element. Only one of
+    `filterlistRule` or `adScriptAncestry` can be set. If `filterlistRule` is provided,
+    the resource URL directly matches a filter list rule. If `adScriptAncestry` is
+    provided, an ad script initiated the resource fetch or appended the element to the
+    DOM. If neither is provided, the entity is known to be an ad, but provenance
+    tracking information is unavailable.
+    """
+
+    filterlist_rule: str | None = None
+    ad_script_ancestry: AdAncestry | None = None
 
 
 CrossOriginOpenerPolicyValue = Literal[
@@ -919,11 +905,7 @@ class ContentSecurityPolicyStatus(CDPModel):
 class SecurityIsolationStatus(CDPModel):
     coop: CrossOriginOpenerPolicyStatus | None = None
     coep: CrossOriginEmbedderPolicyStatus | None = None
-<<<<<<< HEAD
-    csp: list[Any] | None = None
-=======
     csp: list[ContentSecurityPolicyStatus] | None = None
->>>>>>> dbc9f52 (Defer typing import)
 
 
 """
@@ -974,7 +956,14 @@ class DeviceBoundSessionWithUsage(CDPModel):
     """
 
     session_key: DeviceBoundSessionKey
-    usage: str
+    usage: Literal[
+        "NotInScope",
+        "InScopeRefreshNotYetNeeded",
+        "InScopeRefreshNotAllowed",
+        "ProactiveRefreshNotPossible",
+        "ProactiveRefreshAttempted",
+        "Deferred",
+    ]
 
 
 @dataclass(kw_only=True)
@@ -997,7 +986,7 @@ class DeviceBoundSessionUrlRule(CDPModel):
     A device bound session's inclusion URL rule.
     """
 
-    rule_type: str
+    rule_type: Literal["Exclude", "Include"]
     host_pattern: str
     path_prefix: str
 
@@ -1010,7 +999,7 @@ class DeviceBoundSessionInclusionRules(CDPModel):
 
     origin: str
     include_site: bool
-    url_rules: list[Any]
+    url_rules: list[DeviceBoundSessionUrlRule]
 
 
 @dataclass(kw_only=True)
@@ -1022,14 +1011,10 @@ class DeviceBoundSession(CDPModel):
     key: DeviceBoundSessionKey
     refresh_url: str
     inclusion_rules: DeviceBoundSessionInclusionRules
-    cookie_cravings: list[Any]
+    cookie_cravings: list[DeviceBoundSessionCookieCraving]
     expiry_date: network.TimeSinceEpoch
     cached_challenge: str | None = None
-<<<<<<< HEAD
-    allowed_refresh_initiators: list[Any]
-=======
     allowed_refresh_initiators: list[str]
->>>>>>> dbc9f52 (Defer typing import)
 
 
 """
@@ -1132,10 +1117,7 @@ class CreationEventDetails(CDPModel):
 
     fetch_result: DeviceBoundSessionFetchResult
     new_session: DeviceBoundSession | None = None
-<<<<<<< HEAD
     failed_request: DeviceBoundSessionFailedRequest | None = None
-=======
->>>>>>> dbc9f52 (Defer typing import)
 
 
 @dataclass(kw_only=True)
@@ -1144,11 +1126,9 @@ class RefreshEventDetails(CDPModel):
     Session event details specific to refresh.
     """
 
-<<<<<<< HEAD
-    refresh_result: str
-=======
     refresh_result: Literal[
         "Refreshed",
+        "RefreshedAsWaiter",
         "InitializedService",
         "Unreachable",
         "ServerError",
@@ -1156,7 +1136,6 @@ class RefreshEventDetails(CDPModel):
         "FatalError",
         "SigningQuotaExceeded",
     ]
->>>>>>> dbc9f52 (Defer typing import)
     fetch_result: DeviceBoundSessionFetchResult | None = None
     new_session: DeviceBoundSession | None = None
     was_fully_proactive_refresh: bool
@@ -1169,7 +1148,17 @@ class TerminationEventDetails(CDPModel):
     Session event details specific to termination.
     """
 
-    deletion_reason: str
+    deletion_reason: Literal[
+        "Expired",
+        "FailedToRestoreKey",
+        "FailedToUnwrapKey",
+        "StoragePartitionCleared",
+        "ClearBrowsingData",
+        "ServerRequested",
+        "InvalidSessionParams",
+        "RefreshFatalError",
+        "DevTools",
+    ]
 
 
 @dataclass(kw_only=True)
@@ -1178,7 +1167,9 @@ class ChallengeEventDetails(CDPModel):
     Session event details specific to challenges.
     """
 
-    challenge_result: str
+    challenge_result: Literal[
+        "Success", "NoSessionId", "NoSessionMatch", "CantSetBoundCookie"
+    ]
     challenge: str
 
 

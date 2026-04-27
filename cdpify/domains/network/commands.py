@@ -17,6 +17,7 @@ from .types import (
     CookiePriority,
     CookieSameSite,
     CookieSourceScheme,
+    DeviceBoundSessionKey,
     ErrorReason,
     Headers,
     InterceptionId,
@@ -75,6 +76,7 @@ class NetworkCommand(StrEnum):
     GET_SECURITY_ISOLATION_STATUS = "Network.getSecurityIsolationStatus"
     ENABLE_REPORTING_API = "Network.enableReportingApi"
     ENABLE_DEVICE_BOUND_SESSIONS = "Network.enableDeviceBoundSessions"
+    DELETE_DEVICE_BOUND_SESSION = "Network.deleteDeviceBoundSession"
     FETCH_SCHEMEFUL_SITE = "Network.fetchSchemefulSite"
     LOAD_NETWORK_RESOURCE = "Network.loadNetworkResource"
     SET_COOKIE_CONTROLS = "Network.setCookieControls"
@@ -167,7 +169,8 @@ class EmulateNetworkConditionsByRuleParams(CDPModel):
     `navigator` behavior.
     """
 
-    offline: bool
+    offline: bool | None | None = None
+    emulate_offline_service_worker: bool | None | None = None
     matched_network_conditions: list[NetworkConditions]
 
 
@@ -494,6 +497,15 @@ class EnableDeviceBoundSessionsParams(CDPModel):
 
 
 @dataclass(kw_only=True)
+class DeleteDeviceBoundSessionParams(CDPModel):
+    """
+    Deletes a device bound session.
+    """
+
+    key: DeviceBoundSessionKey
+
+
+@dataclass(kw_only=True)
 class FetchSchemefulSiteParams(CDPModel):
     """
     Fetches the schemeful site for a specific origin.
@@ -531,5 +543,3 @@ class SetCookieControlsParams(CDPModel):
     """
 
     enable_third_party_cookie_restriction: bool
-    disable_third_party_cookie_metadata: bool
-    disable_third_party_cookie_heuristics: bool

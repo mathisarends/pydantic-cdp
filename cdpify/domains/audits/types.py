@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Literal, TYPE_CHECKING
+from typing import Literal, TYPE_CHECKING
 from dataclasses import dataclass
 from cdpify.shared.models import CDPModel
 
@@ -99,13 +99,8 @@ class CookieIssueDetails(CDPModel):
 
     cookie: AffectedCookie | None = None
     raw_cookie_line: str | None = None
-<<<<<<< HEAD
-    cookie_warning_reasons: list[Any]
-    cookie_exclusion_reasons: list[Any]
-=======
     cookie_warning_reasons: list[CookieWarningReason]
     cookie_exclusion_reasons: list[CookieExclusionReason]
->>>>>>> dbc9f52 (Defer typing import)
     operation: CookieOperation
     site_for_cookies: str | None = None
     cookie_url: str | None = None
@@ -412,7 +407,7 @@ class SharedDictionaryIssueDetails(CDPModel):
 class SRIMessageSignatureIssueDetails(CDPModel):
     error: SRIMessageSignatureError
     signature_base: str
-    integrity_assertions: list[Any]
+    integrity_assertions: list[str]
     request: AffectedRequest
 
 
@@ -445,6 +440,10 @@ GenericIssueErrorType = Literal[
     "AutofillPolicyControlledFeatureInfo",
     "ManualTextPolicyControlledFeatureInfo",
     "FormModelContextParameterMissingTitleAndDescription",
+    "FormModelContextMissingToolName",
+    "FormModelContextMissingToolDescription",
+    "FormModelContextRequiredParameterMissingName",
+    "FormModelContextParameterMissingName",
 ]
 
 
@@ -483,7 +482,7 @@ class BounceTrackingIssueDetails(CDPModel):
     be `example.test`.
     """
 
-    tracking_sites: list[Any]
+    tracking_sites: list[str]
 
 
 @dataclass(kw_only=True)
@@ -496,7 +495,7 @@ class CookieDeprecationMetadataIssueDetails(CDPModel):
     `example.test`.
     """
 
-    allowed_sites: list[Any]
+    allowed_sites: list[str]
     opt_out_percentage: float
     is_opt_out_top_level: bool
     operation: CookieOperation
@@ -724,7 +723,6 @@ class PermissionElementIssueDetails(CDPModel):
     occluder_node_info: str | None = None
     occluder_parent_node_info: str | None = None
     disable_reason: str | None = None
-<<<<<<< HEAD
 
 
 @dataclass(kw_only=True)
@@ -737,8 +735,6 @@ class SelectivePermissionsInterventionIssueDetails(CDPModel):
     api_name: str
     ad_ancestry: network.AdAncestry
     stack_trace: runtime.StackTrace | None = None
-=======
->>>>>>> dbc9f52 (Defer typing import)
 
 
 """
@@ -774,10 +770,7 @@ InspectorIssueCode = Literal[
     "UserReidentificationIssue",
     "PermissionElementIssue",
     "PerformanceIssue",
-<<<<<<< HEAD
     "SelectivePermissionsInterventionIssue",
-=======
->>>>>>> dbc9f52 (Defer typing import)
 ]
 
 
@@ -797,10 +790,6 @@ class InspectorIssueDetails(CDPModel):
         None
     )
     shared_array_buffer_issue_details: SharedArrayBufferIssueDetails | None = None
-<<<<<<< HEAD
-=======
-    low_text_contrast_issue_details: LowTextContrastIssueDetails | None = None
->>>>>>> dbc9f52 (Defer typing import)
     cors_issue_details: CorsIssueDetails | None = None
     attribution_reporting_issue_details: AttributionReportingIssueDetails | None = None
     quirks_mode_issue_details: QuirksModeIssueDetails | None = None
@@ -827,12 +816,9 @@ class InspectorIssueDetails(CDPModel):
     user_reidentification_issue_details: UserReidentificationIssueDetails | None = None
     permission_element_issue_details: PermissionElementIssueDetails | None = None
     performance_issue_details: PerformanceIssueDetails | None = None
-<<<<<<< HEAD
     selective_permissions_intervention_issue_details: (
         SelectivePermissionsInterventionIssueDetails | None
     ) = None
-=======
->>>>>>> dbc9f52 (Defer typing import)
 
 
 """

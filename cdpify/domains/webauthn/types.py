@@ -28,11 +28,8 @@ class VirtualAuthenticatorOptions(CDPModel):
     has_cred_blob: bool | None = None
     has_min_pin_length: bool | None = None
     has_prf: bool | None = None
-<<<<<<< HEAD
     has_hmac_secret: bool | None = None
     has_hmac_secret_mc: bool | None = None
-=======
->>>>>>> dbc9f52 (Defer typing import)
     automatic_presence_simulation: bool | None = None
     is_user_verified: bool | None = None
     default_backup_eligibility: bool | None = None

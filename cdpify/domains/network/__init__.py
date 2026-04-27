@@ -71,6 +71,7 @@ from .types import (
     ClientSecurityState,
     AdScriptIdentifier,
     AdAncestry,
+    AdProvenance,
     CrossOriginOpenerPolicyValue,
     CrossOriginOpenerPolicyStatus,
     CrossOriginEmbedderPolicyValue,
@@ -106,6 +107,7 @@ from .commands import (
     ConfigureDurableMessagesParams,
     ContinueInterceptedRequestParams,
     DeleteCookiesParams,
+    DeleteDeviceBoundSessionParams,
     EmulateNetworkConditionsByRuleParams,
     EmulateNetworkConditionsByRuleResult,
     EmulateNetworkConditionsParams,
@@ -204,6 +206,7 @@ from .client import NetworkClient
 
 __all__ = [
     "AdAncestry",
+    "AdProvenance",
     "AdScriptIdentifier",
     "AlternateProtocolUsage",
     "AssociatedCookie",
@@ -243,6 +246,7 @@ __all__ = [
     "CrossOriginOpenerPolicyValue",
     "DataReceivedEvent",
     "DeleteCookiesParams",
+    "DeleteDeviceBoundSessionParams",
     "DeviceBoundSession",
     "DeviceBoundSessionCookieCraving",
     "DeviceBoundSessionEventId",
