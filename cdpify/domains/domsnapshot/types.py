@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from cdpify.shared.models import CDPModel
 
 if TYPE_CHECKING:
-    from cdpify.domains import dom, page
+    from cdpify.domains import dom, domdebugger, page
 
 
 @dataclass(kw_only=True)
@@ -26,9 +26,9 @@ class DOMNode(CDPModel):
     input_checked: bool | None = None
     option_selected: bool | None = None
     backend_node_id: dom.BackendNodeId
-    child_node_indexes: list[Any] | None = None
-    attributes: list[Any] | None = None
-    pseudo_element_indexes: list[Any] | None = None
+    child_node_indexes: list[int] | None = None
+    attributes: list[NameValue] | None = None
+    pseudo_element_indexes: list[int] | None = None
     layout_node_index: int | None = None
     document_url: str | None = None
     base_url: str | None = None
@@ -41,7 +41,7 @@ class DOMNode(CDPModel):
     pseudo_type: dom.PseudoType | None = None
     shadow_root_type: dom.ShadowRootType | None = None
     is_clickable: bool | None = None
-    event_listeners: list[Any] | None = None
+    event_listeners: list[domdebugger.EventListener] | None = None
     current_source_url: str | None = None
     origin_url: str | None = None
     scroll_offset_x: float | None = None
@@ -69,7 +69,7 @@ class LayoutTreeNode(CDPModel):
     dom_node_index: int
     bounding_box: dom.Rect
     layout_text: str | None = None
-    inline_text_nodes: list[Any] | None = None
+    inline_text_nodes: list[InlineTextBox] | None = None
     style_index: int | None = None
     paint_order: int | None = None
     is_stacking_context: bool | None = None
@@ -81,7 +81,7 @@ class ComputedStyle(CDPModel):
     A subset of the full ComputedStyle as defined by the request whitelist.
     """
 
-    properties: list[Any]
+    properties: list[NameValue]
 
 
 @dataclass(kw_only=True)
@@ -111,19 +111,19 @@ class RareStringData(CDPModel):
     Data that is only present on rare nodes.
     """
 
-    index: list[Any]
-    value: list[Any]
+    index: list[int]
+    value: list[StringIndex]
 
 
 @dataclass(kw_only=True)
 class RareBooleanData(CDPModel):
-    index: list[Any]
+    index: list[int]
 
 
 @dataclass(kw_only=True)
 class RareIntegerData(CDPModel):
-    index: list[Any]
-    value: list[Any]
+    index: list[int]
+    value: list[int]
 
 
 Rectangle = list[Any]
@@ -135,9 +135,9 @@ class DocumentSnapshot(CDPModel):
     Document snapshot.
     """
 
-    document_url: StringIndex | None = None
+    document_url: StringIndex
     title: StringIndex
-    base_url: StringIndex | None = None
+    base_url: StringIndex
     content_language: StringIndex
     encoding_name: StringIndex
     public_id: StringIndex
@@ -158,13 +158,13 @@ class NodeTreeSnapshot(CDPModel):
     Table containing nodes.
     """
 
-    parent_index: list[Any] | None = None
-    node_type: list[Any] | None = None
+    parent_index: list[int] | None = None
+    node_type: list[int] | None = None
     shadow_root_type: RareStringData | None = None
-    node_name: list[Any] | None = None
-    node_value: list[Any] | None = None
-    backend_node_id: list[Any] | None = None
-    attributes: list[Any] | None = None
+    node_name: list[StringIndex] | None = None
+    node_value: list[StringIndex] | None = None
+    backend_node_id: list[dom.BackendNodeId] | None = None
+    attributes: list[ArrayOfStrings] | None = None
     text_value: RareStringData | None = None
     input_value: RareStringData | None = None
     input_checked: RareBooleanData | None = None
@@ -183,17 +183,17 @@ class LayoutTreeSnapshot(CDPModel):
     Table of details of an element in the DOM tree with a LayoutObject.
     """
 
-    node_index: list[Any]
-    styles: list[Any]
-    bounds: list[Any]
-    text: list[Any]
+    node_index: list[int]
+    styles: list[ArrayOfStrings]
+    bounds: list[Rectangle]
+    text: list[StringIndex]
     stacking_contexts: RareBooleanData
-    paint_orders: list[Any] | None = None
-    offset_rects: list[Any] | None = None
-    scroll_rects: list[Any] | None = None
-    client_rects: list[Any] | None = None
-    blended_background_colors: list[Any] | None = None
-    text_color_opacities: list[Any] | None = None
+    paint_orders: list[int] | None = None
+    offset_rects: list[Rectangle] | None = None
+    scroll_rects: list[Rectangle] | None = None
+    client_rects: list[Rectangle] | None = None
+    blended_background_colors: list[StringIndex] | None = None
+    text_color_opacities: list[float] | None = None
 
 
 @dataclass(kw_only=True)
@@ -203,7 +203,7 @@ class TextBoxSnapshot(CDPModel):
     should not be regarded as stable and may change between versions.
     """
 
-    layout_index: list[Any]
-    bounds: list[Any]
-    start: list[Any]
-    length: list[Any]
+    layout_index: list[int]
+    bounds: list[Rectangle]
+    start: list[int]
+    length: list[int]

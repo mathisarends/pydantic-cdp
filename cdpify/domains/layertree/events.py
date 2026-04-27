@@ -31,4 +31,4 @@ class LayerPaintedEvent(CDPModel):
 
 @dataclass(kw_only=True)
 class LayerTreeDidChangeEvent(CDPModel):
-    layers: list[Layer] | None | None = None
+    layers: list[Layer] | None = None

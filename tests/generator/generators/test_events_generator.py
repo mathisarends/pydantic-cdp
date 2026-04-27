@@ -99,7 +99,7 @@ class TestEventsGeneratorGenerate:
         self, events_generator: EventsGenerator, domain_with_multiple_events: Domain
     ) -> None:
         result = events_generator.generate(domain_with_multiple_events)
-        assert "data: dict[str, Any] | None | None = None" in result
+        assert "data: dict[str, Any] | None = None" in result
 
     def test_generate_includes_strenumimport(
         self, events_generator: EventsGenerator, domain_with_simple_event: Domain
@@ -149,12 +149,12 @@ class TestEventsGeneratorTypeResolution:
         result = events_generator._resolve_type(param)
         assert result == "str"
 
-    def test_resolve_type_with_optional_adds_none_union(
+    def test_resolve_type_with_optional_returns_base_type(
         self, events_generator: EventsGenerator
     ) -> None:
         param = Parameter(name="test", type="integer", optional=True)
         result = events_generator._resolve_type(param)
-        assert result == "int | None"
+        assert result == "int"
 
     def test_resolve_type_with_cross_domain_ref_includes_module_prefix(
         self, events_generator: EventsGenerator

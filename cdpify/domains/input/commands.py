@@ -42,7 +42,7 @@ class DispatchDragEventParams(CDPModel):
     x: float
     y: float
     data: DragData
-    modifiers: int | None | None = None
+    modifiers: int | None = None
 
 
 @dataclass(kw_only=True)
@@ -52,20 +52,20 @@ class DispatchKeyEventParams(CDPModel):
     """
 
     type: Literal["keyDown", "keyUp", "rawKeyDown", "char"]
-    modifiers: int | None | None = None
-    timestamp: TimeSinceEpoch | None | None = None
-    text: str | None | None = None
-    unmodified_text: str | None | None = None
-    key_identifier: str | None | None = None
-    code: str | None | None = None
-    key: str | None | None = None
-    windows_virtual_key_code: int | None | None = None
-    native_virtual_key_code: int | None | None = None
-    auto_repeat: bool | None | None = None
-    is_keypad: bool | None | None = None
-    is_system_key: bool | None | None = None
-    location: int | None | None = None
-    commands: list[str] | None | None = None
+    modifiers: int | None = None
+    timestamp: TimeSinceEpoch | None = None
+    text: str | None = None
+    unmodified_text: str | None = None
+    key_identifier: str | None = None
+    code: str | None = None
+    key: str | None = None
+    windows_virtual_key_code: int | None = None
+    native_virtual_key_code: int | None = None
+    auto_repeat: bool | None = None
+    is_keypad: bool | None = None
+    is_system_key: bool | None = None
+    location: int | None = None
+    commands: list[str] | None = None
 
 
 @dataclass(kw_only=True)
@@ -89,8 +89,8 @@ class ImeSetCompositionParams(CDPModel):
     text: str
     selection_start: int
     selection_end: int
-    replacement_start: int | None | None = None
-    replacement_end: int | None | None = None
+    replacement_start: int | None = None
+    replacement_end: int | None = None
 
 
 @dataclass(kw_only=True)
@@ -102,19 +102,19 @@ class DispatchMouseEventParams(CDPModel):
     type: Literal["mousePressed", "mouseReleased", "mouseMoved", "mouseWheel"]
     x: float
     y: float
-    modifiers: int | None | None = None
-    timestamp: TimeSinceEpoch | None | None = None
-    button: MouseButton | None | None = None
-    buttons: int | None | None = None
-    click_count: int | None | None = None
-    force: float | None | None = None
-    tangential_pressure: float | None | None = None
-    tilt_x: float | None | None = None
-    tilt_y: float | None | None = None
-    twist: int | None | None = None
-    delta_x: float | None | None = None
-    delta_y: float | None | None = None
-    pointer_type: Literal["mouse", "pen"] | None | None = None
+    modifiers: int | None = None
+    timestamp: TimeSinceEpoch | None = None
+    button: MouseButton | None = None
+    buttons: int | None = None
+    click_count: int | None = None
+    force: float | None = None
+    tangential_pressure: float | None = None
+    tilt_x: float | None = None
+    tilt_y: float | None = None
+    twist: int | None = None
+    delta_x: float | None = None
+    delta_y: float | None = None
+    pointer_type: Literal["mouse", "pen"] | None = None
 
 
 @dataclass(kw_only=True)
@@ -125,8 +125,8 @@ class DispatchTouchEventParams(CDPModel):
 
     type: Literal["touchStart", "touchEnd", "touchMove", "touchCancel"]
     touch_points: list[TouchPoint]
-    modifiers: int | None | None = None
-    timestamp: TimeSinceEpoch | None | None = None
+    modifiers: int | None = None
+    timestamp: TimeSinceEpoch | None = None
 
 
 @dataclass(kw_only=True)
@@ -139,11 +139,11 @@ class EmulateTouchFromMouseEventParams(CDPModel):
     x: int
     y: int
     button: MouseButton
-    timestamp: TimeSinceEpoch | None | None = None
-    delta_x: float | None | None = None
-    delta_y: float | None | None = None
-    modifiers: int | None | None = None
-    click_count: int | None | None = None
+    timestamp: TimeSinceEpoch | None = None
+    delta_x: float | None = None
+    delta_y: float | None = None
+    modifiers: int | None = None
+    click_count: int | None = None
 
 
 @dataclass(kw_only=True)
@@ -175,8 +175,8 @@ class SynthesizePinchGestureParams(CDPModel):
     x: float
     y: float
     scale_factor: float
-    relative_speed: int | None | None = None
-    gesture_source_type: GestureSourceType | None | None = None
+    relative_speed: int | None = None
+    gesture_source_type: GestureSourceType | None = None
 
 
 @dataclass(kw_only=True)
@@ -188,16 +188,16 @@ class SynthesizeScrollGestureParams(CDPModel):
 
     x: float
     y: float
-    x_distance: float | None | None = None
-    y_distance: float | None | None = None
-    x_overscroll: float | None | None = None
-    y_overscroll: float | None | None = None
-    prevent_fling: bool | None | None = None
-    speed: int | None | None = None
-    gesture_source_type: GestureSourceType | None | None = None
-    repeat_count: int | None | None = None
-    repeat_delay_ms: int | None | None = None
-    interaction_marker_name: str | None | None = None
+    x_distance: float | None = None
+    y_distance: float | None = None
+    x_overscroll: float | None = None
+    y_overscroll: float | None = None
+    prevent_fling: bool | None = None
+    speed: int | None = None
+    gesture_source_type: GestureSourceType | None = None
+    repeat_count: int | None = None
+    repeat_delay_ms: int | None = None
+    interaction_marker_name: str | None = None
 
 
 @dataclass(kw_only=True)
@@ -208,6 +208,6 @@ class SynthesizeTapGestureParams(CDPModel):
 
     x: float
     y: float
-    duration: int | None | None = None
-    tap_count: int | None | None = None
-    gesture_source_type: GestureSourceType | None | None = None
+    duration: int | None = None
+    tap_count: int | None = None
+    gesture_source_type: GestureSourceType | None = None

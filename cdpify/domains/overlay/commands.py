@@ -69,10 +69,10 @@ class GetHighlightObjectForTestParams(CDPModel):
     """
 
     node_id: dom.NodeId
-    include_distance: bool | None | None = None
-    include_style: bool | None | None = None
-    color_format: ColorFormat | None | None = None
-    show_accessibility_info: bool | None | None = None
+    include_distance: bool | None = None
+    include_style: bool | None = None
+    color_format: ColorFormat | None = None
+    show_accessibility_info: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -132,7 +132,7 @@ class HighlightNodeParams(CDPModel):
     node_id: dom.NodeId | None = None
     backend_node_id: dom.BackendNodeId | None = None
     object_id: runtime.RemoteObjectId | None = None
-    selector: str | None | None = None
+    selector: str | None = None
 
 
 @dataclass(kw_only=True)
@@ -186,7 +186,7 @@ class SetInspectModeParams(CDPModel):
     """
 
     mode: InspectMode
-    highlight_config: HighlightConfig | None | None = None
+    highlight_config: HighlightConfig | None = None
 
 
 @dataclass(kw_only=True)
@@ -200,7 +200,7 @@ class SetShowAdHighlightsParams(CDPModel):
 
 @dataclass(kw_only=True)
 class SetPausedInDebuggerMessageParams(CDPModel):
-    message: str | None | None = None
+    message: str | None = None
 
 
 @dataclass(kw_only=True)
@@ -310,7 +310,7 @@ class SetShowHingeParams(CDPModel):
     Add a dual screen device hinge
     """
 
-    hinge_config: HingeConfig | None | None = None
+    hinge_config: HingeConfig | None = None
 
 
 @dataclass(kw_only=True)
@@ -328,4 +328,4 @@ class SetShowWindowControlsOverlayParams(CDPModel):
     Show Window Controls Overlay for PWA
     """
 
-    window_controls_overlay_config: WindowControlsOverlayConfig | None | None = None
+    window_controls_overlay_config: WindowControlsOverlayConfig | None = None

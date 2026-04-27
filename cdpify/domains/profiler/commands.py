@@ -47,9 +47,9 @@ class StartPreciseCoverageParams(CDPModel):
     and resets execution counters.
     """
 
-    call_count: bool | None | None = None
-    detailed: bool | None | None = None
-    allow_triggered_updates: bool | None | None = None
+    call_count: bool | None = None
+    detailed: bool | None = None
+    allow_triggered_updates: bool | None = None
 
 
 @dataclass(kw_only=True)

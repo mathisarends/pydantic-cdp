@@ -62,8 +62,8 @@ class PausedEvent(CDPModel):
         "XHR",
         "step",
     ]
-    data: dict[str, Any] | None | None = None
-    hit_breakpoints: list[str] | None | None = None
+    data: dict[str, Any] | None = None
+    hit_breakpoints: list[str] | None = None
     async_stack_trace: runtime.StackTrace | None = None
     async_stack_trace_id: runtime.StackTraceId | None = None
     async_call_stack_trace_id: runtime.StackTraceId | None = None
@@ -93,15 +93,15 @@ class ScriptFailedToParseEvent(CDPModel):
     execution_context_id: runtime.ExecutionContextId
     hash: str
     build_id: str
-    execution_context_aux_data: dict[str, Any] | None | None = None
-    source_map_url: str | None | None = None
-    has_source_url: bool | None | None = None
-    is_module: bool | None | None = None
-    length: int | None | None = None
+    execution_context_aux_data: dict[str, Any] | None = None
+    source_map_url: str | None = None
+    has_source_url: bool | None = None
+    is_module: bool | None = None
+    length: int | None = None
     stack_trace: runtime.StackTrace | None = None
-    code_offset: int | None | None = None
+    code_offset: int | None = None
     script_language: debugger.ScriptLanguage | None = None
-    embedder_name: str | None | None = None
+    embedder_name: str | None = None
 
 
 @dataclass(kw_only=True)
@@ -120,15 +120,15 @@ class ScriptParsedEvent(CDPModel):
     execution_context_id: runtime.ExecutionContextId
     hash: str
     build_id: str
-    execution_context_aux_data: dict[str, Any] | None | None = None
-    is_live_edit: bool | None | None = None
-    source_map_url: str | None | None = None
-    has_source_url: bool | None | None = None
-    is_module: bool | None | None = None
-    length: int | None | None = None
+    execution_context_aux_data: dict[str, Any] | None = None
+    is_live_edit: bool | None = None
+    source_map_url: str | None = None
+    has_source_url: bool | None = None
+    is_module: bool | None = None
+    length: int | None = None
     stack_trace: runtime.StackTrace | None = None
-    code_offset: int | None | None = None
+    code_offset: int | None = None
     script_language: debugger.ScriptLanguage | None = None
-    debug_symbols: list[debugger.DebugSymbols] | None | None = None
-    embedder_name: str | None | None = None
-    resolved_breakpoints: list[ResolvedBreakpoint] | None | None = None
+    debug_symbols: list[debugger.DebugSymbols] | None = None
+    embedder_name: str | None = None
+    resolved_breakpoints: list[ResolvedBreakpoint] | None = None

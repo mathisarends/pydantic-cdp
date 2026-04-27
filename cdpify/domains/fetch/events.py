@@ -44,11 +44,11 @@ class RequestPausedEvent(CDPModel):
     frame_id: page.FrameId
     resource_type: network.ResourceType
     response_error_reason: network.ErrorReason | None = None
-    response_status_code: int | None | None = None
-    response_status_text: str | None | None = None
-    response_headers: list[HeaderEntry] | None | None = None
+    response_status_code: int | None = None
+    response_status_text: str | None = None
+    response_headers: list[HeaderEntry] | None = None
     network_id: network.RequestId | None = None
-    redirected_request_id: RequestId | None | None = None
+    redirected_request_id: RequestId | None = None
 
 
 @dataclass(kw_only=True)

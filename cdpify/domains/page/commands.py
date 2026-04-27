@@ -126,9 +126,9 @@ class AddScriptToEvaluateOnNewDocumentParams(CDPModel):
     """
 
     source: str
-    world_name: str | None | None = None
-    include_command_line_api: bool | None | None = None
-    run_immediately: bool | None | None = None
+    world_name: str | None = None
+    include_command_line_api: bool | None = None
+    run_immediately: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -142,12 +142,12 @@ class CaptureScreenshotParams(CDPModel):
     Capture page screenshot.
     """
 
-    format: Literal["jpeg", "png", "webp"] | None | None = None
-    quality: int | None | None = None
-    clip: Viewport | None | None = None
-    from_surface: bool | None | None = None
-    capture_beyond_viewport: bool | None | None = None
-    optimize_for_speed: bool | None | None = None
+    format: Literal["jpeg", "png", "webp"] | None = None
+    quality: int | None = None
+    clip: Viewport | None = None
+    from_surface: bool | None = None
+    capture_beyond_viewport: bool | None = None
+    optimize_for_speed: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -162,7 +162,7 @@ class CaptureSnapshotParams(CDPModel):
     includes iframes, shadow DOM, external resources, and element-inline styles.
     """
 
-    format: Literal["mhtml"] | None | None = None
+    format: Literal["mhtml"] | None = None
 
 
 @dataclass(kw_only=True)
@@ -177,8 +177,8 @@ class CreateIsolatedWorldParams(CDPModel):
     """
 
     frame_id: FrameId
-    world_name: str | None | None = None
-    grant_univeral_access: bool | None | None = None
+    world_name: str | None = None
+    grant_univeral_access: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -202,7 +202,7 @@ class EnableParams(CDPModel):
     Enables page domain notifications.
     """
 
-    enable_file_chooser_opened_event: bool | None | None = None
+    enable_file_chooser_opened_event: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -214,15 +214,15 @@ class GetAppManifestParams(CDPModel):
     page, this API errors out immediately.
     """
 
-    manifest_id: str | None | None = None
+    manifest_id: str | None = None
 
 
 @dataclass(kw_only=True)
 class GetAppManifestResult(CDPModel):
     url: str
     errors: list[AppManifestError]
-    data: str | None | None = None
-    parsed: AppManifestParsedProperties | None | None = None
+    data: str | None = None
+    parsed: AppManifestParsedProperties | None = None
     manifest: WebAppManifest
 
 
@@ -233,13 +233,13 @@ class GetInstallabilityErrorsResult(CDPModel):
 
 @dataclass(kw_only=True)
 class GetManifestIconsResult(CDPModel):
-    primary_icon: str | None | None = None
+    primary_icon: str | None = None
 
 
 @dataclass(kw_only=True)
 class GetAppIdResult(CDPModel):
-    app_id: str | None | None = None
-    recommended_id: str | None | None = None
+    app_id: str | None = None
+    recommended_id: str | None = None
 
 
 @dataclass(kw_only=True)
@@ -302,7 +302,7 @@ class HandleJavaScriptDialogParams(CDPModel):
     """
 
     accept: bool
-    prompt_text: str | None | None = None
+    prompt_text: str | None = None
 
 
 @dataclass(kw_only=True)
@@ -312,18 +312,18 @@ class NavigateParams(CDPModel):
     """
 
     url: str
-    referrer: str | None | None = None
-    transition_type: TransitionType | None | None = None
-    frame_id: FrameId | None | None = None
-    referrer_policy: ReferrerPolicy | None | None = None
+    referrer: str | None = None
+    transition_type: TransitionType | None = None
+    frame_id: FrameId | None = None
+    referrer_policy: ReferrerPolicy | None = None
 
 
 @dataclass(kw_only=True)
 class NavigateResult(CDPModel):
     frame_id: FrameId
     loader_id: network.LoaderId | None = None
-    error_text: str | None | None = None
-    is_download: bool | None | None = None
+    error_text: str | None = None
+    is_download: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -341,23 +341,23 @@ class PrintToPDFParams(CDPModel):
     Print page as PDF.
     """
 
-    landscape: bool | None | None = None
-    display_header_footer: bool | None | None = None
-    print_background: bool | None | None = None
-    scale: float | None | None = None
-    paper_width: float | None | None = None
-    paper_height: float | None | None = None
-    margin_top: float | None | None = None
-    margin_bottom: float | None | None = None
-    margin_left: float | None | None = None
-    margin_right: float | None | None = None
-    page_ranges: str | None | None = None
-    header_template: str | None | None = None
-    footer_template: str | None | None = None
-    prefer_css_page_size: bool | None | None = None
-    transfer_mode: Literal["ReturnAsBase64", "ReturnAsStream"] | None | None = None
-    generate_tagged_pdf: bool | None | None = None
-    generate_document_outline: bool | None | None = None
+    landscape: bool | None = None
+    display_header_footer: bool | None = None
+    print_background: bool | None = None
+    scale: float | None = None
+    paper_width: float | None = None
+    paper_height: float | None = None
+    margin_top: float | None = None
+    margin_bottom: float | None = None
+    margin_left: float | None = None
+    margin_right: float | None = None
+    page_ranges: str | None = None
+    header_template: str | None = None
+    footer_template: str | None = None
+    prefer_css_page_size: bool | None = None
+    transfer_mode: Literal["ReturnAsBase64", "ReturnAsStream"] | None = None
+    generate_tagged_pdf: bool | None = None
+    generate_document_outline: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -372,8 +372,8 @@ class ReloadParams(CDPModel):
     Reloads given page optionally ignoring the cache.
     """
 
-    ignore_cache: bool | None | None = None
-    script_to_evaluate_on_load: str | None | None = None
+    ignore_cache: bool | None = None
+    script_to_evaluate_on_load: str | None = None
     loader_id: network.LoaderId | None = None
 
 
@@ -413,8 +413,8 @@ class SearchInResourceParams(CDPModel):
     frame_id: FrameId
     url: str
     query: str
-    case_sensitive: bool | None | None = None
-    is_regex: bool | None | None = None
+    case_sensitive: bool | None = None
+    is_regex: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -480,14 +480,14 @@ class SetDeviceMetricsOverrideParams(CDPModel):
     height: int
     device_scale_factor: float
     mobile: bool
-    scale: float | None | None = None
-    screen_width: int | None | None = None
-    screen_height: int | None | None = None
-    position_x: int | None | None = None
-    position_y: int | None | None = None
-    dont_set_visible_size: bool | None | None = None
+    scale: float | None = None
+    screen_width: int | None = None
+    screen_height: int | None = None
+    position_x: int | None = None
+    position_y: int | None = None
+    dont_set_visible_size: bool | None = None
     screen_orientation: emulation.ScreenOrientation | None = None
-    viewport: Viewport | None | None = None
+    viewport: Viewport | None = None
 
 
 @dataclass(kw_only=True)
@@ -508,7 +508,7 @@ class SetFontFamiliesParams(CDPModel):
     """
 
     font_families: FontFamilies
-    for_scripts: list[ScriptFontFamilies] | None | None = None
+    for_scripts: list[ScriptFontFamilies] | None = None
 
 
 @dataclass(kw_only=True)
@@ -537,7 +537,7 @@ class SetDownloadBehaviorParams(CDPModel):
     """
 
     behavior: Literal["deny", "allow", "default"]
-    download_path: str | None | None = None
+    download_path: str | None = None
 
 
 @dataclass(kw_only=True)
@@ -547,9 +547,9 @@ class SetGeolocationOverrideParams(CDPModel):
     emulates position unavailable.
     """
 
-    latitude: float | None | None = None
-    longitude: float | None | None = None
-    accuracy: float | None | None = None
+    latitude: float | None = None
+    longitude: float | None = None
+    accuracy: float | None = None
 
 
 @dataclass(kw_only=True)
@@ -568,7 +568,7 @@ class SetTouchEmulationEnabledParams(CDPModel):
     """
 
     enabled: bool
-    configuration: Literal["mobile", "desktop"] | None | None = None
+    configuration: Literal["mobile", "desktop"] | None = None
 
 
 @dataclass(kw_only=True)
@@ -577,11 +577,11 @@ class StartScreencastParams(CDPModel):
     Starts sending each frame using the `screencastFrame` event.
     """
 
-    format: Literal["jpeg", "png"] | None | None = None
-    quality: int | None | None = None
-    max_width: int | None | None = None
-    max_height: int | None | None = None
-    every_nth_frame: int | None | None = None
+    format: Literal["jpeg", "png"] | None = None
+    quality: int | None = None
+    max_width: int | None = None
+    max_height: int | None = None
+    every_nth_frame: int | None = None
 
 
 @dataclass(kw_only=True)
@@ -647,7 +647,7 @@ class GenerateTestReportParams(CDPModel):
     """
 
     message: str
-    group: str | None | None = None
+    group: str | None = None
 
 
 @dataclass(kw_only=True)
@@ -659,7 +659,7 @@ class SetInterceptFileChooserDialogParams(CDPModel):
     """
 
     enabled: bool
-    cancel: bool | None | None = None
+    cancel: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -682,7 +682,7 @@ class GetAnnotatedPageContentParams(CDPModel):
     that is subject to change.
     """
 
-    include_actionable_information: bool | None | None = None
+    include_actionable_information: bool | None = None
 
 
 @dataclass(kw_only=True)

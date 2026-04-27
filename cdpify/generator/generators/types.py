@@ -6,7 +6,6 @@ from cdpify.generator.generators.utils import (
 )
 from cdpify.generator.models import Domain, Parameter, TypeDefinition
 
-
 class TypesGenerator(BaseGenerator):
     OPTIONAL_OVERRIDES: dict[str, set[str]] = {
         "DocumentSnapshot": {
@@ -41,9 +40,8 @@ class TypesGenerator(BaseGenerator):
 
         lines = []
 
-        if self._uses_type_checking:
-            lines.append("from __future__ import annotations")
-            lines.append("")
+        lines.append("from __future__ import annotations")
+        lines.append("")
 
         typing_imports = self._build_typing_imports()
         if typing_imports:

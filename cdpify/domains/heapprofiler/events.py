@@ -47,7 +47,7 @@ class LastSeenObjectIdEvent(CDPModel):
 class ReportHeapSnapshotProgressEvent(CDPModel):
     done: int
     total: int
-    finished: bool | None | None = None
+    finished: bool | None = None
 
 
 @dataclass(kw_only=True)
