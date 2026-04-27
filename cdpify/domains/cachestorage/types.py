@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import Literal, TYPE_CHECKING
+from typing import Any, Literal, TYPE_CHECKING
 from dataclasses import dataclass
 from cdpify.shared.models import CDPModel
 
@@ -32,12 +32,12 @@ class DataEntry(CDPModel):
 
     request_url: str
     request_method: str
-    request_headers: list[Header]
+    request_headers: list[Any]
     response_time: float
     response_status: int
     response_status_text: str
     response_type: CachedResponseType
-    response_headers: list[Header]
+    response_headers: list[Any]
 
 
 @dataclass(kw_only=True)

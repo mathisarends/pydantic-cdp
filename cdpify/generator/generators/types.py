@@ -7,6 +7,13 @@ from cdpify.generator.generators.utils import (
 from cdpify.generator.models import Domain, Parameter, TypeDefinition
 
 class TypesGenerator(BaseGenerator):
+    OPTIONAL_OVERRIDES: dict[str, set[str]] = {
+        "DocumentSnapshot": {
+            "documentURL",
+            "baseURL",
+        },  # chrome does not mark these as optional, but they are not always present
+    }
+
     def generate(self, domain: Domain) -> str:
         self._reset_tracking()
 
@@ -93,20 +100,25 @@ class TypesGenerator(BaseGenerator):
             lines.extend(doc.rstrip().splitlines())
 
         for prop in type_def.properties:
-            lines.append(f"    {self._create_field(prop)}")
+            lines.append(f"    {self._create_field(prop, type_def.id)}")
 
         return "\n".join(lines)
 
-    def _create_field(self, param: Parameter) -> str:
+    def _create_field(self, param: Parameter, type_id: str = "") -> str:
         field_name = to_snake_case(param.name)
-        py_type = self._resolve_type(param)
+        py_type = self._resolve_type(param)  # always returns bare type, no | None
 
         if param.ref and "." in param.ref:
             self._cross_domain_refs.add(param.ref)
 
         self._track_type_usage(py_type)
 
-        if param.optional:
+        should_override = (
+            type_id in self.OPTIONAL_OVERRIDES
+            and param.name in self.OPTIONAL_OVERRIDES[type_id]
+        )
+
+        if param.optional or should_override:
             return f"{field_name}: {py_type} | None = None"
         return f"{field_name}: {py_type}"
 
@@ -117,7 +129,10 @@ class TypesGenerator(BaseGenerator):
             type_name = parts[1]
             return f"{domain_lower}.{type_name}"
 
-        return map_cdp_type(param)
+        # Strip optionality here — _create_field is the single place that adds | None
+        return map_cdp_type(
+            Parameter(name=param.name, type=param.type, ref=param.ref, optional=False)
+        )
 
     def _create_type_alias(self, type_def: TypeDefinition) -> str:
         lines = []
