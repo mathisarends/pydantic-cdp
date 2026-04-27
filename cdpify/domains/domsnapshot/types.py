@@ -135,9 +135,9 @@ class DocumentSnapshot(CDPModel):
     Document snapshot.
     """
 
-    document_url: StringIndex
+    document_url: StringIndex | None = None
     title: StringIndex
-    base_url: StringIndex
+    base_url: StringIndex | None = None
     content_language: StringIndex
     encoding_name: StringIndex
     public_id: StringIndex

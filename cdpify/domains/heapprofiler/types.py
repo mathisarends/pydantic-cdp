@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import Any, TYPE_CHECKING
+from typing import TYPE_CHECKING
 from dataclasses import dataclass
 from cdpify.shared.models import CDPModel
 
@@ -27,7 +27,7 @@ class SamplingHeapProfileNode(CDPModel):
     call_frame: runtime.CallFrame
     self_size: float
     id: int
-    children: list[Any]
+    children: list[SamplingHeapProfileNode]
 
 
 @dataclass(kw_only=True)
@@ -48,4 +48,4 @@ class SamplingHeapProfile(CDPModel):
     """
 
     head: SamplingHeapProfileNode
-    samples: list[Any]
+    samples: list[SamplingHeapProfileSample]
