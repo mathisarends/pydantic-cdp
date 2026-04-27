@@ -1,7 +1,10 @@
+import logging
 import re
 import sys
 from dataclasses import asdict, dataclass, fields, is_dataclass
 from typing import Any, ClassVar, Self, get_args, get_origin, get_type_hints
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -54,7 +57,21 @@ class CDPModel:
             else:
                 converted[field_name] = cls._deserialize_field(value, field_type)
 
-        return cls(**converted)
+        try:
+            return cls(**converted)
+        except TypeError as e:
+            logger.warning(
+                "CDP spec mismatch for %s: %s. Data keys: %s",
+                cls.__name__,
+                e,
+                list(data.keys()),
+            )
+            model_fields = {f.name for f in fields(cls)}
+            for field in fields(cls):
+                if field.name not in converted:
+                    converted[field.name] = None
+            filtered = {k: v for k, v in converted.items() if k in model_fields}
+            return cls(**filtered)
 
     @classmethod
     def _resolve_field_types(cls) -> dict[str, Any]:
