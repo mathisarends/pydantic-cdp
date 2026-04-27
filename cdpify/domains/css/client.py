@@ -51,6 +51,8 @@ from .commands import (
     SetLocalFontsEnabledParams,
     SetMediaTextParams,
     SetMediaTextResult,
+    SetNavigationTextParams,
+    SetNavigationTextResult,
     SetPropertyRulePropertyNameParams,
     SetPropertyRulePropertyNameResult,
     SetRuleSelectorParams,
@@ -663,6 +665,28 @@ class CSSClient:
             session_id=session_id,
         )
         return SetSupportsTextResult.from_cdp(result)
+
+    async def set_navigation_text(
+        self,
+        *,
+        style_sheet_id: dom.StyleSheetId,
+        range: SourceRange,
+        text: str,
+        session_id: str | None = None,
+    ) -> SetNavigationTextResult:
+        """
+        Modifies the expression of a navigation at-rule.
+        """
+        params = SetNavigationTextParams(
+            style_sheet_id=style_sheet_id, range=range, text=text
+        )
+
+        result = await self._client.send_raw(
+            method=CSSCommand.SET_NAVIGATION_TEXT,
+            params=params.to_cdp_params(),
+            session_id=session_id,
+        )
+        return SetNavigationTextResult.from_cdp(result)
 
     async def set_scope_text(
         self,

@@ -55,15 +55,7 @@ class StorageCommand(StrEnum):
     SET_STORAGE_BUCKET_TRACKING = "Storage.setStorageBucketTracking"
     DELETE_STORAGE_BUCKET = "Storage.deleteStorageBucket"
     RUN_BOUNCE_TRACKING_MITIGATIONS = "Storage.runBounceTrackingMitigations"
-    SET_ATTRIBUTION_REPORTING_LOCAL_TESTING_MODE = (
-        "Storage.setAttributionReportingLocalTestingMode"
-    )
-    SET_ATTRIBUTION_REPORTING_TRACKING = "Storage.setAttributionReportingTracking"
-    SEND_PENDING_ATTRIBUTION_REPORTS = "Storage.sendPendingAttributionReports"
     GET_RELATED_WEBSITE_SETS = "Storage.getRelatedWebsiteSets"
-    GET_AFFECTED_URLS_FOR_THIRD_PARTY_COOKIE_METADATA = (
-        "Storage.getAffectedUrlsForThirdPartyCookieMetadata"
-    )
     SET_PROTECTED_AUDIENCE_K_ANONYMITY = "Storage.setProtectedAudienceKAnonymity"
 
 
@@ -406,48 +398,8 @@ class RunBounceTrackingMitigationsResult(CDPModel):
 
 
 @dataclass(kw_only=True)
-class SetAttributionReportingLocalTestingModeParams(CDPModel):
-    """
-    https://wicg.github.io/attribution-reporting-api/
-    """
-
-    enabled: bool
-
-
-@dataclass(kw_only=True)
-class SetAttributionReportingTrackingParams(CDPModel):
-    """
-    Enables/disables issuing of Attribution Reporting events.
-    """
-
-    enable: bool
-
-
-@dataclass(kw_only=True)
-class SendPendingAttributionReportsResult(CDPModel):
-    num_sent: int
-
-
-@dataclass(kw_only=True)
 class GetRelatedWebsiteSetsResult(CDPModel):
     sets: list[RelatedWebsiteSet]
-
-
-@dataclass(kw_only=True)
-class GetAffectedUrlsForThirdPartyCookieMetadataParams(CDPModel):
-    """
-    Returns the list of URLs from a page and its embedded resources that match existing
-    grace period URL pattern rules.
-    https://developers.google.com/privacy-sandbox/cookies/temporary-exceptions/grace-period
-    """
-
-    first_party_url: str
-    third_party_urls: list[str]
-
-
-@dataclass(kw_only=True)
-class GetAffectedUrlsForThirdPartyCookieMetadataResult(CDPModel):
-    matched_urls: list[str]
 
 
 @dataclass(kw_only=True)

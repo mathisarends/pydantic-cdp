@@ -156,6 +156,7 @@ class CSSRule(CDPModel):
     scopes: list[CSSScope] | None = None
     rule_types: list[CSSRuleType] | None = None
     starting_styles: list[CSSStartingStyle] | None = None
+    navigations: list[CSSNavigation] | None = None
 
 
 """
@@ -171,6 +172,7 @@ CSSRuleType = Literal[
     "ScopeRule",
     "StyleRule",
     "StartingStyleRule",
+    "NavigationRule",
 ]
 
 
@@ -307,6 +309,18 @@ class CSSSupports(CDPModel):
 
     text: str
     active: bool
+    range: SourceRange | None = None
+    style_sheet_id: dom.StyleSheetId | None = None
+
+
+@dataclass(kw_only=True)
+class CSSNavigation(CDPModel):
+    """
+    CSS Navigation at-rule descriptor.
+    """
+
+    text: str
+    active: bool | None = None
     range: SourceRange | None = None
     style_sheet_id: dom.StyleSheetId | None = None
 
@@ -500,6 +514,7 @@ class CSSFunctionConditionNode(CDPModel):
     media: CSSMedia | None = None
     container_queries: CSSContainerQuery | None = None
     supports: CSSSupports | None = None
+    navigation: CSSNavigation | None = None
     children: list[CSSFunctionNode]
     condition_text: str
 
@@ -525,6 +540,7 @@ class CSSFunctionRule(CDPModel):
     origin: StyleSheetOrigin
     parameters: list[CSSFunctionParameter]
     children: list[CSSFunctionNode]
+    origin_tree_scope_node_id: dom.BackendNodeId | None = None
 
 
 @dataclass(kw_only=True)

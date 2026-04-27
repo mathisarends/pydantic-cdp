@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from cdpify.shared.models import CDPModel
 
 if TYPE_CHECKING:
-    from cdpify.domains import network, runtime
+    from cdpify.domains import network
 
 """
 Unique frame identifier.
@@ -32,27 +32,6 @@ class AdFrameStatus(CDPModel):
 
     ad_frame_type: AdFrameType
     explanations: list[AdFrameExplanation] | None = None
-
-
-@dataclass(kw_only=True)
-class AdScriptId(CDPModel):
-    """
-    Identifies the script which caused a script or frame to be labelled as an ad.
-    """
-
-    script_id: runtime.ScriptId
-    debugger_id: runtime.UniqueDebuggerId
-
-
-@dataclass(kw_only=True)
-class AdScriptAncestry(CDPModel):
-    """
-    Encapsulates the script ancestry and the root script filterlist rule that caused
-    the frame to be labelled as an ad. Only created when `ancestryChain` is not empty.
-    """
-
-    ancestry_chain: list[AdScriptId]
-    root_script_filterlist_rule: str | None = None
 
 
 """
@@ -135,7 +114,6 @@ PermissionsPolicyFeature = Literal[
     "encrypted-media",
     "execution-while-out-of-viewport",
     "execution-while-not-rendered",
-    "fenced-unpartitioned-storage-read",
     "focus-without-user-activation",
     "fullscreen",
     "frobulate",
@@ -698,6 +676,7 @@ BackForwardCacheNotRestoredReason = Literal[
     "BackForwardCacheDisabledForPrerender",
     "UserAgentOverrideDiffers",
     "ForegroundCacheLimit",
+    "ForwardCacheDisabled",
     "BrowsingInstanceNotSwapped",
     "BackForwardCacheDisabledForDelegate",
     "UnloadHandlerExistsInMainFrame",
@@ -799,6 +778,7 @@ BackForwardCacheNotRestoredReason = Literal[
     "EmbedderExtensionMessaging",
     "EmbedderExtensionMessagingForOpenPort",
     "EmbedderExtensionSentMessageToCachedFrame",
+    "EmbedderExtensionFrame",
     "RequestedByWebViewClient",
     "PostMessageByWebViewClient",
     "CacheControlNoStoreDeviceBoundSessionTerminated",

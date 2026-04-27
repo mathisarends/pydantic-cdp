@@ -19,6 +19,7 @@ from .commands import (
     ConfigureDurableMessagesParams,
     ContinueInterceptedRequestParams,
     DeleteCookiesParams,
+    DeleteDeviceBoundSessionParams,
     EmulateNetworkConditionsByRuleParams,
     EmulateNetworkConditionsByRuleResult,
     EmulateNetworkConditionsParams,
@@ -74,6 +75,7 @@ from .types import (
     CookiePriority,
     CookieSameSite,
     CookieSourceScheme,
+    DeviceBoundSessionKey,
     ErrorReason,
     Headers,
     InterceptionId,
@@ -318,7 +320,8 @@ class NetworkClient:
     async def emulate_network_conditions_by_rule(
         self,
         *,
-        offline: bool,
+        offline: bool | None = None,
+        emulate_offline_service_worker: bool | None = None,
         matched_network_conditions: list[NetworkConditions],
         session_id: str | None = None,
     ) -> EmulateNetworkConditionsByRuleResult:
@@ -329,7 +332,9 @@ class NetworkClient:
         explicitly modify `navigator` behavior.
         """
         params = EmulateNetworkConditionsByRuleParams(
-            offline=offline, matched_network_conditions=matched_network_conditions
+            offline=offline,
+            emulate_offline_service_worker=emulate_offline_service_worker,
+            matched_network_conditions=matched_network_conditions,
         )
 
         result = await self._client.send_raw(
@@ -873,6 +878,24 @@ class NetworkClient:
         )
         return result
 
+    async def delete_device_bound_session(
+        self,
+        *,
+        key: DeviceBoundSessionKey,
+        session_id: str | None = None,
+    ) -> dict[str, Any]:
+        """
+        Deletes a device bound session.
+        """
+        params = DeleteDeviceBoundSessionParams(key=key)
+
+        result = await self._client.send_raw(
+            method=NetworkCommand.DELETE_DEVICE_BOUND_SESSION,
+            params=params.to_cdp_params(),
+            session_id=session_id,
+        )
+        return result
+
     async def fetch_schemeful_site(
         self,
         *,
@@ -915,8 +938,6 @@ class NetworkClient:
         self,
         *,
         enable_third_party_cookie_restriction: bool,
-        disable_third_party_cookie_metadata: bool,
-        disable_third_party_cookie_heuristics: bool,
         session_id: str | None = None,
     ) -> dict[str, Any]:
         """
@@ -924,9 +945,7 @@ class NetworkClient:
         new cookie behavior will be observed
         """
         params = SetCookieControlsParams(
-            enable_third_party_cookie_restriction=enable_third_party_cookie_restriction,
-            disable_third_party_cookie_metadata=disable_third_party_cookie_metadata,
-            disable_third_party_cookie_heuristics=disable_third_party_cookie_heuristics,
+            enable_third_party_cookie_restriction=enable_third_party_cookie_restriction
         )
 
         result = await self._client.send_raw(

@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from cdpify.shared.models import CDPModel
 
 if TYPE_CHECKING:
-    from cdpify.domains import page
+    from cdpify.domains import network, page
 
 """
 Unique DOM node identifier.
@@ -48,6 +48,7 @@ PseudoType = Literal[
     "checkmark",
     "before",
     "after",
+    "expand-icon",
     "picker-icon",
     "interest-hint",
     "marker",
@@ -152,6 +153,7 @@ class Node(CDPModel):
     is_scrollable: bool | None = None
     affected_by_starting_styles: bool | None = None
     adopted_style_sheets: list[StyleSheetId] | None = None
+    ad_provenance: network.AdProvenance | None = None
 
 
 @dataclass(kw_only=True)

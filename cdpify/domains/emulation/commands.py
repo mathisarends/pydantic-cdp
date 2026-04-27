@@ -82,7 +82,9 @@ class EmulationCommand(StrEnum):
     )
     GET_SCREEN_INFOS = "Emulation.getScreenInfos"
     ADD_SCREEN = "Emulation.addScreen"
+    UPDATE_SCREEN = "Emulation.updateScreen"
     REMOVE_SCREEN = "Emulation.removeScreen"
+    SET_PRIMARY_SCREEN = "Emulation.setPrimaryScreen"
 
 
 @dataclass(kw_only=True)
@@ -160,6 +162,8 @@ class SetDeviceMetricsOverrideParams(CDPModel):
     viewport: page.Viewport | None = None
     display_feature: DisplayFeature | None | None = None
     device_posture: DevicePosture | None | None = None
+    scrollbar_type: Literal["overlay", "default"] | None | None = None
+    screen_orientation_lock_emulation: bool | None | None = None
 
 
 @dataclass(kw_only=True)
@@ -503,9 +507,44 @@ class AddScreenResult(CDPModel):
 
 
 @dataclass(kw_only=True)
+class UpdateScreenParams(CDPModel):
+    """
+    Updates specified screen parameters. Only supported in headless mode.
+    """
+
+    screen_id: ScreenId
+    left: int | None | None = None
+    top: int | None | None = None
+    width: int | None | None = None
+    height: int | None | None = None
+    work_area_insets: WorkAreaInsets | None | None = None
+    device_pixel_ratio: float | None | None = None
+    rotation: int | None | None = None
+    color_depth: int | None | None = None
+    label: str | None | None = None
+    is_internal: bool | None | None = None
+
+
+@dataclass(kw_only=True)
+class UpdateScreenResult(CDPModel):
+    screen_info: ScreenInfo
+
+
+@dataclass(kw_only=True)
 class RemoveScreenParams(CDPModel):
     """
     Remove screen from the device. Only supported in headless mode.
+    """
+
+    screen_id: ScreenId
+
+
+@dataclass(kw_only=True)
+class SetPrimaryScreenParams(CDPModel):
+    """
+    Set primary screen. Only supported in headless mode. Note that this changes the
+    coordinate system origin to the top-left of the new primary screen, updating the
+    bounds and work areas of all existing screens accordingly.
     """
 
     screen_id: ScreenId

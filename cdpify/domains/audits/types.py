@@ -256,17 +256,6 @@ class SharedArrayBufferIssueDetails(CDPModel):
 
 
 @dataclass(kw_only=True)
-class LowTextContrastIssueDetails(CDPModel):
-    violating_node_id: dom.BackendNodeId
-    violating_node_selector: str
-    contrast_ratio: float
-    threshold_aa: float
-    threshold_aaa: float
-    font_size: str
-    font_weight: str
-
-
-@dataclass(kw_only=True)
 class CorsIssueDetails(CDPModel):
     """
     Details for a CORS related issue, e.g. a warning or error related to CORS RFC1918
@@ -450,6 +439,11 @@ GenericIssueErrorType = Literal[
     "AutofillAndManualTextPolicyControlledFeaturesInfo",
     "AutofillPolicyControlledFeatureInfo",
     "ManualTextPolicyControlledFeatureInfo",
+    "FormModelContextParameterMissingTitleAndDescription",
+    "FormModelContextMissingToolName",
+    "FormModelContextMissingToolDescription",
+    "FormModelContextRequiredParameterMissingName",
+    "FormModelContextParameterMissingName",
 ]
 
 
@@ -731,6 +725,18 @@ class PermissionElementIssueDetails(CDPModel):
     disable_reason: str | None = None
 
 
+@dataclass(kw_only=True)
+class SelectivePermissionsInterventionIssueDetails(CDPModel):
+    """
+    The issue warns about blocked calls to privacy sensitive APIs via the Selective
+    Permissions Intervention.
+    """
+
+    api_name: str
+    ad_ancestry: network.AdAncestry
+    stack_trace: runtime.StackTrace | None = None
+
+
 """
 A unique identifier for the type of issue. Each type may use one of the optional fields
 in InspectorIssueDetails to convey more specific information about the kind of issue.
@@ -742,7 +748,6 @@ InspectorIssueCode = Literal[
     "HeavyAdIssue",
     "ContentSecurityPolicyIssue",
     "SharedArrayBufferIssue",
-    "LowTextContrastIssue",
     "CorsIssue",
     "AttributionReportingIssue",
     "QuirksModeIssue",
@@ -765,6 +770,7 @@ InspectorIssueCode = Literal[
     "UserReidentificationIssue",
     "PermissionElementIssue",
     "PerformanceIssue",
+    "SelectivePermissionsInterventionIssue",
 ]
 
 
@@ -784,7 +790,6 @@ class InspectorIssueDetails(CDPModel):
         None
     )
     shared_array_buffer_issue_details: SharedArrayBufferIssueDetails | None = None
-    low_text_contrast_issue_details: LowTextContrastIssueDetails | None = None
     cors_issue_details: CorsIssueDetails | None = None
     attribution_reporting_issue_details: AttributionReportingIssueDetails | None = None
     quirks_mode_issue_details: QuirksModeIssueDetails | None = None
@@ -811,6 +816,9 @@ class InspectorIssueDetails(CDPModel):
     user_reidentification_issue_details: UserReidentificationIssueDetails | None = None
     permission_element_issue_details: PermissionElementIssueDetails | None = None
     performance_issue_details: PerformanceIssueDetails | None = None
+    selective_permissions_intervention_issue_details: (
+        SelectivePermissionsInterventionIssueDetails | None
+    ) = None
 
 
 """

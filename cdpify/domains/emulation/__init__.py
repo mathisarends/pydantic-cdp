@@ -61,6 +61,7 @@ from .commands import (
     SetPressureDataOverrideParams,
     SetPressureSourceOverrideEnabledParams,
     SetPressureStateOverrideParams,
+    SetPrimaryScreenParams,
     SetSafeAreaInsetsOverrideParams,
     SetScriptExecutionDisabledParams,
     SetScrollbarsHiddenParams,
@@ -73,9 +74,15 @@ from .commands import (
     SetVirtualTimePolicyParams,
     SetVirtualTimePolicyResult,
     SetVisibleSizeParams,
+    UpdateScreenParams,
+    UpdateScreenResult,
 )
 
-from .events import EmulationEvent, VirtualTimeBudgetExpiredEvent
+from .events import (
+    EmulationEvent,
+    ScreenOrientationLockChangedEvent,
+    VirtualTimeBudgetExpiredEvent,
+)
 
 from .client import EmulationClient
 
@@ -101,6 +108,7 @@ __all__ = [
     "ScreenId",
     "ScreenInfo",
     "ScreenOrientation",
+    "ScreenOrientationLockChangedEvent",
     "SensorMetadata",
     "SensorReading",
     "SensorReadingQuaternion",
@@ -131,6 +139,7 @@ __all__ = [
     "SetPressureDataOverrideParams",
     "SetPressureSourceOverrideEnabledParams",
     "SetPressureStateOverrideParams",
+    "SetPrimaryScreenParams",
     "SetSafeAreaInsetsOverrideParams",
     "SetScriptExecutionDisabledParams",
     "SetScrollbarsHiddenParams",
@@ -143,6 +152,8 @@ __all__ = [
     "SetVirtualTimePolicyParams",
     "SetVirtualTimePolicyResult",
     "SetVisibleSizeParams",
+    "UpdateScreenParams",
+    "UpdateScreenResult",
     "UserAgentBrandVersion",
     "UserAgentMetadata",
     "VirtualTimeBudgetExpiredEvent",

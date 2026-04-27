@@ -8,7 +8,6 @@ from enum import StrEnum
 from cdpify.shared.models import CDPModel
 
 from .types import (
-    AdScriptAncestry,
     AppManifestError,
     AppManifestParsedProperties,
     CompilationCacheParams,
@@ -250,7 +249,7 @@ class GetAdScriptAncestryParams(CDPModel):
 
 @dataclass(kw_only=True)
 class GetAdScriptAncestryResult(CDPModel):
-    ad_script_ancestry: AdScriptAncestry | None | None = None
+    ad_script_ancestry: network.AdAncestry | None = None
 
 
 @dataclass(kw_only=True)

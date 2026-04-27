@@ -157,7 +157,7 @@ Loading priority of a resource request.
 ResourcePriority = Literal["VeryLow", "Low", "Medium", "High", "VeryHigh"]
 
 """
-The render blocking behavior of a resource request.
+The render-blocking behavior of a resource request.
 """
 RenderBlockingBehavior = Literal[
     "Blocking",
@@ -756,6 +756,7 @@ class NetworkConditions(CDPModel):
     packet_loss: float | None = None
     packet_queue_length: int | None = None
     packet_reordering: bool | None = None
+    offline: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -818,6 +819,46 @@ class ClientSecurityState(CDPModel):
     initiator_is_secure_context: bool
     initiator_ip_address_space: IPAddressSpace
     local_network_access_request_policy: LocalNetworkAccessRequestPolicy
+
+
+@dataclass(kw_only=True)
+class AdScriptIdentifier(CDPModel):
+    """
+    Identifies the script on the stack that caused a resource or element to be labeled
+    as an ad. For resources, this indicates the context that triggered the fetch. For
+    elements, this indicates the context that caused the element to be appended to the
+    DOM.
+    """
+
+    script_id: runtime.ScriptId
+    debugger_id: runtime.UniqueDebuggerId
+    name: str
+
+
+@dataclass(kw_only=True)
+class AdAncestry(CDPModel):
+    """
+    Encapsulates the script ancestry and the root script filter list rule that caused
+    the resource or element to be labeled as an ad.
+    """
+
+    ancestry_chain: list[AdScriptIdentifier]
+    root_script_filterlist_rule: str | None = None
+
+
+@dataclass(kw_only=True)
+class AdProvenance(CDPModel):
+    """
+    Represents the provenance of an ad resource or element. Only one of
+    `filterlistRule` or `adScriptAncestry` can be set. If `filterlistRule` is provided,
+    the resource URL directly matches a filter list rule. If `adScriptAncestry` is
+    provided, an ad script initiated the resource fetch or appended the element to the
+    DOM. If neither is provided, the entity is known to be an ad, but provenance
+    tracking information is unavailable.
+    """
+
+    filterlist_rule: str | None = None
+    ad_script_ancestry: AdAncestry | None = None
 
 
 CrossOriginOpenerPolicyValue = Literal[
@@ -1057,6 +1098,18 @@ DeviceBoundSessionFetchResult = Literal[
 
 
 @dataclass(kw_only=True)
+class DeviceBoundSessionFailedRequest(CDPModel):
+    """
+    Details about a failed device bound session network request.
+    """
+
+    request_url: str
+    net_error: str | None = None
+    response_error: int | None = None
+    response_error_body: str | None = None
+
+
+@dataclass(kw_only=True)
 class CreationEventDetails(CDPModel):
     """
     Session event details specific to creation.
@@ -1064,6 +1117,7 @@ class CreationEventDetails(CDPModel):
 
     fetch_result: DeviceBoundSessionFetchResult
     new_session: DeviceBoundSession | None = None
+    failed_request: DeviceBoundSessionFailedRequest | None = None
 
 
 @dataclass(kw_only=True)
@@ -1074,6 +1128,7 @@ class RefreshEventDetails(CDPModel):
 
     refresh_result: Literal[
         "Refreshed",
+        "RefreshedAsWaiter",
         "InitializedService",
         "Unreachable",
         "ServerError",
@@ -1084,6 +1139,7 @@ class RefreshEventDetails(CDPModel):
     fetch_result: DeviceBoundSessionFetchResult | None = None
     new_session: DeviceBoundSession | None = None
     was_fully_proactive_refresh: bool
+    failed_request: DeviceBoundSessionFailedRequest | None = None
 
 
 @dataclass(kw_only=True)
@@ -1101,6 +1157,7 @@ class TerminationEventDetails(CDPModel):
         "ServerRequested",
         "InvalidSessionParams",
         "RefreshFatalError",
+        "DevTools",
     ]
 
 
