@@ -123,7 +123,7 @@ class CreateStyleSheetParams(CDPModel):
     """
 
     frame_id: page.FrameId
-    force: bool | None | None = None
+    force: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -159,9 +159,9 @@ class GetBackgroundColorsParams(CDPModel):
 
 @dataclass(kw_only=True)
 class GetBackgroundColorsResult(CDPModel):
-    background_colors: list[str] | None | None = None
-    computed_font_size: str | None | None = None
-    computed_font_weight: str | None | None = None
+    background_colors: list[str] | None = None
+    computed_font_size: str | None = None
+    computed_font_weight: str | None = None
 
 
 @dataclass(kw_only=True)
@@ -195,9 +195,9 @@ class ResolveValuesParams(CDPModel):
 
     values: list[str]
     node_id: dom.NodeId
-    property_name: str | None | None = None
+    property_name: str | None = None
     pseudo_type: dom.PseudoType | None = None
-    pseudo_identifier: str | None | None = None
+    pseudo_identifier: str | None = None
 
 
 @dataclass(kw_only=True)
@@ -228,8 +228,8 @@ class GetInlineStylesForNodeParams(CDPModel):
 
 @dataclass(kw_only=True)
 class GetInlineStylesForNodeResult(CDPModel):
-    inline_style: CSSStyle | None | None = None
-    attributes_style: CSSStyle | None | None = None
+    inline_style: CSSStyle | None = None
+    attributes_style: CSSStyle | None = None
 
 
 @dataclass(kw_only=True)
@@ -244,9 +244,9 @@ class GetAnimatedStylesForNodeParams(CDPModel):
 
 @dataclass(kw_only=True)
 class GetAnimatedStylesForNodeResult(CDPModel):
-    animation_styles: list[CSSAnimationStyle] | None | None = None
-    transitions_style: CSSStyle | None | None = None
-    inherited: list[InheritedAnimatedStyleEntry] | None | None = None
+    animation_styles: list[CSSAnimationStyle] | None = None
+    transitions_style: CSSStyle | None = None
+    inherited: list[InheritedAnimatedStyleEntry] | None = None
 
 
 @dataclass(kw_only=True)
@@ -260,20 +260,20 @@ class GetMatchedStylesForNodeParams(CDPModel):
 
 @dataclass(kw_only=True)
 class GetMatchedStylesForNodeResult(CDPModel):
-    inline_style: CSSStyle | None | None = None
-    attributes_style: CSSStyle | None | None = None
-    matched_css_rules: list[RuleMatch] | None | None = None
-    pseudo_elements: list[PseudoElementMatches] | None | None = None
-    inherited: list[InheritedStyleEntry] | None | None = None
-    inherited_pseudo_elements: list[InheritedPseudoElementMatches] | None | None = None
-    css_keyframes_rules: list[CSSKeyframesRule] | None | None = None
-    css_position_try_rules: list[CSSPositionTryRule] | None | None = None
-    active_position_fallback_index: int | None | None = None
-    css_property_rules: list[CSSPropertyRule] | None | None = None
-    css_property_registrations: list[CSSPropertyRegistration] | None | None = None
-    css_at_rules: list[CSSAtRule] | None | None = None
+    inline_style: CSSStyle | None = None
+    attributes_style: CSSStyle | None = None
+    matched_css_rules: list[RuleMatch] | None = None
+    pseudo_elements: list[PseudoElementMatches] | None = None
+    inherited: list[InheritedStyleEntry] | None = None
+    inherited_pseudo_elements: list[InheritedPseudoElementMatches] | None = None
+    css_keyframes_rules: list[CSSKeyframesRule] | None = None
+    css_position_try_rules: list[CSSPositionTryRule] | None = None
+    active_position_fallback_index: int | None = None
+    css_property_rules: list[CSSPropertyRule] | None = None
+    css_property_registrations: list[CSSPropertyRegistration] | None = None
+    css_at_rules: list[CSSAtRule] | None = None
     parent_layout_node_id: dom.NodeId | None = None
-    css_function_rules: list[CSSFunctionRule] | None | None = None
+    css_function_rules: list[CSSFunctionRule] | None = None
 
 
 @dataclass(kw_only=True)
@@ -533,7 +533,7 @@ class SetStyleSheetTextParams(CDPModel):
 
 @dataclass(kw_only=True)
 class SetStyleSheetTextResult(CDPModel):
-    source_map_url: str | None | None = None
+    source_map_url: str | None = None
 
 
 @dataclass(kw_only=True)

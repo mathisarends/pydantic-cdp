@@ -54,14 +54,14 @@ class AwaitPromiseParams(CDPModel):
     """
 
     promise_object_id: RemoteObjectId
-    return_by_value: bool | None | None = None
-    generate_preview: bool | None | None = None
+    return_by_value: bool | None = None
+    generate_preview: bool | None = None
 
 
 @dataclass(kw_only=True)
 class AwaitPromiseResult(CDPModel):
     result: RemoteObject
-    exception_details: ExceptionDetails | None | None = None
+    exception_details: ExceptionDetails | None = None
 
 
 @dataclass(kw_only=True)
@@ -72,24 +72,24 @@ class CallFunctionOnParams(CDPModel):
     """
 
     function_declaration: str
-    object_id: RemoteObjectId | None | None = None
-    arguments: list[CallArgument] | None | None = None
-    silent: bool | None | None = None
-    return_by_value: bool | None | None = None
-    generate_preview: bool | None | None = None
-    user_gesture: bool | None | None = None
-    await_promise: bool | None | None = None
-    execution_context_id: ExecutionContextId | None | None = None
-    object_group: str | None | None = None
-    throw_on_side_effect: bool | None | None = None
-    unique_context_id: str | None | None = None
-    serialization_options: SerializationOptions | None | None = None
+    object_id: RemoteObjectId | None = None
+    arguments: list[CallArgument] | None = None
+    silent: bool | None = None
+    return_by_value: bool | None = None
+    generate_preview: bool | None = None
+    user_gesture: bool | None = None
+    await_promise: bool | None = None
+    execution_context_id: ExecutionContextId | None = None
+    object_group: str | None = None
+    throw_on_side_effect: bool | None = None
+    unique_context_id: str | None = None
+    serialization_options: SerializationOptions | None = None
 
 
 @dataclass(kw_only=True)
 class CallFunctionOnResult(CDPModel):
     result: RemoteObject
-    exception_details: ExceptionDetails | None | None = None
+    exception_details: ExceptionDetails | None = None
 
 
 @dataclass(kw_only=True)
@@ -101,13 +101,13 @@ class CompileScriptParams(CDPModel):
     expression: str
     source_url: str
     persist_script: bool
-    execution_context_id: ExecutionContextId | None | None = None
+    execution_context_id: ExecutionContextId | None = None
 
 
 @dataclass(kw_only=True)
 class CompileScriptResult(CDPModel):
-    script_id: ScriptId | None | None = None
-    exception_details: ExceptionDetails | None | None = None
+    script_id: ScriptId | None = None
+    exception_details: ExceptionDetails | None = None
 
 
 @dataclass(kw_only=True)
@@ -117,27 +117,27 @@ class EvaluateParams(CDPModel):
     """
 
     expression: str
-    object_group: str | None | None = None
-    include_command_line_api: bool | None | None = None
-    silent: bool | None | None = None
-    context_id: ExecutionContextId | None | None = None
-    return_by_value: bool | None | None = None
-    generate_preview: bool | None | None = None
-    user_gesture: bool | None | None = None
-    await_promise: bool | None | None = None
-    throw_on_side_effect: bool | None | None = None
-    timeout: TimeDelta | None | None = None
-    disable_breaks: bool | None | None = None
-    repl_mode: bool | None | None = None
-    allow_unsafe_eval_blocked_by_csp: bool | None | None = None
-    unique_context_id: str | None | None = None
-    serialization_options: SerializationOptions | None | None = None
+    object_group: str | None = None
+    include_command_line_api: bool | None = None
+    silent: bool | None = None
+    context_id: ExecutionContextId | None = None
+    return_by_value: bool | None = None
+    generate_preview: bool | None = None
+    user_gesture: bool | None = None
+    await_promise: bool | None = None
+    throw_on_side_effect: bool | None = None
+    timeout: TimeDelta | None = None
+    disable_breaks: bool | None = None
+    repl_mode: bool | None = None
+    allow_unsafe_eval_blocked_by_csp: bool | None = None
+    unique_context_id: str | None = None
+    serialization_options: SerializationOptions | None = None
 
 
 @dataclass(kw_only=True)
 class EvaluateResult(CDPModel):
     result: RemoteObject
-    exception_details: ExceptionDetails | None | None = None
+    exception_details: ExceptionDetails | None = None
 
 
 @dataclass(kw_only=True)
@@ -161,18 +161,18 @@ class GetPropertiesParams(CDPModel):
     """
 
     object_id: RemoteObjectId
-    own_properties: bool | None | None = None
-    accessor_properties_only: bool | None | None = None
-    generate_preview: bool | None | None = None
-    non_indexed_properties_only: bool | None | None = None
+    own_properties: bool | None = None
+    accessor_properties_only: bool | None = None
+    generate_preview: bool | None = None
+    non_indexed_properties_only: bool | None = None
 
 
 @dataclass(kw_only=True)
 class GetPropertiesResult(CDPModel):
     result: list[PropertyDescriptor]
-    internal_properties: list[InternalPropertyDescriptor] | None | None = None
-    private_properties: list[PrivatePropertyDescriptor] | None | None = None
-    exception_details: ExceptionDetails | None | None = None
+    internal_properties: list[InternalPropertyDescriptor] | None = None
+    private_properties: list[PrivatePropertyDescriptor] | None = None
+    exception_details: ExceptionDetails | None = None
 
 
 @dataclass(kw_only=True)
@@ -181,7 +181,7 @@ class GlobalLexicalScopeNamesParams(CDPModel):
     Returns all let, const and class variables from global scope.
     """
 
-    execution_context_id: ExecutionContextId | None | None = None
+    execution_context_id: ExecutionContextId | None = None
 
 
 @dataclass(kw_only=True)
@@ -192,7 +192,7 @@ class GlobalLexicalScopeNamesResult(CDPModel):
 @dataclass(kw_only=True)
 class QueryObjectsParams(CDPModel):
     prototype_object_id: RemoteObjectId
-    object_group: str | None | None = None
+    object_group: str | None = None
 
 
 @dataclass(kw_only=True)
@@ -225,19 +225,19 @@ class RunScriptParams(CDPModel):
     """
 
     script_id: ScriptId
-    execution_context_id: ExecutionContextId | None | None = None
-    object_group: str | None | None = None
-    silent: bool | None | None = None
-    include_command_line_api: bool | None | None = None
-    return_by_value: bool | None | None = None
-    generate_preview: bool | None | None = None
-    await_promise: bool | None | None = None
+    execution_context_id: ExecutionContextId | None = None
+    object_group: str | None = None
+    silent: bool | None = None
+    include_command_line_api: bool | None = None
+    return_by_value: bool | None = None
+    generate_preview: bool | None = None
+    await_promise: bool | None = None
 
 
 @dataclass(kw_only=True)
 class RunScriptResult(CDPModel):
     result: RemoteObject
-    exception_details: ExceptionDetails | None | None = None
+    exception_details: ExceptionDetails | None = None
 
 
 @dataclass(kw_only=True)
@@ -270,8 +270,8 @@ class AddBindingParams(CDPModel):
     """
 
     name: str
-    execution_context_id: ExecutionContextId | None | None = None
-    execution_context_name: str | None | None = None
+    execution_context_id: ExecutionContextId | None = None
+    execution_context_name: str | None = None
 
 
 @dataclass(kw_only=True)
@@ -298,4 +298,4 @@ class GetExceptionDetailsParams(CDPModel):
 
 @dataclass(kw_only=True)
 class GetExceptionDetailsResult(CDPModel):
-    exception_details: ExceptionDetails | None | None = None
+    exception_details: ExceptionDetails | None = None

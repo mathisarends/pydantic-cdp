@@ -56,7 +56,7 @@ class AttachToTargetParams(CDPModel):
     """
 
     target_id: TargetID
-    flatten: bool | None | None = None
+    flatten: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -95,8 +95,8 @@ class ExposeDevToolsProtocolParams(CDPModel):
     """
 
     target_id: TargetID
-    binding_name: str | None | None = None
-    inherit_permissions: bool | None | None = None
+    binding_name: str | None = None
+    inherit_permissions: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -106,10 +106,10 @@ class CreateBrowserContextParams(CDPModel):
     have more than one.
     """
 
-    dispose_on_detach: bool | None | None = None
-    proxy_server: str | None | None = None
-    proxy_bypass_list: str | None | None = None
-    origins_with_universal_network_access: list[str] | None | None = None
+    dispose_on_detach: bool | None = None
+    proxy_server: str | None = None
+    proxy_bypass_list: str | None = None
+    origins_with_universal_network_access: list[str] | None = None
 
 
 @dataclass(kw_only=True)
@@ -130,18 +130,18 @@ class CreateTargetParams(CDPModel):
     """
 
     url: str
-    left: int | None | None = None
-    top: int | None | None = None
-    width: int | None | None = None
-    height: int | None | None = None
-    window_state: WindowState | None | None = None
+    left: int | None = None
+    top: int | None = None
+    width: int | None = None
+    height: int | None = None
+    window_state: WindowState | None = None
     browser_context_id: browser.BrowserContextID | None = None
-    enable_begin_frame_control: bool | None | None = None
-    new_window: bool | None | None = None
-    background: bool | None | None = None
-    for_tab: bool | None | None = None
-    hidden: bool | None | None = None
-    focus: bool | None | None = None
+    enable_begin_frame_control: bool | None = None
+    new_window: bool | None = None
+    background: bool | None = None
+    for_tab: bool | None = None
+    hidden: bool | None = None
+    focus: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -155,8 +155,8 @@ class DetachFromTargetParams(CDPModel):
     Detaches session with given id.
     """
 
-    session_id: SessionID | None | None = None
-    target_id: TargetID | None | None = None
+    session_id: SessionID | None = None
+    target_id: TargetID | None = None
 
 
 @dataclass(kw_only=True)
@@ -175,7 +175,7 @@ class GetTargetInfoParams(CDPModel):
     Returns information about a target.
     """
 
-    target_id: TargetID | None | None = None
+    target_id: TargetID | None = None
 
 
 @dataclass(kw_only=True)
@@ -189,7 +189,7 @@ class GetTargetsParams(CDPModel):
     Retrieves a list of available targets.
     """
 
-    filter: TargetFilter | None | None = None
+    filter: TargetFilter | None = None
 
 
 @dataclass(kw_only=True)
@@ -205,8 +205,8 @@ class SendMessageToTargetParams(CDPModel):
     """
 
     message: str
-    session_id: SessionID | None | None = None
-    target_id: TargetID | None | None = None
+    session_id: SessionID | None = None
+    target_id: TargetID | None = None
 
 
 @dataclass(kw_only=True)
@@ -223,8 +223,8 @@ class SetAutoAttachParams(CDPModel):
 
     auto_attach: bool
     wait_for_debugger_on_start: bool
-    flatten: bool | None | None = None
-    filter: TargetFilter | None | None = None
+    flatten: bool | None = None
+    filter: TargetFilter | None = None
 
 
 @dataclass(kw_only=True)
@@ -239,7 +239,7 @@ class AutoAttachRelatedParams(CDPModel):
 
     target_id: TargetID
     wait_for_debugger_on_start: bool
-    filter: TargetFilter | None | None = None
+    filter: TargetFilter | None = None
 
 
 @dataclass(kw_only=True)
@@ -250,7 +250,7 @@ class SetDiscoverTargetsParams(CDPModel):
     """
 
     discover: bool
-    filter: TargetFilter | None | None = None
+    filter: TargetFilter | None = None
 
 
 @dataclass(kw_only=True)
@@ -274,7 +274,7 @@ class GetDevToolsTargetParams(CDPModel):
 
 @dataclass(kw_only=True)
 class GetDevToolsTargetResult(CDPModel):
-    target_id: TargetID | None | None = None
+    target_id: TargetID | None = None
 
 
 @dataclass(kw_only=True)
@@ -284,7 +284,7 @@ class OpenDevToolsParams(CDPModel):
     """
 
     target_id: TargetID
-    panel_id: str | None | None = None
+    panel_id: str | None = None
 
 
 @dataclass(kw_only=True)

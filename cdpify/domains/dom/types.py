@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from cdpify.shared.models import CDPModel
 
 if TYPE_CHECKING:
-    from cdpify.domains import page
+    from cdpify.domains import network, page
 
 """
 Unique DOM node identifier.
@@ -127,8 +127,8 @@ class Node(CDPModel):
     local_name: str
     node_value: str
     child_node_count: int | None = None
-    children: list[Any] | None = None
-    attributes: list[Any] | None = None
+    children: list[Node] | None = None
+    attributes: list[str] | None = None
     document_url: str | None = None
     base_url: str | None = None
     public_id: str | None = None
@@ -142,18 +142,18 @@ class Node(CDPModel):
     shadow_root_type: ShadowRootType | None = None
     frame_id: page.FrameId | None = None
     content_document: Node | None = None
-    shadow_roots: list[Any] | None = None
+    shadow_roots: list[Node] | None = None
     template_content: Node | None = None
-    pseudo_elements: list[Any] | None = None
+    pseudo_elements: list[Node] | None = None
     imported_document: Node | None = None
-    distributed_nodes: list[Any] | None = None
+    distributed_nodes: list[BackendNode] | None = None
     is_svg: bool | None = None
     compatibility_mode: CompatibilityMode | None = None
     assigned_slot: BackendNode | None = None
     is_scrollable: bool | None = None
     affected_by_starting_styles: bool | None = None
-    adopted_style_sheets: list[Any] | None = None
-    is_ad_related: bool | None = None
+    adopted_style_sheets: list[StyleSheetId] | None = None
+    ad_provenance: network.AdProvenance | None = None
 
 
 @dataclass(kw_only=True)
@@ -164,7 +164,7 @@ class DetachedElementInfo(CDPModel):
     """
 
     tree_node: Node
-    retained_node_ids: list[Any]
+    retained_node_ids: list[NodeId]
 
 
 @dataclass(kw_only=True)

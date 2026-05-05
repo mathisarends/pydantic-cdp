@@ -26,6 +26,7 @@ class TargetInfo(CDPModel):
     title: str
     url: str
     attached: bool
+    parent_id: TargetID | None = None
     opener_id: TargetID | None = None
     can_access_opener: bool
     opener_frame_id: page.FrameId | None = None

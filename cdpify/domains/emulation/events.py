@@ -35,4 +35,4 @@ class ScreenOrientationLockChangedEvent(CDPModel):
     """
 
     locked: bool
-    orientation: ScreenOrientation | None | None = None
+    orientation: ScreenOrientation | None = None

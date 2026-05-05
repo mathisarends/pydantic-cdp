@@ -35,13 +35,13 @@ class ReadParams(CDPModel):
     """
 
     handle: StreamHandle
-    offset: int | None | None = None
-    size: int | None | None = None
+    offset: int | None = None
+    size: int | None = None
 
 
 @dataclass(kw_only=True)
 class ReadResult(CDPModel):
-    base64_encoded: bool | None | None = None
+    base64_encoded: bool | None = None
     data: str
     eof: bool
 

@@ -83,7 +83,7 @@ class AXValueSource(CDPModel):
 
 @dataclass(kw_only=True)
 class AXRelatedNode(CDPModel):
-    backend_dom_node_id: dom.BackendNodeId
+    backend_dom_node_id: dom.BackendNodeId | None = None
     idref: str | None = None
     text: str | None = None
 
@@ -102,8 +102,8 @@ class AXValue(CDPModel):
 
     type: AXValueType
     value: Any | None = None
-    related_nodes: list[Any] | None = None
-    sources: list[Any] | None = None
+    related_nodes: list[AXRelatedNode] | None = None
+    sources: list[AXValueSource] | None = None
 
 
 """
@@ -184,14 +184,14 @@ class AXNode(CDPModel):
 
     node_id: AXNodeId
     ignored: bool
-    ignored_reasons: list[Any] | None = None
+    ignored_reasons: list[AXProperty] | None = None
     role: AXValue | None = None
     chrome_role: AXValue | None = None
     name: AXValue | None = None
     description: AXValue | None = None
     value: AXValue | None = None
-    properties: list[Any] | None = None
+    properties: list[AXProperty] | None = None
     parent_id: AXNodeId | None = None
-    child_ids: list[Any] | None = None
+    child_ids: list[AXNodeId] | None = None
     backend_dom_node_id: dom.BackendNodeId | None = None
     frame_id: page.FrameId | None = None

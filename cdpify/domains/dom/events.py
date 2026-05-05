@@ -17,7 +17,7 @@ from .types import (
 )
 
 if TYPE_CHECKING:
-    from cdpify.domains import dom
+    from cdpify.domains import dom, network
 
 
 class DOMEvent(StrEnum):
@@ -178,7 +178,7 @@ class AdRelatedStateUpdatedEvent(CDPModel):
     """
 
     node_id: dom.NodeId
-    is_ad_related: bool
+    ad_provenance: network.AdProvenance | None = None
 
 
 @dataclass(kw_only=True)

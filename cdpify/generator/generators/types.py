@@ -12,7 +12,10 @@ class TypesGenerator(BaseGenerator):
         "DocumentSnapshot": {
             "documentURL",
             "baseURL",
-        },  # chrome does not mark these as optional, but they are not always present
+        },
+        "AXRelatedNode": {
+            "backendDOMNodeId",
+        },
     }
 
     def generate(self, domain: Domain) -> str:
@@ -41,9 +44,8 @@ class TypesGenerator(BaseGenerator):
 
         lines = []
 
-        if self._uses_type_checking:
-            lines.append("from __future__ import annotations")
-            lines.append("")
+        lines.append("from __future__ import annotations")
+        lines.append("")
 
         typing_imports = self._build_typing_imports()
         if typing_imports:
@@ -131,9 +133,15 @@ class TypesGenerator(BaseGenerator):
             type_name = parts[1]
             return f"{domain_lower}.{type_name}"
 
-        # Strip optionality here — _create_field is the single place that adds | None
         return map_cdp_type(
-            Parameter(name=param.name, type=param.type, ref=param.ref, optional=False)
+            Parameter(
+                name=param.name,
+                type=param.type,
+                ref=param.ref,
+                optional=False,
+                items=param.items,
+                enum=param.enum,
+            )
         )
 
     def _create_type_alias(self, type_def: TypeDefinition) -> str:

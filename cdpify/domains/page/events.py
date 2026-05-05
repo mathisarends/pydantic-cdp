@@ -274,7 +274,7 @@ class JavascriptDialogOpeningEvent(CDPModel):
     message: str
     type: DialogType
     has_browser_handler: bool
-    default_prompt: str | None | None = None
+    default_prompt: str | None = None
 
 
 @dataclass(kw_only=True)
@@ -303,7 +303,7 @@ class BackForwardCacheNotUsedEvent(CDPModel):
     frame_id: FrameId
     not_restored_explanations: list[BackForwardCacheNotRestoredExplanation]
     not_restored_explanations_tree: (
-        BackForwardCacheNotRestoredExplanationTree | None | None
+        BackForwardCacheNotRestoredExplanationTree | None
     ) = None
 
 

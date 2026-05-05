@@ -43,7 +43,7 @@ class DetachedFromTargetEvent(CDPModel):
     """
 
     session_id: SessionID
-    target_id: TargetID | None | None = None
+    target_id: TargetID | None = None
 
 
 @dataclass(kw_only=True)
@@ -55,7 +55,7 @@ class ReceivedMessageFromTargetEvent(CDPModel):
 
     session_id: SessionID
     message: str
-    target_id: TargetID | None | None = None
+    target_id: TargetID | None = None
 
 
 @dataclass(kw_only=True)

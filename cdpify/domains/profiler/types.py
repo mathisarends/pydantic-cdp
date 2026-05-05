@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import Any, TYPE_CHECKING
+from typing import TYPE_CHECKING
 from dataclasses import dataclass
 from cdpify.shared.models import CDPModel
 
@@ -21,9 +21,9 @@ class ProfileNode(CDPModel):
     id: int
     call_frame: runtime.CallFrame
     hit_count: int | None = None
-    children: list[Any] | None = None
+    children: list[int] | None = None
     deopt_reason: str | None = None
-    position_ticks: list[Any] | None = None
+    position_ticks: list[PositionTickInfo] | None = None
 
 
 @dataclass(kw_only=True)
@@ -32,11 +32,11 @@ class Profile(CDPModel):
     Profile.
     """
 
-    nodes: list[Any]
+    nodes: list[ProfileNode]
     start_time: float
     end_time: float
-    samples: list[Any] | None = None
-    time_deltas: list[Any] | None = None
+    samples: list[int] | None = None
+    time_deltas: list[int] | None = None
 
 
 @dataclass(kw_only=True)
@@ -67,7 +67,7 @@ class FunctionCoverage(CDPModel):
     """
 
     function_name: str
-    ranges: list[Any]
+    ranges: list[CoverageRange]
     is_block_coverage: bool
 
 
@@ -79,4 +79,4 @@ class ScriptCoverage(CDPModel):
 
     script_id: runtime.ScriptId
     url: str
-    functions: list[Any]
+    functions: list[FunctionCoverage]

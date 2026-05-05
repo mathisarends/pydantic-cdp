@@ -126,8 +126,8 @@ class NodesConnectedEvent(CDPModel):
     context_id: GraphObjectId
     source_id: GraphObjectId
     destination_id: GraphObjectId
-    source_output_index: float | None | None = None
-    destination_input_index: float | None | None = None
+    source_output_index: float | None = None
+    destination_input_index: float | None = None
 
 
 @dataclass(kw_only=True)
@@ -140,8 +140,8 @@ class NodesDisconnectedEvent(CDPModel):
     context_id: GraphObjectId
     source_id: GraphObjectId
     destination_id: GraphObjectId
-    source_output_index: float | None | None = None
-    destination_input_index: float | None | None = None
+    source_output_index: float | None = None
+    destination_input_index: float | None = None
 
 
 @dataclass(kw_only=True)
@@ -153,7 +153,7 @@ class NodeParamConnectedEvent(CDPModel):
     context_id: GraphObjectId
     source_id: GraphObjectId
     destination_id: GraphObjectId
-    source_output_index: float | None | None = None
+    source_output_index: float | None = None
 
 
 @dataclass(kw_only=True)
@@ -165,4 +165,4 @@ class NodeParamDisconnectedEvent(CDPModel):
     context_id: GraphObjectId
     source_id: GraphObjectId
     destination_id: GraphObjectId
-    source_output_index: float | None | None = None
+    source_output_index: float | None = None

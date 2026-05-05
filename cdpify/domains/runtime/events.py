@@ -68,8 +68,8 @@ class ConsoleAPICalledEvent(CDPModel):
     args: list[RemoteObject]
     execution_context_id: ExecutionContextId
     timestamp: Timestamp
-    stack_trace: StackTrace | None | None = None
-    context: str | None | None = None
+    stack_trace: StackTrace | None = None
+    context: str | None = None
 
 
 @dataclass(kw_only=True)
@@ -129,4 +129,4 @@ class InspectRequestedEvent(CDPModel):
 
     object: RemoteObject
     hints: dict[str, Any]
-    execution_context_id: ExecutionContextId | None | None = None
+    execution_context_id: ExecutionContextId | None = None

@@ -36,8 +36,8 @@ class GetEventListenersParams(CDPModel):
     """
 
     object_id: runtime.RemoteObjectId
-    depth: int | None | None = None
-    pierce: bool | None | None = None
+    depth: int | None = None
+    pierce: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -62,7 +62,7 @@ class RemoveEventListenerBreakpointParams(CDPModel):
     """
 
     event_name: str
-    target_name: str | None | None = None
+    target_name: str | None = None
 
 
 @dataclass(kw_only=True)
@@ -109,7 +109,7 @@ class SetEventListenerBreakpointParams(CDPModel):
     """
 
     event_name: str
-    target_name: str | None | None = None
+    target_name: str | None = None
 
 
 @dataclass(kw_only=True)

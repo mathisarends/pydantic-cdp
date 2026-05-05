@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Literal, TYPE_CHECKING
+from typing import Literal, TYPE_CHECKING
 from dataclasses import dataclass
 from cdpify.shared.models import CDPModel
 
@@ -169,7 +169,7 @@ class SharedStorageUrlWithMetadata(CDPModel):
     """
 
     url: str
-    reporting_metadata: list[Any]
+    reporting_metadata: list[SharedStorageReportingMetadata]
 
 
 @dataclass(kw_only=True)
@@ -186,7 +186,7 @@ class SharedStorageAccessParams(CDPModel):
     keep_alive: bool | None = None
     private_aggregation_config: SharedStoragePrivateAggregationConfig | None = None
     serialized_data: str | None = None
-    urls_with_metadata: list[Any] | None = None
+    urls_with_metadata: list[SharedStorageUrlWithMetadata] | None = None
     urn_uuid: str | None = None
     key: str | None = None
     value: str | None = None
@@ -217,237 +217,12 @@ class StorageBucketInfo(CDPModel):
     durability: StorageBucketsDurability
 
 
-AttributionReportingSourceType = Literal["navigation", "event"]
-
-UnsignedInt64AsBase10 = str
-
-UnsignedInt128AsBase16 = str
-
-SignedInt64AsBase10 = str
-
-
-@dataclass(kw_only=True)
-class AttributionReportingFilterDataEntry(CDPModel):
-    key: str
-    values: list[Any]
-
-
-@dataclass(kw_only=True)
-class AttributionReportingFilterConfig(CDPModel):
-    filter_values: list[Any]
-    lookback_window: int | None = None
-
-
-@dataclass(kw_only=True)
-class AttributionReportingFilterPair(CDPModel):
-    filters: list[Any]
-    not_filters: list[Any]
-
-
-@dataclass(kw_only=True)
-class AttributionReportingAggregationKeysEntry(CDPModel):
-    key: str
-    value: UnsignedInt128AsBase16
-
-
-@dataclass(kw_only=True)
-class AttributionReportingEventReportWindows(CDPModel):
-    start: int
-    ends: list[Any]
-
-
-AttributionReportingTriggerDataMatching = Literal["exact", "modulus"]
-
-
-@dataclass(kw_only=True)
-class AttributionReportingAggregatableDebugReportingData(CDPModel):
-    key_piece: UnsignedInt128AsBase16
-    value: float
-    types: list[Any]
-
-
-@dataclass(kw_only=True)
-class AttributionReportingAggregatableDebugReportingConfig(CDPModel):
-    budget: float | None = None
-    key_piece: UnsignedInt128AsBase16
-    debug_data: list[Any]
-    aggregation_coordinator_origin: str | None = None
-
-
-@dataclass(kw_only=True)
-class AttributionScopesData(CDPModel):
-    values: list[Any]
-    limit: float
-    max_event_states: float
-
-
-@dataclass(kw_only=True)
-class AttributionReportingNamedBudgetDef(CDPModel):
-    name: str
-    budget: int
-
-
-@dataclass(kw_only=True)
-class AttributionReportingSourceRegistration(CDPModel):
-    time: network.TimeSinceEpoch
-    expiry: int
-    trigger_data: list[Any]
-    event_report_windows: AttributionReportingEventReportWindows
-    aggregatable_report_window: int
-    type: AttributionReportingSourceType
-    source_origin: str
-    reporting_origin: str
-    destination_sites: list[Any]
-    event_id: UnsignedInt64AsBase10
-    priority: SignedInt64AsBase10
-    filter_data: list[Any]
-    aggregation_keys: list[Any]
-    debug_key: UnsignedInt64AsBase10 | None = None
-    trigger_data_matching: AttributionReportingTriggerDataMatching
-    destination_limit_priority: SignedInt64AsBase10
-    aggregatable_debug_reporting_config: (
-        AttributionReportingAggregatableDebugReportingConfig
-    )
-    scopes_data: AttributionScopesData | None = None
-    max_event_level_reports: int
-    named_budgets: list[Any]
-    debug_reporting: bool
-    event_level_epsilon: float
-
-
-AttributionReportingSourceRegistrationResult = Literal[
-    "success",
-    "internalError",
-    "insufficientSourceCapacity",
-    "insufficientUniqueDestinationCapacity",
-    "excessiveReportingOrigins",
-    "prohibitedByBrowserPolicy",
-    "successNoised",
-    "destinationReportingLimitReached",
-    "destinationGlobalLimitReached",
-    "destinationBothLimitsReached",
-    "reportingOriginsPerSiteLimitReached",
-    "exceedsMaxChannelCapacity",
-    "exceedsMaxScopesChannelCapacity",
-    "exceedsMaxTriggerStateCardinality",
-    "exceedsMaxEventStatesLimit",
-    "destinationPerDayReportingLimitReached",
-]
-
-AttributionReportingSourceRegistrationTimeConfig = Literal["include", "exclude"]
-
-
-@dataclass(kw_only=True)
-class AttributionReportingAggregatableValueDictEntry(CDPModel):
-    key: str
-    value: float
-    filtering_id: UnsignedInt64AsBase10
-
-
-@dataclass(kw_only=True)
-class AttributionReportingAggregatableValueEntry(CDPModel):
-    values: list[Any]
-    filters: AttributionReportingFilterPair
-
-
-@dataclass(kw_only=True)
-class AttributionReportingEventTriggerData(CDPModel):
-    data: UnsignedInt64AsBase10
-    priority: SignedInt64AsBase10
-    dedup_key: UnsignedInt64AsBase10 | None = None
-    filters: AttributionReportingFilterPair
-
-
-@dataclass(kw_only=True)
-class AttributionReportingAggregatableTriggerData(CDPModel):
-    key_piece: UnsignedInt128AsBase16
-    source_keys: list[Any]
-    filters: AttributionReportingFilterPair
-
-
-@dataclass(kw_only=True)
-class AttributionReportingAggregatableDedupKey(CDPModel):
-    dedup_key: UnsignedInt64AsBase10 | None = None
-    filters: AttributionReportingFilterPair
-
-
-@dataclass(kw_only=True)
-class AttributionReportingNamedBudgetCandidate(CDPModel):
-    name: str | None = None
-    filters: AttributionReportingFilterPair
-
-
-@dataclass(kw_only=True)
-class AttributionReportingTriggerRegistration(CDPModel):
-    filters: AttributionReportingFilterPair
-    debug_key: UnsignedInt64AsBase10 | None = None
-    aggregatable_dedup_keys: list[Any]
-    event_trigger_data: list[Any]
-    aggregatable_trigger_data: list[Any]
-    aggregatable_values: list[Any]
-    aggregatable_filtering_id_max_bytes: int
-    debug_reporting: bool
-    aggregation_coordinator_origin: str | None = None
-    source_registration_time_config: AttributionReportingSourceRegistrationTimeConfig
-    trigger_context_id: str | None = None
-    aggregatable_debug_reporting_config: (
-        AttributionReportingAggregatableDebugReportingConfig
-    )
-    scopes: list[Any]
-    named_budgets: list[Any]
-
-
-AttributionReportingEventLevelResult = Literal[
-    "success",
-    "successDroppedLowerPriority",
-    "internalError",
-    "noCapacityForAttributionDestination",
-    "noMatchingSources",
-    "deduplicated",
-    "excessiveAttributions",
-    "priorityTooLow",
-    "neverAttributedSource",
-    "excessiveReportingOrigins",
-    "noMatchingSourceFilterData",
-    "prohibitedByBrowserPolicy",
-    "noMatchingConfigurations",
-    "excessiveReports",
-    "falselyAttributedSource",
-    "reportWindowPassed",
-    "notRegistered",
-    "reportWindowNotStarted",
-    "noMatchingTriggerData",
-]
-
-AttributionReportingAggregatableResult = Literal[
-    "success",
-    "internalError",
-    "noCapacityForAttributionDestination",
-    "noMatchingSources",
-    "excessiveAttributions",
-    "excessiveReportingOrigins",
-    "noHistograms",
-    "insufficientBudget",
-    "insufficientNamedBudget",
-    "noMatchingSourceFilterData",
-    "notRegistered",
-    "prohibitedByBrowserPolicy",
-    "deduplicated",
-    "reportWindowPassed",
-    "excessiveReports",
-]
-
-AttributionReportingReportResult = Literal[
-    "sent", "prohibited", "failedToAssemble", "expired"
-]
-
-
 @dataclass(kw_only=True)
 class RelatedWebsiteSet(CDPModel):
     """
     A single Related Website Set object.
     """
 
-    primary_sites: list[Any]
-    associated_sites: list[Any]
-    service_sites: list[Any]
+    primary_sites: list[str]
+    associated_sites: list[str]
+    service_sites: list[str]

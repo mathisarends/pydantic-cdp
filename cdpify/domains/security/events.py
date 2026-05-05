@@ -53,4 +53,4 @@ class SecurityStateChangedEvent(CDPModel):
     scheme_is_cryptographic: bool
     explanations: list[SecurityStateExplanation]
     insecure_content_status: InsecureContentStatus
-    summary: str | None | None = None
+    summary: str | None = None

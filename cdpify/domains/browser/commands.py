@@ -57,9 +57,9 @@ class SetPermissionParams(CDPModel):
 
     permission: PermissionDescriptor
     setting: PermissionSetting
-    origin: str | None | None = None
-    embedded_origin: str | None | None = None
-    browser_context_id: BrowserContextID | None | None = None
+    origin: str | None = None
+    embedded_origin: str | None = None
+    browser_context_id: BrowserContextID | None = None
 
 
 @dataclass(kw_only=True)
@@ -70,8 +70,8 @@ class GrantPermissionsParams(CDPModel):
     """
 
     permissions: list[PermissionType]
-    origin: str | None | None = None
-    browser_context_id: BrowserContextID | None | None = None
+    origin: str | None = None
+    browser_context_id: BrowserContextID | None = None
 
 
 @dataclass(kw_only=True)
@@ -80,7 +80,7 @@ class ResetPermissionsParams(CDPModel):
     Reset all permission management for all origins.
     """
 
-    browser_context_id: BrowserContextID | None | None = None
+    browser_context_id: BrowserContextID | None = None
 
 
 @dataclass(kw_only=True)
@@ -90,9 +90,9 @@ class SetDownloadBehaviorParams(CDPModel):
     """
 
     behavior: Literal["deny", "allow", "allowAndName", "default"]
-    browser_context_id: BrowserContextID | None | None = None
-    download_path: str | None | None = None
-    events_enabled: bool | None | None = None
+    browser_context_id: BrowserContextID | None = None
+    download_path: str | None = None
+    events_enabled: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -102,7 +102,7 @@ class CancelDownloadParams(CDPModel):
     """
 
     guid: str
-    browser_context_id: BrowserContextID | None | None = None
+    browser_context_id: BrowserContextID | None = None
 
 
 @dataclass(kw_only=True)
@@ -125,8 +125,8 @@ class GetHistogramsParams(CDPModel):
     Get Chrome histograms.
     """
 
-    query: str | None | None = None
-    delta: bool | None | None = None
+    query: str | None = None
+    delta: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -141,7 +141,7 @@ class GetHistogramParams(CDPModel):
     """
 
     name: str
-    delta: bool | None | None = None
+    delta: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -195,8 +195,8 @@ class SetContentsSizeParams(CDPModel):
     """
 
     window_id: WindowID
-    width: int | None | None = None
-    height: int | None | None = None
+    width: int | None = None
+    height: int | None = None
 
 
 @dataclass(kw_only=True)
@@ -205,8 +205,8 @@ class SetDockTileParams(CDPModel):
     Set dock tile details, platform-specific.
     """
 
-    badge_label: str | None | None = None
-    image: str | None | None = None
+    badge_label: str | None = None
+    image: str | None = None
 
 
 @dataclass(kw_only=True)
@@ -240,4 +240,4 @@ class AddPrivacySandboxCoordinatorKeyConfigParams(CDPModel):
     api: PrivacySandboxAPI
     coordinator_origin: str
     key_config: str
-    browser_context_id: BrowserContextID | None | None = None
+    browser_context_id: BrowserContextID | None = None

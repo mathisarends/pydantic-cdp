@@ -36,8 +36,8 @@ class EnableParams(CDPModel):
     calls one of failRequest, fulfillRequest or continueRequest/continueWithAuth.
     """
 
-    patterns: list[RequestPattern] | None | None = None
-    handle_auth_requests: bool | None | None = None
+    patterns: list[RequestPattern] | None = None
+    handle_auth_requests: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -58,10 +58,10 @@ class FulfillRequestParams(CDPModel):
 
     request_id: RequestId
     response_code: int
-    response_headers: list[HeaderEntry] | None | None = None
-    binary_response_headers: str | None | None = None
-    body: str | None | None = None
-    response_phrase: str | None | None = None
+    response_headers: list[HeaderEntry] | None = None
+    binary_response_headers: str | None = None
+    body: str | None = None
+    response_phrase: str | None = None
 
 
 @dataclass(kw_only=True)
@@ -71,11 +71,11 @@ class ContinueRequestParams(CDPModel):
     """
 
     request_id: RequestId
-    url: str | None | None = None
-    method: str | None | None = None
-    post_data: str | None | None = None
-    headers: list[HeaderEntry] | None | None = None
-    intercept_response: bool | None | None = None
+    url: str | None = None
+    method: str | None = None
+    post_data: str | None = None
+    headers: list[HeaderEntry] | None = None
+    intercept_response: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -97,10 +97,10 @@ class ContinueResponseParams(CDPModel):
     """
 
     request_id: RequestId
-    response_code: int | None | None = None
-    response_phrase: str | None | None = None
-    response_headers: list[HeaderEntry] | None | None = None
-    binary_response_headers: str | None | None = None
+    response_code: int | None = None
+    response_phrase: str | None = None
+    response_headers: list[HeaderEntry] | None = None
+    binary_response_headers: str | None = None
 
 
 @dataclass(kw_only=True)

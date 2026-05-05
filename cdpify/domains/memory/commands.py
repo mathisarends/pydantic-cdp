@@ -63,8 +63,8 @@ class StartSamplingParams(CDPModel):
     Start collecting native memory profile.
     """
 
-    sampling_interval: int | None | None = None
-    suppress_randomness: bool | None | None = None
+    sampling_interval: int | None = None
+    suppress_randomness: bool | None = None
 
 
 @dataclass(kw_only=True)

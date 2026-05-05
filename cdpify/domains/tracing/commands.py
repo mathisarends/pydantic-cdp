@@ -50,8 +50,8 @@ class RequestMemoryDumpParams(CDPModel):
     Request a global memory dump.
     """
 
-    deterministic: bool | None | None = None
-    level_of_detail: MemoryDumpLevelOfDetail | None | None = None
+    deterministic: bool | None = None
+    level_of_detail: MemoryDumpLevelOfDetail | None = None
 
 
 @dataclass(kw_only=True)
@@ -66,12 +66,12 @@ class StartParams(CDPModel):
     Start trace events collection.
     """
 
-    categories: str | None | None = None
-    options: str | None | None = None
-    buffer_usage_reporting_interval: float | None | None = None
-    transfer_mode: Literal["ReportEvents", "ReturnAsStream"] | None | None = None
-    stream_format: StreamFormat | None | None = None
-    stream_compression: StreamCompression | None | None = None
-    trace_config: TraceConfig | None | None = None
-    perfetto_config: str | None | None = None
-    tracing_backend: TracingBackend | None | None = None
+    categories: str | None = None
+    options: str | None = None
+    buffer_usage_reporting_interval: float | None = None
+    transfer_mode: Literal["ReportEvents", "ReturnAsStream"] | None = None
+    stream_format: StreamFormat | None = None
+    stream_compression: StreamCompression | None = None
+    trace_config: TraceConfig | None = None
+    perfetto_config: str | None = None
+    tracing_backend: TracingBackend | None = None

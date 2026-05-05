@@ -30,13 +30,13 @@ class GetEncodedResponseParams(CDPModel):
 
     request_id: network.RequestId
     encoding: Literal["webp", "jpeg", "png"]
-    quality: float | None | None = None
-    size_only: bool | None | None = None
+    quality: float | None = None
+    size_only: bool | None = None
 
 
 @dataclass(kw_only=True)
 class GetEncodedResponseResult(CDPModel):
-    body: str | None | None = None
+    body: str | None = None
     original_size: int
     encoded_size: int
 

@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Literal, TYPE_CHECKING
+from typing import Literal, TYPE_CHECKING
 from dataclasses import dataclass
 from cdpify.shared.models import CDPModel
 
@@ -65,7 +65,7 @@ class CallFrame(CDPModel):
     function_location: Location | None = None
     location: Location
     url: str
-    scope_chain: list[Any]
+    scope_chain: list[Scope]
     this: runtime.RemoteObject
     return_value: runtime.RemoteObject | None = None
     can_be_restarted: bool | None = None
@@ -77,7 +77,18 @@ class Scope(CDPModel):
     Scope description.
     """
 
-    type: str
+    type: Literal[
+        "global",
+        "local",
+        "with",
+        "closure",
+        "catch",
+        "block",
+        "script",
+        "eval",
+        "module",
+        "wasm-expression-stack",
+    ]
     object: runtime.RemoteObject
     name: str | None = None
     start_location: Location | None = None
@@ -99,13 +110,13 @@ class BreakLocation(CDPModel):
     script_id: runtime.ScriptId
     line_number: int
     column_number: int | None = None
-    type: str | None = None
+    type: Literal["debuggerStatement", "call", "return"] | None = None
 
 
 @dataclass(kw_only=True)
 class WasmDisassemblyChunk(CDPModel):
-    lines: list[Any]
-    bytecode_offsets: list[Any]
+    lines: list[str]
+    bytecode_offsets: list[int]
 
 
 """
@@ -120,7 +131,7 @@ class DebugSymbols(CDPModel):
     Debug symbols available for a wasm script.
     """
 
-    type: str
+    type: Literal["SourceMap", "EmbeddedDWARF", "ExternalDWARF"]
     external_url: str | None = None
 
 

@@ -52,7 +52,7 @@ class GetHeapObjectIdResult(CDPModel):
 @dataclass(kw_only=True)
 class GetObjectByHeapObjectIdParams(CDPModel):
     object_id: HeapSnapshotObjectId
-    object_group: str | None | None = None
+    object_group: str | None = None
 
 
 @dataclass(kw_only=True)
@@ -67,15 +67,15 @@ class GetSamplingProfileResult(CDPModel):
 
 @dataclass(kw_only=True)
 class StartSamplingParams(CDPModel):
-    sampling_interval: float | None | None = None
-    stack_depth: float | None | None = None
-    include_objects_collected_by_major_gc: bool | None | None = None
-    include_objects_collected_by_minor_gc: bool | None | None = None
+    sampling_interval: float | None = None
+    stack_depth: float | None = None
+    include_objects_collected_by_major_gc: bool | None = None
+    include_objects_collected_by_minor_gc: bool | None = None
 
 
 @dataclass(kw_only=True)
 class StartTrackingHeapObjectsParams(CDPModel):
-    track_allocations: bool | None | None = None
+    track_allocations: bool | None = None
 
 
 @dataclass(kw_only=True)
@@ -85,15 +85,15 @@ class StopSamplingResult(CDPModel):
 
 @dataclass(kw_only=True)
 class StopTrackingHeapObjectsParams(CDPModel):
-    report_progress: bool | None | None = None
-    treat_global_objects_as_roots: bool | None | None = None
-    capture_numeric_value: bool | None | None = None
-    expose_internals: bool | None | None = None
+    report_progress: bool | None = None
+    treat_global_objects_as_roots: bool | None = None
+    capture_numeric_value: bool | None = None
+    expose_internals: bool | None = None
 
 
 @dataclass(kw_only=True)
 class TakeHeapSnapshotParams(CDPModel):
-    report_progress: bool | None | None = None
-    treat_global_objects_as_roots: bool | None | None = None
-    capture_numeric_value: bool | None | None = None
-    expose_internals: bool | None | None = None
+    report_progress: bool | None = None
+    treat_global_objects_as_roots: bool | None = None
+    capture_numeric_value: bool | None = None
+    expose_internals: bool | None = None

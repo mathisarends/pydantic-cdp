@@ -26,9 +26,9 @@ class TracingEvent(StrEnum):
 
 @dataclass(kw_only=True)
 class BufferUsageEvent(CDPModel):
-    percent_full: float | None | None = None
-    event_count: float | None | None = None
-    value: float | None | None = None
+    percent_full: float | None = None
+    event_count: float | None = None
+    value: float | None = None
 
 
 @dataclass(kw_only=True)
@@ -51,5 +51,5 @@ class TracingCompleteEvent(CDPModel):
 
     data_loss_occurred: bool
     stream: io.StreamHandle | None = None
-    trace_format: StreamFormat | None | None = None
-    stream_compression: StreamCompression | None | None = None
+    trace_format: StreamFormat | None = None
+    stream_compression: StreamCompression | None = None

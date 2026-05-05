@@ -9,9 +9,6 @@ def map_cdp_type(param: Parameter) -> str:
     if param.enum:
         base_type = _create_enum_literal(param.enum)
 
-    if param.optional:
-        return _make_optional(base_type)
-
     return base_type
 
 
