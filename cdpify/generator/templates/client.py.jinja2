@@ -27,7 +27,7 @@ if TYPE_CHECKING:
     from cdpify.domains import {{ cross_domain_modules | join(", ") }}
 {% endif %}
 
-class {{ domain_name }}Client:
+class {{ domain_name }}:
     def __init__(self, command_sender: CDPCommandSender) -> None:
         self._command_sender = command_sender
 {% for method in methods %}

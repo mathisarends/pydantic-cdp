@@ -7,12 +7,17 @@ from cdpify.generator.schemas import Domain
 
 def generate(domain: Domain) -> str:
     type_names = [type_def.id for type_def in domain.types]
+    imported_type_names = [
+        f"{name} as {name}Type" if name == domain.domain else name
+        for name in type_names
+    ]
     command_names = _command_names(domain)
     event_names = _event_names(domain, type_names)
-    client_name = f"{domain.domain}Client"
+    domain_class = domain.domain
 
+    type_exports = [_exported_name(name) for name in imported_type_names]
     event_exports = [_exported_name(name) for name in event_names]
-    all_names = sorted([*type_names, *command_names, *event_exports, client_name])
+    all_names = sorted([*type_exports, *command_names, *event_exports, domain_class])
 
     return render_template(
         "domain_init.py.jinja2",
@@ -21,13 +26,13 @@ def generate(domain: Domain) -> str:
         import_blocks=tuple(
             ImportBlockView(module, tuple(names))
             for module, names in (
-                ("types", type_names),
+                ("types", imported_type_names),
                 ("commands", command_names),
                 ("events", event_names),
             )
             if names
         ),
-        client_name=client_name,
+        domain_class=domain_class,
         exports=tuple(all_names),
     )
 

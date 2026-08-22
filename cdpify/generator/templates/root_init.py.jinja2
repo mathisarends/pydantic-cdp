@@ -5,5 +5,5 @@ from .accessors import CDPDomains
 
 __all__ = [
     "CDPDomains",
-    {{ domains | map(attribute="client_export") | join("\n    ") }}
+    {{ domains | map(attribute="export") | join("\n    ") }}
 ]

@@ -15,7 +15,7 @@ from .{{ block.module }} import (
 {{ render_import(block) | trim }}
 {% endfor %}
 
-from .client import {{ client_name }}
+from .client import {{ domain_class }}
 
 __all__ = [
     "{{ exports | join('",\n    "') }}",

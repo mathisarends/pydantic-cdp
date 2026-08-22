@@ -5,7 +5,7 @@ from cdpify.generator.schemas import Command, Domain, Parameter
 def test_renders_client_class(simple_domain: Domain) -> None:
     output = client.generate(simple_domain)
 
-    assert "class SampleClient:" in output
+    assert "class Sample:" in output
     assert "def __init__(self, command_sender: CDPCommandSender) -> None:" in output
     assert "self._command_sender = command_sender" in output
 

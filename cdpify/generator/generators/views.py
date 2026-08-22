@@ -61,11 +61,11 @@ class DomainView:
 
     @property
     def import_statement(self) -> str:
-        return f"from .{self.module} import {self.name}Client"
+        return f"from .{self.module} import {self.name}"
 
     @property
-    def client_export(self) -> str:
-        return f'"{self.name}Client",'
+    def export(self) -> str:
+        return f'"{self.name}",'
 
 
 @dataclass(frozen=True, slots=True)

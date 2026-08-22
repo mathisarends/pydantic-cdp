@@ -10,6 +10,6 @@ class CDPDomains(CDPCommandSender):
 {% for domain in domains %}
 
     @cached_property
-    def {{ domain.property_name }}(self) -> {{ domain.name }}Client:
-        return {{ domain.name }}Client(self)
+    def {{ domain.property_name }}(self) -> {{ domain.name }}:
+        return {{ domain.name }}(self)
 {% endfor %}
