@@ -24,7 +24,8 @@ class _WebSocketLogFilter(logging.Filter):
         record.name = "cdpify.ws"
         msg = record.getMessage()
 
-        if result := self._handle_ping_pong(msg, record):
+        result = self._handle_ping_pong(msg, record)
+        if result is not None:
             return result
 
         if self._should_suppress(msg):
