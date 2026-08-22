@@ -14,7 +14,7 @@ from cdpify.shared.models import CDPModel
 The Background Service that will be associated with the commands/events. Every
 Background Service operates independently, but they share the same API.
 """
-ServiceName = Literal[
+type ServiceName = Literal[
     "backgroundFetch",
     "backgroundSync",
     "pushMessaging",

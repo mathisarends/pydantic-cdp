@@ -121,7 +121,7 @@ class WasmDisassemblyChunk(CDPModel):
 """
 Enum of possible script languages.
 """
-ScriptLanguage = Literal["JavaScript", "WebAssembly"]
+type ScriptLanguage = Literal["JavaScript", "WebAssembly"]
 
 
 @dataclass(kw_only=True, slots=True)

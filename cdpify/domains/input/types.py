@@ -25,9 +25,9 @@ class TouchPoint(CDPModel):
     id: float | None = None
 
 
-GestureSourceType = Literal["default", "touch", "mouse"]
+type GestureSourceType = Literal["default", "touch", "mouse"]
 
-MouseButton = Literal["none", "left", "middle", "right", "back", "forward"]
+type MouseButton = Literal["none", "left", "middle", "right", "back", "forward"]
 
 """
 UTC time in seconds, counted from January 1, 1970.

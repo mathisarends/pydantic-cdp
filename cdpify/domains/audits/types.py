@@ -41,7 +41,7 @@ class AffectedFrame(CDPModel):
     frame_id: page.FrameId
 
 
-CookieExclusionReason = Literal[
+type CookieExclusionReason = Literal[
     "ExcludeSameSiteUnspecifiedTreatedAsLax",
     "ExcludeSameSiteNoneInsecure",
     "ExcludeSameSiteLax",
@@ -53,7 +53,7 @@ CookieExclusionReason = Literal[
     "ExcludeSchemeMismatch",
 ]
 
-CookieWarningReason = Literal[
+type CookieWarningReason = Literal[
     "WarnSameSiteUnspecifiedCrossSiteContext",
     "WarnSameSiteNoneInsecure",
     "WarnSameSiteUnspecifiedLaxAllowUnsafe",
@@ -70,12 +70,12 @@ CookieWarningReason = Literal[
     "WarnThirdPartyCookieHeuristic",
 ]
 
-CookieOperation = Literal["SetCookie", "ReadCookie"]
+type CookieOperation = Literal["SetCookie", "ReadCookie"]
 
 """
 Represents the category of insight that a cookie issue falls under.
 """
-InsightType = Literal["GitHubResource", "GracePeriod", "Heuristics"]
+type InsightType = Literal["GitHubResource", "GracePeriod", "Heuristics"]
 
 
 @dataclass(kw_only=True, slots=True)
@@ -107,7 +107,7 @@ class CookieIssueDetails(CDPModel):
     insight: CookieIssueInsight | None = None
 
 
-PerformanceIssueType = Literal["DocumentCookie"]
+type PerformanceIssueType = Literal["DocumentCookie"]
 
 
 @dataclass(kw_only=True, slots=True)
@@ -120,11 +120,11 @@ class PerformanceIssueDetails(CDPModel):
     source_code_location: SourceCodeLocation | None = None
 
 
-MixedContentResolutionStatus = Literal[
+type MixedContentResolutionStatus = Literal[
     "MixedContentBlocked", "MixedContentAutomaticallyUpgraded", "MixedContentWarning"
 ]
 
-MixedContentResourceType = Literal[
+type MixedContentResourceType = Literal[
     "AttributionSrc",
     "Audio",
     "Beacon",
@@ -171,7 +171,7 @@ class MixedContentIssueDetails(CDPModel):
 Enum indicating the reason a response has been blocked. These reasons are refinements
 of the net error BLOCKED_BY_RESPONSE.
 """
-BlockedByResponseReason = Literal[
+type BlockedByResponseReason = Literal[
     "CoepFrameResourceNeedsCoepHeader",
     "CoopSandboxedIFrameCannotNavigateToCoopPage",
     "CorpNotSameOrigin",
@@ -197,9 +197,9 @@ class BlockedByResponseIssueDetails(CDPModel):
     reason: BlockedByResponseReason
 
 
-HeavyAdResolutionStatus = Literal["HeavyAdBlocked", "HeavyAdWarning"]
+type HeavyAdResolutionStatus = Literal["HeavyAdBlocked", "HeavyAdWarning"]
 
-HeavyAdReason = Literal["NetworkTotalLimit", "CpuTotalLimit", "CpuPeakLimit"]
+type HeavyAdReason = Literal["NetworkTotalLimit", "CpuTotalLimit", "CpuPeakLimit"]
 
 
 @dataclass(kw_only=True, slots=True)
@@ -209,7 +209,7 @@ class HeavyAdIssueDetails(CDPModel):
     frame: AffectedFrame
 
 
-ContentSecurityPolicyViolationType = Literal[
+type ContentSecurityPolicyViolationType = Literal[
     "kInlineViolation",
     "kEvalViolation",
     "kURLViolation",
@@ -239,7 +239,7 @@ class ContentSecurityPolicyIssueDetails(CDPModel):
     violating_node_id: dom.BackendNodeId | None = None
 
 
-SharedArrayBufferIssueType = Literal["TransferIssue", "CreationIssue"]
+type SharedArrayBufferIssueType = Literal["TransferIssue", "CreationIssue"]
 
 
 @dataclass(kw_only=True, slots=True)
@@ -270,7 +270,7 @@ class CorsIssueDetails(CDPModel):
     client_security_state: network.ClientSecurityState | None = None
 
 
-AttributionReportingIssueType = Literal[
+type AttributionReportingIssueType = Literal[
     "PermissionPolicyDisabled",
     "UntrustworthyReportingOrigin",
     "InsecureContext",
@@ -294,7 +294,7 @@ AttributionReportingIssueType = Literal[
     "NavigationRegistrationUniqueScopeAlreadySet",
 ]
 
-SharedDictionaryError = Literal[
+type SharedDictionaryError = Literal[
     "UseErrorCrossOriginNoCorsRequest",
     "UseErrorDictionaryLoadFailure",
     "UseErrorMatchingDictionaryNotUsed",
@@ -322,7 +322,7 @@ SharedDictionaryError = Literal[
     "WriteErrorUnsupportedType",
 ]
 
-SRIMessageSignatureError = Literal[
+type SRIMessageSignatureError = Literal[
     "MissingSignatureHeader",
     "MissingSignatureInputHeader",
     "InvalidSignatureHeader",
@@ -346,14 +346,14 @@ SRIMessageSignatureError = Literal[
     "ValidationFailedIntegrityMismatch",
 ]
 
-UnencodedDigestError = Literal[
+type UnencodedDigestError = Literal[
     "MalformedDictionary",
     "UnknownAlgorithm",
     "IncorrectDigestType",
     "IncorrectDigestLength",
 ]
 
-ConnectionAllowlistError = Literal[
+type ConnectionAllowlistError = Literal[
     "InvalidHeader",
     "MoreThanOneList",
     "ItemNotInnerList",
@@ -422,7 +422,7 @@ class ConnectionAllowlistIssueDetails(CDPModel):
     request: AffectedRequest
 
 
-GenericIssueErrorType = Literal[
+type GenericIssueErrorType = Literal[
     "FormLabelForNameError",
     "FormDuplicateIdForInputError",
     "FormInputWithNoLabelError",
@@ -500,7 +500,9 @@ class CookieDeprecationMetadataIssueDetails(CDPModel):
     operation: CookieOperation
 
 
-ClientHintIssueReason = Literal["MetaTagAllowListInvalidOrigin", "MetaTagModifiedHTML"]
+type ClientHintIssueReason = Literal[
+    "MetaTagAllowListInvalidOrigin", "MetaTagModifiedHTML"
+]
 
 
 @dataclass(kw_only=True, slots=True)
@@ -514,7 +516,7 @@ updated alongside RequestIdTokenStatus in
 third_party/blink/public/mojom/devtools/inspector_issue.mojom to include all cases
 except for success.
 """
-FederatedAuthRequestIssueReason = Literal[
+type FederatedAuthRequestIssueReason = Literal[
     "ShouldEmbargo",
     "TooManyRequests",
     "WellKnownHttpNotFound",
@@ -572,7 +574,7 @@ Represents the failure reason when a getUserInfo() call fails. Should be updated
 alongside FederatedAuthUserInfoRequestResult in
 third_party/blink/public/mojom/devtools/inspector_issue.mojom.
 """
-FederatedAuthUserInfoRequestIssueReason = Literal[
+type FederatedAuthUserInfoRequestIssueReason = Literal[
     "NotSameOrigin",
     "NotIframe",
     "NotPotentiallyTrustworthy",
@@ -603,7 +605,7 @@ class FailedRequestInfo(CDPModel):
     request_id: network.RequestId | None = None
 
 
-PartitioningBlobURLInfo = Literal[
+type PartitioningBlobURLInfo = Literal[
     "BlockedCrossPartitionFetching", "EnforceNoopenerForNavigation"
 ]
 
@@ -614,7 +616,7 @@ class PartitioningBlobURLIssueDetails(CDPModel):
     partitioning_blob_url_info: PartitioningBlobURLInfo
 
 
-ElementAccessibilityIssueReason = Literal[
+type ElementAccessibilityIssueReason = Literal[
     "DisallowedSelectChild",
     "DisallowedOptGroupChild",
     "NonPhrasingContentOptionChild",
@@ -635,7 +637,7 @@ class ElementAccessibilityIssueDetails(CDPModel):
     has_disallowed_attributes: bool
 
 
-StyleSheetLoadingIssueReason = Literal["LateImportRule", "RequestFailed"]
+type StyleSheetLoadingIssueReason = Literal["LateImportRule", "RequestFailed"]
 
 
 @dataclass(kw_only=True, slots=True)
@@ -649,7 +651,7 @@ class StylesheetLoadingIssueDetails(CDPModel):
     failed_request_info: FailedRequestInfo | None = None
 
 
-PropertyRuleIssueReason = Literal[
+type PropertyRuleIssueReason = Literal[
     "InvalidSyntax", "InvalidInitialValue", "InvalidInherits", "InvalidName"
 ]
 
@@ -666,7 +668,7 @@ class PropertyRuleIssueDetails(CDPModel):
     property_value: str | None = None
 
 
-UserReidentificationIssueType = Literal[
+type UserReidentificationIssueType = Literal[
     "BlockedFrameNavigation", "BlockedSubresource", "NoisedCanvasReadback"
 ]
 
@@ -683,7 +685,7 @@ class UserReidentificationIssueDetails(CDPModel):
     source_code_location: SourceCodeLocation | None = None
 
 
-PermissionElementIssueType = Literal[
+type PermissionElementIssueType = Literal[
     "InvalidType",
     "FencedFrameDisallowed",
     "CspFrameAncestorsMissing",
@@ -740,7 +742,7 @@ class SelectivePermissionsInterventionIssueDetails(CDPModel):
 A unique identifier for the type of issue. Each type may use one of the optional fields
 in InspectorIssueDetails to convey more specific information about the kind of issue.
 """
-InspectorIssueCode = Literal[
+type InspectorIssueCode = Literal[
     "CookieIssue",
     "MixedContentIssue",
     "BlockedByResponseIssue",

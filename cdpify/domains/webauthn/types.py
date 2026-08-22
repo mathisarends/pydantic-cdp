@@ -11,11 +11,11 @@ from cdpify.shared.models import CDPModel
 
 AuthenticatorId = str
 
-AuthenticatorProtocol = Literal["u2f", "ctap2"]
+type AuthenticatorProtocol = Literal["u2f", "ctap2"]
 
-Ctap2Version = Literal["ctap2_0", "ctap2_1", "ctap2_2"]
+type Ctap2Version = Literal["ctap2_0", "ctap2_1", "ctap2_2"]
 
-AuthenticatorTransport = Literal["usb", "nfc", "ble", "cable", "internal"]
+type AuthenticatorTransport = Literal["usb", "nfc", "ble", "cable", "internal"]
 
 
 @dataclass(kw_only=True, slots=True)

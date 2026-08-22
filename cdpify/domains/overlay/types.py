@@ -96,7 +96,7 @@ class BoxStyle(CDPModel):
     hatch_color: dom.RGBA | None = None
 
 
-ContrastAlgorithm = Literal["aa", "aaa", "apca"]
+type ContrastAlgorithm = Literal["aa", "aaa", "apca"]
 
 
 @dataclass(kw_only=True, slots=True)
@@ -128,7 +128,7 @@ class HighlightConfig(CDPModel):
     ) = None
 
 
-ColorFormat = Literal["rgb", "hsl", "hwb", "hex"]
+type ColorFormat = Literal["rgb", "hsl", "hwb", "hex"]
 
 
 @dataclass(kw_only=True, slots=True)
@@ -208,7 +208,7 @@ class IsolationModeHighlightConfig(CDPModel):
     mask_color: dom.RGBA | None = None
 
 
-InspectMode = Literal[
+type InspectMode = Literal[
     "searchForNode", "searchForUAShadowDOM", "captureAreaScreenshot", "none"
 ]
 

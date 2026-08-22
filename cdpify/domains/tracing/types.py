@@ -40,18 +40,18 @@ class TraceConfig(CDPModel):
 Data format of a trace. Can be either the legacy JSON format or the protocol buffer
 format. Note that the JSON format will be deprecated soon.
 """
-StreamFormat = Literal["json", "proto"]
+type StreamFormat = Literal["json", "proto"]
 
 """
 Compression type to use for traces returned via streams.
 """
-StreamCompression = Literal["none", "gzip"]
+type StreamCompression = Literal["none", "gzip"]
 
 """
 Details exposed when memory request explicitly declared. Keep consistent with
 memory_dump_request_args.h and memory_instrumentation.mojom
 """
-MemoryDumpLevelOfDetail = Literal["background", "light", "detailed"]
+type MemoryDumpLevelOfDetail = Literal["background", "light", "detailed"]
 
 """
 Backend type to use for tracing. `chrome` uses the Chrome-integrated tracing service
@@ -60,4 +60,4 @@ Perfetto system tracing service. `auto` chooses `system` when the perfettoConfig
 provided to Tracing.start specifies at least one non-Chrome data source; otherwise uses
 `chrome`.
 """
-TracingBackend = Literal["auto", "chrome", "system"]
+type TracingBackend = Literal["auto", "chrome", "system"]

@@ -24,11 +24,11 @@ class ServiceWorkerRegistration(CDPModel):
     is_deleted: bool
 
 
-ServiceWorkerVersionRunningStatus = Literal[
+type ServiceWorkerVersionRunningStatus = Literal[
     "stopped", "starting", "running", "stopping"
 ]
 
-ServiceWorkerVersionStatus = Literal[
+type ServiceWorkerVersionStatus = Literal[
     "new", "installing", "installed", "activating", "activated", "redundant"
 ]
 

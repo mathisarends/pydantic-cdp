@@ -15,7 +15,7 @@ Stylesheet type: "injected" for stylesheets injected via extension, "user-agent"
 user-agent stylesheets, "inspector" for stylesheets created by the inspector (i.e. those
 holding the "via inspector" rules), "regular" for regular stylesheets.
 """
-StyleSheetOrigin = Literal["injected", "user-agent", "inspector", "regular"]
+type StyleSheetOrigin = Literal["injected", "user-agent", "inspector", "regular"]
 
 
 @dataclass(kw_only=True, slots=True)
@@ -163,7 +163,7 @@ Enum indicating the type of a CSS rule, used to represent the order of a style r
 ancestors. This list only contains rule types that are collected during the ancestor
 rule collection.
 """
-CSSRuleType = Literal[
+type CSSRuleType = Literal[
     "MediaRule",
     "SupportsRule",
     "ContainerRule",

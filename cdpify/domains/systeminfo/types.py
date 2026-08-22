@@ -64,12 +64,12 @@ class VideoEncodeAcceleratorCapability(CDPModel):
 """
 YUV subsampling type of the pixels of a given image.
 """
-SubsamplingFormat = Literal["yuv420", "yuv422", "yuv444"]
+type SubsamplingFormat = Literal["yuv420", "yuv422", "yuv444"]
 
 """
 Image format of a given image.
 """
-ImageType = Literal["jpeg", "webp", "unknown"]
+type ImageType = Literal["jpeg", "webp", "unknown"]
 
 
 @dataclass(kw_only=True, slots=True)

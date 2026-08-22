@@ -63,4 +63,4 @@ class RemoteLocation(CDPModel):
 """
 The state of the target window.
 """
-WindowState = Literal["normal", "minimized", "maximized", "fullscreen"]
+type WindowState = Literal["normal", "minimized", "maximized", "fullscreen"]

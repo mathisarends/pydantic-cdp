@@ -13,7 +13,7 @@ from cdpify.shared.models import CDPModel
 """
 Resource type as it was perceived by the rendering engine.
 """
-ResourceType = Literal[
+type ResourceType = Literal[
     "Document",
     "Stylesheet",
     "Image",
@@ -54,7 +54,7 @@ InterceptionId = str
 """
 Network level fetch failure reason.
 """
-ErrorReason = Literal[
+type ErrorReason = Literal[
     "Failed",
     "Aborted",
     "TimedOut",
@@ -89,7 +89,7 @@ Headers = dict[str, Any]
 """
 The underlying connection technology that the browser is supposedly using.
 """
-ConnectionType = Literal[
+type ConnectionType = Literal[
     "none",
     "cellular2g",
     "cellular3g",
@@ -105,20 +105,20 @@ ConnectionType = Literal[
 Represents the cookie's 'SameSite' status:
 https://tools.ietf.org/html/draft-west-first-party-cookies
 """
-CookieSameSite = Literal["Strict", "Lax", "None"]
+type CookieSameSite = Literal["Strict", "Lax", "None"]
 
 """
 Represents the cookie's 'Priority' status:
 https://tools.ietf.org/html/draft-west-cookie-priority-00
 """
-CookiePriority = Literal["Low", "Medium", "High"]
+type CookiePriority = Literal["Low", "Medium", "High"]
 
 """
 Represents the source scheme of the origin that originally set the cookie. A value of
 "Unset" allows protocol clients to emulate legacy cookie scope for the scheme. This is a
 temporary ability and it will be removed in the future.
 """
-CookieSourceScheme = Literal["Unset", "NonSecure", "Secure"]
+type CookieSourceScheme = Literal["Unset", "NonSecure", "Secure"]
 
 
 @dataclass(kw_only=True, slots=True)
@@ -153,12 +153,12 @@ class ResourceTiming(CDPModel):
 """
 Loading priority of a resource request.
 """
-ResourcePriority = Literal["VeryLow", "Low", "Medium", "High", "VeryHigh"]
+type ResourcePriority = Literal["VeryLow", "Low", "Medium", "High", "VeryHigh"]
 
 """
 The render-blocking behavior of a resource request.
 """
-RenderBlockingBehavior = Literal[
+type RenderBlockingBehavior = Literal[
     "Blocking",
     "InBodyParserBlocking",
     "NonBlocking",
@@ -249,12 +249,14 @@ class SecurityDetails(CDPModel):
 """
 Whether the request complied with Certificate Transparency policy.
 """
-CertificateTransparencyCompliance = Literal["unknown", "not-compliant", "compliant"]
+type CertificateTransparencyCompliance = Literal[
+    "unknown", "not-compliant", "compliant"
+]
 
 """
 The reason why request was blocked.
 """
-BlockedReason = Literal[
+type BlockedReason = Literal[
     "other",
     "csp",
     "mixed-content",
@@ -276,7 +278,7 @@ BlockedReason = Literal[
 """
 The reason why request was blocked.
 """
-CorsError = Literal[
+type CorsError = Literal[
     "DisallowedByMode",
     "InvalidResponse",
     "WildcardOriginNotAllowed",
@@ -317,7 +319,7 @@ class CorsErrorStatus(CDPModel):
 """
 Source of serviceworker response.
 """
-ServiceWorkerResponseSource = Literal[
+type ServiceWorkerResponseSource = Literal[
     "cache-storage", "http-cache", "fallback-code", "network"
 ]
 
@@ -335,12 +337,12 @@ class TrustTokenParams(CDPModel):
     issuers: list[str] | None = None
 
 
-TrustTokenOperationType = Literal["Issuance", "Redemption", "Signing"]
+type TrustTokenOperationType = Literal["Issuance", "Redemption", "Signing"]
 
 """
 The reason why Chrome uses a specific transport protocol for HTTP semantics.
 """
-AlternateProtocolUsage = Literal[
+type AlternateProtocolUsage = Literal[
     "alternativeJobWonWithoutRace",
     "alternativeJobWonRace",
     "mainJobWonRace",
@@ -354,7 +356,7 @@ AlternateProtocolUsage = Literal[
 """
 Source of service worker router.
 """
-ServiceWorkerRouterSource = Literal[
+type ServiceWorkerRouterSource = Literal[
     "network",
     "cache",
     "fetch-event",
@@ -506,7 +508,7 @@ class Cookie(CDPModel):
 """
 Types of reasons why a cookie may not be stored from a response.
 """
-SetCookieBlockedReason = Literal[
+type SetCookieBlockedReason = Literal[
     "SecureOnly",
     "SameSiteStrict",
     "SameSiteLax",
@@ -532,7 +534,7 @@ SetCookieBlockedReason = Literal[
 """
 Types of reasons why a cookie may not be sent with a request.
 """
-CookieBlockedReason = Literal[
+type CookieBlockedReason = Literal[
     "SecureOnly",
     "NotOnPath",
     "DomainMismatch",
@@ -557,7 +559,7 @@ CookieBlockedReason = Literal[
 Types of reasons why a cookie should have been blocked by 3PCD but is exempted for the
 request.
 """
-CookieExemptionReason = Literal[
+type CookieExemptionReason = Literal[
     "None",
     "UserSetting",
     "TPCDMetadata",
@@ -656,7 +658,7 @@ class AuthChallengeResponse(CDPModel):
 Stages of the interception to begin intercepting. Request will intercept before the
 request is sent. Response will intercept after the response is received.
 """
-InterceptionStage = Literal["Request", "HeadersReceived"]
+type InterceptionStage = Literal["Request", "HeadersReceived"]
 
 
 @dataclass(kw_only=True, slots=True)
@@ -705,7 +707,7 @@ class SignedExchangeHeader(CDPModel):
 """
 Field type for a signed exchange related error.
 """
-SignedExchangeErrorField = Literal[
+type SignedExchangeErrorField = Literal[
     "signatureSig",
     "signatureIntegrity",
     "signatureCertUrl",
@@ -742,7 +744,7 @@ class SignedExchangeInfo(CDPModel):
 """
 List of content encodings supported by the backend.
 """
-ContentEncoding = Literal["deflate", "gzip", "br", "zstd"]
+type ContentEncoding = Literal["deflate", "gzip", "br", "zstd"]
 
 
 @dataclass(kw_only=True, slots=True)
@@ -764,7 +766,7 @@ class BlockPattern(CDPModel):
     block: bool
 
 
-DirectSocketDnsQueryType = Literal["ipv4", "ipv6"]
+type DirectSocketDnsQueryType = Literal["ipv4", "ipv6"]
 
 
 @dataclass(kw_only=True, slots=True)
@@ -797,7 +799,7 @@ class DirectUDPMessage(CDPModel):
     remote_port: int | None = None
 
 
-LocalNetworkAccessRequestPolicy = Literal[
+type LocalNetworkAccessRequestPolicy = Literal[
     "Allow",
     "BlockFromInsecureToMorePrivate",
     "WarnFromInsecureToMorePrivate",
@@ -805,7 +807,7 @@ LocalNetworkAccessRequestPolicy = Literal[
     "PermissionWarn",
 ]
 
-IPAddressSpace = Literal["Loopback", "Local", "Public", "Unknown"]
+type IPAddressSpace = Literal["Loopback", "Local", "Public", "Unknown"]
 
 
 @dataclass(kw_only=True, slots=True)
@@ -860,7 +862,7 @@ class AdProvenance(CDPModel):
     ad_script_ancestry: AdAncestry | None = None
 
 
-CrossOriginOpenerPolicyValue = Literal[
+type CrossOriginOpenerPolicyValue = Literal[
     "SameOrigin",
     "SameOriginAllowPopups",
     "RestrictProperties",
@@ -879,7 +881,7 @@ class CrossOriginOpenerPolicyStatus(CDPModel):
     report_only_reporting_endpoint: str | None = None
 
 
-CrossOriginEmbedderPolicyValue = Literal["None", "Credentialless", "RequireCorp"]
+type CrossOriginEmbedderPolicyValue = Literal["None", "Credentialless", "RequireCorp"]
 
 
 @dataclass(kw_only=True, slots=True)
@@ -890,7 +892,7 @@ class CrossOriginEmbedderPolicyStatus(CDPModel):
     report_only_reporting_endpoint: str | None = None
 
 
-ContentSecurityPolicySource = Literal["HTTP", "Meta"]
+type ContentSecurityPolicySource = Literal["HTTP", "Meta"]
 
 
 @dataclass(kw_only=True, slots=True)
@@ -910,7 +912,7 @@ class SecurityIsolationStatus(CDPModel):
 """
 The status of a Reporting API report.
 """
-ReportStatus = Literal["Queued", "Pending", "MarkedForRemoval", "Success"]
+type ReportStatus = Literal["Queued", "Pending", "MarkedForRemoval", "Success"]
 
 ReportId = str
 
@@ -1024,7 +1026,7 @@ DeviceBoundSessionEventId = str
 """
 A fetch result for a device bound session creation or refresh.
 """
-DeviceBoundSessionFetchResult = Literal[
+type DeviceBoundSessionFetchResult = Literal[
     "Success",
     "KeyError",
     "SigningError",

@@ -18,7 +18,7 @@ CacheId = str
 """
 type of HTTP response cached
 """
-CachedResponseType = Literal[
+type CachedResponseType = Literal[
     "basic", "cors", "default", "error", "opaqueResponse", "opaqueRedirect"
 ]
 

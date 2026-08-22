@@ -4,4 +4,5 @@
 
 from __future__ import annotations
 
+
 # No types defined

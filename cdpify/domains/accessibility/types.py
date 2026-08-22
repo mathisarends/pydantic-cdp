@@ -18,7 +18,7 @@ AXNodeId = str
 """
 Enum of possible property types.
 """
-AXValueType = Literal[
+type AXValueType = Literal[
     "boolean",
     "tristate",
     "booleanOrUndefined",
@@ -41,7 +41,7 @@ AXValueType = Literal[
 """
 Enum of possible property sources.
 """
-AXValueSourceType = Literal[
+type AXValueSourceType = Literal[
     "attribute", "implicit", "style", "contents", "placeholder", "relatedElement"
 ]
 
@@ -49,7 +49,7 @@ AXValueSourceType = Literal[
 Enum of possible native property sources (as a subtype of a particular
 AXValueSourceType).
 """
-AXValueNativeSourceType = Literal[
+type AXValueNativeSourceType = Literal[
     "description",
     "figcaption",
     "label",
@@ -113,7 +113,7 @@ to 'selected': states which apply to widgets - from 'activedescendant' to 'owns'
 relationships between elements other than parent/child/sibling - from
 'activeFullscreenElement' to 'uninteresting': reasons why this noode is hidden
 """
-AXPropertyName = Literal[
+type AXPropertyName = Literal[
     "actions",
     "busy",
     "disabled",

@@ -17,12 +17,12 @@ GraphObjectId = str
 """
 Enum of BaseAudioContext types
 """
-ContextType = Literal["realtime", "offline"]
+type ContextType = Literal["realtime", "offline"]
 
 """
 Enum of AudioContextState from the spec
 """
-ContextState = Literal["suspended", "running", "closed", "interrupted"]
+type ContextState = Literal["suspended", "running", "closed", "interrupted"]
 
 """
 Enum of AudioNode types
@@ -32,12 +32,12 @@ NodeType = str
 """
 Enum of AudioNode::ChannelCountMode from the spec
 """
-ChannelCountMode = Literal["clamped-max", "explicit", "max"]
+type ChannelCountMode = Literal["clamped-max", "explicit", "max"]
 
 """
 Enum of AudioNode::ChannelInterpretation from the spec
 """
-ChannelInterpretation = Literal["discrete", "speakers"]
+type ChannelInterpretation = Literal["discrete", "speakers"]
 
 """
 Enum of AudioParam types
@@ -47,7 +47,7 @@ ParamType = str
 """
 Enum of AudioParam::AutomationRate from the spec
 """
-AutomationRate = Literal["a-rate", "k-rate"]
+type AutomationRate = Literal["a-rate", "k-rate"]
 
 
 @dataclass(kw_only=True, slots=True)

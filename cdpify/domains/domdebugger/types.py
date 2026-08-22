@@ -13,12 +13,16 @@ from cdpify.shared.models import CDPModel
 """
 DOM breakpoint type.
 """
-DOMBreakpointType = Literal["subtree-modified", "attribute-modified", "node-removed"]
+type DOMBreakpointType = Literal[
+    "subtree-modified", "attribute-modified", "node-removed"
+]
 
 """
 CSP Violation type.
 """
-CSPViolationType = Literal["trustedtype-sink-violation", "trustedtype-policy-violation"]
+type CSPViolationType = Literal[
+    "trustedtype-sink-violation", "trustedtype-policy-violation"
+]
 
 
 @dataclass(kw_only=True, slots=True)

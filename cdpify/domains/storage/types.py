@@ -15,7 +15,7 @@ SerializedStorageKey = str
 """
 Enum of possible storage types.
 """
-StorageType = Literal[
+type StorageType = Literal[
     "cookies",
     "file_systems",
     "indexeddb",
@@ -61,7 +61,7 @@ InterestGroupAuctionId = str
 """
 Enum of interest group access types.
 """
-InterestGroupAccessType = Literal[
+type InterestGroupAccessType = Literal[
     "join",
     "leave",
     "update",
@@ -78,26 +78,26 @@ InterestGroupAccessType = Literal[
 """
 Enum of auction events.
 """
-InterestGroupAuctionEventType = Literal["started", "configResolved"]
+type InterestGroupAuctionEventType = Literal["started", "configResolved"]
 
 """
 Enum of network fetches auctions can do.
 """
-InterestGroupAuctionFetchType = Literal[
+type InterestGroupAuctionFetchType = Literal[
     "bidderJs", "bidderWasm", "sellerJs", "bidderTrustedSignals", "sellerTrustedSignals"
 ]
 
 """
 Enum of shared storage access scopes.
 """
-SharedStorageAccessScope = Literal[
+type SharedStorageAccessScope = Literal[
     "window", "sharedStorageWorklet", "protectedAudienceWorklet", "header"
 ]
 
 """
 Enum of shared storage access methods.
 """
-SharedStorageAccessMethod = Literal[
+type SharedStorageAccessMethod = Literal[
     "addModule",
     "createWorklet",
     "selectURL",
@@ -197,7 +197,7 @@ class SharedStorageAccessParams(CDPModel):
     batch_size: int | None = None
 
 
-StorageBucketsDurability = Literal["relaxed", "strict"]
+type StorageBucketsDurability = Literal["relaxed", "strict"]
 
 
 @dataclass(kw_only=True, slots=True)

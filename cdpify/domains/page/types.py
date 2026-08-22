@@ -18,9 +18,11 @@ FrameId = str
 """
 Indicates whether a frame has been identified as an ad.
 """
-AdFrameType = Literal["none", "child", "root"]
+type AdFrameType = Literal["none", "child", "root"]
 
-AdFrameExplanation = Literal["ParentIsAd", "CreatedByAdScript", "MatchedBlockingRule"]
+type AdFrameExplanation = Literal[
+    "ParentIsAd", "CreatedByAdScript", "MatchedBlockingRule"
+]
 
 
 @dataclass(kw_only=True, slots=True)
@@ -36,18 +38,18 @@ class AdFrameStatus(CDPModel):
 """
 Indicates whether the frame is a secure context and why it is the case.
 """
-SecureContextType = Literal[
+type SecureContextType = Literal[
     "Secure", "SecureLocalhost", "InsecureScheme", "InsecureAncestor"
 ]
 
 """
 Indicates whether the frame is cross-origin isolated and why it is the case.
 """
-CrossOriginIsolatedContextType = Literal[
+type CrossOriginIsolatedContextType = Literal[
     "Isolated", "NotIsolated", "NotIsolatedFeatureDisabled"
 ]
 
-GatedAPIFeatures = Literal[
+type GatedAPIFeatures = Literal[
     "SharedArrayBuffers",
     "SharedArrayBuffersTransferAllowed",
     "PerformanceMeasureMemory",
@@ -59,7 +61,7 @@ All Permissions Policy features. This enum should match the one defined in
 services/network/public/cpp/permissions_policy/permissions_policy_features.json5.
 LINT.IfChange(PermissionsPolicyFeature)
 """
-PermissionsPolicyFeature = Literal[
+type PermissionsPolicyFeature = Literal[
     "accelerometer",
     "all-screens-capture",
     "ambient-light-sensor",
@@ -175,7 +177,7 @@ PermissionsPolicyFeature = Literal[
 """
 Reason for a permissions policy feature to be disabled.
 """
-PermissionsPolicyBlockReason = Literal[
+type PermissionsPolicyBlockReason = Literal[
     "Header", "IframeAttribute", "InFencedFrameTree", "InIsolatedApp"
 ]
 
@@ -197,7 +199,7 @@ class PermissionsPolicyFeatureState(CDPModel):
 Origin Trial(https://www.chromium.org/blink/origin-trials) support. Status for an
 Origin Trial token.
 """
-OriginTrialTokenStatus = Literal[
+type OriginTrialTokenStatus = Literal[
     "Success",
     "NotSupported",
     "Insecure",
@@ -215,11 +217,11 @@ OriginTrialTokenStatus = Literal[
 """
 Status for an Origin Trial.
 """
-OriginTrialStatus = Literal[
+type OriginTrialStatus = Literal[
     "Enabled", "ValidTokenNotProvided", "OSNotSupported", "TrialNotAllowed"
 ]
 
-OriginTrialUsageRestriction = Literal["None", "Subset"]
+type OriginTrialUsageRestriction = Literal["None", "Subset"]
 
 
 @dataclass(kw_only=True, slots=True)
@@ -322,7 +324,7 @@ ScriptIdentifier = str
 """
 Transition type.
 """
-TransitionType = Literal[
+type TransitionType = Literal[
     "link",
     "typed",
     "address_bar",
@@ -370,7 +372,7 @@ class ScreencastFrameMetadata(CDPModel):
 """
 Javascript dialog type.
 """
-DialogType = Literal["alert", "confirm", "prompt", "beforeunload"]
+type DialogType = Literal["alert", "confirm", "prompt", "beforeunload"]
 
 
 @dataclass(kw_only=True, slots=True)
@@ -470,7 +472,7 @@ class FontSizes(CDPModel):
     fixed: int | None = None
 
 
-ClientNavigationReason = Literal[
+type ClientNavigationReason = Literal[
     "anchorClick",
     "formSubmissionGet",
     "formSubmissionPost",
@@ -483,7 +485,9 @@ ClientNavigationReason = Literal[
     "scriptInitiated",
 ]
 
-ClientNavigationDisposition = Literal["currentTab", "newTab", "newWindow", "download"]
+type ClientNavigationDisposition = Literal[
+    "currentTab", "newTab", "newWindow", "download"
+]
 
 
 @dataclass(kw_only=True, slots=True)
@@ -505,7 +509,7 @@ class InstallabilityError(CDPModel):
 """
 The referring-policy used for the navigation.
 """
-ReferrerPolicy = Literal[
+type ReferrerPolicy = Literal[
     "noReferrer",
     "noReferrerWhenDowngrade",
     "origin",
@@ -630,12 +634,12 @@ class WebAppManifest(CDPModel):
 """
 The type of a frameNavigated event.
 """
-NavigationType = Literal["Navigation", "BackForwardCacheRestore"]
+type NavigationType = Literal["Navigation", "BackForwardCacheRestore"]
 
 """
 List of not restored reasons for back-forward cache.
 """
-BackForwardCacheNotRestoredReason = Literal[
+type BackForwardCacheNotRestoredReason = Literal[
     "NotPrimaryMainFrame",
     "BackForwardCacheDisabled",
     "RelatedActiveContentsExist",
@@ -789,7 +793,7 @@ BackForwardCacheNotRestoredReason = Literal[
 """
 Types of not restored reasons for back-forward cache.
 """
-BackForwardCacheNotRestoredReasonType = Literal[
+type BackForwardCacheNotRestoredReasonType = Literal[
     "SupportPending", "PageSupportNeeded", "Circumstantial"
 ]
 

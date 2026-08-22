@@ -12,7 +12,7 @@ from cdpify.shared.models import CDPModel
 """
 Memory pressure level.
 """
-PressureLevel = Literal["moderate", "critical"]
+type PressureLevel = Literal["moderate", "critical"]
 
 
 @dataclass(kw_only=True, slots=True)

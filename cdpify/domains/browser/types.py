@@ -16,7 +16,7 @@ WindowID = int
 """
 The state of the browser window.
 """
-WindowState = Literal["normal", "minimized", "maximized", "fullscreen"]
+type WindowState = Literal["normal", "minimized", "maximized", "fullscreen"]
 
 
 @dataclass(kw_only=True, slots=True)
@@ -32,7 +32,7 @@ class Bounds(CDPModel):
     window_state: WindowState | None = None
 
 
-PermissionType = Literal[
+type PermissionType = Literal[
     "ar",
     "audioCapture",
     "automaticFullscreen",
@@ -74,7 +74,7 @@ PermissionType = Literal[
     "windowManagement",
 ]
 
-PermissionSetting = Literal["granted", "denied", "prompt"]
+type PermissionSetting = Literal["granted", "denied", "prompt"]
 
 
 @dataclass(kw_only=True, slots=True)
@@ -95,7 +95,7 @@ class PermissionDescriptor(CDPModel):
 """
 Browser command ids used by executeBrowserCommand.
 """
-BrowserCommandId = Literal["openTabSearch", "closeTabSearch", "openGlic"]
+type BrowserCommandId = Literal["openTabSearch", "closeTabSearch", "openGlic"]
 
 
 @dataclass(kw_only=True, slots=True)
@@ -121,4 +121,4 @@ class Histogram(CDPModel):
     buckets: list[Bucket]
 
 
-PrivacySandboxAPI = Literal["BiddingAndAuctionServices", "TrustedKeyValue"]
+type PrivacySandboxAPI = Literal["BiddingAndAuctionServices", "TrustedKeyValue"]

@@ -41,7 +41,7 @@ class BackendNode(CDPModel):
 """
 Pseudo element type.
 """
-PseudoType = Literal[
+type PseudoType = Literal[
     "first-line",
     "first-letter",
     "checkmark",
@@ -88,27 +88,27 @@ PseudoType = Literal[
 """
 Shadow root type.
 """
-ShadowRootType = Literal["user-agent", "open", "closed"]
+type ShadowRootType = Literal["user-agent", "open", "closed"]
 
 """
 Document compatibility mode.
 """
-CompatibilityMode = Literal["QuirksMode", "LimitedQuirksMode", "NoQuirksMode"]
+type CompatibilityMode = Literal["QuirksMode", "LimitedQuirksMode", "NoQuirksMode"]
 
 """
 ContainerSelector physical axes
 """
-PhysicalAxes = Literal["Horizontal", "Vertical", "Both"]
+type PhysicalAxes = Literal["Horizontal", "Vertical", "Both"]
 
 """
 ContainerSelector logical axes
 """
-LogicalAxes = Literal["Inline", "Block", "Both"]
+type LogicalAxes = Literal["Inline", "Block", "Both"]
 
 """
 Physical scroll orientation
 """
-ScrollOrientation = Literal["horizontal", "vertical"]
+type ScrollOrientation = Literal["horizontal", "vertical"]
 
 
 @dataclass(kw_only=True, slots=True)

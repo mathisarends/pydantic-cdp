@@ -58,7 +58,7 @@ forward to allow the next delayed task (if any) to run; pause: The virtual time 
 not advance; pauseIfNetworkFetchesPending: The virtual time base may not advance if
 there are any pending resource fetches.
 """
-VirtualTimePolicy = Literal["advance", "pause", "pauseIfNetworkFetchesPending"]
+type VirtualTimePolicy = Literal["advance", "pause", "pauseIfNetworkFetchesPending"]
 
 
 @dataclass(kw_only=True, slots=True)
@@ -97,7 +97,7 @@ class UserAgentMetadata(CDPModel):
 Used to specify sensor types to emulate. See https://w3c.github.io/sensors/#automation
 for more information.
 """
-SensorType = Literal[
+type SensorType = Literal[
     "absolute-orientation",
     "accelerometer",
     "ambient-light",
@@ -143,9 +143,9 @@ class SensorReading(CDPModel):
     quaternion: SensorReadingQuaternion | None = None
 
 
-PressureSource = Literal["cpu"]
+type PressureSource = Literal["cpu"]
 
-PressureState = Literal["nominal", "fair", "serious", "critical"]
+type PressureState = Literal["nominal", "fair", "serious", "critical"]
 
 
 @dataclass(kw_only=True, slots=True)
@@ -192,4 +192,4 @@ class ScreenInfo(CDPModel):
 """
 Enum of image types that can be disabled.
 """
-DisabledImageType = Literal["avif", "jxl", "webp"]
+type DisabledImageType = Literal["avif", "jxl", "webp"]

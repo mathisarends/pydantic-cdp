@@ -19,12 +19,12 @@ CertificateId = int
 A description of mixed content (HTTP resources on HTTPS pages), as defined by
 https://www.w3.org/TR/mixed-content/#categories
 """
-MixedContentType = Literal["blockable", "optionally-blockable", "none"]
+type MixedContentType = Literal["blockable", "optionally-blockable", "none"]
 
 """
 The security level of a page or resource.
 """
-SecurityState = Literal[
+type SecurityState = Literal[
     "unknown", "neutral", "insecure", "secure", "info", "insecure-broken"
 ]
 
@@ -55,7 +55,7 @@ class CertificateSecurityState(CDPModel):
     obsolete_ssl_signature: bool
 
 
-SafetyTipStatus = Literal["badReputation", "lookalike"]
+type SafetyTipStatus = Literal["badReputation", "lookalike"]
 
 
 @dataclass(kw_only=True, slots=True)
@@ -110,4 +110,4 @@ class InsecureContentStatus(CDPModel):
 The action to take when a certificate error occurs. continue will continue processing
 the request and cancel will cancel the request.
 """
-CertificateErrorAction = Literal["continue", "cancel"]
+type CertificateErrorAction = Literal["continue", "cancel"]
