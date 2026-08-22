@@ -1,4 +1,4 @@
-from .client import CDPClient
+from .client import ActiveSessionCDPClient, CDPClient
 from .exceptions import (
     CDPCommandException,
     CDPConnectionException,
@@ -9,6 +9,7 @@ from .logging import configure_websocket_logging
 
 __all__ = [
     "CDPClient",
+    "ActiveSessionCDPClient",
     "CDPException",
     "CDPConnectionException",
     "CDPCommandException",

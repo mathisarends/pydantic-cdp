@@ -2,70 +2,24 @@ import asyncio
 import json
 import logging
 from collections.abc import AsyncIterator
-from functools import cached_property
-from typing import Any, Self, TypeVar
+from typing import Any, Self
 
 import websockets
 from websockets.asyncio.client import ClientConnection, connect
 
-from cdpify.domains import (
-    AccessibilityClient,
-    AnimationClient,
-    AuditsClient,
-    BackgroundServiceClient,
-    BrowserClient,
-    CacheStorageClient,
-    CastClient,
-    ConsoleClient,
-    CSSClient,
-    DebuggerClient,
-    DeviceOrientationClient,
-    DOMClient,
-    DOMDebuggerClient,
-    DOMSnapshotClient,
-    DOMStorageClient,
-    EmulationClient,
-    EventBreakpointsClient,
-    FetchClient,
-    HeapProfilerClient,
-    IndexedDBClient,
-    InputClient,
-    IOClient,
-    LayerTreeClient,
-    LogClient,
-    MediaClient,
-    MemoryClient,
-    NetworkClient,
-    OverlayClient,
-    PageClient,
-    PerformanceClient,
-    ProfilerClient,
-    RuntimeClient,
-    SchemaClient,
-    SecurityClient,
-    ServiceWorkerClient,
-    StorageClient,
-    SystemInfoClient,
-    TargetClient,
-    TetheringClient,
-    TracingClient,
-    WebAudioClient,
-    WebAuthnClient,
-)
-from cdpify.events import EventDispatcher
+from cdpify.domains import BrowserClient, CDPDomains, TargetClient
+from cdpify.events import EventDispatcher, RawCDPEvent
 from cdpify.exceptions import (
     CDPCommandException,
     CDPConnectionException,
     CDPTimeoutException,
 )
-from cdpify.shared.models import CDPModel
+from cdpify.shared.models import CDPEvent
 
 logger = logging.getLogger(__name__)
 
-T = TypeVar("T", bound=CDPModel)
 
-
-class CDPClient:
+class CDPClient(CDPDomains):
     def __init__(
         self,
         url: str,
@@ -164,10 +118,13 @@ class CDPClient:
 
     async def _handle_event(self, msg: dict[str, Any]) -> None:
         method = msg["method"]
-        params = msg.get("params", {})
+        event = RawCDPEvent(
+            params=dict(msg.get("params", {})),
+            session_id=msg.get("sessionId"),
+        )
 
         logger.debug(f"Event: {method}")
-        handled = await self._events.dispatch(method, params)
+        handled = await self._events.dispatch(method, event)
 
         if not handled:
             logger.debug(f"Unhandled event: {method}")
@@ -209,13 +166,16 @@ class CDPClient:
             finally:
                 self._ws = None
 
-    async def listen(
+    async def listen[T: CDPEvent](
         self, event_name: str, event_type: type[T], timeout: float | None = None
     ) -> AsyncIterator[T]:
         queue: asyncio.Queue[T] = asyncio.Queue()
 
-        async def handler(params: dict[str, Any]) -> None:
-            typed_event = event_type.from_cdp(params)
+        async def handler(event: RawCDPEvent) -> None:
+            typed_event = event_type.from_cdp(
+                event.params,
+                cdp_session_id=event.session_id,
+            )
             await queue.put(typed_event)
 
         try:
@@ -281,170 +241,54 @@ class CDPClient:
         except asyncio.TimeoutError:
             raise CDPTimeoutException(f"{method} timed out after {timeout}s") from None
 
-    @cached_property
-    def accessibility(self) -> AccessibilityClient:
-        return AccessibilityClient(self)
 
-    @cached_property
-    def animation(self) -> AnimationClient:
-        return AnimationClient(self)
+class ActiveSessionCDPClient(CDPDomains):
+    """CDP client view that routes commands to the active target session."""
 
-    @cached_property
-    def audits(self) -> AuditsClient:
-        return AuditsClient(self)
+    def __init__(self, root_client: CDPClient) -> None:
+        self._root_client = root_client
+        self._session_id: str | None = None
 
-    @cached_property
-    def background_service(self) -> BackgroundServiceClient:
-        return BackgroundServiceClient(self)
+    @property
+    def session_id(self) -> str | None:
+        return self._session_id
 
-    @cached_property
+    # Browser and Target are browser-scoped domains. Delegate them to the root
+    # client so their commands are not routed through the active target session.
+    @property
     def browser(self) -> BrowserClient:
-        return BrowserClient(self)
+        return self._root_client.browser
 
-    @cached_property
-    def cache_storage(self) -> CacheStorageClient:
-        return CacheStorageClient(self)
-
-    @cached_property
-    def cast(self) -> CastClient:
-        return CastClient(self)
-
-    @cached_property
-    def console(self) -> ConsoleClient:
-        return ConsoleClient(self)
-
-    @cached_property
-    def css(self) -> CSSClient:
-        return CSSClient(self)
-
-    @cached_property
-    def debugger(self) -> DebuggerClient:
-        return DebuggerClient(self)
-
-    @cached_property
-    def device_orientation(self) -> DeviceOrientationClient:
-        return DeviceOrientationClient(self)
-
-    @cached_property
-    def dom(self) -> DOMClient:
-        return DOMClient(self)
-
-    @cached_property
-    def dom_debugger(self) -> DOMDebuggerClient:
-        return DOMDebuggerClient(self)
-
-    @cached_property
-    def dom_snapshot(self) -> DOMSnapshotClient:
-        return DOMSnapshotClient(self)
-
-    @cached_property
-    def dom_storage(self) -> DOMStorageClient:
-        return DOMStorageClient(self)
-
-    @cached_property
-    def emulation(self) -> EmulationClient:
-        return EmulationClient(self)
-
-    @cached_property
-    def event_breakpoints(self) -> EventBreakpointsClient:
-        return EventBreakpointsClient(self)
-
-    @cached_property
-    def fetch(self) -> FetchClient:
-        return FetchClient(self)
-
-    @cached_property
-    def heap_profiler(self) -> HeapProfilerClient:
-        return HeapProfilerClient(self)
-
-    @cached_property
-    def indexed_db(self) -> IndexedDBClient:
-        return IndexedDBClient(self)
-
-    @cached_property
-    def input(self) -> InputClient:
-        return InputClient(self)
-
-    @cached_property
-    def io(self) -> IOClient:
-        return IOClient(self)
-
-    @cached_property
-    def layer_tree(self) -> LayerTreeClient:
-        return LayerTreeClient(self)
-
-    @cached_property
-    def log(self) -> LogClient:
-        return LogClient(self)
-
-    @cached_property
-    def media(self) -> MediaClient:
-        return MediaClient(self)
-
-    @cached_property
-    def memory(self) -> MemoryClient:
-        return MemoryClient(self)
-
-    @cached_property
-    def network(self) -> NetworkClient:
-        return NetworkClient(self)
-
-    @cached_property
-    def overlay(self) -> OverlayClient:
-        return OverlayClient(self)
-
-    @cached_property
-    def page(self) -> PageClient:
-        return PageClient(self)
-
-    @cached_property
-    def performance(self) -> PerformanceClient:
-        return PerformanceClient(self)
-
-    @cached_property
-    def profiler(self) -> ProfilerClient:
-        return ProfilerClient(self)
-
-    @cached_property
-    def runtime(self) -> RuntimeClient:
-        return RuntimeClient(self)
-
-    @cached_property
-    def schema(self) -> SchemaClient:
-        return SchemaClient(self)
-
-    @cached_property
-    def security(self) -> SecurityClient:
-        return SecurityClient(self)
-
-    @cached_property
-    def service_worker(self) -> ServiceWorkerClient:
-        return ServiceWorkerClient(self)
-
-    @cached_property
-    def storage(self) -> StorageClient:
-        return StorageClient(self)
-
-    @cached_property
-    def system_info(self) -> SystemInfoClient:
-        return SystemInfoClient(self)
-
-    @cached_property
+    @property
     def target(self) -> TargetClient:
-        return TargetClient(self)
+        return self._root_client.target
 
-    @cached_property
-    def tethering(self) -> TetheringClient:
-        return TetheringClient(self)
+    def switch_to(self, session_id: str | None) -> None:
+        self._session_id = session_id
 
-    @cached_property
-    def tracing(self) -> TracingClient:
-        return TracingClient(self)
+    async def listen[T: CDPEvent](
+        self,
+        event_name: str,
+        event_type: type[T],
+        timeout: float | None = None,
+    ) -> AsyncIterator[T]:
+        async for event in self._root_client.listen(
+            event_name=event_name,
+            event_type=event_type,
+            timeout=timeout,
+        ):
+            yield event
 
-    @cached_property
-    def web_audio(self) -> WebAudioClient:
-        return WebAudioClient(self)
-
-    @cached_property
-    def web_authn(self) -> WebAuthnClient:
-        return WebAuthnClient(self)
+    async def send_raw(
+        self,
+        method: str,
+        params: dict[str, Any] | None = None,
+        session_id: str | None = None,
+        timeout: float | None = None,
+    ) -> dict[str, Any]:
+        return await self._root_client.send_raw(
+            method=method,
+            params=params,
+            session_id=session_id if session_id is not None else self._session_id,
+            timeout=timeout,
+        )
