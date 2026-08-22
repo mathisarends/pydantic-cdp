@@ -156,6 +156,7 @@ PermissionsPolicyFeature = Literal[
     "sub-apps",
     "summarizer",
     "sync-xhr",
+    "tools",
     "translator",
     "unload",
     "usb",

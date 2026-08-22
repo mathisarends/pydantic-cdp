@@ -47,7 +47,7 @@ PseudoType = Literal[
     "after",
     "expand-icon",
     "picker-icon",
-    "interest-hint",
+    "interest-button",
     "marker",
     "backdrop",
     "column",
