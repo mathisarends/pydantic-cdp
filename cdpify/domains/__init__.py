@@ -3,7 +3,7 @@
 # Generated from Chrome DevTools Protocol specifications.
 
 from .accessibility import Accessibility
-from .accessors import CDPDomains
+from .accessors import CDPDomainAccessors
 from .ads import Ads
 from .animation import Animation
 from .audits import Audits
@@ -63,7 +63,7 @@ from .webauthn import WebAuthn
 from .webmcp import WebMCP
 
 __all__ = [
-    "CDPDomains",
+    "CDPDomainAccessors",
     "Accessibility",
     "Ads",
     "Animation",

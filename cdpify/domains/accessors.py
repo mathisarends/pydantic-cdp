@@ -66,11 +66,10 @@ from .webauthn import WebAuthn
 from .webmcp import WebMCP
 
 
-class CDPDomains:
-    """Generated accessors for the configured CDP domains."""
+class CDPDomainAccessors:
+    """Generated domain API mixed into executor-backed objects."""
 
-    def __init__(self, executor: CommandExecutor) -> None:
-        self._executor = executor
+    _executor: CommandExecutor
 
     @cached_property
     def accessibility(self) -> Accessibility:

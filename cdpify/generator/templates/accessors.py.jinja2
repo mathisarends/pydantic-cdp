@@ -5,11 +5,10 @@ from functools import cached_property
 from cdpify.executor import CommandExecutor
 {{ domains | map(attribute="import_statement") | join("\n") }}
 
-class CDPDomains:
-    """Generated accessors for the configured CDP domains."""
+class CDPDomainAccessors:
+    """Generated domain API mixed into executor-backed objects."""
 
-    def __init__(self, executor: CommandExecutor) -> None:
-        self._executor = executor
+    _executor: CommandExecutor
 {% for domain in domains %}
 
     @cached_property

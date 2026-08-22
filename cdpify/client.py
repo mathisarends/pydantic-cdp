@@ -3,7 +3,7 @@ import logging
 from collections.abc import AsyncIterator
 from typing import Any, Self
 
-from cdpify.domains import CDPDomains
+from cdpify.domains import CDPDomainAccessors
 from cdpify.events import EventRouter, ReceivedEvent
 from cdpify.executor import BoundCommandExecutor
 from cdpify.session import CDPSession
@@ -12,7 +12,7 @@ from cdpify.transport import Transport, TransportEvent
 logger = logging.getLogger(__name__)
 
 
-class Client(CDPDomains):
+class Client(CDPDomainAccessors):
     def __init__(
         self,
         url: str | None = None,
@@ -35,9 +35,9 @@ class Client(CDPDomains):
             )
 
         self._transport = transport
+        self._executor = BoundCommandExecutor(transport)
         self._event_router = EventRouter()
         self._event_loop_task: asyncio.Task[None] | None = None
-        super().__init__(BoundCommandExecutor(transport))
 
     @property
     def transport(self) -> Transport:

@@ -6,9 +6,9 @@ def test_generates_typed_cached_domain_accessors() -> None:
     output = accessors.generate([Domain(domain="Page"), Domain(domain="DOMStorage")])
 
     assert "from cdpify.executor import CommandExecutor" in output
-    assert "class CDPDomains:" in output
-    assert "def __init__(self, executor: CommandExecutor) -> None:" in output
-    assert "self._executor = executor" in output
+    assert "class CDPDomainAccessors:" in output
+    assert "_executor: CommandExecutor" in output
+    assert "def __init__" not in output
     assert "from .page import Page" in output
     assert "from .domstorage import DOMStorage" in output
     assert "@cached_property" in output

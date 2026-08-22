@@ -1,13 +1,13 @@
 from collections.abc import AsyncIterator
 from typing import Any
 
-from cdpify.domains import CDPDomains
+from cdpify.domains import CDPDomainAccessors
 from cdpify.events.router import EventRouter
 from cdpify.executor import BoundCommandExecutor
 from cdpify.transport import Transport
 
 
-class CDPSession(CDPDomains):
+class CDPSession(CDPDomainAccessors):
     """An immutable view of the CDP domains bound to one target session."""
 
     def __init__(
@@ -22,7 +22,6 @@ class CDPSession(CDPDomains):
         self._session_id = session_id
         self._event_router = event_router
         self._executor = BoundCommandExecutor(transport, session_id)
-        super().__init__(self._executor)
 
     @property
     def session_id(self) -> str:
