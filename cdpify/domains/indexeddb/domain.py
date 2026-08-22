@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from cdpify.shared.command_sender import CDPCommandSender
 
@@ -43,7 +43,7 @@ class IndexedDB:
         database_name: str,
         object_store_name: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Clears all entries from an object store.
         """
@@ -55,12 +55,11 @@ class IndexedDB:
             object_store_name=object_store_name,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=IndexedDBCommand.CLEAR_OBJECT_STORE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def delete_database(
         self,
@@ -70,7 +69,7 @@ class IndexedDB:
         storage_bucket: storage.StorageBucket | None = None,
         database_name: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Deletes a database.
         """
@@ -81,12 +80,11 @@ class IndexedDB:
             database_name=database_name,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=IndexedDBCommand.DELETE_DATABASE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def delete_object_store_entries(
         self,
@@ -98,7 +96,7 @@ class IndexedDB:
         object_store_name: str,
         key_range: KeyRange,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Delete a range of entries from an object store
         """
@@ -111,40 +109,37 @@ class IndexedDB:
             key_range=key_range,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=IndexedDBCommand.DELETE_OBJECT_STORE_ENTRIES,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def disable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Disables events from backend.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=IndexedDBCommand.DISABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def enable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enables events from backend.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=IndexedDBCommand.ENABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def request_data(
         self,

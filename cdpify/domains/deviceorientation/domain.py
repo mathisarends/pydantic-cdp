@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -21,16 +19,15 @@ class DeviceOrientation:
     async def clear_device_orientation_override(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Clears the overridden Device Orientation.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DeviceOrientationCommand.CLEAR_DEVICE_ORIENTATION_OVERRIDE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def set_device_orientation_override(
         self,
@@ -39,15 +36,14 @@ class DeviceOrientation:
         beta: float,
         gamma: float,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Overrides the Device Orientation.
         """
         params = SetDeviceOrientationOverrideParams(alpha=alpha, beta=beta, gamma=gamma)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DeviceOrientationCommand.SET_DEVICE_ORIENTATION_OVERRIDE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result

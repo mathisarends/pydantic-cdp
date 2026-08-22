@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from cdpify.shared.command_sender import CDPCommandSender
 
@@ -39,16 +39,15 @@ class Fetch:
     async def disable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Disables the fetch domain.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=FetchCommand.DISABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def enable(
         self,
@@ -56,7 +55,7 @@ class Fetch:
         patterns: list[RequestPattern] | None = None,
         handle_auth_requests: bool | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enables issuing of requestPaused events. A request will be paused until client
         calls one of failRequest, fulfillRequest or continueRequest/continueWithAuth.
@@ -65,12 +64,11 @@ class Fetch:
             patterns=patterns, handle_auth_requests=handle_auth_requests
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=FetchCommand.ENABLE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def fail_request(
         self,
@@ -78,18 +76,17 @@ class Fetch:
         request_id: RequestId,
         error_reason: network.ErrorReason,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Causes the request to fail with specified reason.
         """
         params = FailRequestParams(request_id=request_id, error_reason=error_reason)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=FetchCommand.FAIL_REQUEST,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def fulfill_request(
         self,
@@ -101,7 +98,7 @@ class Fetch:
         body: str | None = None,
         response_phrase: str | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Provides response to the request.
         """
@@ -114,12 +111,11 @@ class Fetch:
             response_phrase=response_phrase,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=FetchCommand.FULFILL_REQUEST,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def continue_request(
         self,
@@ -131,7 +127,7 @@ class Fetch:
         headers: list[HeaderEntry] | None = None,
         intercept_response: bool | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Continues the request, optionally modifying some of its parameters.
         """
@@ -144,12 +140,11 @@ class Fetch:
             intercept_response=intercept_response,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=FetchCommand.CONTINUE_REQUEST,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def continue_with_auth(
         self,
@@ -157,7 +152,7 @@ class Fetch:
         request_id: RequestId,
         auth_challenge_response: AuthChallengeResponse,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Continues a request supplying authChallengeResponse following authRequired
         event.
@@ -166,12 +161,11 @@ class Fetch:
             request_id=request_id, auth_challenge_response=auth_challenge_response
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=FetchCommand.CONTINUE_WITH_AUTH,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def continue_response(
         self,
@@ -182,7 +176,7 @@ class Fetch:
         response_headers: list[HeaderEntry] | None = None,
         binary_response_headers: str | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Continues loading of the paused response, optionally modifying the response
         headers. If either responseCode or headers are modified, all of them must be
@@ -196,12 +190,11 @@ class Fetch:
             binary_response_headers=binary_response_headers,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=FetchCommand.CONTINUE_RESPONSE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def get_response_body(
         self,

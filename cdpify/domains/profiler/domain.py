@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -26,24 +24,22 @@ class Profiler:
     async def disable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
-        result = await self._command_sender.send_raw(
+    ) -> None:
+        await self._command_sender.send_raw(
             method=ProfilerCommand.DISABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def enable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
-        result = await self._command_sender.send_raw(
+    ) -> None:
+        await self._command_sender.send_raw(
             method=ProfilerCommand.ENABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def get_best_effort_coverage(
         self,
@@ -65,30 +61,28 @@ class Profiler:
         *,
         interval: int,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Changes CPU profiler sampling interval. Must be called before CPU profiles
         recording started.
         """
         params = SetSamplingIntervalParams(interval=interval)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=ProfilerCommand.SET_SAMPLING_INTERVAL,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def start(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
-        result = await self._command_sender.send_raw(
+    ) -> None:
+        await self._command_sender.send_raw(
             method=ProfilerCommand.START,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def start_precise_coverage(
         self,
@@ -130,17 +124,16 @@ class Profiler:
     async def stop_precise_coverage(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Disable precise code coverage. Disabling releases unnecessary execution count
         records and allows executing optimized code.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=ProfilerCommand.STOP_PRECISE_COVERAGE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def take_precise_coverage(
         self,

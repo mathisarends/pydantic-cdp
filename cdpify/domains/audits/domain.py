@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Literal
+from typing import TYPE_CHECKING, Literal
 
 from cdpify.shared.command_sender import CDPCommandSender
 
@@ -53,32 +53,30 @@ class Audits:
     async def disable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Disables issues domain, prevents further issues from being reported to the
         client.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=AuditsCommand.DISABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def enable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enables issues domain, sends the issues collected so far to the client by means
         of the `issueAdded` event.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=AuditsCommand.ENABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def check_forms_issues(
         self,

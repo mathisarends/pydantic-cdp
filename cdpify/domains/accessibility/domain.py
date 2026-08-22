@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from cdpify.shared.command_sender import CDPCommandSender
 
@@ -38,32 +38,30 @@ class Accessibility:
     async def disable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Disables the accessibility domain.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=AccessibilityCommand.DISABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def enable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enables the accessibility domain which causes `AXNodeId`s to remain consistent
         between method calls. This turns on accessibility for the page, which can impact
         performance until accessibility is disabled.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=AccessibilityCommand.ENABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def get_partial_ax_tree(
         self,

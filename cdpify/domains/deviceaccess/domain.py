@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -26,30 +24,28 @@ class DeviceAccess:
     async def enable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enable events in this domain.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DeviceAccessCommand.ENABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def disable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Disable events in this domain.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DeviceAccessCommand.DISABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def select_prompt(
         self,
@@ -57,33 +53,31 @@ class DeviceAccess:
         id: RequestId,
         device_id: DeviceId,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Select a device in response to a DeviceAccess.deviceRequestPrompted event.
         """
         params = SelectPromptParams(id=id, device_id=device_id)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DeviceAccessCommand.SELECT_PROMPT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def cancel_prompt(
         self,
         *,
         id: RequestId,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Cancel a prompt in response to a DeviceAccess.deviceRequestPrompted event.
         """
         params = CancelPromptParams(id=id)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DeviceAccessCommand.CANCEL_PROMPT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result

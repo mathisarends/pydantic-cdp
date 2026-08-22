@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
 
@@ -27,48 +25,45 @@ class Security:
     async def disable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Disables tracking security state changes.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=SecurityCommand.DISABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def enable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enables tracking security state changes.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=SecurityCommand.ENABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def set_ignore_certificate_errors(
         self,
         *,
         ignore: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enable/disable whether all certificate errors should be ignored.
         """
         params = SetIgnoreCertificateErrorsParams(ignore=ignore)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=SecurityCommand.SET_IGNORE_CERTIFICATE_ERRORS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     @deprecated()
     async def handle_certificate_error(
@@ -77,18 +72,17 @@ class Security:
         event_id: int,
         action: CertificateErrorAction,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Handles a certificate error that fired a certificateError event.
         """
         params = HandleCertificateErrorParams(event_id=event_id, action=action)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=SecurityCommand.HANDLE_CERTIFICATE_ERROR,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     @deprecated()
     async def set_override_certificate_errors(
@@ -96,7 +90,7 @@ class Security:
         *,
         override: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enable/disable overriding certificate errors. If enabled, all certificate error
         events need to be handled by the DevTools client and should be answered with
@@ -104,9 +98,8 @@ class Security:
         """
         params = SetOverrideCertificateErrorsParams(override=override)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=SecurityCommand.SET_OVERRIDE_CERTIFICATE_ERRORS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result

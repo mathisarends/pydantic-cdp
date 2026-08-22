@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -29,36 +27,34 @@ class BackgroundService:
         *,
         service: ServiceName,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enables event updates for the service.
         """
         params = StartObservingParams(service=service)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=BackgroundServiceCommand.START_OBSERVING,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def stop_observing(
         self,
         *,
         service: ServiceName,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Disables event updates for the service.
         """
         params = StopObservingParams(service=service)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=BackgroundServiceCommand.STOP_OBSERVING,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_recording(
         self,
@@ -66,33 +62,31 @@ class BackgroundService:
         should_record: bool,
         service: ServiceName,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Set the recording state for the service.
         """
         params = SetRecordingParams(should_record=should_record, service=service)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=BackgroundServiceCommand.SET_RECORDING,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def clear_events(
         self,
         *,
         service: ServiceName,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Clears all stored data for the service.
         """
         params = ClearEventsParams(service=service)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=BackgroundServiceCommand.CLEAR_EVENTS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result

@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -23,16 +21,15 @@ class PerformanceTimeline:
         *,
         event_types: list[str],
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Previously buffered events would be reported before method returns. See also:
         timelineEventAdded
         """
         params = EnableParams(event_types=event_types)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PerformanceTimelineCommand.ENABLE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result

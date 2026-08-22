@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
@@ -70,30 +70,28 @@ class Overlay:
     async def disable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Disables domain notifications.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=OverlayCommand.DISABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def enable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enables domain notifications.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=OverlayCommand.ENABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def get_highlight_object_for_test(
         self,
@@ -162,16 +160,15 @@ class Overlay:
     async def hide_highlight(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Hides any highlight.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=OverlayCommand.HIDE_HIGHLIGHT,
             params=None,
             session_id=session_id,
         )
-        return result
 
     @deprecated()
     async def highlight_frame(
@@ -181,7 +178,7 @@ class Overlay:
         content_color: dom.RGBA | None = None,
         content_outline_color: dom.RGBA | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Highlights owner element of the frame with given id. Deprecated: Doesn't work
         reliably and cannot be fixed due to process separation (the owner node might be
@@ -194,12 +191,11 @@ class Overlay:
             content_outline_color=content_outline_color,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=OverlayCommand.HIGHLIGHT_FRAME,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def highlight_node(
         self,
@@ -210,7 +206,7 @@ class Overlay:
         object_id: runtime.RemoteObjectId | None = None,
         selector: str | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Highlights DOM node with given id or with the given JavaScript object wrapper.
         Either nodeId or objectId must be specified.
@@ -223,12 +219,11 @@ class Overlay:
             selector=selector,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=OverlayCommand.HIGHLIGHT_NODE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def highlight_quad(
         self,
@@ -237,7 +232,7 @@ class Overlay:
         color: dom.RGBA | None = None,
         outline_color: dom.RGBA | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Highlights given quad. Coordinates are absolute with respect to the main frame
         viewport.
@@ -246,12 +241,11 @@ class Overlay:
             quad=quad, color=color, outline_color=outline_color
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=OverlayCommand.HIGHLIGHT_QUAD,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def highlight_rect(
         self,
@@ -263,7 +257,7 @@ class Overlay:
         color: dom.RGBA | None = None,
         outline_color: dom.RGBA | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Highlights given rectangle. Coordinates are absolute with respect to the main
         frame viewport. Issue: the method does not handle device pixel ratio (DPR)
@@ -279,12 +273,11 @@ class Overlay:
             outline_color=outline_color,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=OverlayCommand.HIGHLIGHT_RECT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def highlight_source_order(
         self,
@@ -294,7 +287,7 @@ class Overlay:
         backend_node_id: dom.BackendNodeId | None = None,
         object_id: runtime.RemoteObjectId | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Highlights the source order of the children of the DOM node with given id or
         with the given JavaScript object wrapper. Either nodeId or objectId must be
@@ -307,12 +300,11 @@ class Overlay:
             object_id=object_id,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=OverlayCommand.HIGHLIGHT_SOURCE_ORDER,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_inspect_mode(
         self,
@@ -320,7 +312,7 @@ class Overlay:
         mode: InspectMode,
         highlight_config: HighlightConfig | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enters the 'inspect' mode. In this mode, elements that user is hovering over
         are highlighted. Backend then generates 'inspectNodeRequested' event upon
@@ -328,88 +320,83 @@ class Overlay:
         """
         params = SetInspectModeParams(mode=mode, highlight_config=highlight_config)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=OverlayCommand.SET_INSPECT_MODE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_show_ad_highlights(
         self,
         *,
         show: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Highlights owner element of all frames detected to be ads.
         """
         params = SetShowAdHighlightsParams(show=show)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_AD_HIGHLIGHTS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_paused_in_debugger_message(
         self,
         *,
         message: str | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         params = SetPausedInDebuggerMessageParams(message=message)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=OverlayCommand.SET_PAUSED_IN_DEBUGGER_MESSAGE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_show_debug_borders(
         self,
         *,
         show: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Requests that backend shows debug borders on layers
         """
         params = SetShowDebugBordersParams(show=show)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_DEBUG_BORDERS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_show_fps_counter(
         self,
         *,
         show: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Requests that backend shows the FPS counter
         """
         params = SetShowFPSCounterParams(show=show)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_FPS_COUNTER,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_show_grid_overlays(
         self,
         *,
         grid_node_highlight_configs: list[GridNodeHighlightConfig],
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Highlight multiple elements with the CSS Grid overlay.
         """
@@ -417,134 +404,126 @@ class Overlay:
             grid_node_highlight_configs=grid_node_highlight_configs
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_GRID_OVERLAYS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_show_flex_overlays(
         self,
         *,
         flex_node_highlight_configs: list[FlexNodeHighlightConfig],
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         params = SetShowFlexOverlaysParams(
             flex_node_highlight_configs=flex_node_highlight_configs
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_FLEX_OVERLAYS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_show_scroll_snap_overlays(
         self,
         *,
         scroll_snap_highlight_configs: list[ScrollSnapHighlightConfig],
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         params = SetShowScrollSnapOverlaysParams(
             scroll_snap_highlight_configs=scroll_snap_highlight_configs
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_SCROLL_SNAP_OVERLAYS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_show_container_query_overlays(
         self,
         *,
         container_query_highlight_configs: list[ContainerQueryHighlightConfig],
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         params = SetShowContainerQueryOverlaysParams(
             container_query_highlight_configs=container_query_highlight_configs
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_CONTAINER_QUERY_OVERLAYS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_show_inspected_element_anchor(
         self,
         *,
         inspected_element_anchor_config: InspectedElementAnchorConfig,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         params = SetShowInspectedElementAnchorParams(
             inspected_element_anchor_config=inspected_element_anchor_config
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_INSPECTED_ELEMENT_ANCHOR,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_show_paint_rects(
         self,
         *,
         result: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Requests that backend shows paint rectangles
         """
         params = SetShowPaintRectsParams(result=result)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_PAINT_RECTS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_show_layout_shift_regions(
         self,
         *,
         result: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Requests that backend shows layout shift regions
         """
         params = SetShowLayoutShiftRegionsParams(result=result)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_LAYOUT_SHIFT_REGIONS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_show_scroll_bottleneck_rects(
         self,
         *,
         show: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Requests that backend shows scroll bottleneck rects
         """
         params = SetShowScrollBottleneckRectsParams(show=show)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_SCROLL_BOTTLENECK_RECTS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     @deprecated()
     async def set_show_hit_test_borders(
@@ -552,18 +531,17 @@ class Overlay:
         *,
         show: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Deprecated, no longer has any effect.
         """
         params = SetShowHitTestBordersParams(show=show)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_HIT_TEST_BORDERS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     @deprecated()
     async def set_show_web_vitals(
@@ -571,79 +549,75 @@ class Overlay:
         *,
         show: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Deprecated, no longer has any effect.
         """
         params = SetShowWebVitalsParams(show=show)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_WEB_VITALS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_show_viewport_size_on_resize(
         self,
         *,
         show: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Paints viewport size upon main frame resize.
         """
         params = SetShowViewportSizeOnResizeParams(show=show)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_VIEWPORT_SIZE_ON_RESIZE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_show_hinge(
         self,
         *,
         hinge_config: HingeConfig | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Add a dual screen device hinge
         """
         params = SetShowHingeParams(hinge_config=hinge_config)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_HINGE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_show_display_cutout(
         self,
         *,
         display_cutout_config: DisplayCutoutConfig | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Add a display cutout overlay.
         """
         params = SetShowDisplayCutoutParams(display_cutout_config=display_cutout_config)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_DISPLAY_CUTOUT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_show_isolated_elements(
         self,
         *,
         isolated_element_highlight_configs: list[IsolatedElementHighlightConfig],
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Show elements in isolation mode with overlays.
         """
@@ -651,19 +625,18 @@ class Overlay:
             isolated_element_highlight_configs=isolated_element_highlight_configs
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_ISOLATED_ELEMENTS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_show_window_controls_overlay(
         self,
         *,
         window_controls_overlay_config: WindowControlsOverlayConfig | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Show Window Controls Overlay for PWA
         """
@@ -671,9 +644,8 @@ class Overlay:
             window_controls_overlay_config=window_controls_overlay_config
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_WINDOW_CONTROLS_OVERLAY,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result

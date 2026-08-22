@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Literal
+from typing import TYPE_CHECKING, Literal
 
 from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
@@ -79,7 +79,7 @@ class Debugger:
         location: Location,
         target_call_frames: Literal["any", "current"] | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Continues execution until specific location is reached.
         """
@@ -87,26 +87,24 @@ class Debugger:
             location=location, target_call_frames=target_call_frames
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DebuggerCommand.CONTINUE_TO_LOCATION,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def disable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Disables debugger for given page.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DebuggerCommand.DISABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def enable(
         self,
@@ -281,16 +279,15 @@ class Debugger:
     async def pause(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Stops on the next JavaScript statement.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DebuggerCommand.PAUSE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     @deprecated()
     async def pause_on_async_call(
@@ -298,33 +295,31 @@ class Debugger:
         *,
         parent_stack_trace_id: runtime.StackTraceId,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         params = PauseOnAsyncCallParams(parent_stack_trace_id=parent_stack_trace_id)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DebuggerCommand.PAUSE_ON_ASYNC_CALL,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def remove_breakpoint(
         self,
         *,
         breakpoint_id: BreakpointId,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Removes JavaScript breakpoint.
         """
         params = RemoveBreakpointParams(breakpoint_id=breakpoint_id)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DebuggerCommand.REMOVE_BREAKPOINT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def restart_frame(
         self,
@@ -359,18 +354,17 @@ class Debugger:
         *,
         terminate_on_resume: bool | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Resumes JavaScript execution.
         """
         params = ResumeParams(terminate_on_resume=terminate_on_resume)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DebuggerCommand.RESUME,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def search_in_content(
         self,
@@ -403,25 +397,24 @@ class Debugger:
         *,
         max_depth: int,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enables or disables async call stacks tracking.
         """
         params = SetAsyncCallStackDepthParams(max_depth=max_depth)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DebuggerCommand.SET_ASYNC_CALL_STACK_DEPTH,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_blackbox_execution_contexts(
         self,
         *,
         unique_ids: list[str],
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Replace previous blackbox execution contexts with passed ones. Forces backend
         to skip stepping/pausing in scripts in these execution contexts. VM will try to
@@ -430,12 +423,11 @@ class Debugger:
         """
         params = SetBlackboxExecutionContextsParams(unique_ids=unique_ids)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DebuggerCommand.SET_BLACKBOX_EXECUTION_CONTEXTS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_blackbox_patterns(
         self,
@@ -443,7 +435,7 @@ class Debugger:
         patterns: list[str],
         skip_anonymous: bool | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Replace previous blackbox patterns with passed ones. Forces backend to skip
         stepping/pausing in scripts with url matching one of the patterns. VM will try
@@ -454,12 +446,11 @@ class Debugger:
             patterns=patterns, skip_anonymous=skip_anonymous
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DebuggerCommand.SET_BLACKBOX_PATTERNS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_blackboxed_ranges(
         self,
@@ -467,7 +458,7 @@ class Debugger:
         script_id: runtime.ScriptId,
         positions: list[ScriptPosition],
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Makes backend skip steps in the script in blackboxed ranges. VM will try leave
         blacklisted scripts by performing 'step in' several times, finally resorting to
@@ -476,12 +467,11 @@ class Debugger:
         """
         params = SetBlackboxedRangesParams(script_id=script_id, positions=positions)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DebuggerCommand.SET_BLACKBOXED_RANGES,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_breakpoint(
         self,
@@ -584,25 +574,24 @@ class Debugger:
         *,
         active: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Activates / deactivates all breakpoints on the page.
         """
         params = SetBreakpointsActiveParams(active=active)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DebuggerCommand.SET_BREAKPOINTS_ACTIVE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_pause_on_exceptions(
         self,
         *,
         state: Literal["none", "caught", "uncaught", "all"],
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Defines pause on exceptions state. Can be set to stop on all exceptions,
         uncaught exceptions, or caught exceptions, no exceptions. Initial pause on
@@ -610,30 +599,28 @@ class Debugger:
         """
         params = SetPauseOnExceptionsParams(state=state)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DebuggerCommand.SET_PAUSE_ON_EXCEPTIONS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_return_value(
         self,
         *,
         new_value: runtime.CallArgument,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Changes return value in top frame. Available only at return break position.
         """
         params = SetReturnValueParams(new_value=new_value)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DebuggerCommand.SET_RETURN_VALUE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     @deprecated()
     async def set_script_source(
@@ -668,19 +655,18 @@ class Debugger:
         *,
         skip: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Makes page not interrupt on any pauses (breakpoint, exception, dom exception
         etc).
         """
         params = SetSkipAllPausesParams(skip=skip)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DebuggerCommand.SET_SKIP_ALL_PAUSES,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_variable_value(
         self,
@@ -690,7 +676,7 @@ class Debugger:
         new_value: runtime.CallArgument,
         call_frame_id: CallFrameId,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Changes value of variable in a callframe. Object-based scopes are not supported
         and must be mutated manually.
@@ -702,12 +688,11 @@ class Debugger:
             call_frame_id=call_frame_id,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DebuggerCommand.SET_VARIABLE_VALUE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def step_into(
         self,
@@ -715,7 +700,7 @@ class Debugger:
         break_on_async_call: bool | None = None,
         skip_list: list[LocationRange] | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Steps into the function call.
         """
@@ -723,41 +708,38 @@ class Debugger:
             break_on_async_call=break_on_async_call, skip_list=skip_list
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DebuggerCommand.STEP_INTO,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def step_out(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Steps out of the function call.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DebuggerCommand.STEP_OUT,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def step_over(
         self,
         *,
         skip_list: list[LocationRange] | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Steps over the statement.
         """
         params = StepOverParams(skip_list=skip_list)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DebuggerCommand.STEP_OVER,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result

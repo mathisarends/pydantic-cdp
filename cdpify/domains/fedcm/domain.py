@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -31,26 +29,24 @@ class FedCm:
         *,
         disable_rejection_delay: bool | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         params = EnableParams(disable_rejection_delay=disable_rejection_delay)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=FedCmCommand.ENABLE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def disable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
-        result = await self._command_sender.send_raw(
+    ) -> None:
+        await self._command_sender.send_raw(
             method=FedCmCommand.DISABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def select_account(
         self,
@@ -58,15 +54,14 @@ class FedCm:
         dialog_id: str,
         account_index: int,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         params = SelectAccountParams(dialog_id=dialog_id, account_index=account_index)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=FedCmCommand.SELECT_ACCOUNT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def click_dialog_button(
         self,
@@ -74,17 +69,16 @@ class FedCm:
         dialog_id: str,
         dialog_button: DialogButton,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         params = ClickDialogButtonParams(
             dialog_id=dialog_id, dialog_button=dialog_button
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=FedCmCommand.CLICK_DIALOG_BUTTON,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def open_url(
         self,
@@ -93,19 +87,18 @@ class FedCm:
         account_index: int,
         account_url_type: AccountUrlType,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         params = OpenUrlParams(
             dialog_id=dialog_id,
             account_index=account_index,
             account_url_type=account_url_type,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=FedCmCommand.OPEN_URL,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def dismiss_dialog(
         self,
@@ -113,29 +106,27 @@ class FedCm:
         dialog_id: str,
         trigger_cooldown: bool | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         params = DismissDialogParams(
             dialog_id=dialog_id, trigger_cooldown=trigger_cooldown
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=FedCmCommand.DISMISS_DIALOG,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def reset_cooldown(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Resets the cooldown time, if any, to allow the next FedCM call to show a dialog
         even if one was recently dismissed by the user.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=FedCmCommand.RESET_COOLDOWN,
             params=None,
             session_id=session_id,
         )
-        return result

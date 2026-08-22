@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from cdpify.shared.command_sender import CDPCommandSender
 
@@ -59,30 +59,28 @@ class LayerTree:
     async def disable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Disables compositing tree inspection.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=LayerTreeCommand.DISABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def enable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enables compositing tree inspection.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=LayerTreeCommand.ENABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def load_snapshot(
         self,
@@ -148,18 +146,17 @@ class LayerTree:
         *,
         snapshot_id: SnapshotId,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Releases layer snapshot captured by the back-end.
         """
         params = ReleaseSnapshotParams(snapshot_id=snapshot_id)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=LayerTreeCommand.RELEASE_SNAPSHOT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def replay_snapshot(
         self,

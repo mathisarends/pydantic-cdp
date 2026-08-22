@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
 
@@ -25,30 +23,28 @@ class DOMSnapshot:
     async def disable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Disables DOM snapshot agent for the given page.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMSnapshotCommand.DISABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def enable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enables DOM snapshot agent for the given page.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMSnapshotCommand.ENABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     @deprecated()
     async def get_snapshot(

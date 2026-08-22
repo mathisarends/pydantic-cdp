@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -54,7 +52,7 @@ class PWA:
         manifest_id: str,
         install_url_or_bundle_url: str | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Installs the given manifest identity, optionally using the given
         installUrlOrBundleUrl IWA-specific install description: manifestId corresponds
@@ -75,30 +73,28 @@ class PWA:
             manifest_id=manifest_id, install_url_or_bundle_url=install_url_or_bundle_url
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PWACommand.INSTALL,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def uninstall(
         self,
         *,
         manifest_id: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Uninstalls the given manifest_id and closes any opened app windows.
         """
         params = UninstallParams(manifest_id=manifest_id)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PWACommand.UNINSTALL,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def launch(
         self,
@@ -154,7 +150,7 @@ class PWA:
         *,
         manifest_id: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Opens the current page in its web app identified by the manifest id, needs to
         be called on a page target. This function returns immediately without waiting
@@ -162,12 +158,11 @@ class PWA:
         """
         params = OpenCurrentPageInAppParams(manifest_id=manifest_id)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PWACommand.OPEN_CURRENT_PAGE_IN_APP,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def change_app_user_settings(
         self,
@@ -176,7 +171,7 @@ class PWA:
         link_capturing: bool | None = None,
         display_mode: DisplayMode | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Changes user settings of the web app identified by its manifestId. If the app
         was not installed, this command returns an error. Unset parameters will be
@@ -191,9 +186,8 @@ class PWA:
             display_mode=display_mode,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PWACommand.CHANGE_APP_USER_SETTINGS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result

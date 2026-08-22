@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
@@ -60,18 +60,17 @@ class Target:
         *,
         target_id: TargetID,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Activates (focuses) the target.
         """
         params = ActivateTargetParams(target_id=target_id)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=TargetCommand.ACTIVATE_TARGET,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def attach_to_target(
         self,
@@ -131,7 +130,7 @@ class Target:
         binding_name: str | None = None,
         inherit_permissions: bool | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Inject object to the target's main frame that provides a communication channel
         with browser target. Injected object will be available as `window[bindingName]`.
@@ -146,12 +145,11 @@ class Target:
             inherit_permissions=inherit_permissions,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=TargetCommand.EXPOSE_DEV_TOOLS_PROTOCOL,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def create_browser_context(
         self,
@@ -244,7 +242,7 @@ class Target:
         detach_from_target_session_id: SessionID | None = None,
         target_id: TargetID | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Detaches session with given id.
         """
@@ -252,31 +250,29 @@ class Target:
             session_id=detach_from_target_session_id, target_id=target_id
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=TargetCommand.DETACH_FROM_TARGET,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def dispose_browser_context(
         self,
         *,
         browser_context_id: browser.BrowserContextID,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Deletes a BrowserContext. All the belonging pages will be closed without
         calling their beforeunload hooks.
         """
         params = DisposeBrowserContextParams(browser_context_id=browser_context_id)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=TargetCommand.DISPOSE_BROWSER_CONTEXT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def get_target_info(
         self,
@@ -322,7 +318,7 @@ class Target:
         send_message_to_target_session_id: SessionID | None = None,
         target_id: TargetID | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Sends protocol message over session with given id. Consider using flat mode
         instead; see commands attachToTarget, setAutoAttach, and crbug.com/991325.
@@ -333,12 +329,11 @@ class Target:
             target_id=target_id,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=TargetCommand.SEND_MESSAGE_TO_TARGET,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_auto_attach(
         self,
@@ -348,7 +343,7 @@ class Target:
         flatten: bool | None = None,
         filter: TargetFilter | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Controls whether to automatically attach to new targets which are considered to
         be directly related to this one (for example, iframes or workers). When turned
@@ -365,12 +360,11 @@ class Target:
             filter=filter,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=TargetCommand.SET_AUTO_ATTACH,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def auto_attach_related(
         self,
@@ -379,7 +373,7 @@ class Target:
         wait_for_debugger_on_start: bool,
         filter: TargetFilter | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Adds the specified target to the list of targets that will be monitored for any
         related target creation (such as child frames, child workers and new versions of
@@ -394,12 +388,11 @@ class Target:
             filter=filter,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=TargetCommand.AUTO_ATTACH_RELATED,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_discover_targets(
         self,
@@ -407,38 +400,36 @@ class Target:
         discover: bool,
         filter: TargetFilter | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Controls whether to discover available targets and notify via
         `targetCreated/targetInfoChanged/targetDestroyed` events.
         """
         params = SetDiscoverTargetsParams(discover=discover, filter=filter)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=TargetCommand.SET_DISCOVER_TARGETS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_remote_locations(
         self,
         *,
         locations: list[RemoteLocation],
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enables target discovery for the specified locations, when `setDiscoverTargets`
         was set to `true`.
         """
         params = SetRemoteLocationsParams(locations=locations)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=TargetCommand.SET_REMOTE_LOCATIONS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def get_dev_tools_target(
         self,

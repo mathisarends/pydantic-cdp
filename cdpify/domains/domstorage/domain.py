@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -30,44 +28,41 @@ class DOMStorage:
         *,
         storage_id: StorageId,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         params = ClearParams(storage_id=storage_id)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMStorageCommand.CLEAR,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def disable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Disables storage tracking, prevents storage events from being sent to the
         client.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMStorageCommand.DISABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def enable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enables storage tracking, storage events will now be delivered to the client.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMStorageCommand.ENABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def get_dom_storage_items(
         self,
@@ -90,15 +85,14 @@ class DOMStorage:
         storage_id: StorageId,
         key: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         params = RemoveDOMStorageItemParams(storage_id=storage_id, key=key)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMStorageCommand.REMOVE_DOM_STORAGE_ITEM,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_dom_storage_item(
         self,
@@ -107,12 +101,11 @@ class DOMStorage:
         key: str,
         value: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         params = SetDOMStorageItemParams(storage_id=storage_id, key=key, value=value)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMStorageCommand.SET_DOM_STORAGE_ITEM,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result

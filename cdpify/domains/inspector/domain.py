@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -20,27 +18,25 @@ class Inspector:
     async def disable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Disables inspector domain notifications.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=InspectorCommand.DISABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def enable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enables inspector domain notifications.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=InspectorCommand.ENABLE,
             params=None,
             session_id=session_id,
         )
-        return result

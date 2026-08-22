@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
@@ -127,30 +127,28 @@ class Network:
     async def clear_browser_cache(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Clears browser cache.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=NetworkCommand.CLEAR_BROWSER_CACHE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def clear_browser_cookies(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Clears browser cookies.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=NetworkCommand.CLEAR_BROWSER_COOKIES,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def delete_cookies(
         self,
@@ -161,7 +159,7 @@ class Network:
         path: str | None = None,
         partition_key: CookiePartitionKey | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Deletes browser cookies with matching name and url or domain/path/partitionKey
         pair.
@@ -170,27 +168,25 @@ class Network:
             name=name, url=url, domain=domain, path=path, partition_key=partition_key
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=NetworkCommand.DELETE_COOKIES,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def disable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Disables network tracking, prevents network events from being sent to the
         client.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=NetworkCommand.DISABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     @deprecated()
     async def emulate_network_conditions(
@@ -205,7 +201,7 @@ class Network:
         packet_queue_length: int | None = None,
         packet_reordering: bool | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Activates emulation of network conditions. This command is deprecated in favor
         of the emulateNetworkConditionsByRule and overrideNetworkState commands, which
@@ -222,12 +218,11 @@ class Network:
             packet_reordering=packet_reordering,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=NetworkCommand.EMULATE_NETWORK_CONDITIONS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def emulate_network_conditions_by_rule(
         self,
@@ -265,7 +260,7 @@ class Network:
         upload_throughput: float,
         connection_type: ConnectionType | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Override the state of navigator.onLine and navigator.connection.
         """
@@ -277,12 +272,11 @@ class Network:
             connection_type=connection_type,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=NetworkCommand.OVERRIDE_NETWORK_STATE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def enable(
         self,
@@ -293,7 +287,7 @@ class Network:
         report_direct_socket_traffic: bool | None = None,
         enable_durable_messages: bool | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enables network tracking, network events will now be delivered to the client.
         """
@@ -305,12 +299,11 @@ class Network:
             enable_durable_messages=enable_durable_messages,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=NetworkCommand.ENABLE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def configure_durable_messages(
         self,
@@ -318,7 +311,7 @@ class Network:
         max_total_buffer_size: int | None = None,
         max_resource_buffer_size: int | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Configures storing response bodies outside of renderer, so that these survive a
         cross-process navigation. If maxTotalBufferSize is not set, durable messages are
@@ -329,12 +322,11 @@ class Network:
             max_resource_buffer_size=max_resource_buffer_size,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=NetworkCommand.CONFIGURE_DURABLE_MESSAGES,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     @deprecated()
     async def get_all_cookies(
@@ -432,7 +424,7 @@ class Network:
         *,
         request_id: RequestId,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         This method sends a new XMLHttpRequest which is identical to the original one.
         The following parameters should be identical: method, url, async, request body,
@@ -440,12 +432,11 @@ class Network:
         """
         params = ReplayXHRParams(request_id=request_id)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=NetworkCommand.REPLAY_XHR,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def search_in_response_body(
         self,
@@ -479,54 +470,51 @@ class Network:
         url_patterns: list[BlockPattern] | None = None,
         urls: list[str] | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Blocks URLs from loading.
         """
         params = SetBlockedURLsParams(url_patterns=url_patterns, urls=urls)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=NetworkCommand.SET_BLOCKED_UR_LS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_bypass_service_worker(
         self,
         *,
         bypass: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Toggles ignoring of service worker for each request.
         """
         params = SetBypassServiceWorkerParams(bypass=bypass)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=NetworkCommand.SET_BYPASS_SERVICE_WORKER,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_cache_disabled(
         self,
         *,
         cache_disabled: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Toggles ignoring cache for each request. If `true`, cache will not be used.
         """
         params = SetCacheDisabledParams(cache_disabled=cache_disabled)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=NetworkCommand.SET_CACHE_DISABLED,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_cookie(
         self,
@@ -578,55 +566,52 @@ class Network:
         *,
         cookies: list[CookieParam],
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Sets given cookies.
         """
         params = SetCookiesParams(cookies=cookies)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=NetworkCommand.SET_COOKIES,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_extra_http_headers(
         self,
         *,
         headers: Headers,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Specifies whether to always send extra HTTP headers with the requests from this
         page.
         """
         params = SetExtraHTTPHeadersParams(headers=headers)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=NetworkCommand.SET_EXTRA_HTTP_HEADERS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_attach_debug_stack(
         self,
         *,
         enabled: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Specifies whether to attach a page script stack id in requests
         """
         params = SetAttachDebugStackParams(enabled=enabled)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=NetworkCommand.SET_ATTACH_DEBUG_STACK,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_user_agent_override(
         self,
@@ -636,7 +621,7 @@ class Network:
         platform: str | None = None,
         user_agent_metadata: emulation.UserAgentMetadata | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Allows overriding user agent with the given string.
         """
@@ -647,12 +632,11 @@ class Network:
             user_agent_metadata=user_agent_metadata,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=NetworkCommand.SET_USER_AGENT_OVERRIDE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def stream_resource_content(
         self,
@@ -696,7 +680,7 @@ class Network:
         *,
         enable: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enables tracking for the Reporting API, events generated by the Reporting API
         will now be delivered to the client. Enabling triggers 'reportingApiReportAdded'
@@ -704,48 +688,45 @@ class Network:
         """
         params = EnableReportingApiParams(enable=enable)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=NetworkCommand.ENABLE_REPORTING_API,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def enable_device_bound_sessions(
         self,
         *,
         enable: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Sets up tracking device bound sessions and fetching of initial set of sessions.
         """
         params = EnableDeviceBoundSessionsParams(enable=enable)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=NetworkCommand.ENABLE_DEVICE_BOUND_SESSIONS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def delete_device_bound_session(
         self,
         *,
         key: DeviceBoundSessionKey,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Deletes a device bound session.
         """
         params = DeleteDeviceBoundSessionParams(key=key)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=NetworkCommand.DELETE_DEVICE_BOUND_SESSION,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def fetch_schemeful_site(
         self,
@@ -790,7 +771,7 @@ class Network:
         *,
         enable_third_party_cookie_restriction: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Sets Controls for third-party cookie access Page reload is required before the
         new cookie behavior will be observed
@@ -799,9 +780,8 @@ class Network:
             enable_third_party_cookie_restriction=enable_third_party_cookie_restriction
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=NetworkCommand.SET_COOKIE_CONTROLS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result

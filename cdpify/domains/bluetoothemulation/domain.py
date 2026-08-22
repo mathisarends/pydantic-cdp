@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -49,50 +47,47 @@ class BluetoothEmulation:
         state: CentralState,
         le_supported: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enable the BluetoothEmulation domain.
         """
         params = EnableParams(state=state, le_supported=le_supported)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=BluetoothEmulationCommand.ENABLE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_simulated_central_state(
         self,
         *,
         state: CentralState,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Set the state of the simulated central.
         """
         params = SetSimulatedCentralStateParams(state=state)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=BluetoothEmulationCommand.SET_SIMULATED_CENTRAL_STATE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def disable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Disable the BluetoothEmulation domain.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=BluetoothEmulationCommand.DISABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def simulate_preconnected_peripheral(
         self,
@@ -102,7 +97,7 @@ class BluetoothEmulation:
         manufacturer_data: list[ManufacturerData],
         known_service_uuids: list[str],
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Simulates a peripheral with |address|, |name| and |knownServiceUuids| that has
         already been connected to the system.
@@ -114,31 +109,29 @@ class BluetoothEmulation:
             known_service_uuids=known_service_uuids,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=BluetoothEmulationCommand.SIMULATE_PRECONNECTED_PERIPHERAL,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def simulate_advertisement(
         self,
         *,
         entry: ScanEntry,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Simulates an advertisement packet described in |entry| being received by the
         central.
         """
         params = SimulateAdvertisementParams(entry=entry)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=BluetoothEmulationCommand.SIMULATE_ADVERTISEMENT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def simulate_gatt_operation_response(
         self,
@@ -147,7 +140,7 @@ class BluetoothEmulation:
         type: GATTOperationType,
         code: int,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Simulates the response code from the peripheral with |address| for a GATT
         operation of |type|. The |code| value follows the HCI Error Codes from Bluetooth
@@ -157,12 +150,11 @@ class BluetoothEmulation:
             address=address, type=type, code=code
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=BluetoothEmulationCommand.SIMULATE_GATT_OPERATION_RESPONSE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def simulate_characteristic_operation_response(
         self,
@@ -172,7 +164,7 @@ class BluetoothEmulation:
         code: int,
         data: str | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Simulates the response from the characteristic with |characteristicId| for a
         characteristic operation of |type|. The |code| value follows the Error Codes
@@ -184,12 +176,11 @@ class BluetoothEmulation:
             characteristic_id=characteristic_id, type=type, code=code, data=data
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=BluetoothEmulationCommand.SIMULATE_CHARACTERISTIC_OPERATION_RESPONSE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def simulate_descriptor_operation_response(
         self,
@@ -199,7 +190,7 @@ class BluetoothEmulation:
         code: int,
         data: str | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Simulates the response from the descriptor with |descriptorId| for a descriptor
         operation of |type|. The |code| value follows the Error Codes from Bluetooth
@@ -210,12 +201,11 @@ class BluetoothEmulation:
             descriptor_id=descriptor_id, type=type, code=code, data=data
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=BluetoothEmulationCommand.SIMULATE_DESCRIPTOR_OPERATION_RESPONSE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def add_service(
         self,
@@ -241,18 +231,17 @@ class BluetoothEmulation:
         *,
         service_id: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Removes the service respresented by |serviceId| from the simulated central.
         """
         params = RemoveServiceParams(service_id=service_id)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=BluetoothEmulationCommand.REMOVE_SERVICE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def add_characteristic(
         self,
@@ -284,19 +273,18 @@ class BluetoothEmulation:
         *,
         characteristic_id: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Removes the characteristic respresented by |characteristicId| from the
         simulated central.
         """
         params = RemoveCharacteristicParams(characteristic_id=characteristic_id)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=BluetoothEmulationCommand.REMOVE_CHARACTERISTIC,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def add_descriptor(
         self,
@@ -325,33 +313,31 @@ class BluetoothEmulation:
         *,
         descriptor_id: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Removes the descriptor with |descriptorId| from the simulated central.
         """
         params = RemoveDescriptorParams(descriptor_id=descriptor_id)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=BluetoothEmulationCommand.REMOVE_DESCRIPTOR,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def simulate_gatt_disconnection(
         self,
         *,
         address: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Simulates a GATT disconnection from the peripheral with |address|.
         """
         params = SimulateGATTDisconnectionParams(address=address)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=BluetoothEmulationCommand.SIMULATE_GATT_DISCONNECTION,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result

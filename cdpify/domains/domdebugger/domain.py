@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
@@ -64,18 +64,17 @@ class DOMDebugger:
         node_id: dom.NodeId,
         type: DOMBreakpointType,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Removes DOM breakpoint that was set using `setDOMBreakpoint`.
         """
         params = RemoveDOMBreakpointParams(node_id=node_id, type=type)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMDebuggerCommand.REMOVE_DOM_BREAKPOINT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def remove_event_listener_breakpoint(
         self,
@@ -83,7 +82,7 @@ class DOMDebugger:
         event_name: str,
         target_name: str | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Removes breakpoint on particular DOM event.
         """
@@ -91,12 +90,11 @@ class DOMDebugger:
             event_name=event_name, target_name=target_name
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMDebuggerCommand.REMOVE_EVENT_LISTENER_BREAKPOINT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     @deprecated()
     async def remove_instrumentation_breakpoint(
@@ -104,54 +102,51 @@ class DOMDebugger:
         *,
         event_name: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Removes breakpoint on particular native event.
         """
         params = RemoveInstrumentationBreakpointParams(event_name=event_name)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMDebuggerCommand.REMOVE_INSTRUMENTATION_BREAKPOINT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def remove_xhr_breakpoint(
         self,
         *,
         url: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Removes breakpoint from XMLHttpRequest.
         """
         params = RemoveXHRBreakpointParams(url=url)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMDebuggerCommand.REMOVE_XHR_BREAKPOINT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_break_on_csp_violation(
         self,
         *,
         violation_types: list[CSPViolationType],
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Sets breakpoint on particular CSP violations.
         """
         params = SetBreakOnCSPViolationParams(violation_types=violation_types)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMDebuggerCommand.SET_BREAK_ON_CSP_VIOLATION,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_dom_breakpoint(
         self,
@@ -159,18 +154,17 @@ class DOMDebugger:
         node_id: dom.NodeId,
         type: DOMBreakpointType,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Sets breakpoint on particular operation with DOM.
         """
         params = SetDOMBreakpointParams(node_id=node_id, type=type)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMDebuggerCommand.SET_DOM_BREAKPOINT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_event_listener_breakpoint(
         self,
@@ -178,7 +172,7 @@ class DOMDebugger:
         event_name: str,
         target_name: str | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Sets breakpoint on particular DOM event.
         """
@@ -186,12 +180,11 @@ class DOMDebugger:
             event_name=event_name, target_name=target_name
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMDebuggerCommand.SET_EVENT_LISTENER_BREAKPOINT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     @deprecated()
     async def set_instrumentation_breakpoint(
@@ -199,33 +192,31 @@ class DOMDebugger:
         *,
         event_name: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Sets breakpoint on particular native event.
         """
         params = SetInstrumentationBreakpointParams(event_name=event_name)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMDebuggerCommand.SET_INSTRUMENTATION_BREAKPOINT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_xhr_breakpoint(
         self,
         *,
         url: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Sets breakpoint on XMLHttpRequest.
         """
         params = SetXHRBreakpointParams(url=url)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMDebuggerCommand.SET_XHR_BREAKPOINT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result

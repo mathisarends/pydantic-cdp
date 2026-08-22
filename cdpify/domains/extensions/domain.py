@@ -36,18 +36,17 @@ class Extensions:
         id: str,
         target_id: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Runs an extension default action.
         """
         params = TriggerActionParams(id=id, target_id=target_id)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=ExtensionsCommand.TRIGGER_ACTION,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def load_unpacked(
         self,
@@ -88,18 +87,17 @@ class Extensions:
         *,
         id: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Uninstalls an unpacked extension (others not supported) from the profile.
         """
         params = UninstallParams(id=id)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=ExtensionsCommand.UNINSTALL,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def get_storage_items(
         self,
@@ -129,18 +127,17 @@ class Extensions:
         storage_area: StorageArea,
         keys: list[str],
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Removes `keys` from extension storage in the given `storageArea`.
         """
         params = RemoveStorageItemsParams(id=id, storage_area=storage_area, keys=keys)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=ExtensionsCommand.REMOVE_STORAGE_ITEMS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def clear_storage_items(
         self,
@@ -148,18 +145,17 @@ class Extensions:
         id: str,
         storage_area: StorageArea,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Clears extension storage in the given `storageArea`.
         """
         params = ClearStorageItemsParams(id=id, storage_area=storage_area)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=ExtensionsCommand.CLEAR_STORAGE_ITEMS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_storage_items(
         self,
@@ -168,16 +164,15 @@ class Extensions:
         storage_area: StorageArea,
         values: dict[str, Any],
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Sets `values` in extension storage in the given `storageArea`. The provided
         `values` will be merged with existing values in the storage area.
         """
         params = SetStorageItemsParams(id=id, storage_area=storage_area, values=values)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=ExtensionsCommand.SET_STORAGE_ITEMS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result

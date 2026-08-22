@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -36,28 +34,26 @@ class ServiceWorker:
         registration_id: RegistrationID,
         data: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         params = DeliverPushMessageParams(
             origin=origin, registration_id=registration_id, data=data
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=ServiceWorkerCommand.DELIVER_PUSH_MESSAGE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def disable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
-        result = await self._command_sender.send_raw(
+    ) -> None:
+        await self._command_sender.send_raw(
             method=ServiceWorkerCommand.DISABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def dispatch_sync_event(
         self,
@@ -67,7 +63,7 @@ class ServiceWorker:
         tag: str,
         last_chance: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         params = DispatchSyncEventParams(
             origin=origin,
             registration_id=registration_id,
@@ -75,12 +71,11 @@ class ServiceWorker:
             last_chance=last_chance,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=ServiceWorkerCommand.DISPATCH_SYNC_EVENT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def dispatch_periodic_sync_event(
         self,
@@ -89,128 +84,119 @@ class ServiceWorker:
         registration_id: RegistrationID,
         tag: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         params = DispatchPeriodicSyncEventParams(
             origin=origin, registration_id=registration_id, tag=tag
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=ServiceWorkerCommand.DISPATCH_PERIODIC_SYNC_EVENT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def enable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
-        result = await self._command_sender.send_raw(
+    ) -> None:
+        await self._command_sender.send_raw(
             method=ServiceWorkerCommand.ENABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def set_force_update_on_page_load(
         self,
         *,
         force_update_on_page_load: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         params = SetForceUpdateOnPageLoadParams(
             force_update_on_page_load=force_update_on_page_load
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=ServiceWorkerCommand.SET_FORCE_UPDATE_ON_PAGE_LOAD,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def skip_waiting(
         self,
         *,
         scope_url: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         params = SkipWaitingParams(scope_url=scope_url)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=ServiceWorkerCommand.SKIP_WAITING,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def start_worker(
         self,
         *,
         scope_url: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         params = StartWorkerParams(scope_url=scope_url)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=ServiceWorkerCommand.START_WORKER,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def stop_all_workers(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
-        result = await self._command_sender.send_raw(
+    ) -> None:
+        await self._command_sender.send_raw(
             method=ServiceWorkerCommand.STOP_ALL_WORKERS,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def stop_worker(
         self,
         *,
         version_id: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         params = StopWorkerParams(version_id=version_id)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=ServiceWorkerCommand.STOP_WORKER,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def unregister(
         self,
         *,
         scope_url: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         params = UnregisterParams(scope_url=scope_url)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=ServiceWorkerCommand.UNREGISTER,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def update_registration(
         self,
         *,
         scope_url: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         params = UpdateRegistrationParams(scope_url=scope_url)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=ServiceWorkerCommand.UPDATE_REGISTRATION,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result

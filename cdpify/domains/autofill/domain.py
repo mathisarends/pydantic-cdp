@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from cdpify.shared.command_sender import CDPCommandSender
 
@@ -34,7 +34,7 @@ class Autofill:
         card: CreditCard | None = None,
         address: Address | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Trigger autofill on a form identified by the fieldId. If the field and related
         form cannot be autofilled, returns an error.
@@ -43,55 +43,51 @@ class Autofill:
             field_id=field_id, frame_id=frame_id, card=card, address=address
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=AutofillCommand.TRIGGER,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_addresses(
         self,
         *,
         addresses: list[Address],
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Set addresses so that developers can verify their forms implementation.
         """
         params = SetAddressesParams(addresses=addresses)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=AutofillCommand.SET_ADDRESSES,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def disable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Disables autofill domain notifications.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=AutofillCommand.DISABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def enable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enables autofill domain notifications.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=AutofillCommand.ENABLE,
             params=None,
             session_id=session_id,
         )
-        return result

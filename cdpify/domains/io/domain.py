@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from cdpify.shared.command_sender import CDPCommandSender
 
@@ -33,18 +33,17 @@ class IO:
         *,
         handle: StreamHandle,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Close the stream, discard any temporary backing storage.
         """
         params = CloseParams(handle=handle)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=IOCommand.CLOSE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def read(
         self,

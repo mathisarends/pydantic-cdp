@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
@@ -97,18 +97,17 @@ class Storage:
         origin: str,
         storage_types: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Clears storage for origin.
         """
         params = ClearDataForOriginParams(origin=origin, storage_types=storage_types)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=StorageCommand.CLEAR_DATA_FOR_ORIGIN,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def clear_data_for_storage_key(
         self,
@@ -116,7 +115,7 @@ class Storage:
         storage_key: str,
         storage_types: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Clears storage for storage key.
         """
@@ -124,12 +123,11 @@ class Storage:
             storage_key=storage_key, storage_types=storage_types
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=StorageCommand.CLEAR_DATA_FOR_STORAGE_KEY,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def get_cookies(
         self,
@@ -155,7 +153,7 @@ class Storage:
         cookies: list[network.CookieParam],
         browser_context_id: browser.BrowserContextID | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Sets given cookies.
         """
@@ -163,30 +161,28 @@ class Storage:
             cookies=cookies, browser_context_id=browser_context_id
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=StorageCommand.SET_COOKIES,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def clear_cookies(
         self,
         *,
         browser_context_id: browser.BrowserContextID | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Clears cookies.
         """
         params = ClearCookiesParams(browser_context_id=browser_context_id)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=StorageCommand.CLEAR_COOKIES,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def get_usage_and_quota(
         self,
@@ -212,164 +208,155 @@ class Storage:
         origin: str,
         quota_size: float | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Override quota for the specified origin
         """
         params = OverrideQuotaForOriginParams(origin=origin, quota_size=quota_size)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=StorageCommand.OVERRIDE_QUOTA_FOR_ORIGIN,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def track_cache_storage_for_origin(
         self,
         *,
         origin: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Registers origin to be notified when an update occurs to its cache storage
         list.
         """
         params = TrackCacheStorageForOriginParams(origin=origin)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=StorageCommand.TRACK_CACHE_STORAGE_FOR_ORIGIN,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def track_cache_storage_for_storage_key(
         self,
         *,
         storage_key: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Registers storage key to be notified when an update occurs to its cache storage
         list.
         """
         params = TrackCacheStorageForStorageKeyParams(storage_key=storage_key)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=StorageCommand.TRACK_CACHE_STORAGE_FOR_STORAGE_KEY,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def track_indexed_db_for_origin(
         self,
         *,
         origin: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Registers origin to be notified when an update occurs to its IndexedDB.
         """
         params = TrackIndexedDBForOriginParams(origin=origin)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=StorageCommand.TRACK_INDEXED_DB_FOR_ORIGIN,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def track_indexed_db_for_storage_key(
         self,
         *,
         storage_key: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Registers storage key to be notified when an update occurs to its IndexedDB.
         """
         params = TrackIndexedDBForStorageKeyParams(storage_key=storage_key)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=StorageCommand.TRACK_INDEXED_DB_FOR_STORAGE_KEY,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def untrack_cache_storage_for_origin(
         self,
         *,
         origin: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Unregisters origin from receiving notifications for cache storage.
         """
         params = UntrackCacheStorageForOriginParams(origin=origin)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=StorageCommand.UNTRACK_CACHE_STORAGE_FOR_ORIGIN,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def untrack_cache_storage_for_storage_key(
         self,
         *,
         storage_key: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Unregisters storage key from receiving notifications for cache storage.
         """
         params = UntrackCacheStorageForStorageKeyParams(storage_key=storage_key)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=StorageCommand.UNTRACK_CACHE_STORAGE_FOR_STORAGE_KEY,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def untrack_indexed_db_for_origin(
         self,
         *,
         origin: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Unregisters origin from receiving notifications for IndexedDB.
         """
         params = UntrackIndexedDBForOriginParams(origin=origin)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=StorageCommand.UNTRACK_INDEXED_DB_FOR_ORIGIN,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def untrack_indexed_db_for_storage_key(
         self,
         *,
         storage_key: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Unregisters storage key from receiving notifications for IndexedDB.
         """
         params = UntrackIndexedDBForStorageKeyParams(storage_key=storage_key)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=StorageCommand.UNTRACK_INDEXED_DB_FOR_STORAGE_KEY,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def get_trust_tokens(
         self,
@@ -411,36 +398,34 @@ class Storage:
         storage_key: str,
         enable: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Set tracking for a storage key's buckets.
         """
         params = SetStorageBucketTrackingParams(storage_key=storage_key, enable=enable)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=StorageCommand.SET_STORAGE_BUCKET_TRACKING,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def delete_storage_bucket(
         self,
         *,
         bucket: StorageBucket,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Deletes the Storage Bucket with the given storage key and bucket name.
         """
         params = DeleteStorageBucketParams(bucket=bucket)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=StorageCommand.DELETE_STORAGE_BUCKET,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def run_bounce_tracking_mitigations(
         self,

@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
@@ -155,31 +155,29 @@ class CSS:
     async def disable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Disables the CSS agent for the given page.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=CSSCommand.DISABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def enable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enables the CSS agent for the given page. Clients should not assume that the
         CSS agent has been enabled until the result of this command is received.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=CSSCommand.ENABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def force_pseudo_state(
         self,
@@ -187,7 +185,7 @@ class CSS:
         node_id: dom.NodeId,
         forced_pseudo_classes: list[str],
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Ensures that the given node will have specified pseudo-classes whenever its
         style is computed by the browser.
@@ -196,12 +194,11 @@ class CSS:
             node_id=node_id, forced_pseudo_classes=forced_pseudo_classes
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=CSSCommand.FORCE_PSEUDO_STATE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def force_starting_style(
         self,
@@ -209,18 +206,17 @@ class CSS:
         node_id: dom.NodeId,
         forced: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Ensures that the given node is in its starting-style state.
         """
         params = ForceStartingStyleParams(node_id=node_id, forced=forced)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=CSSCommand.FORCE_STARTING_STYLE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def get_background_colors(
         self,
@@ -477,7 +473,7 @@ class CSS:
         *,
         node_id: dom.NodeId | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Starts tracking the given node for the computed style updates and whenever the
         computed style is updated for node, it queues a `computedStyleUpdated` event
@@ -487,19 +483,18 @@ class CSS:
         """
         params = TrackComputedStyleUpdatesForNodeParams(node_id=node_id)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=CSSCommand.TRACK_COMPUTED_STYLE_UPDATES_FOR_NODE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def track_computed_style_updates(
         self,
         *,
         properties_to_track: list[CSSComputedStyleProperty],
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Starts tracking the given computed styles for updates. The specified array of
         properties replaces the one previously specified. Pass empty array to disable
@@ -513,12 +508,11 @@ class CSS:
             properties_to_track=properties_to_track
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=CSSCommand.TRACK_COMPUTED_STYLE_UPDATES,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def take_computed_style_updates(
         self,
@@ -541,7 +535,7 @@ class CSS:
         property_name: str,
         value: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Find a rule with the given active property for the given node and set the new
         value for this property
@@ -550,12 +544,11 @@ class CSS:
             node_id=node_id, property_name=property_name, value=value
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=CSSCommand.SET_EFFECTIVE_PROPERTY_VALUE_FOR_NODE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_property_rule_property_name(
         self,
@@ -798,16 +791,15 @@ class CSS:
     async def start_rule_usage_tracking(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enables the selector recording.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=CSSCommand.START_RULE_USAGE_TRACKING,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def stop_rule_usage_tracking(
         self,
@@ -844,15 +836,14 @@ class CSS:
         *,
         enabled: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enables/disables rendering of local CSS fonts (enabled by default).
         """
         params = SetLocalFontsEnabledParams(enabled=enabled)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=CSSCommand.SET_LOCAL_FONTS_ENABLED,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result

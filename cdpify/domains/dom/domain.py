@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Literal
+from typing import TYPE_CHECKING, Literal
 
 from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
@@ -186,7 +186,7 @@ class DOM:
         object_id: runtime.RemoteObjectId | None = None,
         rect: Rect | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Scrolls the specified rect of the given node into view if not already visible.
         Note: exactly one between nodeId, backendNodeId and objectId should be passed to
@@ -199,63 +199,59 @@ class DOM:
             rect=rect,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMCommand.SCROLL_INTO_VIEW_IF_NEEDED,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def disable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Disables DOM agent for the given page.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMCommand.DISABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def discard_search_results(
         self,
         *,
         search_id: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Discards search results from the session with the given id. `getSearchResults`
         should no longer be called for that search.
         """
         params = DiscardSearchResultsParams(search_id=search_id)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMCommand.DISCARD_SEARCH_RESULTS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def enable(
         self,
         *,
         include_whitespace: Literal["none", "all"] | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enables DOM agent for the given page.
         """
         params = EnableParams(include_whitespace=include_whitespace)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMCommand.ENABLE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def focus(
         self,
@@ -264,7 +260,7 @@ class DOM:
         backend_node_id: BackendNodeId | None = None,
         object_id: runtime.RemoteObjectId | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Focuses the given element.
         """
@@ -272,12 +268,11 @@ class DOM:
             node_id=node_id, backend_node_id=backend_node_id, object_id=object_id
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMCommand.FOCUS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def get_attributes(
         self,
@@ -503,58 +498,54 @@ class DOM:
     async def hide_highlight(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Hides any highlight.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMCommand.HIDE_HIGHLIGHT,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def highlight_node(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Highlights DOM node.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMCommand.HIGHLIGHT_NODE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def highlight_rect(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Highlights given rectangle.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMCommand.HIGHLIGHT_RECT,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def mark_undoable_state(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Marks last undoable state.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMCommand.MARK_UNDOABLE_STATE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def move_to(
         self,
@@ -718,16 +709,15 @@ class DOM:
     async def redo(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Re-does the last undone action.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMCommand.REDO,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def remove_attribute(
         self,
@@ -735,36 +725,34 @@ class DOM:
         node_id: NodeId,
         name: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Removes attribute with given name from an element with given id.
         """
         params = RemoveAttributeParams(node_id=node_id, name=name)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMCommand.REMOVE_ATTRIBUTE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def remove_node(
         self,
         *,
         node_id: NodeId,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Removes node with given id.
         """
         params = RemoveNodeParams(node_id=node_id)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMCommand.REMOVE_NODE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def request_child_nodes(
         self,
@@ -773,7 +761,7 @@ class DOM:
         depth: int | None = None,
         pierce: bool | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Requests that children of the node with given id are returned to the caller in
         form of `setChildNodes` events where not only immediate children are retrieved,
@@ -781,12 +769,11 @@ class DOM:
         """
         params = RequestChildNodesParams(node_id=node_id, depth=depth, pierce=pierce)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMCommand.REQUEST_CHILD_NODES,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def request_node(
         self,
@@ -841,18 +828,17 @@ class DOM:
         name: str,
         value: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Sets attribute for an element with given id.
         """
         params = SetAttributeValueParams(node_id=node_id, name=name, value=value)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMCommand.SET_ATTRIBUTE_VALUE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_attributes_as_text(
         self,
@@ -861,19 +847,18 @@ class DOM:
         text: str,
         name: str | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Sets attributes on element with given id. This method is useful when user edits
         some existing attribute value and types in several attribute name/value pairs.
         """
         params = SetAttributesAsTextParams(node_id=node_id, text=text, name=name)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMCommand.SET_ATTRIBUTES_AS_TEXT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_file_input_files(
         self,
@@ -883,7 +868,7 @@ class DOM:
         backend_node_id: BackendNodeId | None = None,
         object_id: runtime.RemoteObjectId | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Sets files for the given file input element.
         """
@@ -894,31 +879,29 @@ class DOM:
             object_id=object_id,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMCommand.SET_FILE_INPUT_FILES,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_node_stack_traces_enabled(
         self,
         *,
         enable: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Sets if stack traces should be captured for Nodes. See
         `Node.getNodeStackTraces`. Default is disabled.
         """
         params = SetNodeStackTracesEnabledParams(enable=enable)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMCommand.SET_NODE_STACK_TRACES_ENABLED,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def get_node_stack_traces(
         self,
@@ -976,19 +959,18 @@ class DOM:
         *,
         node_id: NodeId,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enables console to refer to the node with given id via $x (see Command Line API
         for more details $x functions).
         """
         params = SetInspectedNodeParams(node_id=node_id)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMCommand.SET_INSPECTED_NODE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_node_name(
         self,
@@ -1015,18 +997,17 @@ class DOM:
         node_id: NodeId,
         value: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Sets node value for a node with given id.
         """
         params = SetNodeValueParams(node_id=node_id, value=value)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMCommand.SET_NODE_VALUE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_outer_html(
         self,
@@ -1034,32 +1015,30 @@ class DOM:
         node_id: NodeId,
         outer_html: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Sets node HTML markup, returns new node id.
         """
         params = SetOuterHTMLParams(node_id=node_id, outer_html=outer_html)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMCommand.SET_OUTER_HTML,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def undo(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Undoes the last performed action.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMCommand.UNDO,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def get_frame_owner(
         self,
@@ -1183,16 +1162,15 @@ class DOM:
         node_id: NodeId,
         enable: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         When enabling, this API forces an element to gain interest in its target,
         keeping interest active until disabled.
         """
         params = ForceShowInterestParams(node_id=node_id, enable=enable)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DOMCommand.FORCE_SHOW_INTEREST,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result

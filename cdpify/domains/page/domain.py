@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Literal
+from typing import TYPE_CHECKING, Literal
 
 from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
@@ -147,16 +147,15 @@ class Page:
     async def bring_to_front(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Brings page to front (activates tab).
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.BRING_TO_FRONT,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def capture_screenshot(
         self,
@@ -211,46 +210,43 @@ class Page:
     async def clear_device_metrics_override(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Clears the overridden device metrics.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.CLEAR_DEVICE_METRICS_OVERRIDE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     @deprecated()
     async def clear_device_orientation_override(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Clears the overridden Device Orientation.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.CLEAR_DEVICE_ORIENTATION_OVERRIDE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     @deprecated()
     async def clear_geolocation_override(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Clears the overridden Geolocation Position and Error.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.CLEAR_GEOLOCATION_OVERRIDE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def create_isolated_world(
         self,
@@ -285,39 +281,37 @@ class Page:
         cookie_name: str,
         url: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Deletes browser cookie with given name, domain and path.
         """
         params = DeleteCookieParams(cookie_name=cookie_name, url=url)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.DELETE_COOKIE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def disable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Disables page domain notifications.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.DISABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def enable(
         self,
         *,
         enable_file_chooser_opened_event: bool | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enables page domain notifications.
         """
@@ -325,12 +319,11 @@ class Page:
             enable_file_chooser_opened_event=enable_file_chooser_opened_event
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.ENABLE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def get_app_manifest(
         self,
@@ -456,16 +449,15 @@ class Page:
     async def reset_navigation_history(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Resets navigation history for the current page.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.RESET_NAVIGATION_HISTORY,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def get_resource_content(
         self,
@@ -506,19 +498,18 @@ class Page:
         accept: bool,
         prompt_text: str | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Accepts or dismisses a JavaScript initiated dialog (alert, confirm, prompt, or
         onbeforeunload).
         """
         params = HandleJavaScriptDialogParams(accept=accept, prompt_text=prompt_text)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.HANDLE_JAVA_SCRIPT_DIALOG,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def navigate(
         self,
@@ -553,18 +544,17 @@ class Page:
         *,
         entry_id: int,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Navigates current page to the given history entry.
         """
         params = NavigateToHistoryEntryParams(entry_id=entry_id)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.NAVIGATE_TO_HISTORY_ENTRY,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def print_to_pdf(
         self,
@@ -625,7 +615,7 @@ class Page:
         script_to_evaluate_on_load: str | None = None,
         loader_id: network.LoaderId | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Reloads given page optionally ignoring the cache.
         """
@@ -635,12 +625,11 @@ class Page:
             loader_id=loader_id,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.RELOAD,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     @deprecated()
     async def remove_script_to_evaluate_on_load(
@@ -648,54 +637,51 @@ class Page:
         *,
         identifier: ScriptIdentifier,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Deprecated, please use removeScriptToEvaluateOnNewDocument instead.
         """
         params = RemoveScriptToEvaluateOnLoadParams(identifier=identifier)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.REMOVE_SCRIPT_TO_EVALUATE_ON_LOAD,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def remove_script_to_evaluate_on_new_document(
         self,
         *,
         identifier: ScriptIdentifier,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Removes given script from the list.
         """
         params = RemoveScriptToEvaluateOnNewDocumentParams(identifier=identifier)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.REMOVE_SCRIPT_TO_EVALUATE_ON_NEW_DOCUMENT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def screencast_frame_ack(
         self,
         *,
         screencast_frame_ack_session_id: int,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Acknowledges that a screencast frame has been received by the frontend.
         """
         params = ScreencastFrameAckParams(session_id=screencast_frame_ack_session_id)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.SCREENCAST_FRAME_ACK,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def search_in_resource(
         self,
@@ -730,36 +716,34 @@ class Page:
         *,
         enabled: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enable Chrome's experimental ad filter on all sites.
         """
         params = SetAdBlockingEnabledParams(enabled=enabled)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.SET_AD_BLOCKING_ENABLED,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_bypass_csp(
         self,
         *,
         enabled: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enable page Content Security Policy by-passing.
         """
         params = SetBypassCSPParams(enabled=enabled)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.SET_BYPASS_CSP,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def get_permissions_policy_state(
         self,
@@ -814,7 +798,7 @@ class Page:
         screen_orientation: emulation.ScreenOrientation | None = None,
         viewport: Viewport | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Overrides the values of device screen dimensions (window.screen.width,
         window.screen.height, window.innerWidth, window.innerHeight, and
@@ -835,12 +819,11 @@ class Page:
             viewport=viewport,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.SET_DEVICE_METRICS_OVERRIDE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     @deprecated()
     async def set_device_orientation_override(
@@ -850,18 +833,17 @@ class Page:
         beta: float,
         gamma: float,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Overrides the Device Orientation.
         """
         params = SetDeviceOrientationOverrideParams(alpha=alpha, beta=beta, gamma=gamma)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.SET_DEVICE_ORIENTATION_OVERRIDE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_font_families(
         self,
@@ -869,7 +851,7 @@ class Page:
         font_families: FontFamilies,
         for_scripts: list[ScriptFontFamilies] | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Set generic font families.
         """
@@ -877,30 +859,28 @@ class Page:
             font_families=font_families, for_scripts=for_scripts
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.SET_FONT_FAMILIES,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_font_sizes(
         self,
         *,
         font_sizes: FontSizes,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Set default font sizes.
         """
         params = SetFontSizesParams(font_sizes=font_sizes)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.SET_FONT_SIZES,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_document_content(
         self,
@@ -908,18 +888,17 @@ class Page:
         frame_id: FrameId,
         html: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Sets given markup as the document's HTML.
         """
         params = SetDocumentContentParams(frame_id=frame_id, html=html)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.SET_DOCUMENT_CONTENT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     @deprecated()
     async def set_download_behavior(
@@ -928,7 +907,7 @@ class Page:
         behavior: Literal["deny", "allow", "default"],
         download_path: str | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Set the behavior when downloading a file.
         """
@@ -936,12 +915,11 @@ class Page:
             behavior=behavior, download_path=download_path
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.SET_DOWNLOAD_BEHAVIOR,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     @deprecated()
     async def set_geolocation_override(
@@ -951,7 +929,7 @@ class Page:
         longitude: float | None = None,
         accuracy: float | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Overrides the Geolocation Position or Error. Omitting any of the parameters
         emulates position unavailable.
@@ -960,30 +938,28 @@ class Page:
             latitude=latitude, longitude=longitude, accuracy=accuracy
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.SET_GEOLOCATION_OVERRIDE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_lifecycle_events_enabled(
         self,
         *,
         enabled: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Controls whether page will emit lifecycle events.
         """
         params = SetLifecycleEventsEnabledParams(enabled=enabled)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.SET_LIFECYCLE_EVENTS_ENABLED,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     @deprecated()
     async def set_touch_emulation_enabled(
@@ -992,7 +968,7 @@ class Page:
         enabled: bool,
         configuration: Literal["mobile", "desktop"] | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Toggles mouse event-based touch event emulation.
         """
@@ -1000,12 +976,11 @@ class Page:
             enabled=enabled, configuration=configuration
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.SET_TOUCH_EMULATION_ENABLED,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def start_screencast(
         self,
@@ -1018,7 +993,7 @@ class Page:
         max_frames_in_flight: int | None = None,
         send_last_frame: bool | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Starts sending each frame using the `screencastFrame` event.
         """
@@ -1032,12 +1007,11 @@ class Page:
             send_last_frame=send_last_frame,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.START_SCREENCAST,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def start_screen_recording(
         self,
@@ -1082,84 +1056,79 @@ class Page:
     async def stop_loading(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Force the page stop all navigations and pending resource fetches.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.STOP_LOADING,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def crash(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Crashes renderer on the IO thread, generates minidumps.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.CRASH,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def close(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Tries to close page, running its beforeunload hooks, if any.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.CLOSE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def set_web_lifecycle_state(
         self,
         *,
         state: Literal["frozen", "active"],
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Tries to update the web lifecycle state of the page. It will transition the
         page to the given state according to: https://github.com/WICG/web-lifecycle/
         """
         params = SetWebLifecycleStateParams(state=state)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.SET_WEB_LIFECYCLE_STATE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def stop_screencast(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Stops sending each frame in the `screencastFrame`.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.STOP_SCREENCAST,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def produce_compilation_cache(
         self,
         *,
         scripts: list[CompilationCacheParams],
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Requests backend to produce compilation cache for the specified scripts.
         `scripts` are appended to the list of scripts for which the cache would be
@@ -1170,12 +1139,11 @@ class Page:
         """
         params = ProduceCompilationCacheParams(scripts=scripts)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.PRODUCE_COMPILATION_CACHE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def add_compilation_cache(
         self,
@@ -1183,33 +1151,31 @@ class Page:
         url: str,
         data: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Seeds compilation cache for given url. Compilation cache does not survive
         cross-process navigation.
         """
         params = AddCompilationCacheParams(url=url, data=data)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.ADD_COMPILATION_CACHE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def clear_compilation_cache(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Clears seeded compilation cache.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.CLEAR_COMPILATION_CACHE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def set_spc_transaction_mode(
         self,
@@ -1222,38 +1188,36 @@ class Page:
             "autoOptOut",
         ],
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Sets the Secure Payment Confirmation transaction mode.
         https://w3c.github.io/secure-payment-confirmation/#sctn-automation-set-spc-transaction-mode
         """
         params = SetSPCTransactionModeParams(mode=mode)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.SET_SPC_TRANSACTION_MODE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_rph_registration_mode(
         self,
         *,
         mode: Literal["none", "autoAccept", "autoReject"],
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Extensions for Custom Handlers API:
         https://html.spec.whatwg.org/multipage/system-state.html#rph-automation
         """
         params = SetRPHRegistrationModeParams(mode=mode)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.SET_RPH_REGISTRATION_MODE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def generate_test_report(
         self,
@@ -1261,33 +1225,31 @@ class Page:
         message: str,
         group: str | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Generates a report for testing.
         """
         params = GenerateTestReportParams(message=message, group=group)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.GENERATE_TEST_REPORT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def wait_for_debugger(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Pauses page execution. Can be resumed using generic
         Runtime.runIfWaitingForDebugger.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.WAIT_FOR_DEBUGGER,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def set_intercept_file_chooser_dialog(
         self,
@@ -1295,7 +1257,7 @@ class Page:
         enabled: bool,
         cancel: bool | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Intercept file chooser requests and transfer control to protocol clients. When
         file chooser interception is enabled, native file chooser dialog is not shown.
@@ -1303,19 +1265,18 @@ class Page:
         """
         params = SetInterceptFileChooserDialogParams(enabled=enabled, cancel=cancel)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.SET_INTERCEPT_FILE_CHOOSER_DIALOG,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_prerendering_allowed(
         self,
         *,
         is_allowed: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enable/disable prerendering manually. This command is a short-term solution for
         https://crbug.com/1440085. See
@@ -1325,12 +1286,11 @@ class Page:
         """
         params = SetPrerenderingAllowedParams(is_allowed=is_allowed)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PageCommand.SET_PRERENDERING_ALLOWED,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def get_annotated_page_content(
         self,

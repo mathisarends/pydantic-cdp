@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -27,7 +25,7 @@ class Cast:
         *,
         presentation_url: str | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Starts observing for sinks that can be used for tab mirroring, and if set,
         sinks compatible with |presentationUrl| as well. When sinks are found, a
@@ -36,96 +34,90 @@ class Cast:
         """
         params = EnableParams(presentation_url=presentation_url)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=CastCommand.ENABLE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def disable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Stops observing for sinks and issues.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=CastCommand.DISABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def set_sink_to_use(
         self,
         *,
         sink_name: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Sets a sink to be used when the web page requests the browser to choose a sink
         via Presentation API, Remote Playback API, or Cast SDK.
         """
         params = SetSinkToUseParams(sink_name=sink_name)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=CastCommand.SET_SINK_TO_USE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def start_desktop_mirroring(
         self,
         *,
         sink_name: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Starts mirroring the desktop to the sink.
         """
         params = StartDesktopMirroringParams(sink_name=sink_name)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=CastCommand.START_DESKTOP_MIRRORING,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def start_tab_mirroring(
         self,
         *,
         sink_name: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Starts mirroring the tab to the sink.
         """
         params = StartTabMirroringParams(sink_name=sink_name)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=CastCommand.START_TAB_MIRRORING,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def stop_casting(
         self,
         *,
         sink_name: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Stops the active Cast session on the sink.
         """
         params = StopCastingParams(sink_name=sink_name)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=CastCommand.STOP_CASTING,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result

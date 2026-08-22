@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -24,75 +22,70 @@ class Log:
     async def clear(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Clears the log.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=LogCommand.CLEAR,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def disable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Disables log domain, prevents further log entries from being reported to the
         client.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=LogCommand.DISABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def enable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enables log domain, sends the entries collected so far to the client by means
         of the `entryAdded` notification.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=LogCommand.ENABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def start_violations_report(
         self,
         *,
         config: list[ViolationSetting],
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         start violation reporting.
         """
         params = StartViolationsReportParams(config=config)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=LogCommand.START_VIOLATIONS_REPORT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def stop_violations_report(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Stop violation reporting.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=LogCommand.STOP_VIOLATIONS_REPORT,
             params=None,
             session_id=session_id,
         )
-        return result

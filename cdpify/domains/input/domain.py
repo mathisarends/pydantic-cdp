@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Literal
+from typing import Literal
 
 from cdpify.shared.command_sender import CDPCommandSender
 
@@ -45,7 +45,7 @@ class Input:
         data: DragData,
         modifiers: int | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Dispatches a drag event into the page.
         """
@@ -53,12 +53,11 @@ class Input:
             type=type, x=x, y=y, data=data, modifiers=modifiers
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=InputCommand.DISPATCH_DRAG_EVENT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def dispatch_key_event(
         self,
@@ -79,7 +78,7 @@ class Input:
         location: int | None = None,
         commands: list[str] | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Dispatches a key event to the page.
         """
@@ -101,31 +100,29 @@ class Input:
             commands=commands,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=InputCommand.DISPATCH_KEY_EVENT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def insert_text(
         self,
         *,
         text: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         This method emulates inserting text that doesn't come from a key press, for
         example an emoji keyboard or an IME.
         """
         params = InsertTextParams(text=text)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=InputCommand.INSERT_TEXT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def ime_set_composition(
         self,
@@ -136,7 +133,7 @@ class Input:
         replacement_start: int | None = None,
         replacement_end: int | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         This method sets the current candidate text for IME. Use imeCommitComposition
         to commit the final text. Use imeSetComposition with empty string as text to
@@ -150,12 +147,11 @@ class Input:
             replacement_end=replacement_end,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=InputCommand.IME_SET_COMPOSITION,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def dispatch_mouse_event(
         self,
@@ -177,7 +173,7 @@ class Input:
         delta_y: float | None = None,
         pointer_type: Literal["mouse", "pen"] | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Dispatches a mouse event to the page.
         """
@@ -200,12 +196,11 @@ class Input:
             pointer_type=pointer_type,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=InputCommand.DISPATCH_MOUSE_EVENT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def dispatch_touch_event(
         self,
@@ -215,7 +210,7 @@ class Input:
         modifiers: int | None = None,
         timestamp: TimeSinceEpoch | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Dispatches a touch event to the page.
         """
@@ -226,26 +221,24 @@ class Input:
             timestamp=timestamp,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=InputCommand.DISPATCH_TOUCH_EVENT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def cancel_dragging(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Cancels any active dragging in the page.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=InputCommand.CANCEL_DRAGGING,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def emulate_touch_from_mouse_event(
         self,
@@ -260,7 +253,7 @@ class Input:
         modifiers: int | None = None,
         click_count: int | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Emulates touch event from the mouse event parameters.
         """
@@ -276,37 +269,35 @@ class Input:
             click_count=click_count,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=InputCommand.EMULATE_TOUCH_FROM_MOUSE_EVENT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_ignore_input_events(
         self,
         *,
         ignore: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Ignores input events (useful while auditing page).
         """
         params = SetIgnoreInputEventsParams(ignore=ignore)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=InputCommand.SET_IGNORE_INPUT_EVENTS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_intercept_drags(
         self,
         *,
         enabled: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Prevents default drag and drop behavior and instead emits
         `Input.dragIntercepted` events. Drag and drop behavior can be directly
@@ -314,12 +305,11 @@ class Input:
         """
         params = SetInterceptDragsParams(enabled=enabled)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=InputCommand.SET_INTERCEPT_DRAGS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def synthesize_pinch_gesture(
         self,
@@ -330,7 +320,7 @@ class Input:
         relative_speed: int | None = None,
         gesture_source_type: GestureSourceType | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Synthesizes a pinch gesture over a time period by issuing appropriate touch
         events.
@@ -343,12 +333,11 @@ class Input:
             gesture_source_type=gesture_source_type,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=InputCommand.SYNTHESIZE_PINCH_GESTURE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def synthesize_scroll_gesture(
         self,
@@ -366,7 +355,7 @@ class Input:
         repeat_delay_ms: int | None = None,
         interaction_marker_name: str | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Synthesizes a scroll gesture over a time period by issuing appropriate touch
         events.
@@ -386,12 +375,11 @@ class Input:
             interaction_marker_name=interaction_marker_name,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=InputCommand.SYNTHESIZE_SCROLL_GESTURE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def synthesize_tap_gesture(
         self,
@@ -402,7 +390,7 @@ class Input:
         tap_count: int | None = None,
         gesture_source_type: GestureSourceType | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Synthesizes a tap gesture over a time period by issuing appropriate touch
         events.
@@ -415,9 +403,8 @@ class Input:
             gesture_source_type=gesture_source_type,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=InputCommand.SYNTHESIZE_TAP_GESTURE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result

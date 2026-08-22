@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -20,21 +18,19 @@ class Preload:
     async def enable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
-        result = await self._command_sender.send_raw(
+    ) -> None:
+        await self._command_sender.send_raw(
             method=PreloadCommand.ENABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def disable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
-        result = await self._command_sender.send_raw(
+    ) -> None:
+        await self._command_sender.send_raw(
             method=PreloadCommand.DISABLE,
             params=None,
             session_id=session_id,
         )
-        return result

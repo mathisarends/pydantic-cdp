@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -59,67 +57,63 @@ class Memory:
     async def prepare_for_leak_detection(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Prepares for leak detection by terminating workers, stopping spellcheckers,
         dropping non-essential internal caches, running garbage collections, etc.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=MemoryCommand.PREPARE_FOR_LEAK_DETECTION,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def forcibly_purge_java_script_memory(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Simulate OomIntervention by purging V8 memory.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=MemoryCommand.FORCIBLY_PURGE_JAVA_SCRIPT_MEMORY,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def set_pressure_notifications_suppressed(
         self,
         *,
         suppressed: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enable/disable suppressing memory pressure notifications in all processes.
         """
         params = SetPressureNotificationsSuppressedParams(suppressed=suppressed)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=MemoryCommand.SET_PRESSURE_NOTIFICATIONS_SUPPRESSED,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def simulate_pressure_notification(
         self,
         *,
         level: PressureLevel,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Simulate a memory pressure notification in all processes.
         """
         params = SimulatePressureNotificationParams(level=level)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=MemoryCommand.SIMULATE_PRESSURE_NOTIFICATION,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def start_sampling(
         self,
@@ -127,7 +121,7 @@ class Memory:
         sampling_interval: int | None = None,
         suppress_randomness: bool | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Start collecting native memory profile.
         """
@@ -135,26 +129,24 @@ class Memory:
             sampling_interval=sampling_interval, suppress_randomness=suppress_randomness
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=MemoryCommand.START_SAMPLING,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def stop_sampling(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Stop collecting native memory profile.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=MemoryCommand.STOP_SAMPLING,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def get_all_time_sampling_profile(
         self,

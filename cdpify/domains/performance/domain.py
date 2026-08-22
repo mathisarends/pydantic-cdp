@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Literal
+from typing import Literal
 
 from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
@@ -24,34 +24,32 @@ class Performance:
     async def disable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Disable collecting and reporting metrics.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PerformanceCommand.DISABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def enable(
         self,
         *,
         time_domain: Literal["timeTicks", "threadTicks"] | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enable collecting and reporting metrics.
         """
         params = EnableParams(time_domain=time_domain)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PerformanceCommand.ENABLE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     @deprecated()
     async def set_time_domain(
@@ -59,7 +57,7 @@ class Performance:
         *,
         time_domain: Literal["timeTicks", "threadTicks"],
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Sets time domain to use for collecting and reporting duration metrics. Note
         that this must be called before enabling metrics collection. Calling this method
@@ -67,12 +65,11 @@ class Performance:
         """
         params = SetTimeDomainParams(time_domain=time_domain)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=PerformanceCommand.SET_TIME_DOMAIN,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def get_metrics(
         self,

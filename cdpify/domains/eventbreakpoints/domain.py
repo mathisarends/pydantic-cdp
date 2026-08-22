@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -24,47 +22,44 @@ class EventBreakpoints:
         *,
         event_name: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Sets breakpoint on particular native event.
         """
         params = SetInstrumentationBreakpointParams(event_name=event_name)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=EventBreakpointsCommand.SET_INSTRUMENTATION_BREAKPOINT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def remove_instrumentation_breakpoint(
         self,
         *,
         event_name: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Removes breakpoint on particular native event.
         """
         params = RemoveInstrumentationBreakpointParams(event_name=event_name)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=EventBreakpointsCommand.REMOVE_INSTRUMENTATION_BREAKPOINT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def disable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Removes all breakpoints
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=EventBreakpointsCommand.DISABLE,
             params=None,
             session_id=session_id,
         )
-        return result

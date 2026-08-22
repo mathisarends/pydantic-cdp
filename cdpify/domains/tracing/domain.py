@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Literal
+from typing import Literal
 
 from cdpify.shared.command_sender import CDPCommandSender
 
@@ -33,16 +33,15 @@ class Tracing:
     async def end(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Stop trace events collection.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=TracingCommand.END,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def get_categories(
         self,
@@ -77,18 +76,17 @@ class Tracing:
         *,
         sync_id: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Record a clock sync marker in the trace.
         """
         params = RecordClockSyncMarkerParams(sync_id=sync_id)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=TracingCommand.RECORD_CLOCK_SYNC_MARKER,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def request_memory_dump(
         self,
@@ -126,7 +124,7 @@ class Tracing:
         screenshot_max_size: int | None = None,
         screenshot_max_count: int | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Start trace events collection.
         """
@@ -144,9 +142,8 @@ class Tracing:
             screenshot_max_count=screenshot_max_count,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=TracingCommand.START,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result

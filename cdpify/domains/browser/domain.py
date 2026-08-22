@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Literal
+from typing import TYPE_CHECKING, Literal
 
 from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
@@ -62,7 +62,7 @@ class Browser:
         embedded_origin: str | None = None,
         browser_context_id: BrowserContextID | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Set permission settings for given embedding and embedded origins.
         """
@@ -74,12 +74,11 @@ class Browser:
             browser_context_id=browser_context_id,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=BrowserCommand.SET_PERMISSION,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     @deprecated()
     async def grant_permissions(
@@ -89,7 +88,7 @@ class Browser:
         origin: str | None = None,
         browser_context_id: BrowserContextID | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Grant specific permissions to the given origin and reject all others.
         Deprecated. Use setPermission instead.
@@ -100,30 +99,28 @@ class Browser:
             browser_context_id=browser_context_id,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=BrowserCommand.GRANT_PERMISSIONS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def reset_permissions(
         self,
         *,
         browser_context_id: BrowserContextID | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Reset all permission management for all origins.
         """
         params = ResetPermissionsParams(browser_context_id=browser_context_id)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=BrowserCommand.RESET_PERMISSIONS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_download_behavior(
         self,
@@ -133,7 +130,7 @@ class Browser:
         download_path: str | None = None,
         events_enabled: bool | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Set the behavior when downloading a file.
         """
@@ -144,12 +141,11 @@ class Browser:
             events_enabled=events_enabled,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=BrowserCommand.SET_DOWNLOAD_BEHAVIOR,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def cancel_download(
         self,
@@ -157,60 +153,56 @@ class Browser:
         guid: str,
         browser_context_id: BrowserContextID | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Cancel a download if in progress
         """
         params = CancelDownloadParams(guid=guid, browser_context_id=browser_context_id)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=BrowserCommand.CANCEL_DOWNLOAD,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def close(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Close browser gracefully.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=BrowserCommand.CLOSE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def crash(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Crashes browser on the main thread.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=BrowserCommand.CRASH,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def crash_gpu_process(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Crashes GPU process.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=BrowserCommand.CRASH_GPU_PROCESS,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def get_version(
         self,
@@ -321,18 +313,17 @@ class Browser:
         window_id: WindowID,
         bounds: Bounds,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Set position and/or size of the browser window.
         """
         params = SetWindowBoundsParams(window_id=window_id, bounds=bounds)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=BrowserCommand.SET_WINDOW_BOUNDS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_contents_size(
         self,
@@ -341,18 +332,17 @@ class Browser:
         width: int | None = None,
         height: int | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Set size of the browser contents resizing browser window as necessary.
         """
         params = SetContentsSizeParams(window_id=window_id, width=width, height=height)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=BrowserCommand.SET_CONTENTS_SIZE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_dock_tile(
         self,
@@ -360,55 +350,52 @@ class Browser:
         badge_label: str | None = None,
         image: str | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Set dock tile details, platform-specific.
         """
         params = SetDockTileParams(badge_label=badge_label, image=image)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=BrowserCommand.SET_DOCK_TILE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def execute_browser_command(
         self,
         *,
         command_id: BrowserCommandId,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Invoke custom browser commands used by telemetry.
         """
         params = ExecuteBrowserCommandParams(command_id=command_id)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=BrowserCommand.EXECUTE_BROWSER_COMMAND,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def add_privacy_sandbox_enrollment_override(
         self,
         *,
         url: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Allows a site to use privacy sandbox features that require enrollment without
         the site actually being enrolled. Only supported on page targets.
         """
         params = AddPrivacySandboxEnrollmentOverrideParams(url=url)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=BrowserCommand.ADD_PRIVACY_SANDBOX_ENROLLMENT_OVERRIDE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def get_global_privacy_control(
         self,

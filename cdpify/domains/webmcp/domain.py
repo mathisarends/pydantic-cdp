@@ -26,31 +26,29 @@ class WebMCP:
     async def enable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enables the WebMCP domain, allowing events to be sent. Enabling the domain will
         trigger a toolsAdded event for all currently registered tools.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=WebMCPCommand.ENABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def disable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Disables the WebMCP domain.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=WebMCPCommand.DISABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def invoke_tool(
         self,
@@ -77,15 +75,14 @@ class WebMCP:
         *,
         invocation_id: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Cancels a pending tool invocation.
         """
         params = CancelInvocationParams(invocation_id=invocation_id)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=WebMCPCommand.CANCEL_INVOCATION,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result

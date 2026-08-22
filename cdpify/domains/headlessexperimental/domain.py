@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
 
@@ -57,28 +55,26 @@ class HeadlessExperimental:
     async def disable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Disables headless events for the target.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=HeadlessExperimentalCommand.DISABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     @deprecated()
     async def enable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enables headless events for the target.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=HeadlessExperimentalCommand.ENABLE,
             params=None,
             session_id=session_id,
         )
-        return result

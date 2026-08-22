@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -42,33 +40,31 @@ class WebAuthn:
         *,
         enable_ui: bool | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enable the WebAuthn domain and start intercepting credential storage and
         retrieval with a virtual authenticator.
         """
         params = EnableParams(enable_ui=enable_ui)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=WebAuthnCommand.ENABLE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def disable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Disable the WebAuthn domain.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=WebAuthnCommand.DISABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def add_virtual_authenticator(
         self,
@@ -96,7 +92,7 @@ class WebAuthn:
         is_bad_uv: bool | None = None,
         is_bad_up: bool | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Resets parameters isBogusSignature, isBadUV, isBadUP to false if they are not
         present.
@@ -108,30 +104,28 @@ class WebAuthn:
             is_bad_up=is_bad_up,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=WebAuthnCommand.SET_RESPONSE_OVERRIDE_BITS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def remove_virtual_authenticator(
         self,
         *,
         authenticator_id: AuthenticatorId,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Removes the given authenticator.
         """
         params = RemoveVirtualAuthenticatorParams(authenticator_id=authenticator_id)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=WebAuthnCommand.REMOVE_VIRTUAL_AUTHENTICATOR,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def add_credential(
         self,
@@ -139,7 +133,7 @@ class WebAuthn:
         authenticator_id: AuthenticatorId,
         credential: Credential,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Adds the credential to the specified authenticator.
         """
@@ -147,12 +141,11 @@ class WebAuthn:
             authenticator_id=authenticator_id, credential=credential
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=WebAuthnCommand.ADD_CREDENTIAL,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def get_credential(
         self,
@@ -200,7 +193,7 @@ class WebAuthn:
         authenticator_id: AuthenticatorId,
         credential_id: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Removes a credential from the authenticator.
         """
@@ -208,30 +201,28 @@ class WebAuthn:
             authenticator_id=authenticator_id, credential_id=credential_id
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=WebAuthnCommand.REMOVE_CREDENTIAL,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def clear_credentials(
         self,
         *,
         authenticator_id: AuthenticatorId,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Clears all the credentials from the specified device.
         """
         params = ClearCredentialsParams(authenticator_id=authenticator_id)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=WebAuthnCommand.CLEAR_CREDENTIALS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_user_verified(
         self,
@@ -239,7 +230,7 @@ class WebAuthn:
         authenticator_id: AuthenticatorId,
         is_user_verified: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Sets whether User Verification succeeds or fails for an authenticator. The
         default is true.
@@ -248,12 +239,11 @@ class WebAuthn:
             authenticator_id=authenticator_id, is_user_verified=is_user_verified
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=WebAuthnCommand.SET_USER_VERIFIED,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_automatic_presence_simulation(
         self,
@@ -261,7 +251,7 @@ class WebAuthn:
         authenticator_id: AuthenticatorId,
         enabled: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Sets whether tests of user presence will succeed immediately (if true) or fail
         to resolve (if false) for an authenticator. The default is true.
@@ -270,12 +260,11 @@ class WebAuthn:
             authenticator_id=authenticator_id, enabled=enabled
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=WebAuthnCommand.SET_AUTOMATIC_PRESENCE_SIMULATION,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_credential_properties(
         self,
@@ -288,7 +277,7 @@ class WebAuthn:
         generate_cmtg_key_on_next_operation: bool | None = None,
         sign_count: int | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Allows setting credential properties.
         https://w3c.github.io/webauthn/#sctn-automation-set-credential-properties
@@ -303,9 +292,8 @@ class WebAuthn:
             sign_count=sign_count,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=WebAuthnCommand.SET_CREDENTIAL_PROPERTIES,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result

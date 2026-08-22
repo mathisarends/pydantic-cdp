@@ -32,7 +32,7 @@ class DigitalCredentials:
         response: dict[str, Any] | None = None,
         frame_id: page.FrameId | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Sets the behavior of the virtual wallet for digital credential requests issued
         from this frame.
@@ -41,9 +41,8 @@ class DigitalCredentials:
             action=action, protocol=protocol, response=response, frame_id=frame_id
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=DigitalCredentialsCommand.SET_VIRTUAL_WALLET_BEHAVIOR,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result

@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -30,30 +28,28 @@ class Animation:
     async def disable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Disables animation domain notifications.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=AnimationCommand.DISABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def enable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enables animation domain notifications.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=AnimationCommand.ENABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def get_current_time(
         self,
@@ -92,18 +88,17 @@ class Animation:
         *,
         animations: list[str],
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Releases a set of animations to no longer be manipulated.
         """
         params = ReleaseAnimationsParams(animations=animations)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=AnimationCommand.RELEASE_ANIMATIONS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def resolve_animation(
         self,
@@ -129,18 +124,17 @@ class Animation:
         animations: list[str],
         current_time: float,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Seek a set of animations to a particular time within each animation.
         """
         params = SeekAnimationsParams(animations=animations, current_time=current_time)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=AnimationCommand.SEEK_ANIMATIONS,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_paused(
         self,
@@ -148,36 +142,34 @@ class Animation:
         animations: list[str],
         paused: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Sets the paused state of a set of animations.
         """
         params = SetPausedParams(animations=animations, paused=paused)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=AnimationCommand.SET_PAUSED,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_playback_rate(
         self,
         *,
         playback_rate: float,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Sets the playback rate of the document timeline.
         """
         params = SetPlaybackRateParams(playback_rate=playback_rate)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=AnimationCommand.SET_PLAYBACK_RATE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_timing(
         self,
@@ -186,7 +178,7 @@ class Animation:
         duration: float,
         delay: float,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Sets the timing of an animation node.
         """
@@ -194,9 +186,8 @@ class Animation:
             animation_id=animation_id, duration=duration, delay=delay
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=AnimationCommand.SET_TIMING,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result

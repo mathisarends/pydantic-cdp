@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -24,33 +22,31 @@ class Tethering:
         *,
         port: int,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Request browser port binding.
         """
         params = BindParams(port=port)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=TetheringCommand.BIND,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def unbind(
         self,
         *,
         port: int,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Request browser port unbinding.
         """
         params = UnbindParams(port=port)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=TetheringCommand.UNBIND,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result

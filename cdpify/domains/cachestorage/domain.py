@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from cdpify.shared.command_sender import CDPCommandSender
 
@@ -37,18 +37,17 @@ class CacheStorage:
         *,
         cache_id: CacheId,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Deletes a cache.
         """
         params = DeleteCacheParams(cache_id=cache_id)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=CacheStorageCommand.DELETE_CACHE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def delete_entry(
         self,
@@ -56,18 +55,17 @@ class CacheStorage:
         cache_id: CacheId,
         request: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Deletes a cache entry.
         """
         params = DeleteEntryParams(cache_id=cache_id, request=request)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=CacheStorageCommand.DELETE_ENTRY,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def request_cache_names(
         self,

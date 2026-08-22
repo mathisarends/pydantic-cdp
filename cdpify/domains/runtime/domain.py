@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -150,46 +148,43 @@ class Runtime:
     async def disable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Disables reporting of execution contexts creation.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=RuntimeCommand.DISABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def discard_console_entries(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Discards collected exceptions and console API calls.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=RuntimeCommand.DISCARD_CONSOLE_ENTRIES,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def enable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enables reporting of execution contexts creation by means of
         `executionContextCreated` event. When the reporting gets enabled the event will
         be sent immediately for each existing execution context.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=RuntimeCommand.ENABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def evaluate(
         self,
@@ -342,50 +337,47 @@ class Runtime:
         *,
         object_id: RemoteObjectId,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Releases remote object with given id.
         """
         params = ReleaseObjectParams(object_id=object_id)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=RuntimeCommand.RELEASE_OBJECT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def release_object_group(
         self,
         *,
         object_group: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Releases all remote objects that belong to a given group.
         """
         params = ReleaseObjectGroupParams(object_group=object_group)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=RuntimeCommand.RELEASE_OBJECT_GROUP,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def run_if_waiting_for_debugger(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Tells inspected instance to run if it was waiting for debugger to attach.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=RuntimeCommand.RUN_IF_WAITING_FOR_DEBUGGER,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def run_script(
         self,
@@ -426,63 +418,59 @@ class Runtime:
         *,
         max_depth: int,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enables or disables async call stacks tracking.
         """
         params = SetAsyncCallStackDepthParams(max_depth=max_depth)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=RuntimeCommand.SET_ASYNC_CALL_STACK_DEPTH,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_custom_object_formatter_enabled(
         self,
         *,
         enabled: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         params = SetCustomObjectFormatterEnabledParams(enabled=enabled)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=RuntimeCommand.SET_CUSTOM_OBJECT_FORMATTER_ENABLED,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def set_max_call_stack_size_to_capture(
         self,
         *,
         size: int,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         params = SetMaxCallStackSizeToCaptureParams(size=size)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=RuntimeCommand.SET_MAX_CALL_STACK_SIZE_TO_CAPTURE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def terminate_execution(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Terminate current or next JavaScript execution. Will cancel the termination
         when the outer-most script execution ends.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=RuntimeCommand.TERMINATE_EXECUTION,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def add_binding(
         self,
@@ -491,7 +479,7 @@ class Runtime:
         execution_context_id: ExecutionContextId | None = None,
         execution_context_name: str | None = None,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         If executionContextId is empty, adds binding with the given name on the global
         objects of all inspected contexts, including those created later, bindings
@@ -505,31 +493,29 @@ class Runtime:
             execution_context_name=execution_context_name,
         )
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=RuntimeCommand.ADD_BINDING,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def remove_binding(
         self,
         *,
         name: str,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         This method does not remove binding function from global object but
         unsubscribes current runtime agent from Runtime.bindingCalled notifications.
         """
         params = RemoveBindingParams(name=name)
 
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=RuntimeCommand.REMOVE_BINDING,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
 
     async def get_exception_details(
         self,

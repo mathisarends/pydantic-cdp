@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -20,43 +18,40 @@ class Console:
     async def clear_messages(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Does nothing.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=ConsoleCommand.CLEAR_MESSAGES,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def disable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Disables console domain, prevents further console messages from being reported
         to the client.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=ConsoleCommand.DISABLE,
             params=None,
             session_id=session_id,
         )
-        return result
 
     async def enable(
         self,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> None:
         """
         Enables console domain, sends the messages collected so far to the client by
         means of the `messageAdded` notification.
         """
-        result = await self._command_sender.send_raw(
+        await self._command_sender.send_raw(
             method=ConsoleCommand.ENABLE,
             params=None,
             session_id=session_id,
         )
-        return result
