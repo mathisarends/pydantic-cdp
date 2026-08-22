@@ -1,4 +1,3 @@
-import asyncio
 import logging
 
 from cdpify.generator.config import DOMAINS_TO_GENERATE
@@ -10,10 +9,10 @@ logging.basicConfig(level=logging.INFO, format="%(message)s")
 logger = logging.getLogger(__name__)
 
 
-async def main() -> None:
+def main() -> None:
     logger.info("🚀 CDP Pydantic Generator\n")
 
-    specs = await download_specs()
+    specs = download_specs()
     logger.info(f"✓ CDP Version: {specs.version_string}")
     logger.info(f"✓ Total domains: {len(specs.all_domains)}")
 
@@ -41,4 +40,4 @@ def _select_domains(specs: CDPSpecs) -> list[Domain]:
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()

@@ -1,7 +1,7 @@
 import asyncio
+import json
 import logging
-
-import httpx
+from urllib.request import urlopen
 
 from cdpify import CDPClient
 from cdpify.domains.network.events import (
@@ -17,17 +17,16 @@ logging.basicConfig(
 )
 
 
-async def get_ws_url() -> str:
-    async with httpx.AsyncClient() as client:
-        response = await client.get("http://localhost:9222/json")
-        pages = response.json()
+def get_ws_url() -> str:
+    with urlopen("http://localhost:9222/json", timeout=5) as response:
+        pages = json.load(response)
 
-        if not pages:
-            raise RuntimeError(
-                "No pages found. Is Chrome running with --remote-debugging-port=9222?"
-            )
+    if not pages:
+        raise RuntimeError(
+            "No pages found. Is Chrome running with --remote-debugging-port=9222?"
+        )
 
-        return pages[0]["webSocketDebuggerUrl"]
+    return pages[0]["webSocketDebuggerUrl"]
 
 
 async def monitor_requests(client: CDPClient) -> None:
@@ -71,7 +70,7 @@ async def monitor_loading_failed(client: CDPClient) -> None:
 
 
 async def main() -> None:
-    ws_url = await get_ws_url()
+    ws_url = get_ws_url()
     print(f"Connecting to: {ws_url}\n")
 
     async with CDPClient(ws_url) as client:

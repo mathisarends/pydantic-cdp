@@ -41,21 +41,19 @@ Start Chrome or Chromium with remote debugging enabled, then obtain a page's
 
 ```python
 import asyncio
-
-import httpx
+import json
+from urllib.request import urlopen
 
 from cdpify import CDPClient
 
 
-async def get_websocket_url() -> str:
-    async with httpx.AsyncClient() as http:
-        response = await http.get("http://localhost:9222/json")
-        response.raise_for_status()
-        return response.json()[0]["webSocketDebuggerUrl"]
+def get_websocket_url() -> str:
+    with urlopen("http://localhost:9222/json", timeout=5) as response:
+        return json.load(response)[0]["webSocketDebuggerUrl"]
 
 
 async def main() -> None:
-    ws_url = await get_websocket_url()
+    ws_url = get_websocket_url()
 
     async with CDPClient(ws_url) as client:
         await client.page.navigate(url="https://example.com")

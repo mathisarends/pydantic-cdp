@@ -1,9 +1,9 @@
 import asyncio
 import base64
+import json
 import logging
 from pathlib import Path
-
-import httpx
+from urllib.request import urlopen
 
 from cdpify import CDPClient
 from cdpify.domains.page.events import PageEvent, ScreencastFrameEvent
@@ -20,24 +20,23 @@ async def save_frame(frame_data: str, frame_number: int, output_dir: Path) -> No
     print(f"✓ Saved frame {frame_number}")
 
 
-async def get_ws_url() -> str:
-    async with httpx.AsyncClient() as client:
-        response = await client.get("http://localhost:9222/json")
-        pages = response.json()
+def get_ws_url() -> str:
+    with urlopen("http://localhost:9222/json", timeout=5) as response:
+        pages = json.load(response)
 
-        if not pages:
-            raise RuntimeError(
-                "No pages found. Is Chrome running with --remote-debugging-port=9222?"
-            )
+    if not pages:
+        raise RuntimeError(
+            "No pages found. Is Chrome running with --remote-debugging-port=9222?"
+        )
 
-        return pages[0]["webSocketDebuggerUrl"]
+    return pages[0]["webSocketDebuggerUrl"]
 
 
 async def main():
     output_dir = Path("screencast_frames")
     output_dir.mkdir(exist_ok=True)
 
-    ws_url = await get_ws_url()
+    ws_url = get_ws_url()
     print(f"Connecting to: {ws_url}\n")
 
     async with CDPClient(ws_url) as client:
