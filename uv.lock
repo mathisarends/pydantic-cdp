@@ -23,6 +23,7 @@ dependencies = [
 [package.optional-dependencies]
 generator = [
     { name = "jinja2" },
+    { name = "ruff" },
 ]
 
 [package.dev-dependencies]
@@ -38,6 +39,7 @@ dev = [
 requires-dist = [
     { name = "jinja2", marker = "extra == 'generator'", specifier = ">=3.1.6" },
     { name = "pydantic", specifier = ">=2.12.5" },
+    { name = "ruff", marker = "extra == 'generator'", specifier = ">=0.14.10" },
     { name = "websockets", specifier = ">=15.0.1" },
 ]
 provides-extras = ["generator"]

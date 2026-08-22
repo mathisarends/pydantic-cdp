@@ -16,7 +16,10 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-generator = ["jinja2>=3.1.6"]
+generator = [
+    "jinja2>=3.1.6",
+    "ruff>=0.14.10",
+]
 
 [build-system]
 requires = ["setuptools>=61.0"]
