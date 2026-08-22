@@ -1,203 +1,117 @@
-import pytest
-
 from cdpify.generator.generators.client import ClientGenerator
-from cdpify.generator.models import Command, Domain, Parameter
+from cdpify.generator.schemas import Command, Domain, Parameter
 
 
-@pytest.fixture
-def client_generator() -> ClientGenerator:
-    return ClientGenerator()
+def test_renders_client_class(simple_domain: Domain) -> None:
+    output = ClientGenerator().generate(simple_domain)
+
+    assert "class SampleClient:" in output
+    assert "def __init__(self, command_sender: CDPCommandSender) -> None:" in output
+    assert "self._command_sender = command_sender" in output
 
 
-@pytest.fixture
-def empty_domain() -> Domain:
-    return Domain(domain="TestDomain", commands=[])
+def test_depends_on_command_transport_abstraction(simple_domain: Domain) -> None:
+    output = ClientGenerator().generate(simple_domain)
+
+    assert "from cdpify.shared.command_sender import CDPCommandSender" in output
+    assert "from cdpify.client import CDPClient" not in output
 
 
-@pytest.fixture
-def domain_with_simple_command() -> Domain:
-    command = Command(
-        name="testCommand",
-        parameters=[
-            Parameter(name="value", type="string", optional=False),
-        ],
-        returns=[
-            Parameter(name="success", type="boolean", optional=False),
+def test_method_with_params(simple_domain: Domain) -> None:
+    output = ClientGenerator().generate(simple_domain)
+
+    assert "async def get_node(" in output
+    assert "node_id: NodeId," in output
+    assert "session_id: str | None = None," in output
+    assert "-> GetNodeResult:" in output
+    assert "params = GetNodeParams(node_id=node_id)" in output
+    assert "method=SampleCommand.GET_NODE" in output
+    assert "result = await self._command_sender.send_raw(" in output
+    assert "params=params.to_cdp_params()" in output
+    assert "return GetNodeResult.from_cdp(result)" in output
+
+
+def test_method_without_params_or_returns(simple_domain: Domain) -> None:
+    output = ClientGenerator().generate(simple_domain)
+
+    assert "async def clear(" in output
+    # No return type → dict[str, Any]
+    assert "-> dict[str, Any]:" in output
+    assert "params=None" in output
+    # Returns the raw dict without parsing
+    clear_block = output.split("async def clear(")[1].split("async def")[0]
+    assert "return result" in clear_block
+
+
+def test_deprecated_command_gets_decorator(simple_domain: Domain) -> None:
+    output = ClientGenerator().generate(simple_domain)
+
+    assert "from cdpify.shared.decorators import deprecated" in output
+    legacy_block = output.split("async def legacy_op")[0]
+    # The decorator must appear directly above the deprecated method
+    assert legacy_block.rstrip().endswith("@deprecated()")
+
+
+def test_no_deprecated_import_when_no_deprecated_commands() -> None:
+    domain = Domain(
+        domain="Sample",
+        commands=[Command(name="op", parameters=[Parameter(name="x", type="string")])],
+    )
+
+    output = ClientGenerator().generate(domain)
+    assert "from cdpify.shared.decorators import deprecated" not in output
+
+
+def test_session_id_collision_renames_param() -> None:
+    """If a CDP command has its own `sessionId` param, it must be renamed
+    to avoid colliding with the implicit `session_id` keyword."""
+    domain = Domain(
+        domain="Target",
+        commands=[
+            Command(
+                name="attachToTarget",
+                parameters=[Parameter(name="sessionId", type="string")],
+            )
         ],
     )
-    return Domain(domain="TestDomain", commands=[command])
+
+    output = ClientGenerator().generate(domain)
+
+    assert "attach_to_target_session_id: str," in output
+    assert "session_id: str | None = None," in output
 
 
-@pytest.fixture
-def domain_with_no_param_command() -> Domain:
-    command = Command(
-        name="simpleCommand",
-        parameters=[],
-        returns=[],
-    )
-    return Domain(domain="TestDomain", commands=[command])
-
-
-@pytest.fixture
-def domain_with_optional_params() -> Domain:
-    command = Command(
-        name="flexibleCommand",
-        parameters=[
-            Parameter(name="required", type="string", optional=False),
-            Parameter(name="optional", type="integer", optional=True),
+def test_cross_domain_param_resolved_via_type_checking() -> None:
+    domain = Domain(
+        domain="Animation",
+        commands=[
+            Command(
+                name="play",
+                parameters=[Parameter(name="target", ref="DOM.NodeId")],
+            )
         ],
-        returns=[],
     )
-    return Domain(domain="TestDomain", commands=[command])
+
+    output = ClientGenerator().generate(domain)
+
+    assert "if TYPE_CHECKING:" in output
+    assert "from cdpify.domains import dom" in output
+    assert "target: dom.NodeId" in output
 
 
-class TestClientGeneratorGenerate:
-    def test_generate_creates_client_class(
-        self, client_generator: ClientGenerator, domain_with_simple_command: Domain
-    ) -> None:
-        result = client_generator.generate(domain_with_simple_command)
-        assert "class TestDomainClient:" in result
+def test_command_imports_include_enum_and_classes(simple_domain: Domain) -> None:
+    output = ClientGenerator().generate(simple_domain)
 
-    def test_generate_includes_init_method(
-        self, client_generator: ClientGenerator, domain_with_simple_command: Domain
-    ) -> None:
-        result = client_generator.generate(domain_with_simple_command)
-        assert "def __init__(self, client: CDPClient) -> None:" in result
-        assert "self._client = client" in result
-
-    def test_generate_creates_async_method_for_command(
-        self, client_generator: ClientGenerator, domain_with_simple_command: Domain
-    ) -> None:
-        result = client_generator.generate(domain_with_simple_command)
-        assert "async def test_command(" in result
-
-    def test_generate_includes_cdp_client_type_checking_import(
-        self, client_generator: ClientGenerator, domain_with_simple_command: Domain
-    ) -> None:
-        result = client_generator.generate(domain_with_simple_command)
-        assert "if TYPE_CHECKING:" in result
-        assert "from cdpify.client import CDPClient" in result
-
-    def test_generate_with_command_params_imports_params_model(
-        self, client_generator: ClientGenerator, domain_with_simple_command: Domain
-    ) -> None:
-        result = client_generator.generate(domain_with_simple_command)
-        assert "from .commands import (" in result
-        assert "TestCommandParams" in result
-
-    def test_generate_with_command_returns_imports_result_model(
-        self, client_generator: ClientGenerator, domain_with_simple_command: Domain
-    ) -> None:
-        result = client_generator.generate(domain_with_simple_command)
-        assert "TestCommandResult" in result
+    imports_section = output.split("from .commands import (")[1].split(")")[0]
+    assert "SampleCommand" in imports_section
+    assert "GetNodeParams" in imports_section
+    assert "GetNodeResult" in imports_section
+    assert "LegacyOpParams" in imports_section
 
 
-class TestClientGeneratorMethodGeneration:
-    def test_generate_method_with_params_includes_parameter_list(
-        self, client_generator: ClientGenerator, domain_with_simple_command: Domain
-    ) -> None:
-        result = client_generator.generate(domain_with_simple_command)
-        assert "value: str," in result
+def test_kw_only_marker_appears_when_command_has_params(simple_domain: Domain) -> None:
+    output = ClientGenerator().generate(simple_domain)
 
-    def test_generate_method_with_optional_params_adds_none_default(
-        self, client_generator: ClientGenerator, domain_with_optional_params: Domain
-    ) -> None:
-        result = client_generator.generate(domain_with_optional_params)
-        assert "optional: int | None = None," in result
-
-    def test_generate_method_always_includes_session_id_param(
-        self, client_generator: ClientGenerator, domain_with_no_param_command: Domain
-    ) -> None:
-        result = client_generator.generate(domain_with_no_param_command)
-        assert "session_id: str | None = None" in result
-
-    def test_generate_method_with_params_creates_params_object(
-        self, client_generator: ClientGenerator, domain_with_simple_command: Domain
-    ) -> None:
-        result = client_generator.generate(domain_with_simple_command)
-        assert "params = TestCommandParams(value=value)" in result
-
-    def test_generate_method_calls_send_raw_with_method_name(
-        self, client_generator: ClientGenerator, domain_with_simple_command: Domain
-    ) -> None:
-        result = client_generator.generate(domain_with_simple_command)
-        assert "method=TestDomainCommand.TEST_COMMAND" in result
-
-    def test_generate_method_with_params_sends_params_dict(
-        self, client_generator: ClientGenerator, domain_with_simple_command: Domain
-    ) -> None:
-        result = client_generator.generate(domain_with_simple_command)
-        assert "params=params.to_cdp_params()" in result
-
-    def test_generate_method_without_params_sends_none(
-        self, client_generator: ClientGenerator, domain_with_no_param_command: Domain
-    ) -> None:
-        result = client_generator.generate(domain_with_no_param_command)
-        assert "params=None" in result
-
-    def test_generate_method_with_returns_validates_result(
-        self, client_generator: ClientGenerator, domain_with_simple_command: Domain
-    ) -> None:
-        result = client_generator.generate(domain_with_simple_command)
-        assert "return TestCommandResult.from_cdp(result)" in result
-
-    def test_generate_method_without_returns_returns_raw_dict(
-        self, client_generator: ClientGenerator, domain_with_no_param_command: Domain
-    ) -> None:
-        result = client_generator.generate(domain_with_no_param_command)
-        assert "return result" in result
-
-    def test_generate_method_with_returns_has_result_return_type(
-        self, client_generator: ClientGenerator, domain_with_simple_command: Domain
-    ) -> None:
-        result = client_generator.generate(domain_with_simple_command)
-        assert ") -> TestCommandResult:" in result
-
-    def test_generate_method_without_returns_has_dict_return_type(
-        self, client_generator: ClientGenerator, domain_with_no_param_command: Domain
-    ) -> None:
-        result = client_generator.generate(domain_with_no_param_command)
-        assert ") -> dict[str, Any]:" in result
-
-
-class TestClientGeneratorParameterHandling:
-    def test_resolve_param_name_converts_to_snake_case(
-        self, client_generator: ClientGenerator
-    ) -> None:
-        command = Command(name="test", parameters=[], returns=[])
-        param = Parameter(name="myValue", type="string", optional=False)
-        result = client_generator._resolve_param_name(command, param)
-        assert result == "my_value"
-
-    def test_resolve_param_name_renames_session_id_conflict(
-        self, client_generator: ClientGenerator
-    ) -> None:
-        command = Command(name="testCommand", parameters=[], returns=[])
-        param = Parameter(name="sessionId", type="string", optional=False)
-        result = client_generator._resolve_param_name(command, param)
-        assert result == "test_command_session_id"
-
-    def test_build_params_includes_self_first(
-        self, client_generator: ClientGenerator
-    ) -> None:
-        command = Command(name="test", parameters=[], returns=[])
-        result = client_generator._build_params(command)
-        assert result[0] == "self"
-
-    def test_build_params_with_parameters_includes_asterisk(
-        self, client_generator: ClientGenerator
-    ) -> None:
-        command = Command(
-            name="test",
-            parameters=[Parameter(name="value", type="string", optional=False)],
-            returns=[],
-        )
-        result = client_generator._build_params(command)
-        assert "*" in result
-
-    def test_build_params_always_includes_session_id_last(
-        self, client_generator: ClientGenerator
-    ) -> None:
-        command = Command(name="test", parameters=[], returns=[])
-        result = client_generator._build_params(command)
-        assert result[-1] == "session_id: str | None = None"
+    # Methods with params should have the `*` separator
+    get_node_block = output.split("async def get_node(")[1].split(") ->")[0]
+    assert "*," in get_node_block

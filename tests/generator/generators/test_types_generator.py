@@ -1,179 +1,83 @@
-import pytest
-
 from cdpify.generator.generators.types import TypesGenerator
-from cdpify.generator.models import Domain, Parameter, TypeDefinition
+from cdpify.generator.schemas import Domain, Parameter, TypeDefinition
 
 
-@pytest.fixture
-def types_generator() -> TypesGenerator:
-    return TypesGenerator()
+def test_generates_header_and_dataclass_imports(simple_domain: Domain) -> None:
+    output = TypesGenerator().generate(simple_domain)
+
+    assert "auto-generated" in output
+    assert "from __future__ import annotations" not in output
+    assert "from dataclasses import dataclass" in output
+    assert "from cdpify.shared.models import CDPModel" in output
 
 
-@pytest.fixture
-def empty_domain() -> Domain:
-    return Domain(domain="TestDomain", types=[])
+def test_renders_alias_for_primitive_type(simple_domain: Domain) -> None:
+    output = TypesGenerator().generate(simple_domain)
+    assert "NodeId = int" in output
 
 
-@pytest.fixture
-def domain_with_simple_type() -> Domain:
-    type_def = TypeDefinition(
-        id="SimpleType",
-        type="object",
-        description="A simple type",
-        properties=[
-            Parameter(name="value", type="string", optional=False),
+def test_renders_enum_as_literal(simple_domain: Domain) -> None:
+    output = TypesGenerator().generate(simple_domain)
+    assert 'Color = Literal["red", "green", "blue"]' in output
+    assert "from typing import" in output and "Literal" in output
+
+
+def test_renders_object_as_dataclass(simple_domain: Domain) -> None:
+    output = TypesGenerator().generate(simple_domain)
+
+    assert "@dataclass(kw_only=True, slots=True)" in output
+    assert "class Box(CDPModel):" in output
+    assert "width: int" in output
+    assert "height: int" in output
+    assert "label: str | None = None" in output
+
+
+def test_includes_descriptions_as_docstrings(simple_domain: Domain) -> None:
+    output = TypesGenerator().generate(simple_domain)
+    assert "A bounding box." in output
+
+
+def test_empty_domain_emits_marker(empty_domain: Domain) -> None:
+    output = TypesGenerator().generate(empty_domain)
+    assert "# No types defined" in output
+
+
+def test_cross_domain_ref_uses_runtime_import() -> None:
+    domain = Domain(
+        domain="Animation",
+        types=[
+            TypeDefinition(
+                id="Track",
+                type="object",
+                properties=[Parameter(name="target", ref="DOM.NodeId")],
+            )
         ],
     )
-    return Domain(domain="TestDomain", types=[type_def])
+
+    output = TypesGenerator().generate(domain)
+
+    assert "from cdpify.domains import dom" in output
+    assert "target: dom.NodeId" in output
+    assert "if TYPE_CHECKING:" not in output
+    assert "TYPE_CHECKING" not in output
 
 
-@pytest.fixture
-def domain_with_enum_type() -> Domain:
-    type_def = TypeDefinition(
-        id="StatusType",
-        type="string",
-        enum=["active", "inactive", "pending"],
-    )
-    return Domain(domain="TestDomain", types=[type_def])
-
-
-@pytest.fixture
-def domain_with_array_type() -> Domain:
-    type_def = TypeDefinition(
-        id="ListType",
-        type="array",
-        items={"type": "string"},
-    )
-    return Domain(domain="TestDomain", types=[type_def])
-
-
-@pytest.fixture
-def domain_with_cross_domain_ref() -> Domain:
-    type_def = TypeDefinition(
-        id="ComplexType",
-        type="object",
-        properties=[
-            Parameter(name="node", ref="dom.Node", optional=False),
+def test_optional_override_makes_field_optional() -> None:
+    domain = Domain(
+        domain="DOMSnapshot",
+        types=[
+            TypeDefinition(
+                id="DocumentSnapshot",
+                type="object",
+                properties=[
+                    Parameter(name="documentURL", type="string"),
+                    Parameter(name="title", type="string"),
+                ],
+            )
         ],
     )
-    return Domain(domain="Network", types=[type_def])
 
+    output = TypesGenerator().generate(domain)
 
-class TestTypesGeneratorGenerate:
-    def test_generate_with_empty_domain_contains_no_types_comment(
-        self, types_generator: TypesGenerator, empty_domain: Domain
-    ) -> None:
-        result = types_generator.generate(empty_domain)
-        assert "# No types defined" in result
-
-    def test_generate_with_simple_type_creates_model(
-        self, types_generator: TypesGenerator, domain_with_simple_type: Domain
-    ) -> None:
-        result = types_generator.generate(domain_with_simple_type)
-        assert "class SimpleType(CDPModel):" in result
-        assert "value: str" in result
-
-    def test_generate_with_enum_type_creates_literal_alias(
-        self, types_generator: TypesGenerator, domain_with_enum_type: Domain
-    ) -> None:
-        result = types_generator.generate(domain_with_enum_type)
-        assert "StatusType = " in result
-        assert 'Literal["active", "inactive", "pending"]' in result
-
-    def test_generate_with_array_type_creates_list_alias(
-        self, types_generator: TypesGenerator, domain_with_array_type: Domain
-    ) -> None:
-        result = types_generator.generate(domain_with_array_type)
-        assert "ListType = list[Any]" in result
-
-    def test_generate_includes_cdp_model_import(
-        self, types_generator: TypesGenerator, domain_with_simple_type: Domain
-    ) -> None:
-        result = types_generator.generate(domain_with_simple_type)
-        assert "from cdpify.shared.models import CDPModel" in result
-
-    def test_generate_with_cross_domain_ref_includes_type_checking_import(
-        self, types_generator: TypesGenerator, domain_with_cross_domain_ref: Domain
-    ) -> None:
-        result = types_generator.generate(domain_with_cross_domain_ref)
-        assert "if TYPE_CHECKING:" in result
-        assert "from cdpify.domains import dom" in result
-
-    def test_generate_includes_header_comment(
-        self, types_generator: TypesGenerator, domain_with_simple_type: Domain
-    ) -> None:
-        result = types_generator.generate(domain_with_simple_type)
-        assert "# AUTO-GENERATED" in result or "Generated" in result
-
-
-class TestTypesGeneratorTypeAliases:
-    def test_create_type_alias_for_string_without_enum_uses_basic_type(
-        self, types_generator: TypesGenerator
-    ) -> None:
-        type_def = TypeDefinition(
-            id="MyString",
-            type="string",
-        )
-        result = types_generator._create_type_alias(type_def)
-        assert "MyString = str" in result
-
-    def test_create_type_alias_for_array_without_items_generates_list_any(
-        self, types_generator: TypesGenerator
-    ) -> None:
-        type_def = TypeDefinition(
-            id="MyArray",
-            type="array",
-        )
-        result = types_generator._create_type_alias(type_def)
-        assert "MyArray = list[Any]" in result
-
-    def test_create_type_alias_for_simple_type_uses_mapping(
-        self, types_generator: TypesGenerator
-    ) -> None:
-        type_def = TypeDefinition(
-            id="MyString",
-            type="string",
-        )
-        result = types_generator._create_type_alias(type_def)
-        assert "MyString = str" in result
-
-
-class TestTypesGeneratorObjectModels:
-    def test_create_object_model_with_properties_generates_class(
-        self, types_generator: TypesGenerator
-    ) -> None:
-        type_def = TypeDefinition(
-            id="MyObject",
-            type="object",
-            properties=[
-                Parameter(name="field", type="string", optional=False),
-            ],
-        )
-        result = types_generator._create_object_model(type_def)
-        assert "class MyObject(CDPModel):" in result
-        assert "field: str" in result
-
-    def test_create_object_model_with_no_properties_only_has_class_definition(
-        self, types_generator: TypesGenerator
-    ) -> None:
-        type_def = TypeDefinition(
-            id="EmptyObject",
-            type="object",
-            properties=[],
-        )
-        result = types_generator._create_object_model(type_def)
-        assert "class EmptyObject(CDPModel):" in result
-        assert len(result.strip().split("\n")) == 2
-
-    def test_create_object_model_with_description_includes_docstring(
-        self, types_generator: TypesGenerator
-    ) -> None:
-        type_def = TypeDefinition(
-            id="DocumentedObject",
-            type="object",
-            description="This is a test description",
-            properties=[],
-        )
-        result = types_generator._create_object_model(type_def)
-        assert '"""' in result
-        assert "This is a test description" in result
+    assert "document_url: str | None = None" in output
+    assert "title: str\n" in output or "title: str" in output

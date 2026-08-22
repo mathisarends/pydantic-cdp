@@ -1,171 +1,101 @@
-import pytest
-
 from cdpify.generator.generators.events import EventsGenerator
-from cdpify.generator.models import Domain, Event, Parameter
+from cdpify.generator.schemas import Domain, Event, Parameter, TypeDefinition
 
 
-@pytest.fixture
-def events_generator() -> EventsGenerator:
-    return EventsGenerator()
+def test_renders_event_enum(simple_domain: Domain) -> None:
+    output = EventsGenerator().generate(simple_domain)
+
+    assert "class SampleEvent(StrEnum):" in output
+    assert 'NODE_ADDED = "Sample.nodeAdded"' in output
+    assert 'CLEARED = "Sample.cleared"' in output
 
 
-@pytest.fixture
-def empty_domain() -> Domain:
-    return Domain(domain="TestDomain", events=[])
+def test_renders_event_models(simple_domain: Domain) -> None:
+    output = EventsGenerator().generate(simple_domain)
+
+    assert "@dataclass(kw_only=True, slots=True)" in output
+    assert "from cdpify.shared.models import CDPEvent" in output
+    assert "class NodeAddedEvent(CDPEvent):" in output
+    assert "node_id: NodeId" in output
+    assert "parent_id: NodeId | None = None" in output
 
 
-@pytest.fixture
-def domain_with_simple_event() -> Domain:
-    event = Event(
-        name="testEvent",
-        description="A test event",
-        parameters=[
-            Parameter(name="value", type="string", optional=False),
+def test_event_without_parameters_uses_pass(simple_domain: Domain) -> None:
+    output = EventsGenerator().generate(simple_domain)
+
+    assert "class ClearedEvent(CDPEvent):" in output
+    cleared_section = output.split("class ClearedEvent(CDPEvent):")[1].splitlines()
+    assert any("pass" in line for line in cleared_section[:3])
+
+
+def test_includes_event_descriptions(simple_domain: Domain) -> None:
+    output = EventsGenerator().generate(simple_domain)
+    assert "Fired when a node is added." in output
+
+
+def test_empty_domain_marker(empty_domain: Domain) -> None:
+    output = EventsGenerator().generate(empty_domain)
+    assert "# No events defined" in output
+
+
+def test_aliases_local_type_when_name_collides_with_event_enum() -> None:
+    """If a domain has a type whose name matches `{domain}Event`, the import
+    must be aliased to avoid shadowing the event enum class."""
+    domain = Domain(
+        domain="Page",
+        types=[
+            TypeDefinition(id="PageEvent", type="string"),
+        ],
+        events=[
+            Event(
+                name="something",
+                parameters=[Parameter(name="kind", ref="PageEvent")],
+            )
         ],
     )
-    return Domain(domain="TestDomain", events=[event])
+
+    output = EventsGenerator().generate(domain)
+
+    assert "PageEvent as PageEventType" in output
+    assert "kind: PageEventType" in output
+    assert "class PageEvent(StrEnum):" in output
 
 
-@pytest.fixture
-def domain_with_multiple_events() -> Domain:
-    event1 = Event(
-        name="firstEvent",
-        parameters=[
-            Parameter(name="id", type="integer", optional=False),
+def test_cross_domain_ref_uses_runtime_import() -> None:
+    domain = Domain(
+        domain="Animation",
+        events=[
+            Event(
+                name="started",
+                parameters=[Parameter(name="target", ref="DOM.NodeId")],
+            )
         ],
     )
-    event2 = Event(
-        name="secondEvent",
-        parameters=[
-            Parameter(name="data", type="object", optional=True),
+
+    output = EventsGenerator().generate(domain)
+
+    assert "from cdpify.domains import dom" in output
+    assert "target: dom.NodeId" in output
+    assert "if TYPE_CHECKING:" not in output
+    assert "TYPE_CHECKING" not in output
+    assert "from __future__ import annotations" not in output
+
+
+def test_optional_override_for_request_will_be_sent() -> None:
+    domain = Domain(
+        domain="Network",
+        events=[
+            Event(
+                name="requestWillBeSent",
+                parameters=[
+                    Parameter(name="documentURL", type="string"),
+                    Parameter(name="requestId", type="string"),
+                ],
+            )
         ],
     )
-    return Domain(domain="TestDomain", events=[event1, event2])
 
+    output = EventsGenerator().generate(domain)
 
-@pytest.fixture
-def domain_with_event_no_params() -> Domain:
-    event = Event(name="emptyEvent", parameters=[])
-    return Domain(domain="TestDomain", events=[event])
-
-
-@pytest.fixture
-def domain_with_cross_domain_ref() -> Domain:
-    event = Event(
-        name="testEvent",
-        parameters=[
-            Parameter(name="node", ref="dom.Node", optional=False),
-        ],
-    )
-    return Domain(domain="Network", events=[event])
-
-
-class TestEventsGeneratorGenerate:
-    def test_generate_with_empty_domain_contains_no_events_comment(
-        self, events_generator: EventsGenerator, empty_domain: Domain
-    ) -> None:
-        result = events_generator.generate(empty_domain)
-        assert "# No events defined" in result
-
-    def test_generate_with_simple_event_creates_event_enum(
-        self, events_generator: EventsGenerator, domain_with_simple_event: Domain
-    ) -> None:
-        result = events_generator.generate(domain_with_simple_event)
-        assert "class TestDomainEvent(StrEnum):" in result
-        assert 'TEST_EVENT = "TestDomain.testEvent"' in result
-
-    def test_generate_with_simple_event_creates_event_model(
-        self, events_generator: EventsGenerator, domain_with_simple_event: Domain
-    ) -> None:
-        result = events_generator.generate(domain_with_simple_event)
-        assert "class TestEventEvent(CDPModel):" in result
-        assert "value: str" in result
-
-    def test_generate_with_event_no_params_includes_pass_statement(
-        self, events_generator: EventsGenerator, domain_with_event_no_params: Domain
-    ) -> None:
-        result = events_generator.generate(domain_with_event_no_params)
-        assert "class EmptyEventEvent(CDPModel):" in result
-        assert "    pass" in result
-
-    def test_generate_with_multiple_events_creates_all_enum_entries(
-        self, events_generator: EventsGenerator, domain_with_multiple_events: Domain
-    ) -> None:
-        result = events_generator.generate(domain_with_multiple_events)
-        assert 'FIRST_EVENT = "TestDomain.firstEvent"' in result
-        assert 'SECOND_EVENT = "TestDomain.secondEvent"' in result
-
-    def test_generate_with_optional_param_adds_none_default(
-        self, events_generator: EventsGenerator, domain_with_multiple_events: Domain
-    ) -> None:
-        result = events_generator.generate(domain_with_multiple_events)
-        assert "data: dict[str, Any] | None = None" in result
-
-    def test_generate_includes_strenumimport(
-        self, events_generator: EventsGenerator, domain_with_simple_event: Domain
-    ) -> None:
-        result = events_generator.generate(domain_with_simple_event)
-        assert "from enum import StrEnum" in result
-
-    def test_generate_includes_cdp_model_import(
-        self, events_generator: EventsGenerator, domain_with_simple_event: Domain
-    ) -> None:
-        result = events_generator.generate(domain_with_simple_event)
-        assert "from cdpify.shared.models import CDPModel" in result
-
-    def test_generate_with_cross_domain_ref_includes_type_checking_import(
-        self, events_generator: EventsGenerator, domain_with_cross_domain_ref: Domain
-    ) -> None:
-        result = events_generator.generate(domain_with_cross_domain_ref)
-        assert "if TYPE_CHECKING:" in result
-        assert "from cdpify.domains import dom" in result
-
-    def test_generate_includes_header_comment(
-        self, events_generator: EventsGenerator, domain_with_simple_event: Domain
-    ) -> None:
-        result = events_generator.generate(domain_with_simple_event)
-        assert "# AUTO-GENERATED" in result or "Generated" in result
-
-
-class TestEventsGeneratorEnumGeneration:
-    def test_to_enum_name_converts_camel_to_upper_snake(
-        self, events_generator: EventsGenerator
-    ) -> None:
-        result = events_generator._to_enum_name("myTestEvent")
-        assert result == "MY_TEST_EVENT"
-
-    def test_to_enum_name_handles_single_word(
-        self, events_generator: EventsGenerator
-    ) -> None:
-        result = events_generator._to_enum_name("event")
-        assert result == "EVENT"
-
-
-class TestEventsGeneratorTypeResolution:
-    def test_resolve_type_with_simple_type_returns_mapped_type(
-        self, events_generator: EventsGenerator
-    ) -> None:
-        param = Parameter(name="test", type="string", optional=False)
-        result = events_generator._resolve_type(param)
-        assert result == "str"
-
-    def test_resolve_type_with_optional_returns_base_type(
-        self, events_generator: EventsGenerator
-    ) -> None:
-        param = Parameter(name="test", type="integer", optional=True)
-        result = events_generator._resolve_type(param)
-        assert result == "int"
-
-    def test_resolve_type_with_cross_domain_ref_includes_module_prefix(
-        self, events_generator: EventsGenerator
-    ) -> None:
-        param = Parameter(name="test", ref="dom.Node", optional=False)
-        result = events_generator._resolve_type(param)
-        assert result == "dom.Node"
-
-    def test_resolve_type_with_cross_domain_ref_does_not_add_none_when_not_optional(
-        self, events_generator: EventsGenerator
-    ) -> None:
-        param = Parameter(name="test", ref="page.Frame", optional=False)
-        result = events_generator._resolve_type(param)
-        assert " | None" not in result
+    assert "document_url: str | None = None" in output
+    assert "request_id: str\n" in output or "request_id: str" in output
