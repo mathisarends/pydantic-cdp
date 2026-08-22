@@ -4,12 +4,13 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
+
 from cdpify.shared.models import CDPModel
 
 from .types import (
     ComputedStyle,
-    DOMNode,
     DocumentSnapshot,
+    DOMNode,
     LayoutTreeNode,
 )
 
@@ -21,7 +22,7 @@ class DOMSnapshotCommand(StrEnum):
     CAPTURE_SNAPSHOT = "DOMSnapshot.captureSnapshot"
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetSnapshotParams(CDPModel):
     """
     Returns a document snapshot, including the full DOM tree of the root node
@@ -36,14 +37,14 @@ class GetSnapshotParams(CDPModel):
     include_user_agent_shadow_tree: bool | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetSnapshotResult(CDPModel):
     dom_nodes: list[DOMNode]
     layout_tree_nodes: list[LayoutTreeNode]
     computed_styles: list[ComputedStyle]
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class CaptureSnapshotParams(CDPModel):
     """
     Returns a document snapshot, including the full DOM tree of the root node
@@ -59,7 +60,7 @@ class CaptureSnapshotParams(CDPModel):
     include_text_color_opacities: bool | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class CaptureSnapshotResult(CDPModel):
     documents: list[DocumentSnapshot]
     strings: list[str]

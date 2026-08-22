@@ -4,15 +4,15 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
+
+from cdpify.domains import storage
 from cdpify.shared.models import CDPModel
 
 from .types import (
-    DataEntry,
     DatabaseWithObjectStores,
+    DataEntry,
     KeyRange,
 )
-
-from cdpify.domains import storage
 
 
 class IndexedDBCommand(StrEnum):
@@ -27,7 +27,7 @@ class IndexedDBCommand(StrEnum):
     REQUEST_DATABASE_NAMES = "IndexedDB.requestDatabaseNames"
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class ClearObjectStoreParams(CDPModel):
     """
     Clears all entries from an object store.
@@ -40,7 +40,7 @@ class ClearObjectStoreParams(CDPModel):
     object_store_name: str
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class DeleteDatabaseParams(CDPModel):
     """
     Deletes a database.
@@ -52,7 +52,7 @@ class DeleteDatabaseParams(CDPModel):
     database_name: str
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class DeleteObjectStoreEntriesParams(CDPModel):
     """
     Delete a range of entries from an object store
@@ -66,7 +66,7 @@ class DeleteObjectStoreEntriesParams(CDPModel):
     key_range: KeyRange
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class RequestDataParams(CDPModel):
     """
     Requests data from object store or index.
@@ -83,13 +83,13 @@ class RequestDataParams(CDPModel):
     key_range: KeyRange | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class RequestDataResult(CDPModel):
     object_store_data_entries: list[DataEntry]
     has_more: bool
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetMetadataParams(CDPModel):
     """
     Gets metadata of an object store.
@@ -102,13 +102,13 @@ class GetMetadataParams(CDPModel):
     object_store_name: str
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetMetadataResult(CDPModel):
     entries_count: float
     key_generator_value: float
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class RequestDatabaseParams(CDPModel):
     """
     Requests database with given name in given frame.
@@ -120,12 +120,12 @@ class RequestDatabaseParams(CDPModel):
     database_name: str
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class RequestDatabaseResult(CDPModel):
     database_with_object_stores: DatabaseWithObjectStores
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class RequestDatabaseNamesParams(CDPModel):
     """
     Requests database names for given security origin.
@@ -136,6 +136,6 @@ class RequestDatabaseNamesParams(CDPModel):
     storage_bucket: storage.StorageBucket | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class RequestDatabaseNamesResult(CDPModel):
     database_names: list[str]

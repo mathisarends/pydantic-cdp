@@ -4,34 +4,31 @@
 
 """CDP Security Domain."""
 
-from .types import (
-    CertificateId,
-    MixedContentType,
-    SecurityState,
-    CertificateSecurityState,
-    SafetyTipStatus,
-    SafetyTipInfo,
-    VisibleSecurityState,
-    SecurityStateExplanation,
-    InsecureContentStatus,
-    CertificateErrorAction,
-)
-
+from .client import SecurityClient
 from .commands import (
     HandleCertificateErrorParams,
     SecurityCommand,
     SetIgnoreCertificateErrorsParams,
     SetOverrideCertificateErrorsParams,
 )
-
 from .events import (
     CertificateErrorEvent,
     SecurityEvent,
     SecurityStateChangedEvent,
     VisibleSecurityStateChangedEvent,
 )
-
-from .client import SecurityClient
+from .types import (
+    CertificateErrorAction,
+    CertificateId,
+    CertificateSecurityState,
+    InsecureContentStatus,
+    MixedContentType,
+    SafetyTipInfo,
+    SafetyTipStatus,
+    SecurityState,
+    SecurityStateExplanation,
+    VisibleSecurityState,
+)
 
 __all__ = [
     "CertificateErrorAction",

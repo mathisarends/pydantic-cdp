@@ -4,7 +4,8 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.shared.models import CDPModel
+
+from cdpify.shared.models import CDPEvent
 
 
 class HeapProfilerEvent(StrEnum):
@@ -15,13 +16,13 @@ class HeapProfilerEvent(StrEnum):
     RESET_PROFILES = "HeapProfiler.resetProfiles"
 
 
-@dataclass(kw_only=True)
-class AddHeapSnapshotChunkEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class AddHeapSnapshotChunkEvent(CDPEvent):
     chunk: str
 
 
-@dataclass(kw_only=True)
-class HeapStatsUpdateEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class HeapStatsUpdateEvent(CDPEvent):
     """
     If heap objects tracking has been started then backend may send update for one or
     more fragments
@@ -30,8 +31,8 @@ class HeapStatsUpdateEvent(CDPModel):
     stats_update: list[int]
 
 
-@dataclass(kw_only=True)
-class LastSeenObjectIdEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class LastSeenObjectIdEvent(CDPEvent):
     """
     If heap objects tracking has been started then backend regularly sends a current
     value for last seen object id and corresponding timestamp. If the were changes in
@@ -43,13 +44,13 @@ class LastSeenObjectIdEvent(CDPModel):
     timestamp: float
 
 
-@dataclass(kw_only=True)
-class ReportHeapSnapshotProgressEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class ReportHeapSnapshotProgressEvent(CDPEvent):
     done: int
     total: int
     finished: bool | None = None
 
 
-@dataclass(kw_only=True)
-class ResetProfilesEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class ResetProfilesEvent(CDPEvent):
     pass

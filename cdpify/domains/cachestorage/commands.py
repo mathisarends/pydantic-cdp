@@ -4,17 +4,17 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
+
+from cdpify.domains import storage
 from cdpify.shared.models import CDPModel
 
 from .types import (
     Cache,
-    CacheId,
     CachedResponse,
+    CacheId,
     DataEntry,
     Header,
 )
-
-from cdpify.domains import storage
 
 
 class CacheStorageCommand(StrEnum):
@@ -25,7 +25,7 @@ class CacheStorageCommand(StrEnum):
     REQUEST_ENTRIES = "CacheStorage.requestEntries"
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class DeleteCacheParams(CDPModel):
     """
     Deletes a cache.
@@ -34,7 +34,7 @@ class DeleteCacheParams(CDPModel):
     cache_id: CacheId
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class DeleteEntryParams(CDPModel):
     """
     Deletes a cache entry.
@@ -44,7 +44,7 @@ class DeleteEntryParams(CDPModel):
     request: str
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class RequestCacheNamesParams(CDPModel):
     """
     Requests cache names.
@@ -55,12 +55,12 @@ class RequestCacheNamesParams(CDPModel):
     storage_bucket: storage.StorageBucket | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class RequestCacheNamesResult(CDPModel):
     caches: list[Cache]
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class RequestCachedResponseParams(CDPModel):
     """
     Fetches cache entry.
@@ -71,12 +71,12 @@ class RequestCachedResponseParams(CDPModel):
     request_headers: list[Header]
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class RequestCachedResponseResult(CDPModel):
     response: CachedResponse
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class RequestEntriesParams(CDPModel):
     """
     Requests data from cache.
@@ -88,7 +88,7 @@ class RequestEntriesParams(CDPModel):
     path_filter: str | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class RequestEntriesResult(CDPModel):
     cache_data_entries: list[DataEntry]
     return_count: float

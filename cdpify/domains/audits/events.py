@@ -4,7 +4,8 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.shared.models import CDPModel
+
+from cdpify.shared.models import CDPEvent
 
 from .types import (
     InspectorIssue,
@@ -15,6 +16,6 @@ class AuditsEvent(StrEnum):
     ISSUE_ADDED = "Audits.issueAdded"
 
 
-@dataclass(kw_only=True)
-class IssueAddedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class IssueAddedEvent(CDPEvent):
     issue: InspectorIssue

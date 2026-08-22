@@ -4,15 +4,7 @@
 
 """CDP Fetch Domain."""
 
-from .types import (
-    RequestId,
-    RequestStage,
-    RequestPattern,
-    HeaderEntry,
-    AuthChallenge,
-    AuthChallengeResponse,
-)
-
+from .client import FetchClient
 from .commands import (
     ContinueRequestParams,
     ContinueResponseParams,
@@ -26,10 +18,15 @@ from .commands import (
     TakeResponseBodyAsStreamParams,
     TakeResponseBodyAsStreamResult,
 )
-
 from .events import AuthRequiredEvent, FetchEvent, RequestPausedEvent
-
-from .client import FetchClient
+from .types import (
+    AuthChallenge,
+    AuthChallengeResponse,
+    HeaderEntry,
+    RequestId,
+    RequestPattern,
+    RequestStage,
+)
 
 __all__ = [
     "AuthChallenge",

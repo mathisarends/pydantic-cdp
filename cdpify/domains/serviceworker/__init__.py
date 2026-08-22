@@ -4,15 +4,7 @@
 
 """CDP ServiceWorker Domain."""
 
-from .types import (
-    RegistrationID,
-    ServiceWorkerRegistration,
-    ServiceWorkerVersionRunningStatus,
-    ServiceWorkerVersionStatus,
-    ServiceWorkerVersion,
-    ServiceWorkerErrorMessage,
-)
-
+from .client import ServiceWorkerClient
 from .commands import (
     DeliverPushMessageParams,
     DispatchPeriodicSyncEventParams,
@@ -25,15 +17,20 @@ from .commands import (
     UnregisterParams,
     UpdateRegistrationParams,
 )
-
 from .events import (
     ServiceWorkerEvent,
     WorkerErrorReportedEvent,
     WorkerRegistrationUpdatedEvent,
     WorkerVersionUpdatedEvent,
 )
-
-from .client import ServiceWorkerClient
+from .types import (
+    RegistrationID,
+    ServiceWorkerErrorMessage,
+    ServiceWorkerRegistration,
+    ServiceWorkerVersion,
+    ServiceWorkerVersionRunningStatus,
+    ServiceWorkerVersionStatus,
+)
 
 __all__ = [
     "DeliverPushMessageParams",

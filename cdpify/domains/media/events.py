@@ -4,7 +4,8 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.shared.models import CDPModel
+
+from cdpify.shared.models import CDPEvent
 
 from .types import (
     Player,
@@ -24,8 +25,8 @@ class MediaEvent(StrEnum):
     PLAYER_CREATED = "Media.playerCreated"
 
 
-@dataclass(kw_only=True)
-class PlayerPropertiesChangedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class PlayerPropertiesChangedEvent(CDPEvent):
     """
     This can be called multiple times, and can be used to set / override / remove
     player properties. A null propValue indicates removal.
@@ -35,8 +36,8 @@ class PlayerPropertiesChangedEvent(CDPModel):
     properties: list[PlayerProperty]
 
 
-@dataclass(kw_only=True)
-class PlayerEventsAddedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class PlayerEventsAddedEvent(CDPEvent):
     """
     Send events as a list, allowing them to be batched on the browser for less
     congestion. If batched, events must ALWAYS be in chronological order.
@@ -46,8 +47,8 @@ class PlayerEventsAddedEvent(CDPModel):
     events: list[PlayerEvent]
 
 
-@dataclass(kw_only=True)
-class PlayerMessagesLoggedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class PlayerMessagesLoggedEvent(CDPEvent):
     """
     Send a list of any messages that need to be delivered.
     """
@@ -56,8 +57,8 @@ class PlayerMessagesLoggedEvent(CDPModel):
     messages: list[PlayerMessage]
 
 
-@dataclass(kw_only=True)
-class PlayerErrorsRaisedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class PlayerErrorsRaisedEvent(CDPEvent):
     """
     Send a list of any errors that need to be delivered.
     """
@@ -66,8 +67,8 @@ class PlayerErrorsRaisedEvent(CDPModel):
     errors: list[PlayerError]
 
 
-@dataclass(kw_only=True)
-class PlayerCreatedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class PlayerCreatedEvent(CDPEvent):
     """
     Called whenever a player is created, or when a new agent joins and receives a list
     of active players. If an agent is restored, it will receive one event for each

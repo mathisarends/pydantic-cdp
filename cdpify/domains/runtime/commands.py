@@ -4,6 +4,7 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
+
 from cdpify.shared.models import CDPModel
 
 from .types import (
@@ -47,7 +48,7 @@ class RuntimeCommand(StrEnum):
     GET_EXCEPTION_DETAILS = "Runtime.getExceptionDetails"
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class AwaitPromiseParams(CDPModel):
     """
     Add handler to promise with given promise object id.
@@ -58,13 +59,13 @@ class AwaitPromiseParams(CDPModel):
     generate_preview: bool | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class AwaitPromiseResult(CDPModel):
     result: RemoteObject
     exception_details: ExceptionDetails | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class CallFunctionOnParams(CDPModel):
     """
     Calls function with given declaration on the given object. Object group of the
@@ -86,13 +87,13 @@ class CallFunctionOnParams(CDPModel):
     serialization_options: SerializationOptions | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class CallFunctionOnResult(CDPModel):
     result: RemoteObject
     exception_details: ExceptionDetails | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class CompileScriptParams(CDPModel):
     """
     Compiles expression.
@@ -104,13 +105,13 @@ class CompileScriptParams(CDPModel):
     execution_context_id: ExecutionContextId | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class CompileScriptResult(CDPModel):
     script_id: ScriptId | None = None
     exception_details: ExceptionDetails | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class EvaluateParams(CDPModel):
     """
     Evaluates expression on global object.
@@ -134,18 +135,18 @@ class EvaluateParams(CDPModel):
     serialization_options: SerializationOptions | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class EvaluateResult(CDPModel):
     result: RemoteObject
     exception_details: ExceptionDetails | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetIsolateIdResult(CDPModel):
     id: str
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetHeapUsageResult(CDPModel):
     used_size: float
     total_size: float
@@ -153,7 +154,7 @@ class GetHeapUsageResult(CDPModel):
     backing_storage_size: float
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetPropertiesParams(CDPModel):
     """
     Returns properties of a given object. Object group of the result is inherited from
@@ -167,7 +168,7 @@ class GetPropertiesParams(CDPModel):
     non_indexed_properties_only: bool | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetPropertiesResult(CDPModel):
     result: list[PropertyDescriptor]
     internal_properties: list[InternalPropertyDescriptor] | None = None
@@ -175,7 +176,7 @@ class GetPropertiesResult(CDPModel):
     exception_details: ExceptionDetails | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GlobalLexicalScopeNamesParams(CDPModel):
     """
     Returns all let, const and class variables from global scope.
@@ -184,23 +185,23 @@ class GlobalLexicalScopeNamesParams(CDPModel):
     execution_context_id: ExecutionContextId | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GlobalLexicalScopeNamesResult(CDPModel):
     names: list[str]
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class QueryObjectsParams(CDPModel):
     prototype_object_id: RemoteObjectId
     object_group: str | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class QueryObjectsResult(CDPModel):
     objects: RemoteObject
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class ReleaseObjectParams(CDPModel):
     """
     Releases remote object with given id.
@@ -209,7 +210,7 @@ class ReleaseObjectParams(CDPModel):
     object_id: RemoteObjectId
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class ReleaseObjectGroupParams(CDPModel):
     """
     Releases all remote objects that belong to a given group.
@@ -218,7 +219,7 @@ class ReleaseObjectGroupParams(CDPModel):
     object_group: str
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class RunScriptParams(CDPModel):
     """
     Runs script with given id in a given context.
@@ -234,13 +235,13 @@ class RunScriptParams(CDPModel):
     await_promise: bool | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class RunScriptResult(CDPModel):
     result: RemoteObject
     exception_details: ExceptionDetails | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SetAsyncCallStackDepthParams(CDPModel):
     """
     Enables or disables async call stacks tracking.
@@ -249,17 +250,17 @@ class SetAsyncCallStackDepthParams(CDPModel):
     max_depth: int
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SetCustomObjectFormatterEnabledParams(CDPModel):
     enabled: bool
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SetMaxCallStackSizeToCaptureParams(CDPModel):
     size: int
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class AddBindingParams(CDPModel):
     """
     If executionContextId is empty, adds binding with the given name on the global
@@ -274,7 +275,7 @@ class AddBindingParams(CDPModel):
     execution_context_name: str | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class RemoveBindingParams(CDPModel):
     """
     This method does not remove binding function from global object but unsubscribes
@@ -284,7 +285,7 @@ class RemoveBindingParams(CDPModel):
     name: str
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetExceptionDetailsParams(CDPModel):
     """
     This method tries to lookup and populate exception details for a JavaScript Error
@@ -296,6 +297,6 @@ class GetExceptionDetailsParams(CDPModel):
     error_object_id: RemoteObjectId
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetExceptionDetailsResult(CDPModel):
     exception_details: ExceptionDetails | None = None

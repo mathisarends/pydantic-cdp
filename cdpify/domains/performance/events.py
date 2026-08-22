@@ -4,7 +4,8 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.shared.models import CDPModel
+
+from cdpify.shared.models import CDPEvent
 
 from .types import (
     Metric,
@@ -15,8 +16,8 @@ class PerformanceEvent(StrEnum):
     METRICS = "Performance.metrics"
 
 
-@dataclass(kw_only=True)
-class MetricsEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class MetricsEvent(CDPEvent):
     """
     Current values of the metrics.
     """

@@ -4,15 +4,7 @@
 
 """CDP Tracing Domain."""
 
-from .types import (
-    MemoryDumpConfig,
-    TraceConfig,
-    StreamFormat,
-    StreamCompression,
-    MemoryDumpLevelOfDetail,
-    TracingBackend,
-)
-
+from .client import TracingClient
 from .commands import (
     GetCategoriesResult,
     GetTrackEventDescriptorResult,
@@ -22,15 +14,20 @@ from .commands import (
     StartParams,
     TracingCommand,
 )
-
 from .events import (
     BufferUsageEvent,
     DataCollectedEvent,
     TracingCompleteEvent,
     TracingEvent,
 )
-
-from .client import TracingClient
+from .types import (
+    MemoryDumpConfig,
+    MemoryDumpLevelOfDetail,
+    StreamCompression,
+    StreamFormat,
+    TraceConfig,
+    TracingBackend,
+)
 
 __all__ = [
     "BufferUsageEvent",

@@ -4,6 +4,7 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
+
 from cdpify.shared.models import CDPModel
 
 from .types import (
@@ -18,7 +19,7 @@ class WebAudioCommand(StrEnum):
     GET_REALTIME_DATA = "WebAudio.getRealtimeData"
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetRealtimeDataParams(CDPModel):
     """
     Fetch the realtime data from the registered contexts.
@@ -27,6 +28,6 @@ class GetRealtimeDataParams(CDPModel):
     context_id: GraphObjectId
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetRealtimeDataResult(CDPModel):
     realtime_data: ContextRealtimeData

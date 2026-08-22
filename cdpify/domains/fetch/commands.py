@@ -4,6 +4,8 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
+
+from cdpify.domains import io, network
 from cdpify.shared.models import CDPModel
 
 from .types import (
@@ -12,9 +14,6 @@ from .types import (
     RequestId,
     RequestPattern,
 )
-
-from cdpify.domains import io
-from cdpify.domains import network
 
 
 class FetchCommand(StrEnum):
@@ -29,7 +28,7 @@ class FetchCommand(StrEnum):
     TAKE_RESPONSE_BODY_AS_STREAM = "Fetch.takeResponseBodyAsStream"
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class EnableParams(CDPModel):
     """
     Enables issuing of requestPaused events. A request will be paused until client
@@ -40,7 +39,7 @@ class EnableParams(CDPModel):
     handle_auth_requests: bool | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class FailRequestParams(CDPModel):
     """
     Causes the request to fail with specified reason.
@@ -50,7 +49,7 @@ class FailRequestParams(CDPModel):
     error_reason: network.ErrorReason
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class FulfillRequestParams(CDPModel):
     """
     Provides response to the request.
@@ -64,7 +63,7 @@ class FulfillRequestParams(CDPModel):
     response_phrase: str | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class ContinueRequestParams(CDPModel):
     """
     Continues the request, optionally modifying some of its parameters.
@@ -78,7 +77,7 @@ class ContinueRequestParams(CDPModel):
     intercept_response: bool | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class ContinueWithAuthParams(CDPModel):
     """
     Continues a request supplying authChallengeResponse following authRequired event.
@@ -88,7 +87,7 @@ class ContinueWithAuthParams(CDPModel):
     auth_challenge_response: AuthChallengeResponse
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class ContinueResponseParams(CDPModel):
     """
     Continues loading of the paused response, optionally modifying the response
@@ -103,7 +102,7 @@ class ContinueResponseParams(CDPModel):
     binary_response_headers: str | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetResponseBodyParams(CDPModel):
     """
     Causes the body of the response to be received from the server and returned as a
@@ -119,13 +118,13 @@ class GetResponseBodyParams(CDPModel):
     request_id: RequestId
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetResponseBodyResult(CDPModel):
     body: str
     base64_encoded: bool
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class TakeResponseBodyAsStreamParams(CDPModel):
     """
     Returns a handle to the stream representing the response body. The request must be
@@ -140,6 +139,6 @@ class TakeResponseBodyAsStreamParams(CDPModel):
     request_id: RequestId
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class TakeResponseBodyAsStreamResult(CDPModel):
     stream: io.StreamHandle

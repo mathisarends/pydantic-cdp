@@ -4,20 +4,7 @@
 
 """CDP Browser Domain."""
 
-from .types import (
-    BrowserContextID,
-    WindowID,
-    WindowState,
-    Bounds,
-    PermissionType,
-    PermissionSetting,
-    PermissionDescriptor,
-    BrowserCommandId,
-    Bucket,
-    Histogram,
-    PrivacySandboxAPI,
-)
-
+from .client import BrowserClient
 from .commands import (
     AddPrivacySandboxCoordinatorKeyConfigParams,
     AddPrivacySandboxEnrollmentOverrideParams,
@@ -42,10 +29,20 @@ from .commands import (
     SetPermissionParams,
     SetWindowBoundsParams,
 )
-
 from .events import BrowserEvent, DownloadProgressEvent, DownloadWillBeginEvent
-
-from .client import BrowserClient
+from .types import (
+    Bounds,
+    BrowserCommandId,
+    BrowserContextID,
+    Bucket,
+    Histogram,
+    PermissionDescriptor,
+    PermissionSetting,
+    PermissionType,
+    PrivacySandboxAPI,
+    WindowID,
+    WindowState,
+)
 
 __all__ = [
     "AddPrivacySandboxCoordinatorKeyConfigParams",

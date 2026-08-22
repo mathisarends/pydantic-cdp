@@ -4,6 +4,8 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
+
+from cdpify.domains import debugger, emulation, io, page
 from cdpify.shared.models import CDPModel
 
 from .types import (
@@ -29,11 +31,6 @@ from .types import (
     SecurityIsolationStatus,
     TimeSinceEpoch,
 )
-
-from cdpify.domains import debugger
-from cdpify.domains import emulation
-from cdpify.domains import io
-from cdpify.domains import page
 
 
 class NetworkCommand(StrEnum):
@@ -82,7 +79,7 @@ class NetworkCommand(StrEnum):
     SET_COOKIE_CONTROLS = "Network.setCookieControls"
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SetAcceptedEncodingsParams(CDPModel):
     """
     Sets a list of content encodings that will be accepted. Empty list means no
@@ -92,22 +89,22 @@ class SetAcceptedEncodingsParams(CDPModel):
     encodings: list[ContentEncoding]
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class CanClearBrowserCacheResult(CDPModel):
     result: bool
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class CanClearBrowserCookiesResult(CDPModel):
     result: bool
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class CanEmulateNetworkConditionsResult(CDPModel):
     result: bool
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class ContinueInterceptedRequestParams(CDPModel):
     """
     Response to Network.requestIntercepted which either modifies the request to
@@ -128,7 +125,7 @@ class ContinueInterceptedRequestParams(CDPModel):
     auth_challenge_response: AuthChallengeResponse | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class DeleteCookiesParams(CDPModel):
     """
     Deletes browser cookies with matching name and url or domain/path/partitionKey
@@ -142,7 +139,7 @@ class DeleteCookiesParams(CDPModel):
     partition_key: CookiePartitionKey | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class EmulateNetworkConditionsParams(CDPModel):
     """
     Activates emulation of network conditions. This command is deprecated in favor of
@@ -160,7 +157,7 @@ class EmulateNetworkConditionsParams(CDPModel):
     packet_reordering: bool | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class EmulateNetworkConditionsByRuleParams(CDPModel):
     """
     Activates emulation of network conditions for individual requests using URL match
@@ -174,12 +171,12 @@ class EmulateNetworkConditionsByRuleParams(CDPModel):
     matched_network_conditions: list[NetworkConditions]
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class EmulateNetworkConditionsByRuleResult(CDPModel):
     rule_ids: list[str]
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class OverrideNetworkStateParams(CDPModel):
     """
     Override the state of navigator.onLine and navigator.connection.
@@ -192,7 +189,7 @@ class OverrideNetworkStateParams(CDPModel):
     connection_type: ConnectionType | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class EnableParams(CDPModel):
     """
     Enables network tracking, network events will now be delivered to the client.
@@ -205,7 +202,7 @@ class EnableParams(CDPModel):
     enable_durable_messages: bool | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class ConfigureDurableMessagesParams(CDPModel):
     """
     Configures storing response bodies outside of renderer, so that these survive a
@@ -217,12 +214,12 @@ class ConfigureDurableMessagesParams(CDPModel):
     max_resource_buffer_size: int | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetAllCookiesResult(CDPModel):
     cookies: list[Cookie]
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetCertificateParams(CDPModel):
     """
     Returns the DER-encoded certificate.
@@ -231,12 +228,12 @@ class GetCertificateParams(CDPModel):
     origin: str
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetCertificateResult(CDPModel):
     table_names: list[str]
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetCookiesParams(CDPModel):
     """
     Returns all browser cookies for the current URL. Depending on the backend support,
@@ -246,12 +243,12 @@ class GetCookiesParams(CDPModel):
     urls: list[str] | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetCookiesResult(CDPModel):
     cookies: list[Cookie]
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetResponseBodyParams(CDPModel):
     """
     Returns content served for the given request.
@@ -260,13 +257,13 @@ class GetResponseBodyParams(CDPModel):
     request_id: RequestId
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetResponseBodyResult(CDPModel):
     body: str
     base64_encoded: bool
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetRequestPostDataParams(CDPModel):
     """
     Returns post data sent with the request. Returns an error when no data was sent
@@ -276,13 +273,13 @@ class GetRequestPostDataParams(CDPModel):
     request_id: RequestId
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetRequestPostDataResult(CDPModel):
     post_data: str
     base64_encoded: bool
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetResponseBodyForInterceptionParams(CDPModel):
     """
     Returns content served for the given currently intercepted request.
@@ -291,13 +288,13 @@ class GetResponseBodyForInterceptionParams(CDPModel):
     interception_id: InterceptionId
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetResponseBodyForInterceptionResult(CDPModel):
     body: str
     base64_encoded: bool
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class TakeResponseBodyForInterceptionAsStreamParams(CDPModel):
     """
     Returns a handle to the stream representing the response body. Note that after this
@@ -309,12 +306,12 @@ class TakeResponseBodyForInterceptionAsStreamParams(CDPModel):
     interception_id: InterceptionId
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class TakeResponseBodyForInterceptionAsStreamResult(CDPModel):
     stream: io.StreamHandle
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class ReplayXHRParams(CDPModel):
     """
     This method sends a new XMLHttpRequest which is identical to the original one. The
@@ -325,7 +322,7 @@ class ReplayXHRParams(CDPModel):
     request_id: RequestId
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SearchInResponseBodyParams(CDPModel):
     """
     Searches for given string in response content.
@@ -337,12 +334,12 @@ class SearchInResponseBodyParams(CDPModel):
     is_regex: bool | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SearchInResponseBodyResult(CDPModel):
     result: list[debugger.SearchMatch]
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SetBlockedURLsParams(CDPModel):
     """
     Blocks URLs from loading.
@@ -352,7 +349,7 @@ class SetBlockedURLsParams(CDPModel):
     urls: list[str] | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SetBypassServiceWorkerParams(CDPModel):
     """
     Toggles ignoring of service worker for each request.
@@ -361,7 +358,7 @@ class SetBypassServiceWorkerParams(CDPModel):
     bypass: bool
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SetCacheDisabledParams(CDPModel):
     """
     Toggles ignoring cache for each request. If `true`, cache will not be used.
@@ -370,7 +367,7 @@ class SetCacheDisabledParams(CDPModel):
     cache_disabled: bool
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SetCookieParams(CDPModel):
     """
     Sets a cookie with the given cookie data; may overwrite equivalent cookies if they
@@ -392,12 +389,12 @@ class SetCookieParams(CDPModel):
     partition_key: CookiePartitionKey | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SetCookieResult(CDPModel):
     success: bool
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SetCookiesParams(CDPModel):
     """
     Sets given cookies.
@@ -406,7 +403,7 @@ class SetCookiesParams(CDPModel):
     cookies: list[CookieParam]
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SetExtraHTTPHeadersParams(CDPModel):
     """
     Specifies whether to always send extra HTTP headers with the requests from this
@@ -416,7 +413,7 @@ class SetExtraHTTPHeadersParams(CDPModel):
     headers: Headers
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SetAttachDebugStackParams(CDPModel):
     """
     Specifies whether to attach a page script stack id in requests
@@ -425,7 +422,7 @@ class SetAttachDebugStackParams(CDPModel):
     enabled: bool
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SetRequestInterceptionParams(CDPModel):
     """
     Sets the requests to intercept that match the provided patterns and optionally
@@ -435,7 +432,7 @@ class SetRequestInterceptionParams(CDPModel):
     patterns: list[RequestPattern]
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SetUserAgentOverrideParams(CDPModel):
     """
     Allows overriding user agent with the given string.
@@ -447,7 +444,7 @@ class SetUserAgentOverrideParams(CDPModel):
     user_agent_metadata: emulation.UserAgentMetadata | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class StreamResourceContentParams(CDPModel):
     """
     Enables streaming of the response for the given requestId. If enabled, the
@@ -457,12 +454,12 @@ class StreamResourceContentParams(CDPModel):
     request_id: RequestId
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class StreamResourceContentResult(CDPModel):
     buffered_data: str
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetSecurityIsolationStatusParams(CDPModel):
     """
     Returns information about the COEP/COOP isolation status.
@@ -471,12 +468,12 @@ class GetSecurityIsolationStatusParams(CDPModel):
     frame_id: page.FrameId | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetSecurityIsolationStatusResult(CDPModel):
     status: SecurityIsolationStatus
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class EnableReportingApiParams(CDPModel):
     """
     Enables tracking for the Reporting API, events generated by the Reporting API will
@@ -487,7 +484,7 @@ class EnableReportingApiParams(CDPModel):
     enable: bool
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class EnableDeviceBoundSessionsParams(CDPModel):
     """
     Sets up tracking device bound sessions and fetching of initial set of sessions.
@@ -496,7 +493,7 @@ class EnableDeviceBoundSessionsParams(CDPModel):
     enable: bool
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class DeleteDeviceBoundSessionParams(CDPModel):
     """
     Deletes a device bound session.
@@ -505,7 +502,7 @@ class DeleteDeviceBoundSessionParams(CDPModel):
     key: DeviceBoundSessionKey
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class FetchSchemefulSiteParams(CDPModel):
     """
     Fetches the schemeful site for a specific origin.
@@ -514,12 +511,12 @@ class FetchSchemefulSiteParams(CDPModel):
     origin: str
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class FetchSchemefulSiteResult(CDPModel):
     schemeful_site: str
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class LoadNetworkResourceParams(CDPModel):
     """
     Fetches the resource and returns the content.
@@ -530,12 +527,12 @@ class LoadNetworkResourceParams(CDPModel):
     options: LoadNetworkResourceOptions
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class LoadNetworkResourceResult(CDPModel):
     resource: LoadNetworkResourcePageResult
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SetCookieControlsParams(CDPModel):
     """
     Sets Controls for third-party cookie access Page reload is required before the new

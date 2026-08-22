@@ -4,7 +4,8 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.shared.models import CDPModel
+
+from cdpify.shared.models import CDPEvent
 
 from .types import (
     AuthenticatorId,
@@ -19,8 +20,8 @@ class WebAuthnEvent(StrEnum):
     CREDENTIAL_ASSERTED = "WebAuthn.credentialAsserted"
 
 
-@dataclass(kw_only=True)
-class CredentialAddedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class CredentialAddedEvent(CDPEvent):
     """
     Triggered when a credential is added to an authenticator.
     """
@@ -29,8 +30,8 @@ class CredentialAddedEvent(CDPModel):
     credential: Credential
 
 
-@dataclass(kw_only=True)
-class CredentialDeletedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class CredentialDeletedEvent(CDPEvent):
     """
     Triggered when a credential is deleted, e.g. through
     PublicKeyCredential.signalUnknownCredential().
@@ -40,8 +41,8 @@ class CredentialDeletedEvent(CDPModel):
     credential_id: str
 
 
-@dataclass(kw_only=True)
-class CredentialUpdatedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class CredentialUpdatedEvent(CDPEvent):
     """
     Triggered when a credential is updated, e.g. through
     PublicKeyCredential.signalCurrentUserDetails().
@@ -51,8 +52,8 @@ class CredentialUpdatedEvent(CDPModel):
     credential: Credential
 
 
-@dataclass(kw_only=True)
-class CredentialAssertedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class CredentialAssertedEvent(CDPEvent):
     """
     Triggered when a credential is used in a webauthn assertion.
     """

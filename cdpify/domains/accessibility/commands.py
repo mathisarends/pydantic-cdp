@@ -4,16 +4,14 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
+
+from cdpify.domains import dom, page, runtime
 from cdpify.shared.models import CDPModel
 
 from .types import (
     AXNode,
     AXNodeId,
 )
-
-from cdpify.domains import dom
-from cdpify.domains import page
-from cdpify.domains import runtime
 
 
 class AccessibilityCommand(StrEnum):
@@ -27,7 +25,7 @@ class AccessibilityCommand(StrEnum):
     QUERY_AX_TREE = "Accessibility.queryAXTree"
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetPartialAXTreeParams(CDPModel):
     """
     Fetches the accessibility node and partial accessibility tree for this DOM node, if
@@ -40,12 +38,12 @@ class GetPartialAXTreeParams(CDPModel):
     fetch_relatives: bool | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetPartialAXTreeResult(CDPModel):
     nodes: list[AXNode]
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetFullAXTreeParams(CDPModel):
     """
     Fetches the entire accessibility tree for the root Document
@@ -55,12 +53,12 @@ class GetFullAXTreeParams(CDPModel):
     frame_id: page.FrameId | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetFullAXTreeResult(CDPModel):
     nodes: list[AXNode]
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetRootAXNodeParams(CDPModel):
     """
     Fetches the root node. Requires `enable()` to have been called previously.
@@ -69,12 +67,12 @@ class GetRootAXNodeParams(CDPModel):
     frame_id: page.FrameId | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetRootAXNodeResult(CDPModel):
     node: AXNode
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetAXNodeAndAncestorsParams(CDPModel):
     """
     Fetches a node and all ancestors up to and including the root. Requires `enable()`
@@ -86,12 +84,12 @@ class GetAXNodeAndAncestorsParams(CDPModel):
     object_id: runtime.RemoteObjectId | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetAXNodeAndAncestorsResult(CDPModel):
     nodes: list[AXNode]
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetChildAXNodesParams(CDPModel):
     """
     Fetches a particular accessibility node by AXNodeId. Requires `enable()` to have
@@ -102,12 +100,12 @@ class GetChildAXNodesParams(CDPModel):
     frame_id: page.FrameId | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetChildAXNodesResult(CDPModel):
     nodes: list[AXNode]
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class QueryAXTreeParams(CDPModel):
     """
     Query a DOM node's accessibility subtree for accessible name and role. This command
@@ -125,6 +123,6 @@ class QueryAXTreeParams(CDPModel):
     role: str | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class QueryAXTreeResult(CDPModel):
     nodes: list[AXNode]

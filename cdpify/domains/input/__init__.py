@@ -4,15 +4,7 @@
 
 """CDP Input Domain."""
 
-from .types import (
-    TouchPoint,
-    GestureSourceType,
-    MouseButton,
-    TimeSinceEpoch,
-    DragDataItem,
-    DragData,
-)
-
+from .client import InputClient
 from .commands import (
     DispatchDragEventParams,
     DispatchKeyEventParams,
@@ -28,10 +20,15 @@ from .commands import (
     SynthesizeScrollGestureParams,
     SynthesizeTapGestureParams,
 )
-
 from .events import DragInterceptedEvent, InputEvent
-
-from .client import InputClient
+from .types import (
+    DragData,
+    DragDataItem,
+    GestureSourceType,
+    MouseButton,
+    TimeSinceEpoch,
+    TouchPoint,
+)
 
 __all__ = [
     "DispatchDragEventParams",

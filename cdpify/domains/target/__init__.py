@@ -4,16 +4,7 @@
 
 """CDP Target Domain."""
 
-from .types import (
-    TargetID,
-    SessionID,
-    TargetInfo,
-    FilterEntry,
-    TargetFilter,
-    RemoteLocation,
-    WindowState,
-)
-
+from .client import TargetClient
 from .commands import (
     ActivateTargetParams,
     AttachToBrowserTargetResult,
@@ -44,7 +35,6 @@ from .commands import (
     SetRemoteLocationsParams,
     TargetCommand,
 )
-
 from .events import (
     AttachedToTargetEvent,
     DetachedFromTargetEvent,
@@ -55,8 +45,15 @@ from .events import (
     TargetEvent,
     TargetInfoChangedEvent,
 )
-
-from .client import TargetClient
+from .types import (
+    FilterEntry,
+    RemoteLocation,
+    SessionID,
+    TargetFilter,
+    TargetID,
+    TargetInfo,
+    WindowState,
+)
 
 __all__ = [
     "ActivateTargetParams",

@@ -4,6 +4,7 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
+
 from cdpify.shared.models import CDPModel
 
 from .types import (
@@ -26,14 +27,14 @@ class ServiceWorkerCommand(StrEnum):
     UPDATE_REGISTRATION = "ServiceWorker.updateRegistration"
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class DeliverPushMessageParams(CDPModel):
     origin: str
     registration_id: RegistrationID
     data: str
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class DispatchSyncEventParams(CDPModel):
     origin: str
     registration_id: RegistrationID
@@ -41,38 +42,38 @@ class DispatchSyncEventParams(CDPModel):
     last_chance: bool
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class DispatchPeriodicSyncEventParams(CDPModel):
     origin: str
     registration_id: RegistrationID
     tag: str
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SetForceUpdateOnPageLoadParams(CDPModel):
     force_update_on_page_load: bool
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SkipWaitingParams(CDPModel):
     scope_url: str
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class StartWorkerParams(CDPModel):
     scope_url: str
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class StopWorkerParams(CDPModel):
     version_id: str
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class UnregisterParams(CDPModel):
     scope_url: str
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class UpdateRegistrationParams(CDPModel):
     scope_url: str

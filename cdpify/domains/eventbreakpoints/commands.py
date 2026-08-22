@@ -4,6 +4,7 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
+
 from cdpify.shared.models import CDPModel
 
 
@@ -15,7 +16,7 @@ class EventBreakpointsCommand(StrEnum):
     DISABLE = "EventBreakpoints.disable"
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SetInstrumentationBreakpointParams(CDPModel):
     """
     Sets breakpoint on particular native event.
@@ -24,7 +25,7 @@ class SetInstrumentationBreakpointParams(CDPModel):
     event_name: str
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class RemoveInstrumentationBreakpointParams(CDPModel):
     """
     Removes breakpoint on particular native event.

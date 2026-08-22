@@ -4,6 +4,7 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
+
 from cdpify.shared.models import CDPModel
 
 from .types import (
@@ -21,28 +22,28 @@ class DOMStorageCommand(StrEnum):
     SET_DOM_STORAGE_ITEM = "DOMStorage.setDOMStorageItem"
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class ClearParams(CDPModel):
     storage_id: StorageId
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetDOMStorageItemsParams(CDPModel):
     storage_id: StorageId
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetDOMStorageItemsResult(CDPModel):
     entries: list[Item]
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class RemoveDOMStorageItemParams(CDPModel):
     storage_id: StorageId
     key: str
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SetDOMStorageItemParams(CDPModel):
     storage_id: StorageId
     key: str

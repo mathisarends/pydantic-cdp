@@ -4,19 +4,7 @@
 
 """CDP Accessibility Domain."""
 
-from .types import (
-    AXNodeId,
-    AXValueType,
-    AXValueSourceType,
-    AXValueNativeSourceType,
-    AXValueSource,
-    AXRelatedNode,
-    AXProperty,
-    AXValue,
-    AXPropertyName,
-    AXNode,
-)
-
+from .client import AccessibilityClient
 from .commands import (
     AccessibilityCommand,
     GetAXNodeAndAncestorsParams,
@@ -32,10 +20,19 @@ from .commands import (
     QueryAXTreeParams,
     QueryAXTreeResult,
 )
-
 from .events import AccessibilityEvent, LoadCompleteEvent, NodesUpdatedEvent
-
-from .client import AccessibilityClient
+from .types import (
+    AXNode,
+    AXNodeId,
+    AXProperty,
+    AXPropertyName,
+    AXRelatedNode,
+    AXValue,
+    AXValueNativeSourceType,
+    AXValueSource,
+    AXValueSourceType,
+    AXValueType,
+)
 
 __all__ = [
     "AXNode",

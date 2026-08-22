@@ -4,8 +4,7 @@
 
 """CDP BackgroundService Domain."""
 
-from .types import ServiceName, EventMetadata, BackgroundServiceEvent
-
+from .client import BackgroundServiceClient
 from .commands import (
     BackgroundServiceCommand,
     ClearEventsParams,
@@ -13,14 +12,12 @@ from .commands import (
     StartObservingParams,
     StopObservingParams,
 )
-
 from .events import (
     BackgroundServiceEvent,
     BackgroundServiceEventReceivedEvent,
     RecordingStateChangedEvent,
 )
-
-from .client import BackgroundServiceClient
+from .types import BackgroundServiceEvent, EventMetadata, ServiceName
 
 __all__ = [
     "BackgroundServiceClient",

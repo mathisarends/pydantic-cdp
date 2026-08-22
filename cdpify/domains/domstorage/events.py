@@ -4,7 +4,8 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.shared.models import CDPModel
+
+from cdpify.shared.models import CDPEvent
 
 from .types import (
     StorageId,
@@ -18,27 +19,27 @@ class DOMStorageEvent(StrEnum):
     DOM_STORAGE_ITEMS_CLEARED = "DOMStorage.domStorageItemsCleared"
 
 
-@dataclass(kw_only=True)
-class DomStorageItemAddedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class DomStorageItemAddedEvent(CDPEvent):
     storage_id: StorageId
     key: str
     new_value: str
 
 
-@dataclass(kw_only=True)
-class DomStorageItemRemovedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class DomStorageItemRemovedEvent(CDPEvent):
     storage_id: StorageId
     key: str
 
 
-@dataclass(kw_only=True)
-class DomStorageItemUpdatedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class DomStorageItemUpdatedEvent(CDPEvent):
     storage_id: StorageId
     key: str
     old_value: str
     new_value: str
 
 
-@dataclass(kw_only=True)
-class DomStorageItemsClearedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class DomStorageItemsClearedEvent(CDPEvent):
     storage_id: StorageId

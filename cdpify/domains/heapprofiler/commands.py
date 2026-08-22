@@ -4,14 +4,14 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
+
+from cdpify.domains import runtime
 from cdpify.shared.models import CDPModel
 
 from .types import (
     HeapSnapshotObjectId,
     SamplingHeapProfile,
 )
-
-from cdpify.domains import runtime
 
 
 class HeapProfilerCommand(StrEnum):
@@ -29,7 +29,7 @@ class HeapProfilerCommand(StrEnum):
     TAKE_HEAP_SNAPSHOT = "HeapProfiler.takeHeapSnapshot"
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class AddInspectedHeapObjectParams(CDPModel):
     """
     Enables console to refer to the node with given id via $x (see Command Line API for
@@ -39,33 +39,33 @@ class AddInspectedHeapObjectParams(CDPModel):
     heap_object_id: HeapSnapshotObjectId
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetHeapObjectIdParams(CDPModel):
     object_id: runtime.RemoteObjectId
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetHeapObjectIdResult(CDPModel):
     heap_snapshot_object_id: HeapSnapshotObjectId
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetObjectByHeapObjectIdParams(CDPModel):
     object_id: HeapSnapshotObjectId
     object_group: str | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetObjectByHeapObjectIdResult(CDPModel):
     result: runtime.RemoteObject
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetSamplingProfileResult(CDPModel):
     profile: SamplingHeapProfile
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class StartSamplingParams(CDPModel):
     sampling_interval: float | None = None
     stack_depth: float | None = None
@@ -73,17 +73,17 @@ class StartSamplingParams(CDPModel):
     include_objects_collected_by_minor_gc: bool | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class StartTrackingHeapObjectsParams(CDPModel):
     track_allocations: bool | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class StopSamplingResult(CDPModel):
     profile: SamplingHeapProfile
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class StopTrackingHeapObjectsParams(CDPModel):
     report_progress: bool | None = None
     treat_global_objects_as_roots: bool | None = None
@@ -91,7 +91,7 @@ class StopTrackingHeapObjectsParams(CDPModel):
     expose_internals: bool | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class TakeHeapSnapshotParams(CDPModel):
     report_progress: bool | None = None
     treat_global_objects_as_roots: bool | None = None

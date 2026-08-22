@@ -4,15 +4,7 @@
 
 """CDP WebAuthn Domain."""
 
-from .types import (
-    AuthenticatorId,
-    AuthenticatorProtocol,
-    Ctap2Version,
-    AuthenticatorTransport,
-    VirtualAuthenticatorOptions,
-    Credential,
-)
-
+from .client import WebAuthnClient
 from .commands import (
     AddCredentialParams,
     AddVirtualAuthenticatorParams,
@@ -31,7 +23,6 @@ from .commands import (
     SetUserVerifiedParams,
     WebAuthnCommand,
 )
-
 from .events import (
     CredentialAddedEvent,
     CredentialAssertedEvent,
@@ -39,8 +30,14 @@ from .events import (
     CredentialUpdatedEvent,
     WebAuthnEvent,
 )
-
-from .client import WebAuthnClient
+from .types import (
+    AuthenticatorId,
+    AuthenticatorProtocol,
+    AuthenticatorTransport,
+    Credential,
+    Ctap2Version,
+    VirtualAuthenticatorOptions,
+)
 
 __all__ = [
     "AddCredentialParams",

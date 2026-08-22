@@ -4,22 +4,7 @@
 
 """CDP Debugger Domain."""
 
-from .types import (
-    BreakpointId,
-    CallFrameId,
-    Location,
-    ScriptPosition,
-    LocationRange,
-    CallFrame,
-    Scope,
-    SearchMatch,
-    BreakLocation,
-    WasmDisassemblyChunk,
-    ScriptLanguage,
-    DebugSymbols,
-    ResolvedBreakpoint,
-)
-
+from .client import DebuggerClient
 from .commands import (
     ContinueToLocationParams,
     DebuggerCommand,
@@ -47,9 +32,9 @@ from .commands import (
     SearchInContentParams,
     SearchInContentResult,
     SetAsyncCallStackDepthParams,
+    SetBlackboxedRangesParams,
     SetBlackboxExecutionContextsParams,
     SetBlackboxPatternsParams,
-    SetBlackboxedRangesParams,
     SetBreakpointByUrlParams,
     SetBreakpointByUrlResult,
     SetBreakpointOnFunctionCallParams,
@@ -68,7 +53,6 @@ from .commands import (
     StepIntoParams,
     StepOverParams,
 )
-
 from .events import (
     BreakpointResolvedEvent,
     DebuggerEvent,
@@ -77,8 +61,21 @@ from .events import (
     ScriptFailedToParseEvent,
     ScriptParsedEvent,
 )
-
-from .client import DebuggerClient
+from .types import (
+    BreakLocation,
+    BreakpointId,
+    CallFrame,
+    CallFrameId,
+    DebugSymbols,
+    Location,
+    LocationRange,
+    ResolvedBreakpoint,
+    Scope,
+    ScriptLanguage,
+    ScriptPosition,
+    SearchMatch,
+    WasmDisassemblyChunk,
+)
 
 __all__ = [
     "BreakLocation",

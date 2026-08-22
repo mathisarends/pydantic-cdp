@@ -4,13 +4,7 @@
 
 """CDP HeapProfiler Domain."""
 
-from .types import (
-    HeapSnapshotObjectId,
-    SamplingHeapProfileNode,
-    SamplingHeapProfileSample,
-    SamplingHeapProfile,
-)
-
+from .client import HeapProfilerClient
 from .commands import (
     AddInspectedHeapObjectParams,
     GetHeapObjectIdParams,
@@ -25,7 +19,6 @@ from .commands import (
     StopTrackingHeapObjectsParams,
     TakeHeapSnapshotParams,
 )
-
 from .events import (
     AddHeapSnapshotChunkEvent,
     HeapProfilerEvent,
@@ -34,8 +27,12 @@ from .events import (
     ReportHeapSnapshotProgressEvent,
     ResetProfilesEvent,
 )
-
-from .client import HeapProfilerClient
+from .types import (
+    HeapSnapshotObjectId,
+    SamplingHeapProfile,
+    SamplingHeapProfileNode,
+    SamplingHeapProfileSample,
+)
 
 __all__ = [
     "AddHeapSnapshotChunkEvent",

@@ -4,36 +4,16 @@
 
 """CDP DOM Domain."""
 
-from .types import (
-    NodeId,
-    BackendNodeId,
-    StyleSheetId,
-    BackendNode,
-    PseudoType,
-    ShadowRootType,
-    CompatibilityMode,
-    PhysicalAxes,
-    LogicalAxes,
-    ScrollOrientation,
-    Node,
-    DetachedElementInfo,
-    RGBA,
-    Quad,
-    BoxModel,
-    ShapeOutsideInfo,
-    Rect,
-    CSSComputedStyleProperty,
-)
-
+from .client import DOMClient
 from .commands import (
     CollectClassNamesFromSubtreeParams,
     CollectClassNamesFromSubtreeResult,
     CopyToParams,
     CopyToResult,
-    DOMCommand,
     DescribeNodeParams,
     DescribeNodeResult,
     DiscardSearchResultsParams,
+    DOMCommand,
     EnableParams,
     FocusParams,
     ForceShowPopoverParams,
@@ -61,10 +41,10 @@ from .commands import (
     GetFrameOwnerResult,
     GetNodeForLocationParams,
     GetNodeForLocationResult,
-    GetNodeStackTracesParams,
-    GetNodeStackTracesResult,
     GetNodesForSubtreeByStyleParams,
     GetNodesForSubtreeByStyleResult,
+    GetNodeStackTracesParams,
+    GetNodeStackTracesResult,
     GetOuterHTMLParams,
     GetOuterHTMLResult,
     GetQueryingDescendantsForContainerParams,
@@ -94,8 +74,8 @@ from .commands import (
     ResolveNodeParams,
     ResolveNodeResult,
     ScrollIntoViewIfNeededParams,
-    SetAttributeValueParams,
     SetAttributesAsTextParams,
+    SetAttributeValueParams,
     SetFileInputFilesParams,
     SetInspectedNodeParams,
     SetNodeNameParams,
@@ -104,10 +84,9 @@ from .commands import (
     SetNodeValueParams,
     SetOuterHTMLParams,
 )
-
 from .events import (
-    AdRelatedStateUpdatedEvent,
     AdoptedStyleSheetsModifiedEvent,
+    AdRelatedStateUpdatedEvent,
     AffectedByStartingStylesFlagUpdatedEvent,
     AttributeModifiedEvent,
     AttributeRemovedEvent,
@@ -115,9 +94,9 @@ from .events import (
     ChildNodeCountUpdatedEvent,
     ChildNodeInsertedEvent,
     ChildNodeRemovedEvent,
-    DOMEvent,
     DistributedNodesUpdatedEvent,
     DocumentUpdatedEvent,
+    DOMEvent,
     InlineStyleInvalidatedEvent,
     PseudoElementAddedEvent,
     PseudoElementRemovedEvent,
@@ -127,8 +106,26 @@ from .events import (
     ShadowRootPushedEvent,
     TopLayerElementsUpdatedEvent,
 )
-
-from .client import DOMClient
+from .types import (
+    RGBA,
+    BackendNode,
+    BackendNodeId,
+    BoxModel,
+    CompatibilityMode,
+    CSSComputedStyleProperty,
+    DetachedElementInfo,
+    LogicalAxes,
+    Node,
+    NodeId,
+    PhysicalAxes,
+    PseudoType,
+    Quad,
+    Rect,
+    ScrollOrientation,
+    ShadowRootType,
+    ShapeOutsideInfo,
+    StyleSheetId,
+)
 
 __all__ = [
     "AdRelatedStateUpdatedEvent",

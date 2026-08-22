@@ -4,6 +4,7 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
+
 from cdpify.shared.models import CDPModel
 
 from .types import (
@@ -27,19 +28,19 @@ class MemoryCommand(StrEnum):
     GET_SAMPLING_PROFILE = "Memory.getSamplingProfile"
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetDOMCountersResult(CDPModel):
     documents: int
     nodes: int
     js_event_listeners: int
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetDOMCountersForLeakDetectionResult(CDPModel):
     counters: list[DOMCounter]
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SetPressureNotificationsSuppressedParams(CDPModel):
     """
     Enable/disable suppressing memory pressure notifications in all processes.
@@ -48,7 +49,7 @@ class SetPressureNotificationsSuppressedParams(CDPModel):
     suppressed: bool
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SimulatePressureNotificationParams(CDPModel):
     """
     Simulate a memory pressure notification in all processes.
@@ -57,7 +58,7 @@ class SimulatePressureNotificationParams(CDPModel):
     level: PressureLevel
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class StartSamplingParams(CDPModel):
     """
     Start collecting native memory profile.
@@ -67,16 +68,16 @@ class StartSamplingParams(CDPModel):
     suppress_randomness: bool | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetAllTimeSamplingProfileResult(CDPModel):
     profile: SamplingProfile
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetBrowserSamplingProfileResult(CDPModel):
     profile: SamplingProfile
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetSamplingProfileResult(CDPModel):
     profile: SamplingProfile

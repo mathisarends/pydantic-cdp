@@ -4,6 +4,7 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
+
 from cdpify.shared.models import CDPModel
 
 
@@ -12,7 +13,7 @@ class TetheringCommand(StrEnum):
     UNBIND = "Tethering.unbind"
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class BindParams(CDPModel):
     """
     Request browser port binding.
@@ -21,7 +22,7 @@ class BindParams(CDPModel):
     port: int
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class UnbindParams(CDPModel):
     """
     Request browser port unbinding.

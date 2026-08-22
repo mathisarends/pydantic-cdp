@@ -4,16 +4,7 @@
 
 """CDP IndexedDB Domain."""
 
-from .types import (
-    DatabaseWithObjectStores,
-    ObjectStore,
-    ObjectStoreIndex,
-    Key,
-    KeyRange,
-    DataEntry,
-    KeyPath,
-)
-
+from .client import IndexedDBClient
 from .commands import (
     ClearObjectStoreParams,
     DeleteDatabaseParams,
@@ -21,15 +12,22 @@ from .commands import (
     GetMetadataParams,
     GetMetadataResult,
     IndexedDBCommand,
-    RequestDataParams,
-    RequestDataResult,
     RequestDatabaseNamesParams,
     RequestDatabaseNamesResult,
     RequestDatabaseParams,
     RequestDatabaseResult,
+    RequestDataParams,
+    RequestDataResult,
 )
-
-from .client import IndexedDBClient
+from .types import (
+    DatabaseWithObjectStores,
+    DataEntry,
+    Key,
+    KeyPath,
+    KeyRange,
+    ObjectStore,
+    ObjectStoreIndex,
+)
 
 __all__ = [
     "ClearObjectStoreParams",

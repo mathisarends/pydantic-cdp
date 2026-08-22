@@ -4,6 +4,7 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
+
 from cdpify.shared.models import CDPModel
 
 from .types import (
@@ -15,6 +16,6 @@ class SchemaCommand(StrEnum):
     GET_DOMAINS = "Schema.getDomains"
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetDomainsResult(CDPModel):
     domains: list[Domain]

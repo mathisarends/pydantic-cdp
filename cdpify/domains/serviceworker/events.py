@@ -4,7 +4,8 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.shared.models import CDPModel
+
+from cdpify.shared.models import CDPEvent
 
 from .types import (
     ServiceWorkerErrorMessage,
@@ -19,16 +20,16 @@ class ServiceWorkerEvent(StrEnum):
     WORKER_VERSION_UPDATED = "ServiceWorker.workerVersionUpdated"
 
 
-@dataclass(kw_only=True)
-class WorkerErrorReportedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class WorkerErrorReportedEvent(CDPEvent):
     error_message: ServiceWorkerErrorMessage
 
 
-@dataclass(kw_only=True)
-class WorkerRegistrationUpdatedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class WorkerRegistrationUpdatedEvent(CDPEvent):
     registrations: list[ServiceWorkerRegistration]
 
 
-@dataclass(kw_only=True)
-class WorkerVersionUpdatedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class WorkerVersionUpdatedEvent(CDPEvent):
     versions: list[ServiceWorkerVersion]

@@ -4,13 +4,13 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
+
+from cdpify.domains import runtime
 from cdpify.shared.models import CDPModel
 
 from .types import (
     StreamHandle,
 )
-
-from cdpify.domains import runtime
 
 
 class IOCommand(StrEnum):
@@ -19,7 +19,7 @@ class IOCommand(StrEnum):
     RESOLVE_BLOB = "IO.resolveBlob"
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class CloseParams(CDPModel):
     """
     Close the stream, discard any temporary backing storage.
@@ -28,7 +28,7 @@ class CloseParams(CDPModel):
     handle: StreamHandle
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class ReadParams(CDPModel):
     """
     Read a chunk of the stream
@@ -39,14 +39,14 @@ class ReadParams(CDPModel):
     size: int | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class ReadResult(CDPModel):
     base64_encoded: bool | None = None
     data: str
     eof: bool
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class ResolveBlobParams(CDPModel):
     """
     Return UUID of Blob object specified by a remote object id.
@@ -55,6 +55,6 @@ class ResolveBlobParams(CDPModel):
     object_id: runtime.RemoteObjectId
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class ResolveBlobResult(CDPModel):
     uuid: str

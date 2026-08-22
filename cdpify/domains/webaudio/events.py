@@ -4,7 +4,8 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.shared.models import CDPModel
+
+from cdpify.shared.models import CDPEvent
 
 from .types import (
     AudioListener,
@@ -31,8 +32,8 @@ class WebAudioEvent(StrEnum):
     NODE_PARAM_DISCONNECTED = "WebAudio.nodeParamDisconnected"
 
 
-@dataclass(kw_only=True)
-class ContextCreatedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class ContextCreatedEvent(CDPEvent):
     """
     Notifies that a new BaseAudioContext has been created.
     """
@@ -40,8 +41,8 @@ class ContextCreatedEvent(CDPModel):
     context: BaseAudioContext
 
 
-@dataclass(kw_only=True)
-class ContextWillBeDestroyedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class ContextWillBeDestroyedEvent(CDPEvent):
     """
     Notifies that an existing BaseAudioContext will be destroyed.
     """
@@ -49,8 +50,8 @@ class ContextWillBeDestroyedEvent(CDPModel):
     context_id: GraphObjectId
 
 
-@dataclass(kw_only=True)
-class ContextChangedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class ContextChangedEvent(CDPEvent):
     """
     Notifies that existing BaseAudioContext has changed some properties (id stays the
     same)..
@@ -59,8 +60,8 @@ class ContextChangedEvent(CDPModel):
     context: BaseAudioContext
 
 
-@dataclass(kw_only=True)
-class AudioListenerCreatedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class AudioListenerCreatedEvent(CDPEvent):
     """
     Notifies that the construction of an AudioListener has finished.
     """
@@ -68,8 +69,8 @@ class AudioListenerCreatedEvent(CDPModel):
     listener: AudioListener
 
 
-@dataclass(kw_only=True)
-class AudioListenerWillBeDestroyedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class AudioListenerWillBeDestroyedEvent(CDPEvent):
     """
     Notifies that a new AudioListener has been created.
     """
@@ -78,8 +79,8 @@ class AudioListenerWillBeDestroyedEvent(CDPModel):
     listener_id: GraphObjectId
 
 
-@dataclass(kw_only=True)
-class AudioNodeCreatedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class AudioNodeCreatedEvent(CDPEvent):
     """
     Notifies that a new AudioNode has been created.
     """
@@ -87,8 +88,8 @@ class AudioNodeCreatedEvent(CDPModel):
     node: AudioNode
 
 
-@dataclass(kw_only=True)
-class AudioNodeWillBeDestroyedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class AudioNodeWillBeDestroyedEvent(CDPEvent):
     """
     Notifies that an existing AudioNode has been destroyed.
     """
@@ -97,8 +98,8 @@ class AudioNodeWillBeDestroyedEvent(CDPModel):
     node_id: GraphObjectId
 
 
-@dataclass(kw_only=True)
-class AudioParamCreatedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class AudioParamCreatedEvent(CDPEvent):
     """
     Notifies that a new AudioParam has been created.
     """
@@ -106,8 +107,8 @@ class AudioParamCreatedEvent(CDPModel):
     param: AudioParam
 
 
-@dataclass(kw_only=True)
-class AudioParamWillBeDestroyedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class AudioParamWillBeDestroyedEvent(CDPEvent):
     """
     Notifies that an existing AudioParam has been destroyed.
     """
@@ -117,8 +118,8 @@ class AudioParamWillBeDestroyedEvent(CDPModel):
     param_id: GraphObjectId
 
 
-@dataclass(kw_only=True)
-class NodesConnectedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class NodesConnectedEvent(CDPEvent):
     """
     Notifies that two AudioNodes are connected.
     """
@@ -130,8 +131,8 @@ class NodesConnectedEvent(CDPModel):
     destination_input_index: float | None = None
 
 
-@dataclass(kw_only=True)
-class NodesDisconnectedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class NodesDisconnectedEvent(CDPEvent):
     """
     Notifies that AudioNodes are disconnected. The destination can be null, and it
     means all the outgoing connections from the source are disconnected.
@@ -144,8 +145,8 @@ class NodesDisconnectedEvent(CDPModel):
     destination_input_index: float | None = None
 
 
-@dataclass(kw_only=True)
-class NodeParamConnectedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class NodeParamConnectedEvent(CDPEvent):
     """
     Notifies that an AudioNode is connected to an AudioParam.
     """
@@ -156,8 +157,8 @@ class NodeParamConnectedEvent(CDPModel):
     source_output_index: float | None = None
 
 
-@dataclass(kw_only=True)
-class NodeParamDisconnectedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class NodeParamDisconnectedEvent(CDPEvent):
     """
     Notifies that an AudioNode is disconnected to an AudioParam.
     """

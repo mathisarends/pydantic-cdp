@@ -4,6 +4,7 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
+
 from cdpify.shared.models import CDPModel
 
 from .types import (
@@ -29,7 +30,7 @@ class WebAuthnCommand(StrEnum):
     SET_CREDENTIAL_PROPERTIES = "WebAuthn.setCredentialProperties"
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class EnableParams(CDPModel):
     """
     Enable the WebAuthn domain and start intercepting credential storage and retrieval
@@ -39,7 +40,7 @@ class EnableParams(CDPModel):
     enable_ui: bool | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class AddVirtualAuthenticatorParams(CDPModel):
     """
     Creates and adds a virtual authenticator.
@@ -48,12 +49,12 @@ class AddVirtualAuthenticatorParams(CDPModel):
     options: VirtualAuthenticatorOptions
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class AddVirtualAuthenticatorResult(CDPModel):
     authenticator_id: AuthenticatorId
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SetResponseOverrideBitsParams(CDPModel):
     """
     Resets parameters isBogusSignature, isBadUV, isBadUP to false if they are not
@@ -66,7 +67,7 @@ class SetResponseOverrideBitsParams(CDPModel):
     is_bad_up: bool | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class RemoveVirtualAuthenticatorParams(CDPModel):
     """
     Removes the given authenticator.
@@ -75,7 +76,7 @@ class RemoveVirtualAuthenticatorParams(CDPModel):
     authenticator_id: AuthenticatorId
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class AddCredentialParams(CDPModel):
     """
     Adds the credential to the specified authenticator.
@@ -85,7 +86,7 @@ class AddCredentialParams(CDPModel):
     credential: Credential
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetCredentialParams(CDPModel):
     """
     Returns a single credential stored in the given virtual authenticator that matches
@@ -96,12 +97,12 @@ class GetCredentialParams(CDPModel):
     credential_id: str
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetCredentialResult(CDPModel):
     credential: Credential
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetCredentialsParams(CDPModel):
     """
     Returns all the credentials stored in the given virtual authenticator.
@@ -110,12 +111,12 @@ class GetCredentialsParams(CDPModel):
     authenticator_id: AuthenticatorId
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetCredentialsResult(CDPModel):
     credentials: list[Credential]
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class RemoveCredentialParams(CDPModel):
     """
     Removes a credential from the authenticator.
@@ -125,7 +126,7 @@ class RemoveCredentialParams(CDPModel):
     credential_id: str
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class ClearCredentialsParams(CDPModel):
     """
     Clears all the credentials from the specified device.
@@ -134,7 +135,7 @@ class ClearCredentialsParams(CDPModel):
     authenticator_id: AuthenticatorId
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SetUserVerifiedParams(CDPModel):
     """
     Sets whether User Verification succeeds or fails for an authenticator. The default
@@ -145,7 +146,7 @@ class SetUserVerifiedParams(CDPModel):
     is_user_verified: bool
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SetAutomaticPresenceSimulationParams(CDPModel):
     """
     Sets whether tests of user presence will succeed immediately (if true) or fail to
@@ -156,7 +157,7 @@ class SetAutomaticPresenceSimulationParams(CDPModel):
     enabled: bool
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SetCredentialPropertiesParams(CDPModel):
     """
     Allows setting credential properties.

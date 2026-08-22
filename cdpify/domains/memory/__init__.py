@@ -4,14 +4,7 @@
 
 """CDP Memory Domain."""
 
-from .types import (
-    PressureLevel,
-    SamplingProfileNode,
-    SamplingProfile,
-    Module,
-    DOMCounter,
-)
-
+from .client import MemoryClient
 from .commands import (
     GetAllTimeSamplingProfileResult,
     GetBrowserSamplingProfileResult,
@@ -23,8 +16,13 @@ from .commands import (
     SimulatePressureNotificationParams,
     StartSamplingParams,
 )
-
-from .client import MemoryClient
+from .types import (
+    DOMCounter,
+    Module,
+    PressureLevel,
+    SamplingProfile,
+    SamplingProfileNode,
+)
 
 __all__ = [
     "DOMCounter",

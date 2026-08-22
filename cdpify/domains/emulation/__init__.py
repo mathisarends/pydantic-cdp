@@ -4,30 +4,7 @@
 
 """CDP Emulation Domain."""
 
-from .types import (
-    SafeAreaInsets,
-    ScreenOrientation,
-    DisplayFeature,
-    DevicePosture,
-    MediaFeature,
-    VirtualTimePolicy,
-    UserAgentBrandVersion,
-    UserAgentMetadata,
-    SensorType,
-    SensorMetadata,
-    SensorReadingSingle,
-    SensorReadingXYZ,
-    SensorReadingQuaternion,
-    SensorReading,
-    PressureSource,
-    PressureState,
-    PressureMetadata,
-    WorkAreaInsets,
-    ScreenId,
-    ScreenInfo,
-    DisabledImageType,
-)
-
+from .client import EmulationClient
 from .commands import (
     AddScreenParams,
     AddScreenResult,
@@ -77,14 +54,34 @@ from .commands import (
     UpdateScreenParams,
     UpdateScreenResult,
 )
-
 from .events import (
     EmulationEvent,
     ScreenOrientationLockChangedEvent,
     VirtualTimeBudgetExpiredEvent,
 )
-
-from .client import EmulationClient
+from .types import (
+    DevicePosture,
+    DisabledImageType,
+    DisplayFeature,
+    MediaFeature,
+    PressureMetadata,
+    PressureSource,
+    PressureState,
+    SafeAreaInsets,
+    ScreenId,
+    ScreenInfo,
+    ScreenOrientation,
+    SensorMetadata,
+    SensorReading,
+    SensorReadingQuaternion,
+    SensorReadingSingle,
+    SensorReadingXYZ,
+    SensorType,
+    UserAgentBrandVersion,
+    UserAgentMetadata,
+    VirtualTimePolicy,
+    WorkAreaInsets,
+)
 
 __all__ = [
     "AddScreenParams",

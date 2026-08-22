@@ -4,7 +4,8 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.shared.models import CDPModel
+
+from cdpify.shared.models import CDPEvent
 
 from .types import (
     Sink,
@@ -16,8 +17,8 @@ class CastEvent(StrEnum):
     ISSUE_UPDATED = "Cast.issueUpdated"
 
 
-@dataclass(kw_only=True)
-class SinksUpdatedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class SinksUpdatedEvent(CDPEvent):
     """
     This is fired whenever the list of available sinks changes. A sink is a device or a
     software surface that you can cast to.
@@ -26,8 +27,8 @@ class SinksUpdatedEvent(CDPModel):
     sinks: list[Sink]
 
 
-@dataclass(kw_only=True)
-class IssueUpdatedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class IssueUpdatedEvent(CDPEvent):
     """
     This is fired whenever the outstanding issue/error message changes. |issueMessage|
     is empty if there is no issue.

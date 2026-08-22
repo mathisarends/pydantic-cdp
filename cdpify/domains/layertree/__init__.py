@@ -4,16 +4,7 @@
 
 """CDP LayerTree Domain."""
 
-from .types import (
-    LayerId,
-    SnapshotId,
-    ScrollRect,
-    StickyPositionConstraint,
-    PictureTile,
-    Layer,
-    PaintProfile,
-)
-
+from .client import LayerTreeClient
 from .commands import (
     CompositingReasonsParams,
     CompositingReasonsResult,
@@ -30,10 +21,16 @@ from .commands import (
     SnapshotCommandLogParams,
     SnapshotCommandLogResult,
 )
-
 from .events import LayerPaintedEvent, LayerTreeDidChangeEvent, LayerTreeEvent
-
-from .client import LayerTreeClient
+from .types import (
+    Layer,
+    LayerId,
+    PaintProfile,
+    PictureTile,
+    ScrollRect,
+    SnapshotId,
+    StickyPositionConstraint,
+)
 
 __all__ = [
     "CompositingReasonsParams",

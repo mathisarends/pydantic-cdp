@@ -4,6 +4,8 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
+
+from cdpify.domains import browser
 from cdpify.shared.models import CDPModel
 
 from .types import (
@@ -14,8 +16,6 @@ from .types import (
     TargetInfo,
     WindowState,
 )
-
-from cdpify.domains import browser
 
 
 class TargetCommand(StrEnum):
@@ -40,7 +40,7 @@ class TargetCommand(StrEnum):
     OPEN_DEV_TOOLS = "Target.openDevTools"
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class ActivateTargetParams(CDPModel):
     """
     Activates (focuses) the target.
@@ -49,7 +49,7 @@ class ActivateTargetParams(CDPModel):
     target_id: TargetID
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class AttachToTargetParams(CDPModel):
     """
     Attaches to the target with given id.
@@ -59,17 +59,17 @@ class AttachToTargetParams(CDPModel):
     flatten: bool | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class AttachToTargetResult(CDPModel):
     session_id: SessionID
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class AttachToBrowserTargetResult(CDPModel):
     session_id: SessionID
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class CloseTargetParams(CDPModel):
     """
     Closes the target. If the target is a page that gets closed too.
@@ -78,12 +78,12 @@ class CloseTargetParams(CDPModel):
     target_id: TargetID
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class CloseTargetResult(CDPModel):
     success: bool
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class ExposeDevToolsProtocolParams(CDPModel):
     """
     Inject object to the target's main frame that provides a communication channel with
@@ -99,7 +99,7 @@ class ExposeDevToolsProtocolParams(CDPModel):
     inherit_permissions: bool | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class CreateBrowserContextParams(CDPModel):
     """
     Creates a new empty BrowserContext. Similar to an incognito profile but you can
@@ -112,18 +112,18 @@ class CreateBrowserContextParams(CDPModel):
     origins_with_universal_network_access: list[str] | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class CreateBrowserContextResult(CDPModel):
     browser_context_id: browser.BrowserContextID
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetBrowserContextsResult(CDPModel):
     browser_context_ids: list[browser.BrowserContextID]
     default_browser_context_id: browser.BrowserContextID | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class CreateTargetParams(CDPModel):
     """
     Creates a new page.
@@ -144,12 +144,12 @@ class CreateTargetParams(CDPModel):
     focus: bool | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class CreateTargetResult(CDPModel):
     target_id: TargetID
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class DetachFromTargetParams(CDPModel):
     """
     Detaches session with given id.
@@ -159,7 +159,7 @@ class DetachFromTargetParams(CDPModel):
     target_id: TargetID | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class DisposeBrowserContextParams(CDPModel):
     """
     Deletes a BrowserContext. All the belonging pages will be closed without calling
@@ -169,7 +169,7 @@ class DisposeBrowserContextParams(CDPModel):
     browser_context_id: browser.BrowserContextID
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetTargetInfoParams(CDPModel):
     """
     Returns information about a target.
@@ -178,12 +178,12 @@ class GetTargetInfoParams(CDPModel):
     target_id: TargetID | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetTargetInfoResult(CDPModel):
     target_info: TargetInfo
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetTargetsParams(CDPModel):
     """
     Retrieves a list of available targets.
@@ -192,12 +192,12 @@ class GetTargetsParams(CDPModel):
     filter: TargetFilter | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetTargetsResult(CDPModel):
     target_infos: list[TargetInfo]
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SendMessageToTargetParams(CDPModel):
     """
     Sends protocol message over session with given id. Consider using flat mode
@@ -209,7 +209,7 @@ class SendMessageToTargetParams(CDPModel):
     target_id: TargetID | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SetAutoAttachParams(CDPModel):
     """
     Controls whether to automatically attach to new targets which are considered to be
@@ -227,7 +227,7 @@ class SetAutoAttachParams(CDPModel):
     filter: TargetFilter | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class AutoAttachRelatedParams(CDPModel):
     """
     Adds the specified target to the list of targets that will be monitored for any
@@ -242,7 +242,7 @@ class AutoAttachRelatedParams(CDPModel):
     filter: TargetFilter | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SetDiscoverTargetsParams(CDPModel):
     """
     Controls whether to discover available targets and notify via
@@ -253,7 +253,7 @@ class SetDiscoverTargetsParams(CDPModel):
     filter: TargetFilter | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SetRemoteLocationsParams(CDPModel):
     """
     Enables target discovery for the specified locations, when `setDiscoverTargets` was
@@ -263,7 +263,7 @@ class SetRemoteLocationsParams(CDPModel):
     locations: list[RemoteLocation]
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetDevToolsTargetParams(CDPModel):
     """
     Gets the targetId of the DevTools page target opened for the given target (if any).
@@ -272,12 +272,12 @@ class GetDevToolsTargetParams(CDPModel):
     target_id: TargetID
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetDevToolsTargetResult(CDPModel):
     target_id: TargetID | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class OpenDevToolsParams(CDPModel):
     """
     Opens a DevTools window for the target.
@@ -287,6 +287,6 @@ class OpenDevToolsParams(CDPModel):
     panel_id: str | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class OpenDevToolsResult(CDPModel):
     target_id: TargetID

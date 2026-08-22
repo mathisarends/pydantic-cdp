@@ -4,7 +4,8 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.shared.models import CDPModel
+
+from cdpify.shared.models import CDPEvent
 
 from .types import (
     AXNode,
@@ -16,8 +17,8 @@ class AccessibilityEvent(StrEnum):
     NODES_UPDATED = "Accessibility.nodesUpdated"
 
 
-@dataclass(kw_only=True)
-class LoadCompleteEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class LoadCompleteEvent(CDPEvent):
     """
     The loadComplete event mirrors the load complete event sent by the browser to
     assistive technology when the web page has finished loading.
@@ -26,8 +27,8 @@ class LoadCompleteEvent(CDPModel):
     root: AXNode
 
 
-@dataclass(kw_only=True)
-class NodesUpdatedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class NodesUpdatedEvent(CDPEvent):
     """
     The nodesUpdated event is sent every time a previously requested node has changed
     the in tree.

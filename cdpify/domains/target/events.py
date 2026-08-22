@@ -4,7 +4,8 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.shared.models import CDPModel
+
+from cdpify.shared.models import CDPEvent
 
 from .types import (
     SessionID,
@@ -23,8 +24,8 @@ class TargetEvent(StrEnum):
     TARGET_INFO_CHANGED = "Target.targetInfoChanged"
 
 
-@dataclass(kw_only=True)
-class AttachedToTargetEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class AttachedToTargetEvent(CDPEvent):
     """
     Issued when attached to target because of auto-attach or `attachToTarget` command.
     """
@@ -34,8 +35,8 @@ class AttachedToTargetEvent(CDPModel):
     waiting_for_debugger: bool
 
 
-@dataclass(kw_only=True)
-class DetachedFromTargetEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class DetachedFromTargetEvent(CDPEvent):
     """
     Issued when detached from target for any reason (including `detachFromTarget`
     command). Can be issued multiple times per target if multiple sessions have been
@@ -46,8 +47,8 @@ class DetachedFromTargetEvent(CDPModel):
     target_id: TargetID | None = None
 
 
-@dataclass(kw_only=True)
-class ReceivedMessageFromTargetEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class ReceivedMessageFromTargetEvent(CDPEvent):
     """
     Notifies about a new protocol message received from the session (as reported in
     `attachedToTarget` event).
@@ -58,8 +59,8 @@ class ReceivedMessageFromTargetEvent(CDPModel):
     target_id: TargetID | None = None
 
 
-@dataclass(kw_only=True)
-class TargetCreatedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class TargetCreatedEvent(CDPEvent):
     """
     Issued when a possible inspection target is created.
     """
@@ -67,8 +68,8 @@ class TargetCreatedEvent(CDPModel):
     target_info: TargetInfo
 
 
-@dataclass(kw_only=True)
-class TargetDestroyedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class TargetDestroyedEvent(CDPEvent):
     """
     Issued when a target is destroyed.
     """
@@ -76,8 +77,8 @@ class TargetDestroyedEvent(CDPModel):
     target_id: TargetID
 
 
-@dataclass(kw_only=True)
-class TargetCrashedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class TargetCrashedEvent(CDPEvent):
     """
     Issued when a target has crashed.
     """
@@ -87,8 +88,8 @@ class TargetCrashedEvent(CDPModel):
     error_code: int
 
 
-@dataclass(kw_only=True)
-class TargetInfoChangedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class TargetInfoChangedEvent(CDPEvent):
     """
     Issued when some information about a target has changed. This only happens between
     `targetCreated` and `targetDestroyed`.

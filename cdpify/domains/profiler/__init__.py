@@ -4,15 +4,7 @@
 
 """CDP Profiler Domain."""
 
-from .types import (
-    ProfileNode,
-    Profile,
-    PositionTickInfo,
-    CoverageRange,
-    FunctionCoverage,
-    ScriptCoverage,
-)
-
+from .client import ProfilerClient
 from .commands import (
     GetBestEffortCoverageResult,
     ProfilerCommand,
@@ -22,15 +14,20 @@ from .commands import (
     StopResult,
     TakePreciseCoverageResult,
 )
-
 from .events import (
     ConsoleProfileFinishedEvent,
     ConsoleProfileStartedEvent,
     PreciseCoverageDeltaUpdateEvent,
     ProfilerEvent,
 )
-
-from .client import ProfilerClient
+from .types import (
+    CoverageRange,
+    FunctionCoverage,
+    PositionTickInfo,
+    Profile,
+    ProfileNode,
+    ScriptCoverage,
+)
 
 __all__ = [
     "ConsoleProfileFinishedEvent",

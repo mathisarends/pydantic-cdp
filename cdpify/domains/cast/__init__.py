@@ -4,8 +4,7 @@
 
 """CDP Cast Domain."""
 
-from .types import Sink
-
+from .client import CastClient
 from .commands import (
     CastCommand,
     EnableParams,
@@ -14,10 +13,8 @@ from .commands import (
     StartTabMirroringParams,
     StopCastingParams,
 )
-
 from .events import CastEvent, IssueUpdatedEvent, SinksUpdatedEvent
-
-from .client import CastClient
+from .types import Sink
 
 __all__ = [
     "CastClient",

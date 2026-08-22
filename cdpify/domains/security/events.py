@@ -4,7 +4,8 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.shared.models import CDPModel
+
+from cdpify.shared.models import CDPEvent
 
 from .types import (
     InsecureContentStatus,
@@ -20,8 +21,8 @@ class SecurityEvent(StrEnum):
     SECURITY_STATE_CHANGED = "Security.securityStateChanged"
 
 
-@dataclass(kw_only=True)
-class CertificateErrorEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class CertificateErrorEvent(CDPEvent):
     """
     There is a certificate error. If overriding certificate errors is enabled, then it
     should be handled with the `handleCertificateError` command. Note: this event does
@@ -34,8 +35,8 @@ class CertificateErrorEvent(CDPModel):
     request_url: str
 
 
-@dataclass(kw_only=True)
-class VisibleSecurityStateChangedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class VisibleSecurityStateChangedEvent(CDPEvent):
     """
     The security state of the page changed.
     """
@@ -43,8 +44,8 @@ class VisibleSecurityStateChangedEvent(CDPModel):
     visible_security_state: VisibleSecurityState
 
 
-@dataclass(kw_only=True)
-class SecurityStateChangedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class SecurityStateChangedEvent(CDPEvent):
     """
     The security state of the page changed. No longer being sent.
     """

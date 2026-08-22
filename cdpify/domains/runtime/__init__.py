@@ -4,32 +4,7 @@
 
 """CDP Runtime Domain."""
 
-from .types import (
-    ScriptId,
-    SerializationOptions,
-    DeepSerializedValue,
-    RemoteObjectId,
-    UnserializableValue,
-    RemoteObject,
-    CustomPreview,
-    ObjectPreview,
-    PropertyPreview,
-    EntryPreview,
-    PropertyDescriptor,
-    InternalPropertyDescriptor,
-    PrivatePropertyDescriptor,
-    CallArgument,
-    ExecutionContextId,
-    ExecutionContextDescription,
-    ExceptionDetails,
-    Timestamp,
-    TimeDelta,
-    CallFrame,
-    StackTrace,
-    UniqueDebuggerId,
-    StackTraceId,
-)
-
+from .client import RuntimeClient
 from .commands import (
     AddBindingParams,
     AwaitPromiseParams,
@@ -60,7 +35,6 @@ from .commands import (
     SetCustomObjectFormatterEnabledParams,
     SetMaxCallStackSizeToCaptureParams,
 )
-
 from .events import (
     BindingCalledEvent,
     ConsoleAPICalledEvent,
@@ -72,8 +46,31 @@ from .events import (
     InspectRequestedEvent,
     RuntimeEvent,
 )
-
-from .client import RuntimeClient
+from .types import (
+    CallArgument,
+    CallFrame,
+    CustomPreview,
+    DeepSerializedValue,
+    EntryPreview,
+    ExceptionDetails,
+    ExecutionContextDescription,
+    ExecutionContextId,
+    InternalPropertyDescriptor,
+    ObjectPreview,
+    PrivatePropertyDescriptor,
+    PropertyDescriptor,
+    PropertyPreview,
+    RemoteObject,
+    RemoteObjectId,
+    ScriptId,
+    SerializationOptions,
+    StackTrace,
+    StackTraceId,
+    TimeDelta,
+    Timestamp,
+    UniqueDebuggerId,
+    UnserializableValue,
+)
 
 __all__ = [
     "AddBindingParams",

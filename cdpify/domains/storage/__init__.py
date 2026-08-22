@@ -4,29 +4,7 @@
 
 """CDP Storage Domain."""
 
-from .types import (
-    SerializedStorageKey,
-    StorageType,
-    UsageForType,
-    TrustTokens,
-    InterestGroupAuctionId,
-    InterestGroupAccessType,
-    InterestGroupAuctionEventType,
-    InterestGroupAuctionFetchType,
-    SharedStorageAccessScope,
-    SharedStorageAccessMethod,
-    SharedStorageEntry,
-    SharedStorageMetadata,
-    SharedStoragePrivateAggregationConfig,
-    SharedStorageReportingMetadata,
-    SharedStorageUrlWithMetadata,
-    SharedStorageAccessParams,
-    StorageBucketsDurability,
-    StorageBucket,
-    StorageBucketInfo,
-    RelatedWebsiteSet,
-)
-
+from .client import StorageClient
 from .commands import (
     ClearCookiesParams,
     ClearDataForOriginParams,
@@ -72,7 +50,6 @@ from .commands import (
     UntrackIndexedDBForOriginParams,
     UntrackIndexedDBForStorageKeyParams,
 )
-
 from .events import (
     CacheStorageContentUpdatedEvent,
     CacheStorageListUpdatedEvent,
@@ -87,8 +64,28 @@ from .events import (
     StorageBucketDeletedEvent,
     StorageEvent,
 )
-
-from .client import StorageClient
+from .types import (
+    InterestGroupAccessType,
+    InterestGroupAuctionEventType,
+    InterestGroupAuctionFetchType,
+    InterestGroupAuctionId,
+    RelatedWebsiteSet,
+    SerializedStorageKey,
+    SharedStorageAccessMethod,
+    SharedStorageAccessParams,
+    SharedStorageAccessScope,
+    SharedStorageEntry,
+    SharedStorageMetadata,
+    SharedStoragePrivateAggregationConfig,
+    SharedStorageReportingMetadata,
+    SharedStorageUrlWithMetadata,
+    StorageBucket,
+    StorageBucketInfo,
+    StorageBucketsDurability,
+    StorageType,
+    TrustTokens,
+    UsageForType,
+)
 
 __all__ = [
     "CacheStorageContentUpdatedEvent",

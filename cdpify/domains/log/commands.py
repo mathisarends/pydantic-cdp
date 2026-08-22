@@ -4,6 +4,7 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
+
 from cdpify.shared.models import CDPModel
 
 from .types import (
@@ -19,7 +20,7 @@ class LogCommand(StrEnum):
     STOP_VIOLATIONS_REPORT = "Log.stopViolationsReport"
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class StartViolationsReportParams(CDPModel):
     """
     start violation reporting.

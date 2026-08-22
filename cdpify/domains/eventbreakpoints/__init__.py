@@ -4,13 +4,12 @@
 
 """CDP EventBreakpoints Domain."""
 
+from .client import EventBreakpointsClient
 from .commands import (
     EventBreakpointsCommand,
     RemoveInstrumentationBreakpointParams,
     SetInstrumentationBreakpointParams,
 )
-
-from .client import EventBreakpointsClient
 
 __all__ = [
     "EventBreakpointsClient",

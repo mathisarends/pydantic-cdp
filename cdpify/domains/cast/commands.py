@@ -4,6 +4,7 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
+
 from cdpify.shared.models import CDPModel
 
 
@@ -16,7 +17,7 @@ class CastCommand(StrEnum):
     STOP_CASTING = "Cast.stopCasting"
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class EnableParams(CDPModel):
     """
     Starts observing for sinks that can be used for tab mirroring, and if set, sinks
@@ -28,7 +29,7 @@ class EnableParams(CDPModel):
     presentation_url: str | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SetSinkToUseParams(CDPModel):
     """
     Sets a sink to be used when the web page requests the browser to choose a sink via
@@ -38,7 +39,7 @@ class SetSinkToUseParams(CDPModel):
     sink_name: str
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class StartDesktopMirroringParams(CDPModel):
     """
     Starts mirroring the desktop to the sink.
@@ -47,7 +48,7 @@ class StartDesktopMirroringParams(CDPModel):
     sink_name: str
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class StartTabMirroringParams(CDPModel):
     """
     Starts mirroring the tab to the sink.
@@ -56,7 +57,7 @@ class StartTabMirroringParams(CDPModel):
     sink_name: str
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class StopCastingParams(CDPModel):
     """
     Stops the active Cast session on the sink.

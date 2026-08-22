@@ -4,6 +4,7 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
+
 from cdpify.shared.models import CDPModel
 
 from .types import (
@@ -19,7 +20,7 @@ class SecurityCommand(StrEnum):
     SET_OVERRIDE_CERTIFICATE_ERRORS = "Security.setOverrideCertificateErrors"
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SetIgnoreCertificateErrorsParams(CDPModel):
     """
     Enable/disable whether all certificate errors should be ignored.
@@ -28,7 +29,7 @@ class SetIgnoreCertificateErrorsParams(CDPModel):
     ignore: bool
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class HandleCertificateErrorParams(CDPModel):
     """
     Handles a certificate error that fired a certificateError event.
@@ -38,7 +39,7 @@ class HandleCertificateErrorParams(CDPModel):
     action: CertificateErrorAction
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SetOverrideCertificateErrorsParams(CDPModel):
     """
     Enable/disable overriding certificate errors. If enabled, all certificate error

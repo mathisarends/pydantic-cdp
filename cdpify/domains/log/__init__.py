@@ -4,13 +4,10 @@
 
 """CDP Log Domain."""
 
-from .types import LogEntry, ViolationSetting
-
-from .commands import LogCommand, StartViolationsReportParams
-
-from .events import EntryAddedEvent, LogEvent
-
 from .client import LogClient
+from .commands import LogCommand, StartViolationsReportParams
+from .events import EntryAddedEvent, LogEvent
+from .types import LogEntry, ViolationSetting
 
 __all__ = [
     "EntryAddedEvent",

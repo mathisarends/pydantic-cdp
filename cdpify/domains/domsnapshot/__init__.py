@@ -4,24 +4,7 @@
 
 """CDP DOMSnapshot Domain."""
 
-from .types import (
-    DOMNode,
-    InlineTextBox,
-    LayoutTreeNode,
-    ComputedStyle,
-    NameValue,
-    StringIndex,
-    ArrayOfStrings,
-    RareStringData,
-    RareBooleanData,
-    RareIntegerData,
-    Rectangle,
-    DocumentSnapshot,
-    NodeTreeSnapshot,
-    LayoutTreeSnapshot,
-    TextBoxSnapshot,
-)
-
+from .client import DOMSnapshotClient
 from .commands import (
     CaptureSnapshotParams,
     CaptureSnapshotResult,
@@ -29,8 +12,23 @@ from .commands import (
     GetSnapshotParams,
     GetSnapshotResult,
 )
-
-from .client import DOMSnapshotClient
+from .types import (
+    ArrayOfStrings,
+    ComputedStyle,
+    DocumentSnapshot,
+    DOMNode,
+    InlineTextBox,
+    LayoutTreeNode,
+    LayoutTreeSnapshot,
+    NameValue,
+    NodeTreeSnapshot,
+    RareBooleanData,
+    RareIntegerData,
+    RareStringData,
+    Rectangle,
+    StringIndex,
+    TextBoxSnapshot,
+)
 
 __all__ = [
     "ArrayOfStrings",

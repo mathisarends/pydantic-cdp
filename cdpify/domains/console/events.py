@@ -4,7 +4,8 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.shared.models import CDPModel
+
+from cdpify.shared.models import CDPEvent
 
 from .types import (
     ConsoleMessage,
@@ -15,8 +16,8 @@ class ConsoleEvent(StrEnum):
     MESSAGE_ADDED = "Console.messageAdded"
 
 
-@dataclass(kw_only=True)
-class MessageAddedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class MessageAddedEvent(CDPEvent):
     """
     Issued when new console message is added.
     """

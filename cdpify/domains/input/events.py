@@ -4,7 +4,8 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.shared.models import CDPModel
+
+from cdpify.shared.models import CDPEvent
 
 from .types import (
     DragData,
@@ -15,8 +16,8 @@ class InputEvent(StrEnum):
     DRAG_INTERCEPTED = "Input.dragIntercepted"
 
 
-@dataclass(kw_only=True)
-class DragInterceptedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class DragInterceptedEvent(CDPEvent):
     """
     Emitted only when `Input.setInterceptDrags` is enabled. Use this data with
     `Input.dispatchDragEvent` to restore normal drag and drop behavior.

@@ -4,6 +4,7 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
+
 from cdpify.shared.models import CDPModel
 
 from .types import (
@@ -18,7 +19,7 @@ class SystemInfoCommand(StrEnum):
     GET_PROCESS_INFO = "SystemInfo.getProcessInfo"
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetInfoResult(CDPModel):
     gpu: GPUInfo
     model_name: str
@@ -26,7 +27,7 @@ class GetInfoResult(CDPModel):
     command_line: str
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetFeatureStateParams(CDPModel):
     """
     Returns information about the feature state.
@@ -35,11 +36,11 @@ class GetFeatureStateParams(CDPModel):
     feature_state: str
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetFeatureStateResult(CDPModel):
     feature_enabled: bool
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetProcessInfoResult(CDPModel):
     process_info: list[ProcessInfo]

@@ -4,19 +4,8 @@
 
 """CDP Media Domain."""
 
-from .types import (
-    PlayerId,
-    Timestamp,
-    PlayerMessage,
-    PlayerProperty,
-    PlayerEvent,
-    PlayerErrorSourceLocation,
-    PlayerError,
-    Player,
-)
-
+from .client import MediaClient
 from .commands import MediaCommand
-
 from .events import (
     MediaEvent,
     PlayerCreatedEvent,
@@ -25,8 +14,16 @@ from .events import (
     PlayerMessagesLoggedEvent,
     PlayerPropertiesChangedEvent,
 )
-
-from .client import MediaClient
+from .types import (
+    Player,
+    PlayerError,
+    PlayerErrorSourceLocation,
+    PlayerEvent,
+    PlayerId,
+    PlayerMessage,
+    PlayerProperty,
+    Timestamp,
+)
 
 __all__ = [
     "MediaClient",

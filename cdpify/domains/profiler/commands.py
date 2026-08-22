@@ -4,6 +4,7 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
+
 from cdpify.shared.models import CDPModel
 
 from .types import (
@@ -24,12 +25,12 @@ class ProfilerCommand(StrEnum):
     TAKE_PRECISE_COVERAGE = "Profiler.takePreciseCoverage"
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class GetBestEffortCoverageResult(CDPModel):
     result: list[ScriptCoverage]
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SetSamplingIntervalParams(CDPModel):
     """
     Changes CPU profiler sampling interval. Must be called before CPU profiles
@@ -39,7 +40,7 @@ class SetSamplingIntervalParams(CDPModel):
     interval: int
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class StartPreciseCoverageParams(CDPModel):
     """
     Enable precise code coverage. Coverage data for JavaScript executed before enabling
@@ -52,17 +53,17 @@ class StartPreciseCoverageParams(CDPModel):
     allow_triggered_updates: bool | None = None
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class StartPreciseCoverageResult(CDPModel):
     timestamp: float
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class StopResult(CDPModel):
     profile: Profile
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class TakePreciseCoverageResult(CDPModel):
     result: list[ScriptCoverage]
     timestamp: float

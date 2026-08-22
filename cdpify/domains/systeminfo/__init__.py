@@ -4,17 +4,7 @@
 
 """CDP SystemInfo Domain."""
 
-from .types import (
-    GPUDevice,
-    Size,
-    VideoDecodeAcceleratorCapability,
-    VideoEncodeAcceleratorCapability,
-    SubsamplingFormat,
-    ImageType,
-    GPUInfo,
-    ProcessInfo,
-)
-
+from .client import SystemInfoClient
 from .commands import (
     GetFeatureStateParams,
     GetFeatureStateResult,
@@ -22,8 +12,16 @@ from .commands import (
     GetProcessInfoResult,
     SystemInfoCommand,
 )
-
-from .client import SystemInfoClient
+from .types import (
+    GPUDevice,
+    GPUInfo,
+    ImageType,
+    ProcessInfo,
+    Size,
+    SubsamplingFormat,
+    VideoDecodeAcceleratorCapability,
+    VideoEncodeAcceleratorCapability,
+)
 
 __all__ = [
     "GPUDevice",

@@ -4,10 +4,13 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.shared.models import CDPModel
+
+from cdpify.shared.models import CDPEvent
 
 from .types import (
-    BackgroundServiceEvent,
+    BackgroundServiceEvent as BackgroundServiceEventType,
+)
+from .types import (
     ServiceName,
 )
 
@@ -19,8 +22,8 @@ class BackgroundServiceEvent(StrEnum):
     )
 
 
-@dataclass(kw_only=True)
-class RecordingStateChangedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class RecordingStateChangedEvent(CDPEvent):
     """
     Called when the recording state for the service has been updated.
     """
@@ -29,11 +32,11 @@ class RecordingStateChangedEvent(CDPModel):
     service: ServiceName
 
 
-@dataclass(kw_only=True)
-class BackgroundServiceEventReceivedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class BackgroundServiceEventReceivedEvent(CDPEvent):
     """
     Called with all existing backgroundServiceEvents when enabled, and all new events
     afterwards if enabled and recording.
     """
 
-    background_service_event: BackgroundServiceEvent
+    background_service_event: BackgroundServiceEventType

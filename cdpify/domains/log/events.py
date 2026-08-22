@@ -4,7 +4,8 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.shared.models import CDPModel
+
+from cdpify.shared.models import CDPEvent
 
 from .types import (
     LogEntry,
@@ -15,8 +16,8 @@ class LogEvent(StrEnum):
     ENTRY_ADDED = "Log.entryAdded"
 
 
-@dataclass(kw_only=True)
-class EntryAddedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class EntryAddedEvent(CDPEvent):
     """
     Issued when new message was logged.
     """

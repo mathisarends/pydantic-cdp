@@ -4,30 +4,7 @@
 
 """CDP Overlay Domain."""
 
-from .types import (
-    SourceOrderConfig,
-    GridHighlightConfig,
-    FlexContainerHighlightConfig,
-    FlexItemHighlightConfig,
-    LineStyle,
-    BoxStyle,
-    ContrastAlgorithm,
-    HighlightConfig,
-    ColorFormat,
-    GridNodeHighlightConfig,
-    FlexNodeHighlightConfig,
-    ScrollSnapContainerHighlightConfig,
-    ScrollSnapHighlightConfig,
-    HingeConfig,
-    WindowControlsOverlayConfig,
-    ContainerQueryHighlightConfig,
-    ContainerQueryContainerHighlightConfig,
-    IsolatedElementHighlightConfig,
-    IsolationModeHighlightConfig,
-    InspectMode,
-    InspectedElementAnchorConfig,
-)
-
+from .client import OverlayClient
 from .commands import (
     GetGridHighlightObjectsForTestParams,
     GetGridHighlightObjectsForTestResult,
@@ -46,8 +23,8 @@ from .commands import (
     SetShowAdHighlightsParams,
     SetShowContainerQueryOverlaysParams,
     SetShowDebugBordersParams,
-    SetShowFPSCounterParams,
     SetShowFlexOverlaysParams,
+    SetShowFPSCounterParams,
     SetShowGridOverlaysParams,
     SetShowHingeParams,
     SetShowHitTestBordersParams,
@@ -61,18 +38,38 @@ from .commands import (
     SetShowWebVitalsParams,
     SetShowWindowControlsOverlayParams,
 )
-
 from .events import (
+    InspectedElementWindowRestoredEvent,
     InspectModeCanceledEvent,
     InspectNodeRequestedEvent,
     InspectPanelShowRequestedEvent,
-    InspectedElementWindowRestoredEvent,
     NodeHighlightRequestedEvent,
     OverlayEvent,
     ScreenshotRequestedEvent,
 )
-
-from .client import OverlayClient
+from .types import (
+    BoxStyle,
+    ColorFormat,
+    ContainerQueryContainerHighlightConfig,
+    ContainerQueryHighlightConfig,
+    ContrastAlgorithm,
+    FlexContainerHighlightConfig,
+    FlexItemHighlightConfig,
+    FlexNodeHighlightConfig,
+    GridHighlightConfig,
+    GridNodeHighlightConfig,
+    HighlightConfig,
+    HingeConfig,
+    InspectedElementAnchorConfig,
+    InspectMode,
+    IsolatedElementHighlightConfig,
+    IsolationModeHighlightConfig,
+    LineStyle,
+    ScrollSnapContainerHighlightConfig,
+    ScrollSnapHighlightConfig,
+    SourceOrderConfig,
+    WindowControlsOverlayConfig,
+)
 
 __all__ = [
     "BoxStyle",

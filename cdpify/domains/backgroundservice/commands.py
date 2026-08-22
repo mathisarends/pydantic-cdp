@@ -4,6 +4,7 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
+
 from cdpify.shared.models import CDPModel
 
 from .types import (
@@ -18,7 +19,7 @@ class BackgroundServiceCommand(StrEnum):
     CLEAR_EVENTS = "BackgroundService.clearEvents"
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class StartObservingParams(CDPModel):
     """
     Enables event updates for the service.
@@ -27,7 +28,7 @@ class StartObservingParams(CDPModel):
     service: ServiceName
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class StopObservingParams(CDPModel):
     """
     Disables event updates for the service.
@@ -36,7 +37,7 @@ class StopObservingParams(CDPModel):
     service: ServiceName
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SetRecordingParams(CDPModel):
     """
     Set the recording state for the service.
@@ -46,7 +47,7 @@ class SetRecordingParams(CDPModel):
     service: ServiceName
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class ClearEventsParams(CDPModel):
     """
     Clears all stored data for the service.

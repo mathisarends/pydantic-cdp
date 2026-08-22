@@ -4,7 +4,8 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.shared.models import CDPModel
+
+from cdpify.shared.models import CDPEvent
 
 from .types import (
     Animation,
@@ -18,8 +19,8 @@ class AnimationEvent(StrEnum):
     ANIMATION_UPDATED = "Animation.animationUpdated"
 
 
-@dataclass(kw_only=True)
-class AnimationCanceledEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class AnimationCanceledEvent(CDPEvent):
     """
     Event for when an animation has been cancelled.
     """
@@ -27,8 +28,8 @@ class AnimationCanceledEvent(CDPModel):
     id: str
 
 
-@dataclass(kw_only=True)
-class AnimationCreatedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class AnimationCreatedEvent(CDPEvent):
     """
     Event for each animation that has been created.
     """
@@ -36,8 +37,8 @@ class AnimationCreatedEvent(CDPModel):
     id: str
 
 
-@dataclass(kw_only=True)
-class AnimationStartedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class AnimationStartedEvent(CDPEvent):
     """
     Event for animation that has been started.
     """
@@ -45,8 +46,8 @@ class AnimationStartedEvent(CDPModel):
     animation: Animation
 
 
-@dataclass(kw_only=True)
-class AnimationUpdatedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class AnimationUpdatedEvent(CDPEvent):
     """
     Event for animation that has been updated.
     """

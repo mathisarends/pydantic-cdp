@@ -4,24 +4,8 @@
 
 """CDP WebAudio Domain."""
 
-from .types import (
-    GraphObjectId,
-    ContextType,
-    ContextState,
-    NodeType,
-    ChannelCountMode,
-    ChannelInterpretation,
-    ParamType,
-    AutomationRate,
-    ContextRealtimeData,
-    BaseAudioContext,
-    AudioListener,
-    AudioNode,
-    AudioParam,
-)
-
+from .client import WebAudioClient
 from .commands import GetRealtimeDataParams, GetRealtimeDataResult, WebAudioCommand
-
 from .events import (
     AudioListenerCreatedEvent,
     AudioListenerWillBeDestroyedEvent,
@@ -38,8 +22,21 @@ from .events import (
     NodesDisconnectedEvent,
     WebAudioEvent,
 )
-
-from .client import WebAudioClient
+from .types import (
+    AudioListener,
+    AudioNode,
+    AudioParam,
+    AutomationRate,
+    BaseAudioContext,
+    ChannelCountMode,
+    ChannelInterpretation,
+    ContextRealtimeData,
+    ContextState,
+    ContextType,
+    GraphObjectId,
+    NodeType,
+    ParamType,
+)
 
 __all__ = [
     "AudioListener",

@@ -4,15 +4,16 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
-from cdpify.shared.models import CDPModel
+
+from cdpify.shared.models import CDPEvent
 
 
 class TetheringEvent(StrEnum):
     ACCEPTED = "Tethering.accepted"
 
 
-@dataclass(kw_only=True)
-class AcceptedEvent(CDPModel):
+@dataclass(kw_only=True, slots=True)
+class AcceptedEvent(CDPEvent):
     """
     Informs that port was successfully bound and got a specified connection id.
     """

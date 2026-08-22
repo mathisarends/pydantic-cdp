@@ -4,6 +4,7 @@
 
 from dataclasses import dataclass
 from enum import StrEnum
+
 from cdpify.shared.models import CDPModel
 
 
@@ -14,7 +15,7 @@ class DeviceOrientationCommand(StrEnum):
     SET_DEVICE_ORIENTATION_OVERRIDE = "DeviceOrientation.setDeviceOrientationOverride"
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class SetDeviceOrientationOverrideParams(CDPModel):
     """
     Overrides the Device Orientation.
