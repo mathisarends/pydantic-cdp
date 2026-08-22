@@ -50,14 +50,18 @@ class {{ domain_name }}:
         params = {{ method.params_model }}({{ method.constructor_args }})
 
 {% endif %}
+{% if method.result_model %}
         result = await self._command_sender.send_raw(
             method={{ domain_name }}Command.{{ method.command_member }},
             params={% if method.params_model %}params.to_cdp_params(){% else %}None{% endif %},
             session_id=session_id,
         )
-{% if method.result_model %}
         return {{ method.result_model }}.from_cdp(result)
 {% else %}
-        return result
+        await self._command_sender.send_raw(
+            method={{ domain_name }}Command.{{ method.command_member }},
+            params={% if method.params_model %}params.to_cdp_params(){% else %}None{% endif %},
+            session_id=session_id,
+        )
 {% endif %}
 {% endfor %}

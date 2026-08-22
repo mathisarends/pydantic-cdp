@@ -61,8 +61,7 @@ def _build_method(command: Command, ctx: GenerationContext) -> MethodView:
         return_type = f"{pascal_name}Result"
         result_model = return_type
     else:
-        ctx.use_typing("Any")
-        return_type = "dict[str, Any]"
+        return_type = "None"
         result_model = None
 
     params_model = f"{pascal_name}Params" if command.parameters else None

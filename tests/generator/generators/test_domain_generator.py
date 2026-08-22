@@ -35,12 +35,12 @@ def test_method_without_params_or_returns(simple_domain: Domain) -> None:
     output = domain_generator.generate(simple_domain)
 
     assert "async def clear(" in output
-    # No return type → dict[str, Any]
-    assert "-> dict[str, Any]:" in output
+    assert "-> None:" in output
     assert "params=None" in output
-    # Returns the raw dict without parsing
     clear_block = output.split("async def clear(")[1].split("async def")[0]
-    assert "return result" in clear_block
+    assert "await self._command_sender.send_raw(" in clear_block
+    assert "result =" not in clear_block
+    assert "return" not in clear_block
 
 
 def test_deprecated_command_gets_decorator(simple_domain: Domain) -> None:
