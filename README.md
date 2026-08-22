@@ -1,26 +1,30 @@
-<div align="center">
-
 # cdpify
 
-**An async, typed Python client for the Chrome DevTools Protocol.**
-
-[![PyPI](https://img.shields.io/pypi/v/cdpify?style=flat-square)](https://pypi.org/project/cdpify/)
-[![Python](https://img.shields.io/pypi/pyversions/cdpify?style=flat-square)](https://pypi.org/project/cdpify/)
-[![CI](https://img.shields.io/github/actions/workflow/status/mathisarends/pydantic-cdp/ci.yml?branch=main&style=flat-square&label=CI)](https://github.com/mathisarends/pydantic-cdp/actions/workflows/ci.yml)
-
-</div>
+🚀 **An async, typed Python client for the Chrome DevTools Protocol.**
 
 `cdpify` turns the Chrome DevTools Protocol (CDP) into a Pythonic, IDE-friendly
 API. Commands, results, events, and protocol types are generated from the
 official CDP specifications, so you get autocomplete and typed responses
 without working with raw JSON messages.
 
+## Contents
+
+- [Why cdpify?](#why-cdpify)
+- [Installation](#installation)
+- [Quick start](#quick-start)
+- [Supported domains](#supported-domains)
+- [Listening for events](#listening-for-events)
+- [Working with target sessions](#working-with-target-sessions)
+- [Configuration](#configuration)
+- [Development](#development)
+- [Resources](#resources)
+
 ## Why cdpify?
 
 - **Typed by default** — generated models for commands, results, events, and
   shared protocol types
-- **Ergonomic domain access** — use `client.page`, `client.network`,
-  `client.runtime`, and 39 more CDP domains directly
+- **Complete domain coverage** — access all 58 generated CDP domains through
+  properties such as `client.page`, `client.network`, and `client.runtime`
 - **Async throughout** — built on `asyncio` and `websockets`
 - **Typed event streams** — consume CDP events with async iterators
 - **Multi-target support** — route commands through an active CDP session
@@ -70,6 +74,44 @@ asyncio.run(main())
 
 Domain clients are available as lazy properties on `CDPClient`. Parameters use
 Python's `snake_case`; `cdpify` handles conversion to and from CDP's wire format.
+
+## Supported domains
+
+The generated client currently includes all 58 domains from the bundled CDP
+specifications. Each domain is available as a lazy property on `CDPClient` and
+`ActiveSessionCDPClient`:
+
+| CDP domain | Python accessor | CDP domain | Python accessor |
+| --- | --- | --- | --- |
+| `Accessibility` | `client.accessibility` | `IndexedDB` | `client.indexed_db` |
+| `Ads` | `client.ads` | `Input` | `client.input` |
+| `Animation` | `client.animation` | `Inspector` | `client.inspector` |
+| `Audits` | `client.audits` | `IO` | `client.io` |
+| `Autofill` | `client.autofill` | `LayerTree` | `client.layer_tree` |
+| `BackgroundService` | `client.background_service` | `Log` | `client.log` |
+| `BluetoothEmulation` | `client.bluetooth_emulation` | `Media` | `client.media` |
+| `Browser` | `client.browser` | `Memory` | `client.memory` |
+| `CacheStorage` | `client.cache_storage` | `Network` | `client.network` |
+| `Cast` | `client.cast` | `Overlay` | `client.overlay` |
+| `Console` | `client.console` | `Page` | `client.page` |
+| `CrashReportContext` | `client.crash_report_context` | `Performance` | `client.performance` |
+| `CSS` | `client.css` | `PerformanceTimeline` | `client.performance_timeline` |
+| `Debugger` | `client.debugger` | `Preload` | `client.preload` |
+| `DeviceAccess` | `client.device_access` | `Profiler` | `client.profiler` |
+| `DeviceOrientation` | `client.device_orientation` | `PWA` | `client.pwa` |
+| `DigitalCredentials` | `client.digital_credentials` | `Runtime` | `client.runtime` |
+| `DOM` | `client.dom` | `Schema` | `client.schema` |
+| `DOMDebugger` | `client.dom_debugger` | `Security` | `client.security` |
+| `DOMSnapshot` | `client.dom_snapshot` | `ServiceWorker` | `client.service_worker` |
+| `DOMStorage` | `client.dom_storage` | `SmartCardEmulation` | `client.smart_card_emulation` |
+| `Emulation` | `client.emulation` | `Storage` | `client.storage` |
+| `EventBreakpoints` | `client.event_breakpoints` | `SystemInfo` | `client.system_info` |
+| `Extensions` | `client.extensions` | `Target` | `client.target` |
+| `FedCm` | `client.fed_cm` | `Tethering` | `client.tethering` |
+| `Fetch` | `client.fetch` | `Tracing` | `client.tracing` |
+| `FileSystem` | `client.file_system` | `WebAudio` | `client.web_audio` |
+| `HeadlessExperimental` | `client.headless_experimental` | `WebAuthn` | `client.web_authn` |
+| `HeapProfiler` | `client.heap_profiler` | `WebMCP` | `client.web_mcp` |
 
 ## Listening for events
 
