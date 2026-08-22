@@ -36,7 +36,13 @@ without working with raw JSON messages.
 pip install cdpify
 ```
 
-Requires Python 3.12 or newer.
+Requires Python 3.12 or newer. The normal installation pulls in only the CDP
+runtime dependencies. Install the optional generator dependencies only when
+regenerating the protocol modules:
+
+```bash
+pip install "cdpify[generator]"
+```
 
 ## Quick start
 
