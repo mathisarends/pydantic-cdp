@@ -1,7 +1,7 @@
 import asyncio
-import json
 import logging
-from urllib.request import urlopen
+
+from _chrome import get_ws_url
 
 from cdpify import Client
 from cdpify.domains.network.events import (
@@ -15,18 +15,6 @@ from cdpify.domains.network.events import (
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
-
-
-def get_ws_url() -> str:
-    with urlopen("http://localhost:9222/json", timeout=5) as response:
-        pages = json.load(response)
-
-    if not pages:
-        raise RuntimeError(
-            "No pages found. Is Chrome running with --remote-debugging-port=9222?"
-        )
-
-    return pages[0]["webSocketDebuggerUrl"]
 
 
 async def monitor_requests(client: Client) -> None:

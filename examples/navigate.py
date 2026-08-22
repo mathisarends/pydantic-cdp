@@ -1,18 +1,8 @@
 import asyncio
-import json
-from urllib.request import urlopen
+
+from _chrome import get_ws_url
 
 from cdpify import Client
-
-
-def get_ws_url() -> str:
-    with urlopen("http://localhost:9222/json", timeout=5) as response:
-        pages = json.load(response)
-    if not pages:
-        raise RuntimeError(
-            "No pages found. Is Chrome running with --remote-debugging-port=9222?"
-        )
-    return pages[0]["webSocketDebuggerUrl"]
 
 
 async def test_basic():
