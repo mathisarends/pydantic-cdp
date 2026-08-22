@@ -115,12 +115,6 @@ class DataReceivedEvent:
     data_length: int = field(metadata={"cdp_name": "dataLength"})
     encoded_data_length: int = field(metadata={"cdp_name": "encodedDataLength"})
     data: str | None = field(default=None, metadata={"cdp_name": "data"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -134,12 +128,6 @@ class EventSourceMessageReceivedEvent:
     event_name: str = field(metadata={"cdp_name": "eventName"})
     event_id: str = field(metadata={"cdp_name": "eventId"})
     data: str = field(metadata={"cdp_name": "data"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -159,12 +147,6 @@ class LoadingFailedEvent:
     cors_error_status: CorsErrorStatus | None = field(
         default=None, metadata={"cdp_name": "corsErrorStatus"}
     )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -176,12 +158,6 @@ class LoadingFinishedEvent:
     request_id: RequestId = field(metadata={"cdp_name": "requestId"})
     timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
     encoded_data_length: float = field(metadata={"cdp_name": "encodedDataLength"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -191,12 +167,6 @@ class RequestServedFromCacheEvent:
     """
 
     request_id: RequestId = field(metadata={"cdp_name": "requestId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -226,12 +196,6 @@ class RequestWillBeSentEvent:
     render_blocking_behavior: RenderBlockingBehavior | None = field(
         default=None, metadata={"cdp_name": "renderBlockingBehavior"}
     )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -243,12 +207,6 @@ class ResourceChangedPriorityEvent:
     request_id: RequestId = field(metadata={"cdp_name": "requestId"})
     new_priority: ResourcePriority = field(metadata={"cdp_name": "newPriority"})
     timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -259,12 +217,6 @@ class SignedExchangeReceivedEvent:
 
     request_id: RequestId = field(metadata={"cdp_name": "requestId"})
     info: SignedExchangeInfo = field(metadata={"cdp_name": "info"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -282,12 +234,6 @@ class ResponseReceivedEvent:
     frame_id: page.FrameId | None = field(
         default=None, metadata={"cdp_name": "frameId"}
     )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -298,12 +244,6 @@ class WebSocketClosedEvent:
 
     request_id: RequestId = field(metadata={"cdp_name": "requestId"})
     timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -317,12 +257,6 @@ class WebSocketCreatedEvent:
     initiator: Initiator | None = field(
         default=None, metadata={"cdp_name": "initiator"}
     )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -334,12 +268,6 @@ class WebSocketFrameErrorEvent:
     request_id: RequestId = field(metadata={"cdp_name": "requestId"})
     timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
     error_message: str = field(metadata={"cdp_name": "errorMessage"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -351,12 +279,6 @@ class WebSocketFrameReceivedEvent:
     request_id: RequestId = field(metadata={"cdp_name": "requestId"})
     timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
     response: WebSocketFrame = field(metadata={"cdp_name": "response"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -368,12 +290,6 @@ class WebSocketFrameSentEvent:
     request_id: RequestId = field(metadata={"cdp_name": "requestId"})
     timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
     response: WebSocketFrame = field(metadata={"cdp_name": "response"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -385,12 +301,6 @@ class WebSocketHandshakeResponseReceivedEvent:
     request_id: RequestId = field(metadata={"cdp_name": "requestId"})
     timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
     response: WebSocketResponse = field(metadata={"cdp_name": "response"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -403,12 +313,6 @@ class WebSocketWillSendHandshakeRequestEvent:
     timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
     wall_time: TimeSinceEpoch = field(metadata={"cdp_name": "wallTime"})
     request: WebSocketRequest = field(metadata={"cdp_name": "request"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -423,12 +327,6 @@ class WebTransportCreatedEvent:
     initiator: Initiator | None = field(
         default=None, metadata={"cdp_name": "initiator"}
     )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -439,12 +337,6 @@ class WebTransportConnectionEstablishedEvent:
 
     transport_id: RequestId = field(metadata={"cdp_name": "transportId"})
     timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -455,12 +347,6 @@ class WebTransportClosedEvent:
 
     transport_id: RequestId = field(metadata={"cdp_name": "transportId"})
     timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -477,12 +363,6 @@ class DirectTCPSocketCreatedEvent:
     initiator: Initiator | None = field(
         default=None, metadata={"cdp_name": "initiator"}
     )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -497,12 +377,6 @@ class DirectTCPSocketOpenedEvent:
     timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
     local_addr: str | None = field(default=None, metadata={"cdp_name": "localAddr"})
     local_port: int | None = field(default=None, metadata={"cdp_name": "localPort"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -514,12 +388,6 @@ class DirectTCPSocketAbortedEvent:
     identifier: RequestId = field(metadata={"cdp_name": "identifier"})
     error_message: ErrorReason = field(metadata={"cdp_name": "errorMessage"})
     timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -530,12 +398,6 @@ class DirectTCPSocketClosedEvent:
 
     identifier: RequestId = field(metadata={"cdp_name": "identifier"})
     timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -547,12 +409,6 @@ class DirectTCPSocketChunkSentEvent:
     identifier: RequestId = field(metadata={"cdp_name": "identifier"})
     data: str = field(metadata={"cdp_name": "data"})
     timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -564,36 +420,18 @@ class DirectTCPSocketChunkReceivedEvent:
     identifier: RequestId = field(metadata={"cdp_name": "identifier"})
     data: str = field(metadata={"cdp_name": "data"})
     timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
 class DirectUDPSocketJoinedMulticastGroupEvent:
     identifier: RequestId = field(metadata={"cdp_name": "identifier"})
     ip_address: str = field(metadata={"cdp_name": "IPAddress"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
 class DirectUDPSocketLeftMulticastGroupEvent:
     identifier: RequestId = field(metadata={"cdp_name": "identifier"})
     ip_address: str = field(metadata={"cdp_name": "IPAddress"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -607,12 +445,6 @@ class DirectUDPSocketCreatedEvent:
     timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
     initiator: Initiator | None = field(
         default=None, metadata={"cdp_name": "initiator"}
-    )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
     )
 
 
@@ -628,12 +460,6 @@ class DirectUDPSocketOpenedEvent:
     timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
     remote_addr: str | None = field(default=None, metadata={"cdp_name": "remoteAddr"})
     remote_port: int | None = field(default=None, metadata={"cdp_name": "remotePort"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -645,12 +471,6 @@ class DirectUDPSocketAbortedEvent:
     identifier: RequestId = field(metadata={"cdp_name": "identifier"})
     error_message: ErrorReason = field(metadata={"cdp_name": "errorMessage"})
     timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -661,12 +481,6 @@ class DirectUDPSocketClosedEvent:
 
     identifier: RequestId = field(metadata={"cdp_name": "identifier"})
     timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -678,12 +492,6 @@ class DirectUDPSocketChunkSentEvent:
     identifier: RequestId = field(metadata={"cdp_name": "identifier"})
     message: DirectUDPMessage = field(metadata={"cdp_name": "message"})
     timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -695,12 +503,6 @@ class DirectUDPSocketChunkReceivedEvent:
     identifier: RequestId = field(metadata={"cdp_name": "identifier"})
     message: DirectUDPMessage = field(metadata={"cdp_name": "message"})
     timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -730,12 +532,6 @@ class RequestWillBeSentExtraInfoEvent:
     )
     applied_network_conditions_id: str | None = field(
         default=None, metadata={"cdp_name": "appliedNetworkConditionsId"}
-    )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
     )
 
 
@@ -767,12 +563,6 @@ class ResponseReceivedExtraInfoEvent:
     exempted_cookies: list[ExemptedSetCookieWithReason] | None = field(
         default=None, metadata={"cdp_name": "exemptedCookies"}
     )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -785,12 +575,6 @@ class ResponseReceivedEarlyHintsEvent:
 
     request_id: RequestId = field(metadata={"cdp_name": "requestId"})
     headers: Headers = field(metadata={"cdp_name": "headers"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -829,12 +613,6 @@ class TrustTokenOperationDoneEvent:
     issued_token_count: int | None = field(
         default=None, metadata={"cdp_name": "issuedTokenCount"}
     )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -843,12 +621,7 @@ class PolicyUpdatedEvent:
     Fired once security policy has been updated.
     """
 
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
+    pass
 
 
 @dataclass(kw_only=True, slots=True)
@@ -859,35 +632,17 @@ class ReportingApiReportAddedEvent:
     """
 
     report: ReportingApiReport = field(metadata={"cdp_name": "report"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
 class ReportingApiReportUpdatedEvent:
     report: ReportingApiReport = field(metadata={"cdp_name": "report"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
 class ReportingApiEndpointsChangedForOriginEvent:
     origin: str = field(metadata={"cdp_name": "origin"})
     endpoints: list[ReportingApiEndpoint] = field(metadata={"cdp_name": "endpoints"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -897,12 +652,6 @@ class DeviceBoundSessionsAddedEvent:
     """
 
     sessions: list[DeviceBoundSession] = field(metadata={"cdp_name": "sessions"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -926,10 +675,4 @@ class DeviceBoundSessionEventOccurredEvent:
     )
     challenge_event_details: ChallengeEventDetails | None = field(
         default=None, metadata={"cdp_name": "challengeEventDetails"}
-    )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
     )

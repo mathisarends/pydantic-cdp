@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import encode_cdp
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .commands import (
     ReportBeginTransactionResultParams,
@@ -29,33 +29,29 @@ from .types import (
 
 
 class SmartCardEmulation:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def enable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Enables the |SmartCardEmulation| domain.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=SmartCardEmulationCommand.ENABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def disable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Disables the |SmartCardEmulation| domain.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=SmartCardEmulationCommand.DISABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def report_establish_context_result(
@@ -63,7 +59,6 @@ class SmartCardEmulation:
         *,
         request_id: str,
         context_id: int,
-        session_id: str | None = None,
     ) -> None:
         """
         Reports the successful result of a |SCardEstablishContext| call. This maps to:
@@ -76,17 +71,15 @@ class SmartCardEmulation:
             request_id=request_id, context_id=context_id
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=SmartCardEmulationCommand.REPORT_ESTABLISH_CONTEXT_RESULT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def report_release_context_result(
         self,
         *,
         request_id: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Reports the successful result of a |SCardReleaseContext| call. This maps to:
@@ -97,10 +90,9 @@ class SmartCardEmulation:
         """
         params = ReportReleaseContextResultParams(request_id=request_id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=SmartCardEmulationCommand.REPORT_RELEASE_CONTEXT_RESULT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def report_list_readers_result(
@@ -108,7 +100,6 @@ class SmartCardEmulation:
         *,
         request_id: str,
         readers: list[str],
-        session_id: str | None = None,
     ) -> None:
         """
         Reports the successful result of a |SCardListReaders| call. This maps to: PC/SC
@@ -119,10 +110,9 @@ class SmartCardEmulation:
         """
         params = ReportListReadersResultParams(request_id=request_id, readers=readers)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=SmartCardEmulationCommand.REPORT_LIST_READERS_RESULT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def report_get_status_change_result(
@@ -130,7 +120,6 @@ class SmartCardEmulation:
         *,
         request_id: str,
         reader_states: list[ReaderStateOut],
-        session_id: str | None = None,
     ) -> None:
         """
         Reports the successful result of a |SCardGetStatusChange| call. This maps to:
@@ -143,10 +132,9 @@ class SmartCardEmulation:
             request_id=request_id, reader_states=reader_states
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=SmartCardEmulationCommand.REPORT_GET_STATUS_CHANGE_RESULT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def report_begin_transaction_result(
@@ -154,7 +142,6 @@ class SmartCardEmulation:
         *,
         request_id: str,
         handle: int,
-        session_id: str | None = None,
     ) -> None:
         """
         Reports the result of a |SCardBeginTransaction| call. On success, this creates
@@ -167,17 +154,15 @@ class SmartCardEmulation:
             request_id=request_id, handle=handle
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=SmartCardEmulationCommand.REPORT_BEGIN_TRANSACTION_RESULT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def report_plain_result(
         self,
         *,
         request_id: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Reports the successful result of a call that returns only a result code. Used
@@ -201,10 +186,9 @@ class SmartCardEmulation:
         """
         params = ReportPlainResultParams(request_id=request_id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=SmartCardEmulationCommand.REPORT_PLAIN_RESULT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def report_connect_result(
@@ -213,7 +197,6 @@ class SmartCardEmulation:
         request_id: str,
         handle: int,
         active_protocol: Protocol | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Reports the successful result of a |SCardConnect| call. This maps to: PC/SC
@@ -226,10 +209,9 @@ class SmartCardEmulation:
             request_id=request_id, handle=handle, active_protocol=active_protocol
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=SmartCardEmulationCommand.REPORT_CONNECT_RESULT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def report_data_result(
@@ -237,7 +219,6 @@ class SmartCardEmulation:
         *,
         request_id: str,
         data: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Reports the successful result of a call that sends back data on success. Used
@@ -257,10 +238,9 @@ class SmartCardEmulation:
         """
         params = ReportDataResultParams(request_id=request_id, data=data)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=SmartCardEmulationCommand.REPORT_DATA_RESULT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def report_status_result(
@@ -271,7 +251,6 @@ class SmartCardEmulation:
         state: ConnectionState,
         atr: str,
         protocol: Protocol | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Reports the successful result of a |SCardStatus| call. This maps to: PC/SC
@@ -288,10 +267,9 @@ class SmartCardEmulation:
             protocol=protocol,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=SmartCardEmulationCommand.REPORT_STATUS_RESULT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def report_error(
@@ -299,15 +277,13 @@ class SmartCardEmulation:
         *,
         request_id: str,
         result_code: ResultCode,
-        session_id: str | None = None,
     ) -> None:
         """
         Reports an error result for the given request.
         """
         params = ReportErrorParams(request_id=request_id, result_code=result_code)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=SmartCardEmulationCommand.REPORT_ERROR,
             params=encode_cdp(params),
-            session_id=session_id,
         )

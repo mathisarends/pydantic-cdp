@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .commands import (
     ConsoleCommand,
@@ -12,46 +12,40 @@ from .commands import (
 
 
 class Console:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def clear_messages(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Does nothing.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=ConsoleCommand.CLEAR_MESSAGES,
             params=None,
-            session_id=session_id,
         )
 
     async def disable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Disables console domain, prevents further console messages from being reported
         to the client.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=ConsoleCommand.DISABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def enable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Enables console domain, sends the messages collected so far to the client by
         means of the `messageAdded` notification.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=ConsoleCommand.ENABLE,
             params=None,
-            session_id=session_id,
         )

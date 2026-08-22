@@ -7,7 +7,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from cdpify.codec import encode_cdp
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .commands import (
     AutofillCommand,
@@ -24,8 +24,8 @@ if TYPE_CHECKING:
 
 
 class Autofill:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def trigger(
         self,
@@ -34,7 +34,6 @@ class Autofill:
         frame_id: page.FrameId | None = None,
         card: CreditCard | None = None,
         address: Address | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Trigger autofill on a form identified by the fieldId. If the field and related
@@ -44,51 +43,44 @@ class Autofill:
             field_id=field_id, frame_id=frame_id, card=card, address=address
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=AutofillCommand.TRIGGER,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_addresses(
         self,
         *,
         addresses: list[Address],
-        session_id: str | None = None,
     ) -> None:
         """
         Set addresses so that developers can verify their forms implementation.
         """
         params = SetAddressesParams(addresses=addresses)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=AutofillCommand.SET_ADDRESSES,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def disable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Disables autofill domain notifications.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=AutofillCommand.DISABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def enable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Enables autofill domain notifications.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=AutofillCommand.ENABLE,
             params=None,
-            session_id=session_id,
         )

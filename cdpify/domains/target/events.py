@@ -33,12 +33,6 @@ class AttachedToTargetEvent:
     session_id: SessionID = field(metadata={"cdp_name": "sessionId"})
     target_info: TargetInfo = field(metadata={"cdp_name": "targetInfo"})
     waiting_for_debugger: bool = field(metadata={"cdp_name": "waitingForDebugger"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -51,12 +45,6 @@ class DetachedFromTargetEvent:
 
     session_id: SessionID = field(metadata={"cdp_name": "sessionId"})
     target_id: TargetID | None = field(default=None, metadata={"cdp_name": "targetId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -69,12 +57,6 @@ class ReceivedMessageFromTargetEvent:
     session_id: SessionID = field(metadata={"cdp_name": "sessionId"})
     message: str = field(metadata={"cdp_name": "message"})
     target_id: TargetID | None = field(default=None, metadata={"cdp_name": "targetId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -84,12 +66,6 @@ class TargetCreatedEvent:
     """
 
     target_info: TargetInfo = field(metadata={"cdp_name": "targetInfo"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -99,12 +75,6 @@ class TargetDestroyedEvent:
     """
 
     target_id: TargetID = field(metadata={"cdp_name": "targetId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -116,12 +86,6 @@ class TargetCrashedEvent:
     target_id: TargetID = field(metadata={"cdp_name": "targetId"})
     status: str = field(metadata={"cdp_name": "status"})
     error_code: int = field(metadata={"cdp_name": "errorCode"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -132,9 +96,3 @@ class TargetInfoChangedEvent:
     """
 
     target_info: TargetInfo = field(metadata={"cdp_name": "targetInfo"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )

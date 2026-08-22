@@ -48,12 +48,6 @@ class AttributeModifiedEvent:
     node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
     name: str = field(metadata={"cdp_name": "name"})
     value: str = field(metadata={"cdp_name": "value"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -66,12 +60,6 @@ class AdoptedStyleSheetsModifiedEvent:
     adopted_style_sheets: list[StyleSheetId] = field(
         metadata={"cdp_name": "adoptedStyleSheets"}
     )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -82,12 +70,6 @@ class AttributeRemovedEvent:
 
     node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
     name: str = field(metadata={"cdp_name": "name"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -98,12 +80,6 @@ class CharacterDataModifiedEvent:
 
     node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
     character_data: str = field(metadata={"cdp_name": "characterData"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -114,12 +90,6 @@ class ChildNodeCountUpdatedEvent:
 
     node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
     child_node_count: int = field(metadata={"cdp_name": "childNodeCount"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -131,12 +101,6 @@ class ChildNodeInsertedEvent:
     parent_node_id: NodeId = field(metadata={"cdp_name": "parentNodeId"})
     previous_node_id: NodeId = field(metadata={"cdp_name": "previousNodeId"})
     node: Node = field(metadata={"cdp_name": "node"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -147,12 +111,6 @@ class ChildNodeRemovedEvent:
 
     parent_node_id: NodeId = field(metadata={"cdp_name": "parentNodeId"})
     node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -165,12 +123,6 @@ class DistributedNodesUpdatedEvent:
     distributed_nodes: list[BackendNode] = field(
         metadata={"cdp_name": "distributedNodes"}
     )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -179,12 +131,7 @@ class DocumentUpdatedEvent:
     Fired when `Document` has been totally updated. Node ids are no longer valid.
     """
 
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
+    pass
 
 
 @dataclass(kw_only=True, slots=True)
@@ -194,12 +141,6 @@ class InlineStyleInvalidatedEvent:
     """
 
     node_ids: list[NodeId] = field(metadata={"cdp_name": "nodeIds"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -210,12 +151,6 @@ class PseudoElementAddedEvent:
 
     parent_id: NodeId = field(metadata={"cdp_name": "parentId"})
     pseudo_element: Node = field(metadata={"cdp_name": "pseudoElement"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -224,12 +159,7 @@ class TopLayerElementsUpdatedEvent:
     Called when top layer elements are changed.
     """
 
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
+    pass
 
 
 @dataclass(kw_only=True, slots=True)
@@ -240,12 +170,6 @@ class ScrollableFlagUpdatedEvent:
 
     node_id: dom.NodeId = field(metadata={"cdp_name": "nodeId"})
     is_scrollable: bool = field(metadata={"cdp_name": "isScrollable"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -257,12 +181,6 @@ class AdRelatedStateUpdatedEvent:
     node_id: dom.NodeId = field(metadata={"cdp_name": "nodeId"})
     ad_provenance: network.AdProvenance | None = field(
         default=None, metadata={"cdp_name": "adProvenance"}
-    )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
     )
 
 
@@ -276,12 +194,6 @@ class AffectedByStartingStylesFlagUpdatedEvent:
     affected_by_starting_styles: bool = field(
         metadata={"cdp_name": "affectedByStartingStyles"}
     )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -292,12 +204,6 @@ class PseudoElementRemovedEvent:
 
     parent_id: NodeId = field(metadata={"cdp_name": "parentId"})
     pseudo_element_id: NodeId = field(metadata={"cdp_name": "pseudoElementId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -309,12 +215,6 @@ class SetChildNodesEvent:
 
     parent_id: NodeId = field(metadata={"cdp_name": "parentId"})
     nodes: list[Node] = field(metadata={"cdp_name": "nodes"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -325,12 +225,6 @@ class ShadowRootPoppedEvent:
 
     host_id: NodeId = field(metadata={"cdp_name": "hostId"})
     root_id: NodeId = field(metadata={"cdp_name": "rootId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -341,9 +235,3 @@ class ShadowRootPushedEvent:
 
     host_id: NodeId = field(metadata={"cdp_name": "hostId"})
     root: Node = field(metadata={"cdp_name": "root"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )

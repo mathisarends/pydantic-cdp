@@ -7,8 +7,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Literal
 
 from cdpify.codec import decode_cdp, encode_cdp
+from cdpify.executor import CommandExecutor
 from cdpify.shared.decorators import deprecated
-from cdpify.transport import Transport
 
 from .commands import (
     AddScreenParams,
@@ -84,119 +84,104 @@ if TYPE_CHECKING:
 
 
 class Emulation:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     @deprecated()
     async def can_emulate(
         self,
-        session_id: str | None = None,
     ) -> CanEmulateResult:
         """
         Tells whether emulation is supported.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=EmulationCommand.CAN_EMULATE,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(CanEmulateResult, result)
 
     async def clear_device_metrics_override(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Clears the overridden device metrics.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.CLEAR_DEVICE_METRICS_OVERRIDE,
             params=None,
-            session_id=session_id,
         )
 
     async def clear_geolocation_override(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Clears the overridden Geolocation Position and Error.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.CLEAR_GEOLOCATION_OVERRIDE,
             params=None,
-            session_id=session_id,
         )
 
     async def reset_page_scale_factor(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Requests that page scale factor is reset to initial values.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.RESET_PAGE_SCALE_FACTOR,
             params=None,
-            session_id=session_id,
         )
 
     async def set_focus_emulation_enabled(
         self,
         *,
         enabled: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         Enables or disables simulating a focused and active page.
         """
         params = SetFocusEmulationEnabledParams(enabled=enabled)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_FOCUS_EMULATION_ENABLED,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_auto_dark_mode_override(
         self,
         *,
         enabled: bool | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Automatically render all web contents using a dark theme.
         """
         params = SetAutoDarkModeOverrideParams(enabled=enabled)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_AUTO_DARK_MODE_OVERRIDE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_cpu_throttling_rate(
         self,
         *,
         rate: float,
-        session_id: str | None = None,
     ) -> None:
         """
         Enables CPU throttling to emulate slow CPUs.
         """
         params = SetCPUThrottlingRateParams(rate=rate)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_CPU_THROTTLING_RATE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_default_background_color_override(
         self,
         *,
         color: dom.RGBA | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Sets or clears an override of the default background color of the frame. This
@@ -204,17 +189,15 @@ class Emulation:
         """
         params = SetDefaultBackgroundColorOverrideParams(color=color)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_DEFAULT_BACKGROUND_COLOR_OVERRIDE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_safe_area_insets_override(
         self,
         *,
         insets: SafeAreaInsets,
-        session_id: str | None = None,
     ) -> None:
         """
         Overrides the values for env(safe-area-inset-*) and env(safe-area-max-inset-*).
@@ -223,17 +206,15 @@ class Emulation:
         """
         params = SetSafeAreaInsetsOverrideParams(insets=insets)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_SAFE_AREA_INSETS_OVERRIDE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_virtual_keyboard_geometry_override(
         self,
         *,
         keyboard_rect: dom.Rect | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Overrides virtual keyboard geometry in CSS pixels, relative to the top-level
@@ -245,10 +226,9 @@ class Emulation:
         """
         params = SetVirtualKeyboardGeometryOverrideParams(keyboard_rect=keyboard_rect)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_VIRTUAL_KEYBOARD_GEOMETRY_OVERRIDE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_device_metrics_override(
@@ -270,7 +250,6 @@ class Emulation:
         device_posture: DevicePosture | None = None,
         scrollbar_type: Literal["overlay", "default"] | None = None,
         screen_orientation_lock_emulation: bool | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Overrides the values of device screen dimensions (window.screen.width,
@@ -296,17 +275,15 @@ class Emulation:
             screen_orientation_lock_emulation=screen_orientation_lock_emulation,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_DEVICE_METRICS_OVERRIDE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_device_posture_override(
         self,
         *,
         posture: DevicePosture,
-        session_id: str | None = None,
     ) -> None:
         """
         Start reporting the given posture value to the Device Posture API. This
@@ -314,32 +291,28 @@ class Emulation:
         """
         params = SetDevicePostureOverrideParams(posture=posture)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_DEVICE_POSTURE_OVERRIDE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def clear_device_posture_override(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Clears a device posture override set with either setDeviceMetricsOverride() or
         setDevicePostureOverride() and starts using posture information from the
         platform again. Does nothing if no override is set.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.CLEAR_DEVICE_POSTURE_OVERRIDE,
             params=None,
-            session_id=session_id,
         )
 
     async def set_display_features_override(
         self,
         *,
         features: list[DisplayFeature],
-        session_id: str | None = None,
     ) -> None:
         """
         Start using the given display features to pupulate the Viewport Segments API.
@@ -347,53 +320,46 @@ class Emulation:
         """
         params = SetDisplayFeaturesOverrideParams(features=features)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_DISPLAY_FEATURES_OVERRIDE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def clear_display_features_override(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Clears the display features override set with either setDeviceMetricsOverride()
         or setDisplayFeaturesOverride() and starts using display features from the
         platform again. Does nothing if no override is set.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.CLEAR_DISPLAY_FEATURES_OVERRIDE,
             params=None,
-            session_id=session_id,
         )
 
     async def set_scrollbars_hidden(
         self,
         *,
         hidden: bool,
-        session_id: str | None = None,
     ) -> None:
         params = SetScrollbarsHiddenParams(hidden=hidden)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_SCROLLBARS_HIDDEN,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_document_cookie_disabled(
         self,
         *,
         disabled: bool,
-        session_id: str | None = None,
     ) -> None:
         params = SetDocumentCookieDisabledParams(disabled=disabled)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_DOCUMENT_COOKIE_DISABLED,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_emit_touch_events_for_mouse(
@@ -401,16 +367,14 @@ class Emulation:
         *,
         enabled: bool,
         configuration: Literal["mobile", "desktop"] | None = None,
-        session_id: str | None = None,
     ) -> None:
         params = SetEmitTouchEventsForMouseParams(
             enabled=enabled, configuration=configuration
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_EMIT_TOUCH_EVENTS_FOR_MOUSE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_emulated_media(
@@ -418,17 +382,15 @@ class Emulation:
         *,
         media: str | None = None,
         features: list[MediaFeature] | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Emulates the given media type or media feature for CSS media queries.
         """
         params = SetEmulatedMediaParams(media=media, features=features)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_EMULATED_MEDIA,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_emulated_vision_deficiency(
@@ -443,34 +405,30 @@ class Emulation:
             "protanopia",
             "tritanopia",
         ],
-        session_id: str | None = None,
     ) -> None:
         """
         Emulates the given vision deficiency.
         """
         params = SetEmulatedVisionDeficiencyParams(type=type)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_EMULATED_VISION_DEFICIENCY,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_emulated_os_text_scale(
         self,
         *,
         scale: float | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Emulates the given OS text scale.
         """
         params = SetEmulatedOSTextScaleParams(scale=scale)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_EMULATED_OS_TEXT_SCALE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_geolocation_override(
@@ -483,7 +441,6 @@ class Emulation:
         altitude_accuracy: float | None = None,
         heading: float | None = None,
         speed: float | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Overrides the Geolocation Position or Error. Omitting latitude, longitude or
@@ -499,24 +456,21 @@ class Emulation:
             speed=speed,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_GEOLOCATION_OVERRIDE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def get_overridden_sensor_information(
         self,
         *,
         type: SensorType,
-        session_id: str | None = None,
     ) -> GetOverriddenSensorInformationResult:
         params = GetOverriddenSensorInformationParams(type=type)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=EmulationCommand.GET_OVERRIDDEN_SENSOR_INFORMATION,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetOverriddenSensorInformationResult, result)
 
@@ -526,7 +480,6 @@ class Emulation:
         enabled: bool,
         type: SensorType,
         metadata: SensorMetadata | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Overrides a platform sensor of a given type. If |enabled| is true, calls to
@@ -539,10 +492,9 @@ class Emulation:
             enabled=enabled, type=type, metadata=metadata
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_SENSOR_OVERRIDE_ENABLED,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_sensor_override_readings(
@@ -550,7 +502,6 @@ class Emulation:
         *,
         type: SensorType,
         reading: SensorReading,
-        session_id: str | None = None,
     ) -> None:
         """
         Updates the sensor readings reported by a sensor type previously overridden by
@@ -558,10 +509,9 @@ class Emulation:
         """
         params = SetSensorOverrideReadingsParams(type=type, reading=reading)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_SENSOR_OVERRIDE_READINGS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_pressure_source_override_enabled(
@@ -570,7 +520,6 @@ class Emulation:
         enabled: bool,
         source: PressureSource,
         metadata: PressureMetadata | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Overrides a pressure source of a given type, as used by the Compute Pressure
@@ -582,10 +531,9 @@ class Emulation:
             enabled=enabled, source=source, metadata=metadata
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_PRESSURE_SOURCE_OVERRIDE_ENABLED,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_pressure_state_override(
@@ -593,7 +541,6 @@ class Emulation:
         *,
         source: PressureSource,
         state: PressureState,
-        session_id: str | None = None,
     ) -> None:
         """
         Provides a given pressure state that will be processed and eventually be
@@ -602,10 +549,9 @@ class Emulation:
         """
         params = SetPressureStateOverrideParams(source=source, state=state)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_PRESSURE_STATE_OVERRIDE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_idle_override(
@@ -613,7 +559,6 @@ class Emulation:
         *,
         is_user_active: bool,
         is_screen_unlocked: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         Overrides the Idle state.
@@ -622,23 +567,20 @@ class Emulation:
             is_user_active=is_user_active, is_screen_unlocked=is_screen_unlocked
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_IDLE_OVERRIDE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def clear_idle_override(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Clears Idle state overrides.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.CLEAR_IDLE_OVERRIDE,
             params=None,
-            session_id=session_id,
         )
 
     @deprecated()
@@ -646,51 +588,45 @@ class Emulation:
         self,
         *,
         platform: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Overrides value returned by the javascript navigator object.
         """
         params = SetNavigatorOverridesParams(platform=platform)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_NAVIGATOR_OVERRIDES,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_page_scale_factor(
         self,
         *,
         page_scale_factor: float,
-        session_id: str | None = None,
     ) -> None:
         """
         Sets a specified page scale factor.
         """
         params = SetPageScaleFactorParams(page_scale_factor=page_scale_factor)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_PAGE_SCALE_FACTOR,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_script_execution_disabled(
         self,
         *,
         value: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         Switches script execution in the page.
         """
         params = SetScriptExecutionDisabledParams(value=value)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_SCRIPT_EXECUTION_DISABLED,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_touch_emulation_enabled(
@@ -698,7 +634,6 @@ class Emulation:
         *,
         enabled: bool,
         max_touch_points: int | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Enables touch on platforms which do not support them.
@@ -707,10 +642,9 @@ class Emulation:
             enabled=enabled, max_touch_points=max_touch_points
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_TOUCH_EMULATION_ENABLED,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_virtual_time_policy(
@@ -720,7 +654,6 @@ class Emulation:
         budget: float | None = None,
         max_virtual_time_task_starvation_count: int | None = None,
         initial_virtual_time: network.TimeSinceEpoch | None = None,
-        session_id: str | None = None,
     ) -> SetVirtualTimePolicyResult:
         """
         Turns on virtual time for all frames (replacing real-time with a synthetic time
@@ -734,10 +667,9 @@ class Emulation:
             initial_virtual_time=initial_virtual_time,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=EmulationCommand.SET_VIRTUAL_TIME_POLICY,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(SetVirtualTimePolicyResult, result)
 
@@ -745,34 +677,30 @@ class Emulation:
         self,
         *,
         locale: str | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Overrides default host system locale with the specified one.
         """
         params = SetLocaleOverrideParams(locale=locale)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_LOCALE_OVERRIDE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_timezone_override(
         self,
         *,
         timezone_id: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Overrides default host system timezone with the specified one.
         """
         params = SetTimezoneOverrideParams(timezone_id=timezone_id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_TIMEZONE_OVERRIDE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     @deprecated()
@@ -781,7 +709,6 @@ class Emulation:
         *,
         width: int,
         height: int,
-        session_id: str | None = None,
     ) -> None:
         """
         Resizes the frame/viewport of the page. Note that this does not affect the
@@ -790,57 +717,50 @@ class Emulation:
         """
         params = SetVisibleSizeParams(width=width, height=height)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_VISIBLE_SIZE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_disabled_image_types(
         self,
         *,
         image_types: list[DisabledImageType],
-        session_id: str | None = None,
     ) -> None:
         params = SetDisabledImageTypesParams(image_types=image_types)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_DISABLED_IMAGE_TYPES,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_data_saver_override(
         self,
         *,
         data_saver_enabled: bool | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Override the value of navigator.connection.saveData
         """
         params = SetDataSaverOverrideParams(data_saver_enabled=data_saver_enabled)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_DATA_SAVER_OVERRIDE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_hardware_concurrency_override(
         self,
         *,
         hardware_concurrency: int,
-        session_id: str | None = None,
     ) -> None:
         params = SetHardwareConcurrencyOverrideParams(
             hardware_concurrency=hardware_concurrency
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_HARDWARE_CONCURRENCY_OVERRIDE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_cpu_performance_override(
@@ -848,17 +768,15 @@ class Emulation:
         *,
         performance_tier: Literal["unknown", "low", "mid", "high", "ultra"]
         | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Overrides the value of navigator.cpuPerformance
         """
         params = SetCPUPerformanceOverrideParams(performance_tier=performance_tier)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_CPU_PERFORMANCE_OVERRIDE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_user_agent_override(
@@ -868,7 +786,6 @@ class Emulation:
         accept_language: str | None = None,
         platform: str | None = None,
         user_agent_metadata: UserAgentMetadata | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Allows overriding user agent with the given string. `userAgentMetadata` must be
@@ -881,34 +798,30 @@ class Emulation:
             user_agent_metadata=user_agent_metadata,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_USER_AGENT_OVERRIDE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_automation_override(
         self,
         *,
         enabled: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         Allows overriding the automation flag.
         """
         params = SetAutomationOverrideParams(enabled=enabled)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_AUTOMATION_OVERRIDE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_small_viewport_height_difference_override(
         self,
         *,
         difference: int,
-        session_id: str | None = None,
     ) -> None:
         """
         Allows overriding the difference between the small and large viewport sizes,
@@ -917,25 +830,22 @@ class Emulation:
         """
         params = SetSmallViewportHeightDifferenceOverrideParams(difference=difference)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_SMALL_VIEWPORT_HEIGHT_DIFFERENCE_OVERRIDE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def get_screen_infos(
         self,
-        session_id: str | None = None,
     ) -> GetScreenInfosResult:
         """
         Returns device's screen configuration. In headful mode, the physical screens
         configuration is returned, whereas in headless mode, a virtual headless screen
         configuration is provided instead.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=EmulationCommand.GET_SCREEN_INFOS,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetScreenInfosResult, result)
 
@@ -952,7 +862,6 @@ class Emulation:
         color_depth: int | None = None,
         label: str | None = None,
         is_internal: bool | None = None,
-        session_id: str | None = None,
     ) -> AddScreenResult:
         """
         Add a new screen to the device. Only supported in headless mode.
@@ -970,10 +879,9 @@ class Emulation:
             is_internal=is_internal,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=EmulationCommand.ADD_SCREEN,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(AddScreenResult, result)
 
@@ -991,7 +899,6 @@ class Emulation:
         color_depth: int | None = None,
         label: str | None = None,
         is_internal: bool | None = None,
-        session_id: str | None = None,
     ) -> UpdateScreenResult:
         """
         Updates specified screen parameters. Only supported in headless mode.
@@ -1010,10 +917,9 @@ class Emulation:
             is_internal=is_internal,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=EmulationCommand.UPDATE_SCREEN,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(UpdateScreenResult, result)
 
@@ -1021,24 +927,21 @@ class Emulation:
         self,
         *,
         screen_id: ScreenId,
-        session_id: str | None = None,
     ) -> None:
         """
         Remove screen from the device. Only supported in headless mode.
         """
         params = RemoveScreenParams(screen_id=screen_id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.REMOVE_SCREEN,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_primary_screen(
         self,
         *,
         screen_id: ScreenId,
-        session_id: str | None = None,
     ) -> None:
         """
         Set primary screen. Only supported in headless mode. Note that this changes the
@@ -1047,8 +950,7 @@ class Emulation:
         """
         params = SetPrimaryScreenParams(screen_id=screen_id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EmulationCommand.SET_PRIMARY_SCREEN,
             params=encode_cdp(params),
-            session_id=session_id,
         )

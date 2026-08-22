@@ -7,8 +7,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from cdpify.codec import decode_cdp, encode_cdp
+from cdpify.executor import CommandExecutor
 from cdpify.shared.decorators import deprecated
-from cdpify.transport import Transport
 
 from .commands import (
     DOMDebuggerCommand,
@@ -34,8 +34,8 @@ if TYPE_CHECKING:
 
 
 class DOMDebugger:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def get_event_listeners(
         self,
@@ -43,7 +43,6 @@ class DOMDebugger:
         object_id: runtime.RemoteObjectId,
         depth: int | None = None,
         pierce: bool | None = None,
-        session_id: str | None = None,
     ) -> GetEventListenersResult:
         """
         Returns event listeners of the given object.
@@ -52,10 +51,9 @@ class DOMDebugger:
             object_id=object_id, depth=depth, pierce=pierce
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMDebuggerCommand.GET_EVENT_LISTENERS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetEventListenersResult, result)
 
@@ -64,17 +62,15 @@ class DOMDebugger:
         *,
         node_id: dom.NodeId,
         type: DOMBreakpointType,
-        session_id: str | None = None,
     ) -> None:
         """
         Removes DOM breakpoint that was set using `setDOMBreakpoint`.
         """
         params = RemoveDOMBreakpointParams(node_id=node_id, type=type)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMDebuggerCommand.REMOVE_DOM_BREAKPOINT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def remove_event_listener_breakpoint(
@@ -82,7 +78,6 @@ class DOMDebugger:
         *,
         event_name: str,
         target_name: str | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Removes breakpoint on particular DOM event.
@@ -91,10 +86,9 @@ class DOMDebugger:
             event_name=event_name, target_name=target_name
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMDebuggerCommand.REMOVE_EVENT_LISTENER_BREAKPOINT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     @deprecated()
@@ -102,51 +96,45 @@ class DOMDebugger:
         self,
         *,
         event_name: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Removes breakpoint on particular native event.
         """
         params = RemoveInstrumentationBreakpointParams(event_name=event_name)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMDebuggerCommand.REMOVE_INSTRUMENTATION_BREAKPOINT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def remove_xhr_breakpoint(
         self,
         *,
         url: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Removes breakpoint from XMLHttpRequest.
         """
         params = RemoveXHRBreakpointParams(url=url)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMDebuggerCommand.REMOVE_XHR_BREAKPOINT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_break_on_csp_violation(
         self,
         *,
         violation_types: list[CSPViolationType],
-        session_id: str | None = None,
     ) -> None:
         """
         Sets breakpoint on particular CSP violations.
         """
         params = SetBreakOnCSPViolationParams(violation_types=violation_types)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMDebuggerCommand.SET_BREAK_ON_CSP_VIOLATION,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_dom_breakpoint(
@@ -154,17 +142,15 @@ class DOMDebugger:
         *,
         node_id: dom.NodeId,
         type: DOMBreakpointType,
-        session_id: str | None = None,
     ) -> None:
         """
         Sets breakpoint on particular operation with DOM.
         """
         params = SetDOMBreakpointParams(node_id=node_id, type=type)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMDebuggerCommand.SET_DOM_BREAKPOINT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_event_listener_breakpoint(
@@ -172,7 +158,6 @@ class DOMDebugger:
         *,
         event_name: str,
         target_name: str | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Sets breakpoint on particular DOM event.
@@ -181,10 +166,9 @@ class DOMDebugger:
             event_name=event_name, target_name=target_name
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMDebuggerCommand.SET_EVENT_LISTENER_BREAKPOINT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     @deprecated()
@@ -192,32 +176,28 @@ class DOMDebugger:
         self,
         *,
         event_name: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Sets breakpoint on particular native event.
         """
         params = SetInstrumentationBreakpointParams(event_name=event_name)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMDebuggerCommand.SET_INSTRUMENTATION_BREAKPOINT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_xhr_breakpoint(
         self,
         *,
         url: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Sets breakpoint on XMLHttpRequest.
         """
         params = SetXHRBreakpointParams(url=url)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMDebuggerCommand.SET_XHR_BREAKPOINT,
             params=encode_cdp(params),
-            session_id=session_id,
         )

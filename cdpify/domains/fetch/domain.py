@@ -7,7 +7,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .commands import (
     ContinueRequestParams,
@@ -34,20 +34,18 @@ if TYPE_CHECKING:
 
 
 class Fetch:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def disable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Disables the fetch domain.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=FetchCommand.DISABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def enable(
@@ -55,7 +53,6 @@ class Fetch:
         *,
         patterns: list[RequestPattern] | None = None,
         handle_auth_requests: bool | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Enables issuing of requestPaused events. A request will be paused until client
@@ -65,10 +62,9 @@ class Fetch:
             patterns=patterns, handle_auth_requests=handle_auth_requests
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=FetchCommand.ENABLE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def fail_request(
@@ -76,17 +72,15 @@ class Fetch:
         *,
         request_id: RequestId,
         error_reason: network.ErrorReason,
-        session_id: str | None = None,
     ) -> None:
         """
         Causes the request to fail with specified reason.
         """
         params = FailRequestParams(request_id=request_id, error_reason=error_reason)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=FetchCommand.FAIL_REQUEST,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def fulfill_request(
@@ -98,7 +92,6 @@ class Fetch:
         binary_response_headers: str | None = None,
         body: str | None = None,
         response_phrase: str | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Provides response to the request.
@@ -112,10 +105,9 @@ class Fetch:
             response_phrase=response_phrase,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=FetchCommand.FULFILL_REQUEST,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def continue_request(
@@ -127,7 +119,6 @@ class Fetch:
         post_data: str | None = None,
         headers: list[HeaderEntry] | None = None,
         intercept_response: bool | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Continues the request, optionally modifying some of its parameters.
@@ -141,10 +132,9 @@ class Fetch:
             intercept_response=intercept_response,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=FetchCommand.CONTINUE_REQUEST,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def continue_with_auth(
@@ -152,7 +142,6 @@ class Fetch:
         *,
         request_id: RequestId,
         auth_challenge_response: AuthChallengeResponse,
-        session_id: str | None = None,
     ) -> None:
         """
         Continues a request supplying authChallengeResponse following authRequired
@@ -162,10 +151,9 @@ class Fetch:
             request_id=request_id, auth_challenge_response=auth_challenge_response
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=FetchCommand.CONTINUE_WITH_AUTH,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def continue_response(
@@ -176,7 +164,6 @@ class Fetch:
         response_phrase: str | None = None,
         response_headers: list[HeaderEntry] | None = None,
         binary_response_headers: str | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Continues loading of the paused response, optionally modifying the response
@@ -191,17 +178,15 @@ class Fetch:
             binary_response_headers=binary_response_headers,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=FetchCommand.CONTINUE_RESPONSE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def get_response_body(
         self,
         *,
         request_id: RequestId,
-        session_id: str | None = None,
     ) -> GetResponseBodyResult:
         """
         Causes the body of the response to be received from the server and returned as
@@ -215,10 +200,9 @@ class Fetch:
         """
         params = GetResponseBodyParams(request_id=request_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=FetchCommand.GET_RESPONSE_BODY,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetResponseBodyResult, result)
 
@@ -226,7 +210,6 @@ class Fetch:
         self,
         *,
         request_id: RequestId,
-        session_id: str | None = None,
     ) -> TakeResponseBodyAsStreamResult:
         """
         Returns a handle to the stream representing the response body. The request must
@@ -239,9 +222,8 @@ class Fetch:
         """
         params = TakeResponseBodyAsStreamParams(request_id=request_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=FetchCommand.TAKE_RESPONSE_BODY_AS_STREAM,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(TakeResponseBodyAsStreamResult, result)

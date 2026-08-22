@@ -5,8 +5,8 @@
 from __future__ import annotations
 
 from cdpify.codec import decode_cdp, encode_cdp
+from cdpify.executor import CommandExecutor
 from cdpify.shared.decorators import deprecated
-from cdpify.transport import Transport
 
 from .commands import (
     CaptureSnapshotParams,
@@ -18,33 +18,29 @@ from .commands import (
 
 
 class DOMSnapshot:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def disable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Disables DOM snapshot agent for the given page.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMSnapshotCommand.DISABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def enable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Enables DOM snapshot agent for the given page.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMSnapshotCommand.ENABLE,
             params=None,
-            session_id=session_id,
         )
 
     @deprecated()
@@ -55,7 +51,6 @@ class DOMSnapshot:
         include_event_listeners: bool | None = None,
         include_paint_order: bool | None = None,
         include_user_agent_shadow_tree: bool | None = None,
-        session_id: str | None = None,
     ) -> GetSnapshotResult:
         """
         Returns a document snapshot, including the full DOM tree of the root node
@@ -70,10 +65,9 @@ class DOMSnapshot:
             include_user_agent_shadow_tree=include_user_agent_shadow_tree,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMSnapshotCommand.GET_SNAPSHOT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetSnapshotResult, result)
 
@@ -85,7 +79,6 @@ class DOMSnapshot:
         include_dom_rects: bool | None = None,
         include_blended_background_colors: bool | None = None,
         include_text_color_opacities: bool | None = None,
-        session_id: str | None = None,
     ) -> CaptureSnapshotResult:
         """
         Returns a document snapshot, including the full DOM tree of the root node
@@ -101,9 +94,8 @@ class DOMSnapshot:
             include_text_color_opacities=include_text_color_opacities,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMSnapshotCommand.CAPTURE_SNAPSHOT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(CaptureSnapshotResult, result)

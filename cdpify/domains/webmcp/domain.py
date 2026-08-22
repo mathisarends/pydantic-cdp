@@ -7,7 +7,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .commands import (
     CancelInvocationParams,
@@ -21,34 +21,30 @@ if TYPE_CHECKING:
 
 
 class WebMCP:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def enable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Enables the WebMCP domain, allowing events to be sent. Enabling the domain will
         trigger a toolsAdded event for all currently registered tools.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=WebMCPCommand.ENABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def disable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Disables the WebMCP domain.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=WebMCPCommand.DISABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def invoke_tool(
@@ -57,17 +53,15 @@ class WebMCP:
         frame_id: page.FrameId,
         tool_name: str,
         input: dict[str, Any],
-        session_id: str | None = None,
     ) -> InvokeToolResult:
         """
         Invokes a registered tool.
         """
         params = InvokeToolParams(frame_id=frame_id, tool_name=tool_name, input=input)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=WebMCPCommand.INVOKE_TOOL,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(InvokeToolResult, result)
 
@@ -75,15 +69,13 @@ class WebMCP:
         self,
         *,
         invocation_id: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Cancels a pending tool invocation.
         """
         params = CancelInvocationParams(invocation_id=invocation_id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=WebMCPCommand.CANCEL_INVOCATION,
             params=encode_cdp(params),
-            session_id=session_id,
         )

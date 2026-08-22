@@ -14,8 +14,8 @@ async def test_dispatch_invokes_specific_and_wildcard_handlers() -> None:
     async def wildcard(event: RawCDPEvent) -> None:
         calls.append(("wildcard", event))
 
-    dispatcher.add_handler("Page.frameNavigated", specific)
-    dispatcher.add_handler(None, wildcard)
+    dispatcher.add_handler("Page.frameNavigated", specific, session_id="S1")
+    dispatcher.add_handler(None, wildcard, all_sessions=True)
 
     event = RawCDPEvent(params={"id": 1}, session_id="S1")
     handled = await dispatcher.dispatch("Page.frameNavigated", event)
@@ -33,6 +33,25 @@ async def test_dispatch_returns_false_for_unhandled_event() -> None:
     )
 
     assert handled is False
+
+
+@pytest.mark.asyncio
+async def test_dispatch_does_not_cross_session_boundaries() -> None:
+    dispatcher = EventDispatcher()
+    calls: list[RawCDPEvent] = []
+
+    async def handler(event: RawCDPEvent) -> None:
+        calls.append(event)
+
+    dispatcher.add_handler("Network.requestWillBeSent", handler, session_id="A")
+
+    handled = await dispatcher.dispatch(
+        "Network.requestWillBeSent",
+        RawCDPEvent(params={}, session_id="B"),
+    )
+
+    assert handled is False
+    assert calls == []
 
 
 @pytest.mark.asyncio

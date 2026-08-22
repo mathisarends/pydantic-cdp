@@ -24,24 +24,12 @@ class DomStorageItemAddedEvent:
     storage_id: StorageId = field(metadata={"cdp_name": "storageId"})
     key: str = field(metadata={"cdp_name": "key"})
     new_value: str = field(metadata={"cdp_name": "newValue"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
 class DomStorageItemRemovedEvent:
     storage_id: StorageId = field(metadata={"cdp_name": "storageId"})
     key: str = field(metadata={"cdp_name": "key"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -50,20 +38,8 @@ class DomStorageItemUpdatedEvent:
     key: str = field(metadata={"cdp_name": "key"})
     old_value: str = field(metadata={"cdp_name": "oldValue"})
     new_value: str = field(metadata={"cdp_name": "newValue"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
 class DomStorageItemsClearedEvent:
     storage_id: StorageId = field(metadata={"cdp_name": "storageId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )

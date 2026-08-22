@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import encode_cdp
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .commands import (
     DeliverPushMessageParams,
@@ -25,8 +25,8 @@ from .types import (
 
 
 class ServiceWorker:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def deliver_push_message(
         self,
@@ -34,26 +34,22 @@ class ServiceWorker:
         origin: str,
         registration_id: RegistrationID,
         data: str,
-        session_id: str | None = None,
     ) -> None:
         params = DeliverPushMessageParams(
             origin=origin, registration_id=registration_id, data=data
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=ServiceWorkerCommand.DELIVER_PUSH_MESSAGE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def disable(
         self,
-        session_id: str | None = None,
     ) -> None:
-        await self._transport.execute(
+        await self._executor.execute(
             method=ServiceWorkerCommand.DISABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def dispatch_sync_event(
@@ -63,7 +59,6 @@ class ServiceWorker:
         registration_id: RegistrationID,
         tag: str,
         last_chance: bool,
-        session_id: str | None = None,
     ) -> None:
         params = DispatchSyncEventParams(
             origin=origin,
@@ -72,10 +67,9 @@ class ServiceWorker:
             last_chance=last_chance,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=ServiceWorkerCommand.DISPATCH_SYNC_EVENT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def dispatch_periodic_sync_event(
@@ -84,120 +78,102 @@ class ServiceWorker:
         origin: str,
         registration_id: RegistrationID,
         tag: str,
-        session_id: str | None = None,
     ) -> None:
         params = DispatchPeriodicSyncEventParams(
             origin=origin, registration_id=registration_id, tag=tag
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=ServiceWorkerCommand.DISPATCH_PERIODIC_SYNC_EVENT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def enable(
         self,
-        session_id: str | None = None,
     ) -> None:
-        await self._transport.execute(
+        await self._executor.execute(
             method=ServiceWorkerCommand.ENABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def set_force_update_on_page_load(
         self,
         *,
         force_update_on_page_load: bool,
-        session_id: str | None = None,
     ) -> None:
         params = SetForceUpdateOnPageLoadParams(
             force_update_on_page_load=force_update_on_page_load
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=ServiceWorkerCommand.SET_FORCE_UPDATE_ON_PAGE_LOAD,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def skip_waiting(
         self,
         *,
         scope_url: str,
-        session_id: str | None = None,
     ) -> None:
         params = SkipWaitingParams(scope_url=scope_url)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=ServiceWorkerCommand.SKIP_WAITING,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def start_worker(
         self,
         *,
         scope_url: str,
-        session_id: str | None = None,
     ) -> None:
         params = StartWorkerParams(scope_url=scope_url)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=ServiceWorkerCommand.START_WORKER,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def stop_all_workers(
         self,
-        session_id: str | None = None,
     ) -> None:
-        await self._transport.execute(
+        await self._executor.execute(
             method=ServiceWorkerCommand.STOP_ALL_WORKERS,
             params=None,
-            session_id=session_id,
         )
 
     async def stop_worker(
         self,
         *,
         version_id: str,
-        session_id: str | None = None,
     ) -> None:
         params = StopWorkerParams(version_id=version_id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=ServiceWorkerCommand.STOP_WORKER,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def unregister(
         self,
         *,
         scope_url: str,
-        session_id: str | None = None,
     ) -> None:
         params = UnregisterParams(scope_url=scope_url)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=ServiceWorkerCommand.UNREGISTER,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def update_registration(
         self,
         *,
         scope_url: str,
-        session_id: str | None = None,
     ) -> None:
         params = UpdateRegistrationParams(scope_url=scope_url)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=ServiceWorkerCommand.UPDATE_REGISTRATION,
             params=encode_cdp(params),
-            session_id=session_id,
         )

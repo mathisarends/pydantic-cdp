@@ -7,8 +7,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Literal
 
 from cdpify.codec import decode_cdp, encode_cdp
+from cdpify.executor import CommandExecutor
 from cdpify.shared.decorators import deprecated
-from cdpify.transport import Transport
 
 from .commands import (
     ContinueToLocationParams,
@@ -71,15 +71,14 @@ if TYPE_CHECKING:
 
 
 class Debugger:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def continue_to_location(
         self,
         *,
         location: Location,
         target_call_frames: Literal["any", "current"] | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Continues execution until specific location is reached.
@@ -88,30 +87,26 @@ class Debugger:
             location=location, target_call_frames=target_call_frames
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DebuggerCommand.CONTINUE_TO_LOCATION,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def disable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Disables debugger for given page.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=DebuggerCommand.DISABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def enable(
         self,
         *,
         max_scripts_cache_size: float | None = None,
-        session_id: str | None = None,
     ) -> EnableResult:
         """
         Enables debugger for the given page. Clients should not assume that the
@@ -119,10 +114,9 @@ class Debugger:
         """
         params = EnableParams(max_scripts_cache_size=max_scripts_cache_size)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DebuggerCommand.ENABLE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(EnableResult, result)
 
@@ -139,7 +133,6 @@ class Debugger:
         throw_on_side_effect: bool | None = None,
         timeout: runtime.TimeDelta | None = None,
         scope_number: int | None = None,
-        session_id: str | None = None,
     ) -> EvaluateOnCallFrameResult:
         """
         Evaluates expression on a given call frame.
@@ -157,10 +150,9 @@ class Debugger:
             scope_number=scope_number,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DebuggerCommand.EVALUATE_ON_CALL_FRAME,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(EvaluateOnCallFrameResult, result)
 
@@ -170,7 +162,6 @@ class Debugger:
         start: Location,
         end: Location | None = None,
         restrict_to_function: bool | None = None,
-        session_id: str | None = None,
     ) -> GetPossibleBreakpointsResult:
         """
         Returns possible locations for breakpoint. scriptId in start and end range
@@ -180,10 +171,9 @@ class Debugger:
             start=start, end=end, restrict_to_function=restrict_to_function
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DebuggerCommand.GET_POSSIBLE_BREAKPOINTS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetPossibleBreakpointsResult, result)
 
@@ -191,17 +181,15 @@ class Debugger:
         self,
         *,
         script_id: runtime.ScriptId,
-        session_id: str | None = None,
     ) -> GetScriptSourceResult:
         """
         Returns source for the script with given id.
         """
         params = GetScriptSourceParams(script_id=script_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DebuggerCommand.GET_SCRIPT_SOURCE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetScriptSourceResult, result)
 
@@ -209,14 +197,12 @@ class Debugger:
         self,
         *,
         script_id: runtime.ScriptId,
-        session_id: str | None = None,
     ) -> DisassembleWasmModuleResult:
         params = DisassembleWasmModuleParams(script_id=script_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DebuggerCommand.DISASSEMBLE_WASM_MODULE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(DisassembleWasmModuleResult, result)
 
@@ -224,7 +210,6 @@ class Debugger:
         self,
         *,
         stream_id: str,
-        session_id: str | None = None,
     ) -> NextWasmDisassemblyChunkResult:
         """
         Disassemble the next chunk of lines for the module corresponding to the stream.
@@ -233,10 +218,9 @@ class Debugger:
         """
         params = NextWasmDisassemblyChunkParams(stream_id=stream_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DebuggerCommand.NEXT_WASM_DISASSEMBLY_CHUNK,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(NextWasmDisassemblyChunkResult, result)
 
@@ -245,17 +229,15 @@ class Debugger:
         self,
         *,
         script_id: runtime.ScriptId,
-        session_id: str | None = None,
     ) -> GetWasmBytecodeResult:
         """
         This command is deprecated. Use getScriptSource instead.
         """
         params = GetWasmBytecodeParams(script_id=script_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DebuggerCommand.GET_WASM_BYTECODE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetWasmBytecodeResult, result)
 
@@ -263,31 +245,27 @@ class Debugger:
         self,
         *,
         stack_trace_id: runtime.StackTraceId,
-        session_id: str | None = None,
     ) -> GetStackTraceResult:
         """
         Returns stack trace with given `stackTraceId`.
         """
         params = GetStackTraceParams(stack_trace_id=stack_trace_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DebuggerCommand.GET_STACK_TRACE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetStackTraceResult, result)
 
     async def pause(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Stops on the next JavaScript statement.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=DebuggerCommand.PAUSE,
             params=None,
-            session_id=session_id,
         )
 
     @deprecated()
@@ -295,31 +273,27 @@ class Debugger:
         self,
         *,
         parent_stack_trace_id: runtime.StackTraceId,
-        session_id: str | None = None,
     ) -> None:
         params = PauseOnAsyncCallParams(parent_stack_trace_id=parent_stack_trace_id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DebuggerCommand.PAUSE_ON_ASYNC_CALL,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def remove_breakpoint(
         self,
         *,
         breakpoint_id: BreakpointId,
-        session_id: str | None = None,
     ) -> None:
         """
         Removes JavaScript breakpoint.
         """
         params = RemoveBreakpointParams(breakpoint_id=breakpoint_id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DebuggerCommand.REMOVE_BREAKPOINT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def restart_frame(
@@ -327,7 +301,6 @@ class Debugger:
         *,
         call_frame_id: CallFrameId,
         mode: Literal["StepInto"] | None = None,
-        session_id: str | None = None,
     ) -> RestartFrameResult:
         """
         Restarts particular call frame from the beginning. The old, deprecated behavior
@@ -343,10 +316,9 @@ class Debugger:
         """
         params = RestartFrameParams(call_frame_id=call_frame_id, mode=mode)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DebuggerCommand.RESTART_FRAME,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(RestartFrameResult, result)
 
@@ -354,17 +326,15 @@ class Debugger:
         self,
         *,
         terminate_on_resume: bool | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Resumes JavaScript execution.
         """
         params = ResumeParams(terminate_on_resume=terminate_on_resume)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DebuggerCommand.RESUME,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def search_in_content(
@@ -374,7 +344,6 @@ class Debugger:
         query: str,
         case_sensitive: bool | None = None,
         is_regex: bool | None = None,
-        session_id: str | None = None,
     ) -> SearchInContentResult:
         """
         Searches for given string in script content.
@@ -386,10 +355,9 @@ class Debugger:
             is_regex=is_regex,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DebuggerCommand.SEARCH_IN_CONTENT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(SearchInContentResult, result)
 
@@ -397,24 +365,21 @@ class Debugger:
         self,
         *,
         max_depth: int,
-        session_id: str | None = None,
     ) -> None:
         """
         Enables or disables async call stacks tracking.
         """
         params = SetAsyncCallStackDepthParams(max_depth=max_depth)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DebuggerCommand.SET_ASYNC_CALL_STACK_DEPTH,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_blackbox_execution_contexts(
         self,
         *,
         unique_ids: list[str],
-        session_id: str | None = None,
     ) -> None:
         """
         Replace previous blackbox execution contexts with passed ones. Forces backend
@@ -424,10 +389,9 @@ class Debugger:
         """
         params = SetBlackboxExecutionContextsParams(unique_ids=unique_ids)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DebuggerCommand.SET_BLACKBOX_EXECUTION_CONTEXTS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_blackbox_patterns(
@@ -435,7 +399,6 @@ class Debugger:
         *,
         patterns: list[str],
         skip_anonymous: bool | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Replace previous blackbox patterns with passed ones. Forces backend to skip
@@ -447,10 +410,9 @@ class Debugger:
             patterns=patterns, skip_anonymous=skip_anonymous
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DebuggerCommand.SET_BLACKBOX_PATTERNS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_blackboxed_ranges(
@@ -458,7 +420,6 @@ class Debugger:
         *,
         script_id: runtime.ScriptId,
         positions: list[ScriptPosition],
-        session_id: str | None = None,
     ) -> None:
         """
         Makes backend skip steps in the script in blackboxed ranges. VM will try leave
@@ -468,10 +429,9 @@ class Debugger:
         """
         params = SetBlackboxedRangesParams(script_id=script_id, positions=positions)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DebuggerCommand.SET_BLACKBOXED_RANGES,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_breakpoint(
@@ -479,17 +439,15 @@ class Debugger:
         *,
         location: Location,
         condition: str | None = None,
-        session_id: str | None = None,
     ) -> SetBreakpointResult:
         """
         Sets JavaScript breakpoint at a given location.
         """
         params = SetBreakpointParams(location=location, condition=condition)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DebuggerCommand.SET_BREAKPOINT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(SetBreakpointResult, result)
 
@@ -499,17 +457,15 @@ class Debugger:
         instrumentation: Literal[
             "beforeScriptExecution", "beforeScriptWithSourceMapExecution"
         ],
-        session_id: str | None = None,
     ) -> SetInstrumentationBreakpointResult:
         """
         Sets instrumentation breakpoint.
         """
         params = SetInstrumentationBreakpointParams(instrumentation=instrumentation)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DebuggerCommand.SET_INSTRUMENTATION_BREAKPOINT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(SetInstrumentationBreakpointResult, result)
 
@@ -522,7 +478,6 @@ class Debugger:
         script_hash: str | None = None,
         column_number: int | None = None,
         condition: str | None = None,
-        session_id: str | None = None,
     ) -> SetBreakpointByUrlResult:
         """
         Sets JavaScript breakpoint at given location specified either by URL or URL
@@ -540,10 +495,9 @@ class Debugger:
             condition=condition,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DebuggerCommand.SET_BREAKPOINT_BY_URL,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(SetBreakpointByUrlResult, result)
 
@@ -552,7 +506,6 @@ class Debugger:
         *,
         object_id: runtime.RemoteObjectId,
         condition: str | None = None,
-        session_id: str | None = None,
     ) -> SetBreakpointOnFunctionCallResult:
         """
         Sets JavaScript breakpoint before each call to the given function. If another
@@ -563,10 +516,9 @@ class Debugger:
             object_id=object_id, condition=condition
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DebuggerCommand.SET_BREAKPOINT_ON_FUNCTION_CALL,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(SetBreakpointOnFunctionCallResult, result)
 
@@ -574,24 +526,21 @@ class Debugger:
         self,
         *,
         active: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         Activates / deactivates all breakpoints on the page.
         """
         params = SetBreakpointsActiveParams(active=active)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DebuggerCommand.SET_BREAKPOINTS_ACTIVE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_pause_on_exceptions(
         self,
         *,
         state: Literal["none", "caught", "uncaught", "all"],
-        session_id: str | None = None,
     ) -> None:
         """
         Defines pause on exceptions state. Can be set to stop on all exceptions,
@@ -600,27 +549,24 @@ class Debugger:
         """
         params = SetPauseOnExceptionsParams(state=state)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DebuggerCommand.SET_PAUSE_ON_EXCEPTIONS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_return_value(
         self,
         *,
         new_value: runtime.CallArgument,
-        session_id: str | None = None,
     ) -> None:
         """
         Changes return value in top frame. Available only at return break position.
         """
         params = SetReturnValueParams(new_value=new_value)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DebuggerCommand.SET_RETURN_VALUE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     @deprecated()
@@ -631,7 +577,6 @@ class Debugger:
         script_source: str,
         dry_run: bool | None = None,
         allow_top_frame_editing: bool | None = None,
-        session_id: str | None = None,
     ) -> SetScriptSourceResult:
         """
         Live edit is no longer supported and this command always fails with a "no
@@ -644,10 +589,9 @@ class Debugger:
             allow_top_frame_editing=allow_top_frame_editing,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DebuggerCommand.SET_SCRIPT_SOURCE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(SetScriptSourceResult, result)
 
@@ -655,7 +599,6 @@ class Debugger:
         self,
         *,
         skip: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         Makes page not interrupt on any pauses (breakpoint, exception, dom exception
@@ -663,10 +606,9 @@ class Debugger:
         """
         params = SetSkipAllPausesParams(skip=skip)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DebuggerCommand.SET_SKIP_ALL_PAUSES,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_variable_value(
@@ -676,7 +618,6 @@ class Debugger:
         variable_name: str,
         new_value: runtime.CallArgument,
         call_frame_id: CallFrameId,
-        session_id: str | None = None,
     ) -> None:
         """
         Changes value of variable in a callframe. Object-based scopes are not supported
@@ -689,10 +630,9 @@ class Debugger:
             call_frame_id=call_frame_id,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DebuggerCommand.SET_VARIABLE_VALUE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def step_into(
@@ -700,7 +640,6 @@ class Debugger:
         *,
         break_on_async_call: bool | None = None,
         skip_list: list[LocationRange] | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Steps into the function call.
@@ -709,38 +648,33 @@ class Debugger:
             break_on_async_call=break_on_async_call, skip_list=skip_list
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DebuggerCommand.STEP_INTO,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def step_out(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Steps out of the function call.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=DebuggerCommand.STEP_OUT,
             params=None,
-            session_id=session_id,
         )
 
     async def step_over(
         self,
         *,
         skip_list: list[LocationRange] | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Steps over the statement.
         """
         params = StepOverParams(skip_list=skip_list)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DebuggerCommand.STEP_OVER,
             params=encode_cdp(params),
-            session_id=session_id,
         )

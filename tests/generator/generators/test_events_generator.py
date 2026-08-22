@@ -21,18 +21,15 @@ def test_renders_event_models(simple_domain: Domain) -> None:
         "parent_id: NodeId | None = field("
         'default=None, metadata={"cdp_name": "parentId"})'
     ) in output
-    assert "cdp_session_id: str | None = field(" in output
-    assert 'metadata={"cdp": False}' in output
+    assert "cdp_session_id" not in output
 
 
-def test_event_without_parameters_only_contains_session_metadata(
-    simple_domain: Domain,
-) -> None:
+def test_event_without_parameters_has_an_empty_model(simple_domain: Domain) -> None:
     output = events.generate(simple_domain)
 
     assert "class ClearedEvent:" in output
     cleared_section = output.split("class ClearedEvent:")[1].splitlines()
-    assert any("cdp_session_id" in line for line in cleared_section[:3])
+    assert "    pass" in cleared_section[:3]
 
 
 def test_includes_event_descriptions(simple_domain: Domain) -> None:

@@ -5,8 +5,8 @@
 from __future__ import annotations
 
 from cdpify.codec import decode_cdp, encode_cdp
+from cdpify.executor import CommandExecutor
 from cdpify.shared.decorators import deprecated
-from cdpify.transport import Transport
 
 from .commands import (
     BeginFrameParams,
@@ -19,8 +19,8 @@ from .types import (
 
 
 class HeadlessExperimental:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def begin_frame(
         self,
@@ -29,7 +29,6 @@ class HeadlessExperimental:
         interval: float | None = None,
         no_display_updates: bool | None = None,
         screenshot: ScreenshotParams | None = None,
-        session_id: str | None = None,
     ) -> BeginFrameResult:
         """
         Sends a BeginFrame to the target and returns when the frame was completed.
@@ -45,37 +44,32 @@ class HeadlessExperimental:
             screenshot=screenshot,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=HeadlessExperimentalCommand.BEGIN_FRAME,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(BeginFrameResult, result)
 
     @deprecated()
     async def disable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Disables headless events for the target.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=HeadlessExperimentalCommand.DISABLE,
             params=None,
-            session_id=session_id,
         )
 
     @deprecated()
     async def enable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Enables headless events for the target.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=HeadlessExperimentalCommand.ENABLE,
             params=None,
-            session_id=session_id,
         )

@@ -25,12 +25,6 @@ class SinksUpdatedEvent:
     """
 
     sinks: list[Sink] = field(metadata={"cdp_name": "sinks"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -41,9 +35,3 @@ class IssueUpdatedEvent:
     """
 
     issue_message: str = field(metadata={"cdp_name": "issueMessage"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )

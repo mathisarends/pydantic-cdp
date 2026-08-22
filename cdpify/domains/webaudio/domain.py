@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .commands import (
     GetRealtimeDataParams,
@@ -18,49 +18,43 @@ from .types import (
 
 
 class WebAudio:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def enable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Enables the WebAudio domain and starts sending context lifetime events.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=WebAudioCommand.ENABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def disable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Disables the WebAudio domain.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=WebAudioCommand.DISABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def get_realtime_data(
         self,
         *,
         context_id: GraphObjectId,
-        session_id: str | None = None,
     ) -> GetRealtimeDataResult:
         """
         Fetch the realtime data from the registered contexts.
         """
         params = GetRealtimeDataParams(context_id=context_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=WebAudioCommand.GET_REALTIME_DATA,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetRealtimeDataResult, result)

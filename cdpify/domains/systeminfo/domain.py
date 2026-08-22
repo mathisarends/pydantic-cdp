@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .commands import (
     GetFeatureStateParams,
@@ -17,20 +17,18 @@ from .commands import (
 
 
 class SystemInfo:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def get_info(
         self,
-        session_id: str | None = None,
     ) -> GetInfoResult:
         """
         Returns information about the system.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=SystemInfoCommand.GET_INFO,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetInfoResult, result)
 
@@ -38,30 +36,26 @@ class SystemInfo:
         self,
         *,
         feature_state: str,
-        session_id: str | None = None,
     ) -> GetFeatureStateResult:
         """
         Returns information about the feature state.
         """
         params = GetFeatureStateParams(feature_state=feature_state)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=SystemInfoCommand.GET_FEATURE_STATE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetFeatureStateResult, result)
 
     async def get_process_info(
         self,
-        session_id: str | None = None,
     ) -> GetProcessInfoResult:
         """
         Returns information about all running processes.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=SystemInfoCommand.GET_PROCESS_INFO,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetProcessInfoResult, result)

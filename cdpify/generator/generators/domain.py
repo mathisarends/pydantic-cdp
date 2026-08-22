@@ -52,8 +52,7 @@ def _command_imports(domain: Domain) -> tuple[str, ...]:
 
 def _build_method(command: Command, ctx: GenerationContext) -> MethodView:
     parameters = tuple(
-        _build_parameter_view(command, parameter, ctx)
-        for parameter in command.parameters
+        _build_parameter_view(parameter, ctx) for parameter in command.parameters
     )
     pascal_name = to_pascal_case(command.name)
 
@@ -66,7 +65,7 @@ def _build_method(command: Command, ctx: GenerationContext) -> MethodView:
 
     params_model = f"{pascal_name}Params" if command.parameters else None
     constructor_args = ", ".join(
-        f"{to_snake_case(parameter.name)}={_parameter_name(command, parameter)}"
+        f"{to_snake_case(parameter.name)}={to_snake_case(parameter.name)}"
         for parameter in command.parameters
     )
 
@@ -87,21 +86,12 @@ def _build_method(command: Command, ctx: GenerationContext) -> MethodView:
     )
 
 
-def _build_parameter_view(
-    command: Command, parameter: Parameter, ctx: GenerationContext
-) -> FieldView:
+def _build_parameter_view(parameter: Parameter, ctx: GenerationContext) -> FieldView:
     ctx.scan_param(parameter)
     annotation = resolve_type(parameter)
     ctx.track_type_string(annotation)
     return FieldView(
-        name=_parameter_name(command, parameter),
+        name=to_snake_case(parameter.name),
         annotation=annotation,
         optional=parameter.optional,
     )
-
-
-def _parameter_name(command: Command, parameter: Parameter) -> str:
-    name = to_snake_case(parameter.name)
-    if name == "session_id":
-        return f"{to_snake_case(command.name)}_session_id"
-    return name

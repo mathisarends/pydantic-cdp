@@ -7,7 +7,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .commands import (
     AddInspectedHeapObjectParams,
@@ -32,14 +32,13 @@ if TYPE_CHECKING:
 
 
 class HeapProfiler:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def add_inspected_heap_object(
         self,
         *,
         heap_object_id: HeapSnapshotObjectId,
-        session_id: str | None = None,
     ) -> None:
         """
         Enables console to refer to the node with given id via $x (see Command Line API
@@ -47,54 +46,45 @@ class HeapProfiler:
         """
         params = AddInspectedHeapObjectParams(heap_object_id=heap_object_id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=HeapProfilerCommand.ADD_INSPECTED_HEAP_OBJECT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def collect_garbage(
         self,
-        session_id: str | None = None,
     ) -> None:
-        await self._transport.execute(
+        await self._executor.execute(
             method=HeapProfilerCommand.COLLECT_GARBAGE,
             params=None,
-            session_id=session_id,
         )
 
     async def disable(
         self,
-        session_id: str | None = None,
     ) -> None:
-        await self._transport.execute(
+        await self._executor.execute(
             method=HeapProfilerCommand.DISABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def enable(
         self,
-        session_id: str | None = None,
     ) -> None:
-        await self._transport.execute(
+        await self._executor.execute(
             method=HeapProfilerCommand.ENABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def get_heap_object_id(
         self,
         *,
         object_id: runtime.RemoteObjectId,
-        session_id: str | None = None,
     ) -> GetHeapObjectIdResult:
         params = GetHeapObjectIdParams(object_id=object_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=HeapProfilerCommand.GET_HEAP_OBJECT_ID,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetHeapObjectIdResult, result)
 
@@ -103,27 +93,23 @@ class HeapProfiler:
         *,
         object_id: HeapSnapshotObjectId,
         object_group: str | None = None,
-        session_id: str | None = None,
     ) -> GetObjectByHeapObjectIdResult:
         params = GetObjectByHeapObjectIdParams(
             object_id=object_id, object_group=object_group
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=HeapProfilerCommand.GET_OBJECT_BY_HEAP_OBJECT_ID,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetObjectByHeapObjectIdResult, result)
 
     async def get_sampling_profile(
         self,
-        session_id: str | None = None,
     ) -> GetSamplingProfileResult:
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=HeapProfilerCommand.GET_SAMPLING_PROFILE,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetSamplingProfileResult, result)
 
@@ -134,7 +120,6 @@ class HeapProfiler:
         stack_depth: float | None = None,
         include_objects_collected_by_major_gc: bool | None = None,
         include_objects_collected_by_minor_gc: bool | None = None,
-        session_id: str | None = None,
     ) -> None:
         params = StartSamplingParams(
             sampling_interval=sampling_interval,
@@ -143,34 +128,29 @@ class HeapProfiler:
             include_objects_collected_by_minor_gc=include_objects_collected_by_minor_gc,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=HeapProfilerCommand.START_SAMPLING,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def start_tracking_heap_objects(
         self,
         *,
         track_allocations: bool | None = None,
-        session_id: str | None = None,
     ) -> None:
         params = StartTrackingHeapObjectsParams(track_allocations=track_allocations)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=HeapProfilerCommand.START_TRACKING_HEAP_OBJECTS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def stop_sampling(
         self,
-        session_id: str | None = None,
     ) -> StopSamplingResult:
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=HeapProfilerCommand.STOP_SAMPLING,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(StopSamplingResult, result)
 
@@ -181,7 +161,6 @@ class HeapProfiler:
         treat_global_objects_as_roots: bool | None = None,
         capture_numeric_value: bool | None = None,
         expose_internals: bool | None = None,
-        session_id: str | None = None,
     ) -> None:
         params = StopTrackingHeapObjectsParams(
             report_progress=report_progress,
@@ -190,10 +169,9 @@ class HeapProfiler:
             expose_internals=expose_internals,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=HeapProfilerCommand.STOP_TRACKING_HEAP_OBJECTS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def take_heap_snapshot(
@@ -203,7 +181,6 @@ class HeapProfiler:
         treat_global_objects_as_roots: bool | None = None,
         capture_numeric_value: bool | None = None,
         expose_internals: bool | None = None,
-        session_id: str | None = None,
     ) -> None:
         params = TakeHeapSnapshotParams(
             report_progress=report_progress,
@@ -212,8 +189,7 @@ class HeapProfiler:
             expose_internals=expose_internals,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=HeapProfilerCommand.TAKE_HEAP_SNAPSHOT,
             params=encode_cdp(params),
-            session_id=session_id,
         )

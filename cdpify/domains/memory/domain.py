@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .commands import (
     GetAllTimeSamplingProfileResult,
@@ -24,96 +24,84 @@ from .types import (
 
 
 class Memory:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def get_dom_counters(
         self,
-        session_id: str | None = None,
     ) -> GetDOMCountersResult:
         """
         Retruns current DOM object counters.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=MemoryCommand.GET_DOM_COUNTERS,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetDOMCountersResult, result)
 
     async def get_dom_counters_for_leak_detection(
         self,
-        session_id: str | None = None,
     ) -> GetDOMCountersForLeakDetectionResult:
         """
         Retruns DOM object counters after preparing renderer for leak detection.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=MemoryCommand.GET_DOM_COUNTERS_FOR_LEAK_DETECTION,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetDOMCountersForLeakDetectionResult, result)
 
     async def prepare_for_leak_detection(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Prepares for leak detection by terminating workers, stopping spellcheckers,
         dropping non-essential internal caches, running garbage collections, etc.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=MemoryCommand.PREPARE_FOR_LEAK_DETECTION,
             params=None,
-            session_id=session_id,
         )
 
     async def forcibly_purge_java_script_memory(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Simulate OomIntervention by purging V8 memory.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=MemoryCommand.FORCIBLY_PURGE_JAVA_SCRIPT_MEMORY,
             params=None,
-            session_id=session_id,
         )
 
     async def set_pressure_notifications_suppressed(
         self,
         *,
         suppressed: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         Enable/disable suppressing memory pressure notifications in all processes.
         """
         params = SetPressureNotificationsSuppressedParams(suppressed=suppressed)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=MemoryCommand.SET_PRESSURE_NOTIFICATIONS_SUPPRESSED,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def simulate_pressure_notification(
         self,
         *,
         level: PressureLevel,
-        session_id: str | None = None,
     ) -> None:
         """
         Simulate a memory pressure notification in all processes.
         """
         params = SimulatePressureNotificationParams(level=level)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=MemoryCommand.SIMULATE_PRESSURE_NOTIFICATION,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def start_sampling(
@@ -121,7 +109,6 @@ class Memory:
         *,
         sampling_interval: int | None = None,
         suppress_randomness: bool | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Start collecting native memory profile.
@@ -130,66 +117,57 @@ class Memory:
             sampling_interval=sampling_interval, suppress_randomness=suppress_randomness
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=MemoryCommand.START_SAMPLING,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def stop_sampling(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Stop collecting native memory profile.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=MemoryCommand.STOP_SAMPLING,
             params=None,
-            session_id=session_id,
         )
 
     async def get_all_time_sampling_profile(
         self,
-        session_id: str | None = None,
     ) -> GetAllTimeSamplingProfileResult:
         """
         Retrieve native memory allocations profile collected since renderer process
         startup.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=MemoryCommand.GET_ALL_TIME_SAMPLING_PROFILE,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetAllTimeSamplingProfileResult, result)
 
     async def get_browser_sampling_profile(
         self,
-        session_id: str | None = None,
     ) -> GetBrowserSamplingProfileResult:
         """
         Retrieve native memory allocations profile collected since browser process
         startup.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=MemoryCommand.GET_BROWSER_SAMPLING_PROFILE,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetBrowserSamplingProfileResult, result)
 
     async def get_sampling_profile(
         self,
-        session_id: str | None = None,
     ) -> GetSamplingProfileResult:
         """
         Retrieve native memory allocations profile collected since last `startSampling`
         call.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=MemoryCommand.GET_SAMPLING_PROFILE,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetSamplingProfileResult, result)

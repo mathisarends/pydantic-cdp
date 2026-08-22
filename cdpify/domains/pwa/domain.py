@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .commands import (
     ChangeAppUserSettingsParams,
@@ -26,24 +26,22 @@ from .types import (
 
 
 class PWA:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def get_os_app_state(
         self,
         *,
         manifest_id: str,
-        session_id: str | None = None,
     ) -> GetOsAppStateResult:
         """
         Returns the following OS state for the given manifest id.
         """
         params = GetOsAppStateParams(manifest_id=manifest_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=PWACommand.GET_OS_APP_STATE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetOsAppStateResult, result)
 
@@ -52,7 +50,6 @@ class PWA:
         *,
         manifest_id: str,
         install_url_or_bundle_url: str | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Installs the given manifest identity, optionally using the given
@@ -74,27 +71,24 @@ class PWA:
             manifest_id=manifest_id, install_url_or_bundle_url=install_url_or_bundle_url
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=PWACommand.INSTALL,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def uninstall(
         self,
         *,
         manifest_id: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Uninstalls the given manifest_id and closes any opened app windows.
         """
         params = UninstallParams(manifest_id=manifest_id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=PWACommand.UNINSTALL,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def launch(
@@ -102,7 +96,6 @@ class PWA:
         *,
         manifest_id: str,
         url: str | None = None,
-        session_id: str | None = None,
     ) -> LaunchResult:
         """
         Launches the installed web app, or an url in the same web app instead of the
@@ -111,10 +104,9 @@ class PWA:
         """
         params = LaunchParams(manifest_id=manifest_id, url=url)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=PWACommand.LAUNCH,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(LaunchResult, result)
 
@@ -123,7 +115,6 @@ class PWA:
         *,
         manifest_id: str,
         files: list[str],
-        session_id: str | None = None,
     ) -> LaunchFilesInAppResult:
         """
         Opens one or more local files from an installed web app identified by its
@@ -139,10 +130,9 @@ class PWA:
         """
         params = LaunchFilesInAppParams(manifest_id=manifest_id, files=files)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=PWACommand.LAUNCH_FILES_IN_APP,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(LaunchFilesInAppResult, result)
 
@@ -150,7 +140,6 @@ class PWA:
         self,
         *,
         manifest_id: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Opens the current page in its web app identified by the manifest id, needs to
@@ -159,10 +148,9 @@ class PWA:
         """
         params = OpenCurrentPageInAppParams(manifest_id=manifest_id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=PWACommand.OPEN_CURRENT_PAGE_IN_APP,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def change_app_user_settings(
@@ -171,7 +159,6 @@ class PWA:
         manifest_id: str,
         link_capturing: bool | None = None,
         display_mode: DisplayMode | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Changes user settings of the web app identified by its manifestId. If the app
@@ -187,8 +174,7 @@ class PWA:
             display_mode=display_mode,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=PWACommand.CHANGE_APP_USER_SETTINGS,
             params=encode_cdp(params),
-            session_id=session_id,
         )

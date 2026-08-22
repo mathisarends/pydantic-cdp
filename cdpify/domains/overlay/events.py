@@ -27,12 +27,6 @@ class InspectNodeRequestedEvent:
     """
 
     backend_node_id: dom.BackendNodeId = field(metadata={"cdp_name": "backendNodeId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -43,12 +37,6 @@ class NodeHighlightRequestedEvent:
     """
 
     node_id: dom.NodeId = field(metadata={"cdp_name": "nodeId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -58,12 +46,6 @@ class ScreenshotRequestedEvent:
     """
 
     viewport: page.Viewport = field(metadata={"cdp_name": "viewport"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -73,12 +55,6 @@ class InspectPanelShowRequestedEvent:
     """
 
     backend_node_id: dom.BackendNodeId = field(metadata={"cdp_name": "backendNodeId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -88,12 +64,6 @@ class InspectedElementWindowRestoredEvent:
     """
 
     backend_node_id: dom.BackendNodeId = field(metadata={"cdp_name": "backendNodeId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -102,9 +72,4 @@ class InspectModeCanceledEvent:
     Fired when user cancels the inspect mode.
     """
 
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
+    pass

@@ -58,12 +58,6 @@ class RequestPausedEvent:
     redirected_request_id: RequestId | None = field(
         default=None, metadata={"cdp_name": "redirectedRequestId"}
     )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -78,9 +72,3 @@ class AuthRequiredEvent:
     frame_id: page.FrameId = field(metadata={"cdp_name": "frameId"})
     resource_type: network.ResourceType = field(metadata={"cdp_name": "resourceType"})
     auth_challenge: AuthChallenge = field(metadata={"cdp_name": "authChallenge"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )

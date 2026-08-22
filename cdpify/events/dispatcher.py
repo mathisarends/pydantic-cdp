@@ -17,36 +17,75 @@ _EventHandler = Callable[[RawCDPEvent], Awaitable[None]]
 
 class EventDispatcher:
     def __init__(self) -> None:
-        self._specific_handlers: dict[str, list[_EventHandler]] = {}
-        self._wildcard_handlers: list[_EventHandler] = []
+        self._session_handlers: dict[
+            tuple[str | None, str | None], list[_EventHandler]
+        ] = {}
+        self._all_session_handlers: dict[str | None, list[_EventHandler]] = {}
 
-    def add_handler(self, event_name: str | None, handler: _EventHandler) -> None:
-        if event_name is None:
-            self._wildcard_handlers.append(handler)
-        else:
-            self._specific_handlers.setdefault(event_name, []).append(handler)
+    def add_handler(
+        self,
+        event_name: str | None,
+        handler: _EventHandler,
+        *,
+        session_id: str | None = None,
+        all_sessions: bool = False,
+    ) -> None:
+        handlers = self._handlers_for(
+            event_name,
+            session_id=session_id,
+            all_sessions=all_sessions,
+        )
+        handlers.append(handler)
 
-    def remove_handler(self, event_name: str | None, handler: _EventHandler) -> None:
-        if event_name is None:
-            if handler in self._wildcard_handlers:
-                self._wildcard_handlers.remove(handler)
+    def remove_handler(
+        self,
+        event_name: str | None,
+        handler: _EventHandler,
+        *,
+        session_id: str | None = None,
+        all_sessions: bool = False,
+    ) -> None:
+        if all_sessions:
+            handlers = self._all_session_handlers.get(event_name, [])
         else:
-            handlers = self._specific_handlers.get(event_name, [])
-            if handler in handlers:
-                handlers.remove(handler)
+            handlers = self._session_handlers.get((event_name, session_id), [])
+
+        if handler in handlers:
+            handlers.remove(handler)
+        if handlers:
+            return
+
+        if all_sessions:
+            self._all_session_handlers.pop(event_name, None)
+        else:
+            self._session_handlers.pop((event_name, session_id), None)
 
     async def dispatch(self, method: str, event: RawCDPEvent) -> bool:
         any_handled = False
 
-        for handler in self._specific_handlers.get(method, []):
-            if await _invoke_handler(handler, event):
-                any_handled = True
-
-        for handler in self._wildcard_handlers:
-            if await _invoke_handler(handler, event):
-                any_handled = True
+        handler_groups = (
+            self._session_handlers.get((method, event.session_id), []),
+            self._session_handlers.get((None, event.session_id), []),
+            self._all_session_handlers.get(method, []),
+            self._all_session_handlers.get(None, []),
+        )
+        for handlers in handler_groups:
+            for handler in tuple(handlers):
+                if await _invoke_handler(handler, event):
+                    any_handled = True
 
         return any_handled
+
+    def _handlers_for(
+        self,
+        event_name: str | None,
+        *,
+        session_id: str | None,
+        all_sessions: bool,
+    ) -> list[_EventHandler]:
+        if all_sessions:
+            return self._all_session_handlers.setdefault(event_name, [])
+        return self._session_handlers.setdefault((event_name, session_id), [])
 
 
 async def _invoke_handler(handler: _EventHandler, event: RawCDPEvent) -> bool:

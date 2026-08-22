@@ -33,12 +33,6 @@ class CertificateErrorEvent:
     event_id: int = field(metadata={"cdp_name": "eventId"})
     error_type: str = field(metadata={"cdp_name": "errorType"})
     request_url: str = field(metadata={"cdp_name": "requestURL"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -49,12 +43,6 @@ class VisibleSecurityStateChangedEvent:
 
     visible_security_state: VisibleSecurityState = field(
         metadata={"cdp_name": "visibleSecurityState"}
-    )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
     )
 
 
@@ -75,9 +63,3 @@ class SecurityStateChangedEvent:
         metadata={"cdp_name": "insecureContentStatus"}
     )
     summary: str | None = field(default=None, metadata={"cdp_name": "summary"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )

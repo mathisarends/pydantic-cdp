@@ -7,8 +7,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from cdpify.codec import decode_cdp, encode_cdp
+from cdpify.executor import CommandExecutor
 from cdpify.shared.decorators import deprecated
-from cdpify.transport import Transport
 
 from .commands import (
     AddRuleParams,
@@ -85,8 +85,8 @@ if TYPE_CHECKING:
 
 
 class CSS:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def add_rule(
         self,
@@ -95,7 +95,6 @@ class CSS:
         rule_text: str,
         location: SourceRange,
         node_for_property_syntax_validation: dom.NodeId | None = None,
-        session_id: str | None = None,
     ) -> AddRuleResult:
         """
         Inserts a new rule with the given `ruleText` in a stylesheet with given
@@ -108,10 +107,9 @@ class CSS:
             node_for_property_syntax_validation=node_for_property_syntax_validation,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=CSSCommand.ADD_RULE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(AddRuleResult, result)
 
@@ -119,17 +117,15 @@ class CSS:
         self,
         *,
         style_sheet_id: dom.StyleSheetId,
-        session_id: str | None = None,
     ) -> CollectClassNamesResult:
         """
         Returns all class names from specified stylesheet.
         """
         params = CollectClassNamesParams(style_sheet_id=style_sheet_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=CSSCommand.COLLECT_CLASS_NAMES,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(CollectClassNamesResult, result)
 
@@ -138,7 +134,6 @@ class CSS:
         *,
         frame_id: page.FrameId,
         force: bool | None = None,
-        session_id: str | None = None,
     ) -> CreateStyleSheetResult:
         """
         Creates a new special "via-inspector" stylesheet in the frame with given
@@ -146,38 +141,33 @@ class CSS:
         """
         params = CreateStyleSheetParams(frame_id=frame_id, force=force)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=CSSCommand.CREATE_STYLE_SHEET,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(CreateStyleSheetResult, result)
 
     async def disable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Disables the CSS agent for the given page.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=CSSCommand.DISABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def enable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Enables the CSS agent for the given page. Clients should not assume that the
         CSS agent has been enabled until the result of this command is received.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=CSSCommand.ENABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def force_pseudo_state(
@@ -185,7 +175,6 @@ class CSS:
         *,
         node_id: dom.NodeId,
         forced_pseudo_classes: list[str],
-        session_id: str | None = None,
     ) -> None:
         """
         Ensures that the given node will have specified pseudo-classes whenever its
@@ -195,10 +184,9 @@ class CSS:
             node_id=node_id, forced_pseudo_classes=forced_pseudo_classes
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=CSSCommand.FORCE_PSEUDO_STATE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def force_starting_style(
@@ -206,31 +194,27 @@ class CSS:
         *,
         node_id: dom.NodeId,
         forced: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         Ensures that the given node is in its starting-style state.
         """
         params = ForceStartingStyleParams(node_id=node_id, forced=forced)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=CSSCommand.FORCE_STARTING_STYLE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def get_background_colors(
         self,
         *,
         node_id: dom.NodeId,
-        session_id: str | None = None,
     ) -> GetBackgroundColorsResult:
         params = GetBackgroundColorsParams(node_id=node_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=CSSCommand.GET_BACKGROUND_COLORS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetBackgroundColorsResult, result)
 
@@ -238,17 +222,15 @@ class CSS:
         self,
         *,
         node_id: dom.NodeId,
-        session_id: str | None = None,
     ) -> GetComputedStyleForNodeResult:
         """
         Returns the computed style for a DOM node identified by `nodeId`.
         """
         params = GetComputedStyleForNodeParams(node_id=node_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=CSSCommand.GET_COMPUTED_STYLE_FOR_NODE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetComputedStyleForNodeResult, result)
 
@@ -260,7 +242,6 @@ class CSS:
         property_name: str | None = None,
         pseudo_type: dom.PseudoType | None = None,
         pseudo_identifier: str | None = None,
-        session_id: str | None = None,
     ) -> ResolveValuesResult:
         """
         Resolve the specified values in the context of the provided element. For
@@ -281,10 +262,9 @@ class CSS:
             pseudo_identifier=pseudo_identifier,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=CSSCommand.RESOLVE_VALUES,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(ResolveValuesResult, result)
 
@@ -293,14 +273,12 @@ class CSS:
         *,
         shorthand_name: str,
         value: str,
-        session_id: str | None = None,
     ) -> GetLonghandPropertiesResult:
         params = GetLonghandPropertiesParams(shorthand_name=shorthand_name, value=value)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=CSSCommand.GET_LONGHAND_PROPERTIES,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetLonghandPropertiesResult, result)
 
@@ -308,7 +286,6 @@ class CSS:
         self,
         *,
         node_id: dom.NodeId,
-        session_id: str | None = None,
     ) -> GetInlineStylesForNodeResult:
         """
         Returns the styles defined inline (explicitly in the "style" attribute and
@@ -316,10 +293,9 @@ class CSS:
         """
         params = GetInlineStylesForNodeParams(node_id=node_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=CSSCommand.GET_INLINE_STYLES_FOR_NODE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetInlineStylesForNodeResult, result)
 
@@ -327,7 +303,6 @@ class CSS:
         self,
         *,
         node_id: dom.NodeId,
-        session_id: str | None = None,
     ) -> GetAnimatedStylesForNodeResult:
         """
         Returns the styles coming from animations & transitions including the animation
@@ -335,10 +310,9 @@ class CSS:
         """
         params = GetAnimatedStylesForNodeParams(node_id=node_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=CSSCommand.GET_ANIMATED_STYLES_FOR_NODE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetAnimatedStylesForNodeResult, result)
 
@@ -346,46 +320,40 @@ class CSS:
         self,
         *,
         node_id: dom.NodeId,
-        session_id: str | None = None,
     ) -> GetMatchedStylesForNodeResult:
         """
         Returns requested styles for a DOM node identified by `nodeId`.
         """
         params = GetMatchedStylesForNodeParams(node_id=node_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=CSSCommand.GET_MATCHED_STYLES_FOR_NODE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetMatchedStylesForNodeResult, result)
 
     async def get_environment_variables(
         self,
-        session_id: str | None = None,
     ) -> GetEnvironmentVariablesResult:
         """
         Returns the values of the default UA-defined environment variables used in
         env()
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=CSSCommand.GET_ENVIRONMENT_VARIABLES,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetEnvironmentVariablesResult, result)
 
     async def get_media_queries(
         self,
-        session_id: str | None = None,
     ) -> GetMediaQueriesResult:
         """
         Returns all media queries parsed by the rendering engine.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=CSSCommand.GET_MEDIA_QUERIES,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetMediaQueriesResult, result)
 
@@ -393,7 +361,6 @@ class CSS:
         self,
         *,
         node_id: dom.NodeId,
-        session_id: str | None = None,
     ) -> GetPlatformFontsForNodeResult:
         """
         Requests information about platform fonts which we used to render child
@@ -401,10 +368,9 @@ class CSS:
         """
         params = GetPlatformFontsForNodeParams(node_id=node_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=CSSCommand.GET_PLATFORM_FONTS_FOR_NODE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetPlatformFontsForNodeResult, result)
 
@@ -412,17 +378,15 @@ class CSS:
         self,
         *,
         style_sheet_id: dom.StyleSheetId,
-        session_id: str | None = None,
     ) -> GetStyleSheetTextResult:
         """
         Returns the current textual content for a stylesheet.
         """
         params = GetStyleSheetTextParams(style_sheet_id=style_sheet_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=CSSCommand.GET_STYLE_SHEET_TEXT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetStyleSheetTextResult, result)
 
@@ -430,7 +394,6 @@ class CSS:
         self,
         *,
         node_id: dom.NodeId,
-        session_id: str | None = None,
     ) -> GetLayersForNodeResult:
         """
         Returns all layers parsed by the rendering engine for the tree scope of a node.
@@ -440,10 +403,9 @@ class CSS:
         """
         params = GetLayersForNodeParams(node_id=node_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=CSSCommand.GET_LAYERS_FOR_NODE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetLayersForNodeResult, result)
 
@@ -452,7 +414,6 @@ class CSS:
         *,
         style_sheet_id: dom.StyleSheetId,
         selector_text: str,
-        session_id: str | None = None,
     ) -> GetLocationForSelectorResult:
         """
         Given a CSS selector text and a style sheet ID, getLocationForSelector returns
@@ -462,10 +423,9 @@ class CSS:
             style_sheet_id=style_sheet_id, selector_text=selector_text
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=CSSCommand.GET_LOCATION_FOR_SELECTOR,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetLocationForSelectorResult, result)
 
@@ -473,7 +433,6 @@ class CSS:
         self,
         *,
         node_id: dom.NodeId | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Starts tracking the given node for the computed style updates and whenever the
@@ -484,17 +443,15 @@ class CSS:
         """
         params = TrackComputedStyleUpdatesForNodeParams(node_id=node_id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=CSSCommand.TRACK_COMPUTED_STYLE_UPDATES_FOR_NODE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def track_computed_style_updates(
         self,
         *,
         properties_to_track: list[CSSComputedStyleProperty],
-        session_id: str | None = None,
     ) -> None:
         """
         Starts tracking the given computed styles for updates. The specified array of
@@ -509,23 +466,20 @@ class CSS:
             properties_to_track=properties_to_track
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=CSSCommand.TRACK_COMPUTED_STYLE_UPDATES,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def take_computed_style_updates(
         self,
-        session_id: str | None = None,
     ) -> TakeComputedStyleUpdatesResult:
         """
         Polls the next batch of computed style updates.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=CSSCommand.TAKE_COMPUTED_STYLE_UPDATES,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(TakeComputedStyleUpdatesResult, result)
 
@@ -535,7 +489,6 @@ class CSS:
         node_id: dom.NodeId,
         property_name: str,
         value: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Find a rule with the given active property for the given node and set the new
@@ -545,10 +498,9 @@ class CSS:
             node_id=node_id, property_name=property_name, value=value
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=CSSCommand.SET_EFFECTIVE_PROPERTY_VALUE_FOR_NODE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_property_rule_property_name(
@@ -557,7 +509,6 @@ class CSS:
         style_sheet_id: dom.StyleSheetId,
         range: SourceRange,
         property_name: str,
-        session_id: str | None = None,
     ) -> SetPropertyRulePropertyNameResult:
         """
         Modifies the property rule property name.
@@ -566,10 +517,9 @@ class CSS:
             style_sheet_id=style_sheet_id, range=range, property_name=property_name
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=CSSCommand.SET_PROPERTY_RULE_PROPERTY_NAME,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(SetPropertyRulePropertyNameResult, result)
 
@@ -579,7 +529,6 @@ class CSS:
         style_sheet_id: dom.StyleSheetId,
         range: SourceRange,
         key_text: str,
-        session_id: str | None = None,
     ) -> SetKeyframeKeyResult:
         """
         Modifies the keyframe rule key text.
@@ -588,10 +537,9 @@ class CSS:
             style_sheet_id=style_sheet_id, range=range, key_text=key_text
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=CSSCommand.SET_KEYFRAME_KEY,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(SetKeyframeKeyResult, result)
 
@@ -601,7 +549,6 @@ class CSS:
         style_sheet_id: dom.StyleSheetId,
         range: SourceRange,
         text: str,
-        session_id: str | None = None,
     ) -> SetMediaTextResult:
         """
         Modifies the rule selector.
@@ -610,10 +557,9 @@ class CSS:
             style_sheet_id=style_sheet_id, range=range, text=text
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=CSSCommand.SET_MEDIA_TEXT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(SetMediaTextResult, result)
 
@@ -624,7 +570,6 @@ class CSS:
         style_sheet_id: dom.StyleSheetId,
         range: SourceRange,
         text: str,
-        session_id: str | None = None,
     ) -> SetContainerQueryTextResult:
         """
         Modifies the expression of a container query. Deprecated. Use
@@ -634,10 +579,9 @@ class CSS:
             style_sheet_id=style_sheet_id, range=range, text=text
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=CSSCommand.SET_CONTAINER_QUERY_TEXT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(SetContainerQueryTextResult, result)
 
@@ -647,16 +591,14 @@ class CSS:
         style_sheet_id: dom.StyleSheetId,
         range: SourceRange,
         text: str,
-        session_id: str | None = None,
     ) -> SetContainerQueryConditionTextResult:
         params = SetContainerQueryConditionTextParams(
             style_sheet_id=style_sheet_id, range=range, text=text
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=CSSCommand.SET_CONTAINER_QUERY_CONDITION_TEXT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(SetContainerQueryConditionTextResult, result)
 
@@ -666,7 +608,6 @@ class CSS:
         style_sheet_id: dom.StyleSheetId,
         range: SourceRange,
         text: str,
-        session_id: str | None = None,
     ) -> SetSupportsTextResult:
         """
         Modifies the expression of a supports at-rule.
@@ -675,10 +616,9 @@ class CSS:
             style_sheet_id=style_sheet_id, range=range, text=text
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=CSSCommand.SET_SUPPORTS_TEXT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(SetSupportsTextResult, result)
 
@@ -688,7 +628,6 @@ class CSS:
         style_sheet_id: dom.StyleSheetId,
         range: SourceRange,
         text: str,
-        session_id: str | None = None,
     ) -> SetNavigationTextResult:
         """
         Modifies the expression of a navigation at-rule.
@@ -697,10 +636,9 @@ class CSS:
             style_sheet_id=style_sheet_id, range=range, text=text
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=CSSCommand.SET_NAVIGATION_TEXT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(SetNavigationTextResult, result)
 
@@ -710,7 +648,6 @@ class CSS:
         style_sheet_id: dom.StyleSheetId,
         range: SourceRange,
         text: str,
-        session_id: str | None = None,
     ) -> SetScopeTextResult:
         """
         Modifies the expression of a scope at-rule.
@@ -719,10 +656,9 @@ class CSS:
             style_sheet_id=style_sheet_id, range=range, text=text
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=CSSCommand.SET_SCOPE_TEXT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(SetScopeTextResult, result)
 
@@ -732,7 +668,6 @@ class CSS:
         style_sheet_id: dom.StyleSheetId,
         range: SourceRange,
         selector: str,
-        session_id: str | None = None,
     ) -> SetRuleSelectorResult:
         """
         Modifies the rule selector.
@@ -741,10 +676,9 @@ class CSS:
             style_sheet_id=style_sheet_id, range=range, selector=selector
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=CSSCommand.SET_RULE_SELECTOR,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(SetRuleSelectorResult, result)
 
@@ -753,17 +687,15 @@ class CSS:
         *,
         style_sheet_id: dom.StyleSheetId,
         text: str,
-        session_id: str | None = None,
     ) -> SetStyleSheetTextResult:
         """
         Sets the new stylesheet text.
         """
         params = SetStyleSheetTextParams(style_sheet_id=style_sheet_id, text=text)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=CSSCommand.SET_STYLE_SHEET_TEXT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(SetStyleSheetTextResult, result)
 
@@ -772,7 +704,6 @@ class CSS:
         *,
         edits: list[StyleDeclarationEdit],
         node_for_property_syntax_validation: dom.NodeId | None = None,
-        session_id: str | None = None,
     ) -> SetStyleTextsResult:
         """
         Applies specified style edits one after another in the given order.
@@ -782,53 +713,46 @@ class CSS:
             node_for_property_syntax_validation=node_for_property_syntax_validation,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=CSSCommand.SET_STYLE_TEXTS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(SetStyleTextsResult, result)
 
     async def start_rule_usage_tracking(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Enables the selector recording.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=CSSCommand.START_RULE_USAGE_TRACKING,
             params=None,
-            session_id=session_id,
         )
 
     async def stop_rule_usage_tracking(
         self,
-        session_id: str | None = None,
     ) -> StopRuleUsageTrackingResult:
         """
         Stop tracking rule usage and return the list of rules that were used since last
         call to `takeCoverageDelta` (or since start of coverage instrumentation).
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=CSSCommand.STOP_RULE_USAGE_TRACKING,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(StopRuleUsageTrackingResult, result)
 
     async def take_coverage_delta(
         self,
-        session_id: str | None = None,
     ) -> TakeCoverageDeltaResult:
         """
         Obtain list of rules that became used since last call to this method (or since
         start of coverage instrumentation).
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=CSSCommand.TAKE_COVERAGE_DELTA,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(TakeCoverageDeltaResult, result)
 
@@ -836,15 +760,13 @@ class CSS:
         self,
         *,
         enabled: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         Enables/disables rendering of local CSS fonts (enabled by default).
         """
         params = SetLocalFontsEnabledParams(enabled=enabled)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=CSSCommand.SET_LOCAL_FONTS_ENABLED,
             params=encode_cdp(params),
-            session_id=session_id,
         )

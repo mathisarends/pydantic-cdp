@@ -23,9 +23,3 @@ class EntryAddedEvent:
     """
 
     entry: LogEntry = field(metadata={"cdp_name": "entry"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )

@@ -29,12 +29,6 @@ class BufferUsageEvent:
     )
     event_count: float | None = field(default=None, metadata={"cdp_name": "eventCount"})
     value: float | None = field(default=None, metadata={"cdp_name": "value"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -46,12 +40,6 @@ class DataCollectedEvent:
     """
 
     value: list[dict[str, Any]] = field(metadata={"cdp_name": "value"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -70,10 +58,4 @@ class TracingCompleteEvent:
     )
     stream_compression: StreamCompression | None = field(
         default=None, metadata={"cdp_name": "streamCompression"}
-    )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
     )

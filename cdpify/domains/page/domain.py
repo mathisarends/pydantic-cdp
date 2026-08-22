@@ -7,8 +7,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Literal
 
 from cdpify.codec import decode_cdp, encode_cdp
+from cdpify.executor import CommandExecutor
 from cdpify.shared.decorators import deprecated
-from cdpify.transport import Transport
 
 from .commands import (
     AddCompilationCacheParams,
@@ -96,25 +96,23 @@ if TYPE_CHECKING:
 
 
 class Page:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     @deprecated()
     async def add_script_to_evaluate_on_load(
         self,
         *,
         script_source: str,
-        session_id: str | None = None,
     ) -> AddScriptToEvaluateOnLoadResult:
         """
         Deprecated, please use addScriptToEvaluateOnNewDocument instead.
         """
         params = AddScriptToEvaluateOnLoadParams(script_source=script_source)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=PageCommand.ADD_SCRIPT_TO_EVALUATE_ON_LOAD,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(AddScriptToEvaluateOnLoadResult, result)
 
@@ -125,7 +123,6 @@ class Page:
         world_name: str | None = None,
         include_command_line_api: bool | None = None,
         run_immediately: bool | None = None,
-        session_id: str | None = None,
     ) -> AddScriptToEvaluateOnNewDocumentResult:
         """
         Evaluates given script in every frame upon creation (before loading frame's
@@ -138,24 +135,21 @@ class Page:
             run_immediately=run_immediately,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=PageCommand.ADD_SCRIPT_TO_EVALUATE_ON_NEW_DOCUMENT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(AddScriptToEvaluateOnNewDocumentResult, result)
 
     async def bring_to_front(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Brings page to front (activates tab).
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.BRING_TO_FRONT,
             params=None,
-            session_id=session_id,
         )
 
     async def capture_screenshot(
@@ -167,7 +161,6 @@ class Page:
         from_surface: bool | None = None,
         capture_beyond_viewport: bool | None = None,
         optimize_for_speed: bool | None = None,
-        session_id: str | None = None,
     ) -> CaptureScreenshotResult:
         """
         Capture page screenshot.
@@ -181,10 +174,9 @@ class Page:
             optimize_for_speed=optimize_for_speed,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=PageCommand.CAPTURE_SCREENSHOT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(CaptureScreenshotResult, result)
 
@@ -192,7 +184,6 @@ class Page:
         self,
         *,
         format: Literal["mhtml"] | None = None,
-        session_id: str | None = None,
     ) -> CaptureSnapshotResult:
         """
         Returns a snapshot of the page as a string. For MHTML format, the serialization
@@ -200,53 +191,46 @@ class Page:
         """
         params = CaptureSnapshotParams(format=format)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=PageCommand.CAPTURE_SNAPSHOT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(CaptureSnapshotResult, result)
 
     @deprecated()
     async def clear_device_metrics_override(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Clears the overridden device metrics.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.CLEAR_DEVICE_METRICS_OVERRIDE,
             params=None,
-            session_id=session_id,
         )
 
     @deprecated()
     async def clear_device_orientation_override(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Clears the overridden Device Orientation.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.CLEAR_DEVICE_ORIENTATION_OVERRIDE,
             params=None,
-            session_id=session_id,
         )
 
     @deprecated()
     async def clear_geolocation_override(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Clears the overridden Geolocation Position and Error.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.CLEAR_GEOLOCATION_OVERRIDE,
             params=None,
-            session_id=session_id,
         )
 
     async def create_isolated_world(
@@ -256,7 +240,6 @@ class Page:
         world_name: str | None = None,
         grant_univeral_access: bool | None = None,
         content_security_policy: str | None = None,
-        session_id: str | None = None,
     ) -> CreateIsolatedWorldResult:
         """
         Creates an isolated world for the given frame.
@@ -268,10 +251,9 @@ class Page:
             content_security_policy=content_security_policy,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=PageCommand.CREATE_ISOLATED_WORLD,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(CreateIsolatedWorldResult, result)
 
@@ -281,37 +263,32 @@ class Page:
         *,
         cookie_name: str,
         url: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Deletes browser cookie with given name, domain and path.
         """
         params = DeleteCookieParams(cookie_name=cookie_name, url=url)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.DELETE_COOKIE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def disable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Disables page domain notifications.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.DISABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def enable(
         self,
         *,
         enable_file_chooser_opened_event: bool | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Enables page domain notifications.
@@ -320,17 +297,15 @@ class Page:
             enable_file_chooser_opened_event=enable_file_chooser_opened_event
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.ENABLE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def get_app_manifest(
         self,
         *,
         manifest_id: str | None = None,
-        session_id: str | None = None,
     ) -> GetAppManifestResult:
         """
         Gets the processed manifest for this current document. This API always waits
@@ -340,52 +315,45 @@ class Page:
         """
         params = GetAppManifestParams(manifest_id=manifest_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=PageCommand.GET_APP_MANIFEST,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetAppManifestResult, result)
 
     async def get_installability_errors(
         self,
-        session_id: str | None = None,
     ) -> GetInstallabilityErrorsResult:
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=PageCommand.GET_INSTALLABILITY_ERRORS,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetInstallabilityErrorsResult, result)
 
     @deprecated()
     async def get_manifest_icons(
         self,
-        session_id: str | None = None,
     ) -> GetManifestIconsResult:
         """
         Deprecated because it's not guaranteed that the returned icon is in fact the
         one used for PWA installation.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=PageCommand.GET_MANIFEST_ICONS,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetManifestIconsResult, result)
 
     async def get_app_id(
         self,
-        session_id: str | None = None,
     ) -> GetAppIdResult:
         """
         Returns the unique (PWA) app id. Only returns values if the feature flag
         'WebAppEnableManifestId' is enabled
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=PageCommand.GET_APP_ID,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetAppIdResult, result)
 
@@ -393,71 +361,61 @@ class Page:
         self,
         *,
         frame_id: FrameId,
-        session_id: str | None = None,
     ) -> GetAdScriptAncestryResult:
         params = GetAdScriptAncestryParams(frame_id=frame_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=PageCommand.GET_AD_SCRIPT_ANCESTRY,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetAdScriptAncestryResult, result)
 
     async def get_frame_tree(
         self,
-        session_id: str | None = None,
     ) -> GetFrameTreeResult:
         """
         Returns present frame tree structure.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=PageCommand.GET_FRAME_TREE,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetFrameTreeResult, result)
 
     async def get_layout_metrics(
         self,
-        session_id: str | None = None,
     ) -> GetLayoutMetricsResult:
         """
         Returns metrics relating to the layouting of the page, such as viewport
         bounds/scale.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=PageCommand.GET_LAYOUT_METRICS,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetLayoutMetricsResult, result)
 
     async def get_navigation_history(
         self,
-        session_id: str | None = None,
     ) -> GetNavigationHistoryResult:
         """
         Returns navigation history for the current page.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=PageCommand.GET_NAVIGATION_HISTORY,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetNavigationHistoryResult, result)
 
     async def reset_navigation_history(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Resets navigation history for the current page.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.RESET_NAVIGATION_HISTORY,
             params=None,
-            session_id=session_id,
         )
 
     async def get_resource_content(
@@ -465,31 +423,27 @@ class Page:
         *,
         frame_id: FrameId,
         url: str,
-        session_id: str | None = None,
     ) -> GetResourceContentResult:
         """
         Returns content of the given resource.
         """
         params = GetResourceContentParams(frame_id=frame_id, url=url)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=PageCommand.GET_RESOURCE_CONTENT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetResourceContentResult, result)
 
     async def get_resource_tree(
         self,
-        session_id: str | None = None,
     ) -> GetResourceTreeResult:
         """
         Returns present frame / resource tree structure.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=PageCommand.GET_RESOURCE_TREE,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetResourceTreeResult, result)
 
@@ -498,7 +452,6 @@ class Page:
         *,
         accept: bool,
         prompt_text: str | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Accepts or dismisses a JavaScript initiated dialog (alert, confirm, prompt, or
@@ -506,10 +459,9 @@ class Page:
         """
         params = HandleJavaScriptDialogParams(accept=accept, prompt_text=prompt_text)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.HANDLE_JAVA_SCRIPT_DIALOG,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def navigate(
@@ -520,7 +472,6 @@ class Page:
         transition_type: TransitionType | None = None,
         frame_id: FrameId | None = None,
         referrer_policy: ReferrerPolicy | None = None,
-        session_id: str | None = None,
     ) -> NavigateResult:
         """
         Navigates current page to the given URL.
@@ -533,10 +484,9 @@ class Page:
             referrer_policy=referrer_policy,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=PageCommand.NAVIGATE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(NavigateResult, result)
 
@@ -544,17 +494,15 @@ class Page:
         self,
         *,
         entry_id: int,
-        session_id: str | None = None,
     ) -> None:
         """
         Navigates current page to the given history entry.
         """
         params = NavigateToHistoryEntryParams(entry_id=entry_id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.NAVIGATE_TO_HISTORY_ENTRY,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def print_to_pdf(
@@ -577,7 +525,6 @@ class Page:
         transfer_mode: Literal["ReturnAsBase64", "ReturnAsStream"] | None = None,
         generate_tagged_pdf: bool | None = None,
         generate_document_outline: bool | None = None,
-        session_id: str | None = None,
     ) -> PrintToPDFResult:
         """
         Print page as PDF.
@@ -602,10 +549,9 @@ class Page:
             generate_document_outline=generate_document_outline,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=PageCommand.PRINT_TO_PDF,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(PrintToPDFResult, result)
 
@@ -615,7 +561,6 @@ class Page:
         ignore_cache: bool | None = None,
         script_to_evaluate_on_load: str | None = None,
         loader_id: network.LoaderId | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Reloads given page optionally ignoring the cache.
@@ -626,10 +571,9 @@ class Page:
             loader_id=loader_id,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.RELOAD,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     @deprecated()
@@ -637,51 +581,45 @@ class Page:
         self,
         *,
         identifier: ScriptIdentifier,
-        session_id: str | None = None,
     ) -> None:
         """
         Deprecated, please use removeScriptToEvaluateOnNewDocument instead.
         """
         params = RemoveScriptToEvaluateOnLoadParams(identifier=identifier)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.REMOVE_SCRIPT_TO_EVALUATE_ON_LOAD,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def remove_script_to_evaluate_on_new_document(
         self,
         *,
         identifier: ScriptIdentifier,
-        session_id: str | None = None,
     ) -> None:
         """
         Removes given script from the list.
         """
         params = RemoveScriptToEvaluateOnNewDocumentParams(identifier=identifier)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.REMOVE_SCRIPT_TO_EVALUATE_ON_NEW_DOCUMENT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def screencast_frame_ack(
         self,
         *,
-        screencast_frame_ack_session_id: int,
-        session_id: str | None = None,
+        session_id: int,
     ) -> None:
         """
         Acknowledges that a screencast frame has been received by the frontend.
         """
-        params = ScreencastFrameAckParams(session_id=screencast_frame_ack_session_id)
+        params = ScreencastFrameAckParams(session_id=session_id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.SCREENCAST_FRAME_ACK,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def search_in_resource(
@@ -692,7 +630,6 @@ class Page:
         query: str,
         case_sensitive: bool | None = None,
         is_regex: bool | None = None,
-        session_id: str | None = None,
     ) -> SearchInResourceResult:
         """
         Searches for given string in resource content.
@@ -705,10 +642,9 @@ class Page:
             is_regex=is_regex,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=PageCommand.SEARCH_IN_RESOURCE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(SearchInResourceResult, result)
 
@@ -716,51 +652,45 @@ class Page:
         self,
         *,
         enabled: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         Enable Chrome's experimental ad filter on all sites.
         """
         params = SetAdBlockingEnabledParams(enabled=enabled)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.SET_AD_BLOCKING_ENABLED,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_bypass_csp(
         self,
         *,
         enabled: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         Enable page Content Security Policy by-passing.
         """
         params = SetBypassCSPParams(enabled=enabled)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.SET_BYPASS_CSP,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def get_permissions_policy_state(
         self,
         *,
         frame_id: FrameId,
-        session_id: str | None = None,
     ) -> GetPermissionsPolicyStateResult:
         """
         Get Permissions Policy state on given frame.
         """
         params = GetPermissionsPolicyStateParams(frame_id=frame_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=PageCommand.GET_PERMISSIONS_POLICY_STATE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetPermissionsPolicyStateResult, result)
 
@@ -768,17 +698,15 @@ class Page:
         self,
         *,
         frame_id: FrameId,
-        session_id: str | None = None,
     ) -> GetOriginTrialsResult:
         """
         Get Origin Trials on given frame.
         """
         params = GetOriginTrialsParams(frame_id=frame_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=PageCommand.GET_ORIGIN_TRIALS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetOriginTrialsResult, result)
 
@@ -798,7 +726,6 @@ class Page:
         dont_set_visible_size: bool | None = None,
         screen_orientation: emulation.ScreenOrientation | None = None,
         viewport: Viewport | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Overrides the values of device screen dimensions (window.screen.width,
@@ -820,10 +747,9 @@ class Page:
             viewport=viewport,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.SET_DEVICE_METRICS_OVERRIDE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     @deprecated()
@@ -833,17 +759,15 @@ class Page:
         alpha: float,
         beta: float,
         gamma: float,
-        session_id: str | None = None,
     ) -> None:
         """
         Overrides the Device Orientation.
         """
         params = SetDeviceOrientationOverrideParams(alpha=alpha, beta=beta, gamma=gamma)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.SET_DEVICE_ORIENTATION_OVERRIDE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_font_families(
@@ -851,7 +775,6 @@ class Page:
         *,
         font_families: FontFamilies,
         for_scripts: list[ScriptFontFamilies] | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Set generic font families.
@@ -860,27 +783,24 @@ class Page:
             font_families=font_families, for_scripts=for_scripts
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.SET_FONT_FAMILIES,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_font_sizes(
         self,
         *,
         font_sizes: FontSizes,
-        session_id: str | None = None,
     ) -> None:
         """
         Set default font sizes.
         """
         params = SetFontSizesParams(font_sizes=font_sizes)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.SET_FONT_SIZES,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_document_content(
@@ -888,17 +808,15 @@ class Page:
         *,
         frame_id: FrameId,
         html: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Sets given markup as the document's HTML.
         """
         params = SetDocumentContentParams(frame_id=frame_id, html=html)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.SET_DOCUMENT_CONTENT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     @deprecated()
@@ -907,7 +825,6 @@ class Page:
         *,
         behavior: Literal["deny", "allow", "default"],
         download_path: str | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Set the behavior when downloading a file.
@@ -916,10 +833,9 @@ class Page:
             behavior=behavior, download_path=download_path
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.SET_DOWNLOAD_BEHAVIOR,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     @deprecated()
@@ -929,7 +845,6 @@ class Page:
         latitude: float | None = None,
         longitude: float | None = None,
         accuracy: float | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Overrides the Geolocation Position or Error. Omitting any of the parameters
@@ -939,27 +854,24 @@ class Page:
             latitude=latitude, longitude=longitude, accuracy=accuracy
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.SET_GEOLOCATION_OVERRIDE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_lifecycle_events_enabled(
         self,
         *,
         enabled: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         Controls whether page will emit lifecycle events.
         """
         params = SetLifecycleEventsEnabledParams(enabled=enabled)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.SET_LIFECYCLE_EVENTS_ENABLED,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     @deprecated()
@@ -968,7 +880,6 @@ class Page:
         *,
         enabled: bool,
         configuration: Literal["mobile", "desktop"] | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Toggles mouse event-based touch event emulation.
@@ -977,10 +888,9 @@ class Page:
             enabled=enabled, configuration=configuration
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.SET_TOUCH_EMULATION_ENABLED,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def start_screencast(
@@ -993,7 +903,6 @@ class Page:
         every_nth_frame: int | None = None,
         max_frames_in_flight: int | None = None,
         send_last_frame: bool | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Starts sending each frame using the `screencastFrame` event.
@@ -1008,10 +917,9 @@ class Page:
             send_last_frame=send_last_frame,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.START_SCREENCAST,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def start_screen_recording(
@@ -1021,7 +929,6 @@ class Page:
         max_width: int | None = None,
         max_height: int | None = None,
         frame_rate: int | None = None,
-        session_id: str | None = None,
     ) -> StartScreenRecordingResult:
         """
         Starts screencast video recording.
@@ -1033,71 +940,61 @@ class Page:
             frame_rate=frame_rate,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=PageCommand.START_SCREEN_RECORDING,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(StartScreenRecordingResult, result)
 
     async def stop_screen_recording(
         self,
-        session_id: str | None = None,
     ) -> StopScreenRecordingResult:
         """
         Stops screencast video recording.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=PageCommand.STOP_SCREEN_RECORDING,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(StopScreenRecordingResult, result)
 
     async def stop_loading(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Force the page stop all navigations and pending resource fetches.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.STOP_LOADING,
             params=None,
-            session_id=session_id,
         )
 
     async def crash(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Crashes renderer on the IO thread, generates minidumps.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.CRASH,
             params=None,
-            session_id=session_id,
         )
 
     async def close(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Tries to close page, running its beforeunload hooks, if any.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.CLOSE,
             params=None,
-            session_id=session_id,
         )
 
     async def set_web_lifecycle_state(
         self,
         *,
         state: Literal["frozen", "active"],
-        session_id: str | None = None,
     ) -> None:
         """
         Tries to update the web lifecycle state of the page. It will transition the
@@ -1105,30 +1002,26 @@ class Page:
         """
         params = SetWebLifecycleStateParams(state=state)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.SET_WEB_LIFECYCLE_STATE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def stop_screencast(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Stops sending each frame in the `screencastFrame`.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.STOP_SCREENCAST,
             params=None,
-            session_id=session_id,
         )
 
     async def produce_compilation_cache(
         self,
         *,
         scripts: list[CompilationCacheParams],
-        session_id: str | None = None,
     ) -> None:
         """
         Requests backend to produce compilation cache for the specified scripts.
@@ -1140,10 +1033,9 @@ class Page:
         """
         params = ProduceCompilationCacheParams(scripts=scripts)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.PRODUCE_COMPILATION_CACHE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def add_compilation_cache(
@@ -1151,7 +1043,6 @@ class Page:
         *,
         url: str,
         data: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Seeds compilation cache for given url. Compilation cache does not survive
@@ -1159,23 +1050,20 @@ class Page:
         """
         params = AddCompilationCacheParams(url=url, data=data)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.ADD_COMPILATION_CACHE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def clear_compilation_cache(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Clears seeded compilation cache.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.CLEAR_COMPILATION_CACHE,
             params=None,
-            session_id=session_id,
         )
 
     async def set_spc_transaction_mode(
@@ -1188,7 +1076,6 @@ class Page:
             "autoReject",
             "autoOptOut",
         ],
-        session_id: str | None = None,
     ) -> None:
         """
         Sets the Secure Payment Confirmation transaction mode.
@@ -1196,17 +1083,15 @@ class Page:
         """
         params = SetSPCTransactionModeParams(mode=mode)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.SET_SPC_TRANSACTION_MODE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_rph_registration_mode(
         self,
         *,
         mode: Literal["none", "autoAccept", "autoReject"],
-        session_id: str | None = None,
     ) -> None:
         """
         Extensions for Custom Handlers API:
@@ -1214,10 +1099,9 @@ class Page:
         """
         params = SetRPHRegistrationModeParams(mode=mode)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.SET_RPH_REGISTRATION_MODE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def generate_test_report(
@@ -1225,31 +1109,27 @@ class Page:
         *,
         message: str,
         group: str | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Generates a report for testing.
         """
         params = GenerateTestReportParams(message=message, group=group)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.GENERATE_TEST_REPORT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def wait_for_debugger(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Pauses page execution. Can be resumed using generic
         Runtime.runIfWaitingForDebugger.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.WAIT_FOR_DEBUGGER,
             params=None,
-            session_id=session_id,
         )
 
     async def set_intercept_file_chooser_dialog(
@@ -1257,7 +1137,6 @@ class Page:
         *,
         enabled: bool,
         cancel: bool | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Intercept file chooser requests and transfer control to protocol clients. When
@@ -1266,17 +1145,15 @@ class Page:
         """
         params = SetInterceptFileChooserDialogParams(enabled=enabled, cancel=cancel)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.SET_INTERCEPT_FILE_CHOOSER_DIALOG,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_prerendering_allowed(
         self,
         *,
         is_allowed: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         Enable/disable prerendering manually. This command is a short-term solution for
@@ -1287,17 +1164,15 @@ class Page:
         """
         params = SetPrerenderingAllowedParams(is_allowed=is_allowed)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=PageCommand.SET_PRERENDERING_ALLOWED,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def get_annotated_page_content(
         self,
         *,
         include_actionable_information: bool | None = None,
-        session_id: str | None = None,
     ) -> GetAnnotatedPageContentResult:
         """
         Get the annotated page content for the main frame. This is an experimental
@@ -1307,9 +1182,8 @@ class Page:
             include_actionable_information=include_actionable_information
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=PageCommand.GET_ANNOTATED_PAGE_CONTENT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetAnnotatedPageContentResult, result)

@@ -19,12 +19,6 @@ class HeapProfilerEvent(StrEnum):
 @dataclass(kw_only=True, slots=True)
 class AddHeapSnapshotChunkEvent:
     chunk: str = field(metadata={"cdp_name": "chunk"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -35,12 +29,6 @@ class HeapStatsUpdateEvent:
     """
 
     stats_update: list[int] = field(metadata={"cdp_name": "statsUpdate"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -54,12 +42,6 @@ class LastSeenObjectIdEvent:
 
     last_seen_object_id: int = field(metadata={"cdp_name": "lastSeenObjectId"})
     timestamp: float = field(metadata={"cdp_name": "timestamp"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -67,19 +49,8 @@ class ReportHeapSnapshotProgressEvent:
     done: int = field(metadata={"cdp_name": "done"})
     total: int = field(metadata={"cdp_name": "total"})
     finished: bool | None = field(default=None, metadata={"cdp_name": "finished"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
 class ResetProfilesEvent:
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
+    pass

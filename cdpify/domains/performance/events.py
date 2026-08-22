@@ -24,9 +24,3 @@ class MetricsEvent:
 
     metrics: list[Metric] = field(metadata={"cdp_name": "metrics"})
     title: str = field(metadata={"cdp_name": "title"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )

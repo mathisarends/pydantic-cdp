@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import encode_cdp
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .commands import (
     EventBreakpointsCommand,
@@ -15,52 +15,46 @@ from .commands import (
 
 
 class EventBreakpoints:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def set_instrumentation_breakpoint(
         self,
         *,
         event_name: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Sets breakpoint on particular native event.
         """
         params = SetInstrumentationBreakpointParams(event_name=event_name)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EventBreakpointsCommand.SET_INSTRUMENTATION_BREAKPOINT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def remove_instrumentation_breakpoint(
         self,
         *,
         event_name: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Removes breakpoint on particular native event.
         """
         params = RemoveInstrumentationBreakpointParams(event_name=event_name)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=EventBreakpointsCommand.REMOVE_INSTRUMENTATION_BREAKPOINT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def disable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Removes all breakpoints
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=EventBreakpointsCommand.DISABLE,
             params=None,
-            session_id=session_id,
         )

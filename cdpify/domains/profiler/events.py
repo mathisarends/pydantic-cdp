@@ -27,12 +27,6 @@ class ConsoleProfileFinishedEvent:
     location: debugger.Location = field(metadata={"cdp_name": "location"})
     profile: Profile = field(metadata={"cdp_name": "profile"})
     title: str | None = field(default=None, metadata={"cdp_name": "title"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -44,12 +38,6 @@ class ConsoleProfileStartedEvent:
     id: str = field(metadata={"cdp_name": "id"})
     location: debugger.Location = field(metadata={"cdp_name": "location"})
     title: str | None = field(default=None, metadata={"cdp_name": "title"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -64,9 +52,3 @@ class PreciseCoverageDeltaUpdateEvent:
     timestamp: float = field(metadata={"cdp_name": "timestamp"})
     occasion: str = field(metadata={"cdp_name": "occasion"})
     result: list[ScriptCoverage] = field(metadata={"cdp_name": "result"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )

@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import encode_cdp
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .commands import (
     EnableParams,
@@ -14,14 +14,13 @@ from .commands import (
 
 
 class PerformanceTimeline:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def enable(
         self,
         *,
         event_types: list[str],
-        session_id: str | None = None,
     ) -> None:
         """
         Previously buffered events would be reported before method returns. See also:
@@ -29,8 +28,7 @@ class PerformanceTimeline:
         """
         params = EnableParams(event_types=event_types)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=PerformanceTimelineCommand.ENABLE,
             params=encode_cdp(params),
-            session_id=session_id,
         )

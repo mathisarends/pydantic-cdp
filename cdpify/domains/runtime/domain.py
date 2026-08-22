@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .commands import (
     AddBindingParams,
@@ -48,8 +48,8 @@ from .types import (
 
 
 class Runtime:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def await_promise(
         self,
@@ -57,7 +57,6 @@ class Runtime:
         promise_object_id: RemoteObjectId,
         return_by_value: bool | None = None,
         generate_preview: bool | None = None,
-        session_id: str | None = None,
     ) -> AwaitPromiseResult:
         """
         Add handler to promise with given promise object id.
@@ -68,10 +67,9 @@ class Runtime:
             generate_preview=generate_preview,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=RuntimeCommand.AWAIT_PROMISE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(AwaitPromiseResult, result)
 
@@ -91,7 +89,6 @@ class Runtime:
         throw_on_side_effect: bool | None = None,
         unique_context_id: str | None = None,
         serialization_options: SerializationOptions | None = None,
-        session_id: str | None = None,
     ) -> CallFunctionOnResult:
         """
         Calls function with given declaration on the given object. Object group of the
@@ -113,10 +110,9 @@ class Runtime:
             serialization_options=serialization_options,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=RuntimeCommand.CALL_FUNCTION_ON,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(CallFunctionOnResult, result)
 
@@ -127,7 +123,6 @@ class Runtime:
         source_url: str,
         persist_script: bool,
         execution_context_id: ExecutionContextId | None = None,
-        session_id: str | None = None,
     ) -> CompileScriptResult:
         """
         Compiles expression.
@@ -139,52 +134,45 @@ class Runtime:
             execution_context_id=execution_context_id,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=RuntimeCommand.COMPILE_SCRIPT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(CompileScriptResult, result)
 
     async def disable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Disables reporting of execution contexts creation.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=RuntimeCommand.DISABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def discard_console_entries(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Discards collected exceptions and console API calls.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=RuntimeCommand.DISCARD_CONSOLE_ENTRIES,
             params=None,
-            session_id=session_id,
         )
 
     async def enable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Enables reporting of execution contexts creation by means of
         `executionContextCreated` event. When the reporting gets enabled the event will
         be sent immediately for each existing execution context.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=RuntimeCommand.ENABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def evaluate(
@@ -206,7 +194,6 @@ class Runtime:
         allow_unsafe_eval_blocked_by_csp: bool | None = None,
         unique_context_id: str | None = None,
         serialization_options: SerializationOptions | None = None,
-        session_id: str | None = None,
     ) -> EvaluateResult:
         """
         Evaluates expression on global object.
@@ -230,39 +217,34 @@ class Runtime:
             serialization_options=serialization_options,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=RuntimeCommand.EVALUATE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(EvaluateResult, result)
 
     async def get_isolate_id(
         self,
-        session_id: str | None = None,
     ) -> GetIsolateIdResult:
         """
         Returns the isolate id.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=RuntimeCommand.GET_ISOLATE_ID,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetIsolateIdResult, result)
 
     async def get_heap_usage(
         self,
-        session_id: str | None = None,
     ) -> GetHeapUsageResult:
         """
         Returns the JavaScript heap usage. It is the total usage of the corresponding
         isolate not scoped to a particular Runtime.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=RuntimeCommand.GET_HEAP_USAGE,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetHeapUsageResult, result)
 
@@ -274,7 +256,6 @@ class Runtime:
         accessor_properties_only: bool | None = None,
         generate_preview: bool | None = None,
         non_indexed_properties_only: bool | None = None,
-        session_id: str | None = None,
     ) -> GetPropertiesResult:
         """
         Returns properties of a given object. Object group of the result is inherited
@@ -288,10 +269,9 @@ class Runtime:
             non_indexed_properties_only=non_indexed_properties_only,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=RuntimeCommand.GET_PROPERTIES,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetPropertiesResult, result)
 
@@ -299,7 +279,6 @@ class Runtime:
         self,
         *,
         execution_context_id: ExecutionContextId | None = None,
-        session_id: str | None = None,
     ) -> GlobalLexicalScopeNamesResult:
         """
         Returns all let, const and class variables from global scope.
@@ -308,10 +287,9 @@ class Runtime:
             execution_context_id=execution_context_id
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=RuntimeCommand.GLOBAL_LEXICAL_SCOPE_NAMES,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GlobalLexicalScopeNamesResult, result)
 
@@ -320,16 +298,14 @@ class Runtime:
         *,
         prototype_object_id: RemoteObjectId,
         object_group: str | None = None,
-        session_id: str | None = None,
     ) -> QueryObjectsResult:
         params = QueryObjectsParams(
             prototype_object_id=prototype_object_id, object_group=object_group
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=RuntimeCommand.QUERY_OBJECTS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(QueryObjectsResult, result)
 
@@ -337,47 +313,41 @@ class Runtime:
         self,
         *,
         object_id: RemoteObjectId,
-        session_id: str | None = None,
     ) -> None:
         """
         Releases remote object with given id.
         """
         params = ReleaseObjectParams(object_id=object_id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=RuntimeCommand.RELEASE_OBJECT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def release_object_group(
         self,
         *,
         object_group: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Releases all remote objects that belong to a given group.
         """
         params = ReleaseObjectGroupParams(object_group=object_group)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=RuntimeCommand.RELEASE_OBJECT_GROUP,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def run_if_waiting_for_debugger(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Tells inspected instance to run if it was waiting for debugger to attach.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=RuntimeCommand.RUN_IF_WAITING_FOR_DEBUGGER,
             params=None,
-            session_id=session_id,
         )
 
     async def run_script(
@@ -391,7 +361,6 @@ class Runtime:
         return_by_value: bool | None = None,
         generate_preview: bool | None = None,
         await_promise: bool | None = None,
-        session_id: str | None = None,
     ) -> RunScriptResult:
         """
         Runs script with given id in a given context.
@@ -407,10 +376,9 @@ class Runtime:
             await_promise=await_promise,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=RuntimeCommand.RUN_SCRIPT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(RunScriptResult, result)
 
@@ -418,59 +386,51 @@ class Runtime:
         self,
         *,
         max_depth: int,
-        session_id: str | None = None,
     ) -> None:
         """
         Enables or disables async call stacks tracking.
         """
         params = SetAsyncCallStackDepthParams(max_depth=max_depth)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=RuntimeCommand.SET_ASYNC_CALL_STACK_DEPTH,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_custom_object_formatter_enabled(
         self,
         *,
         enabled: bool,
-        session_id: str | None = None,
     ) -> None:
         params = SetCustomObjectFormatterEnabledParams(enabled=enabled)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=RuntimeCommand.SET_CUSTOM_OBJECT_FORMATTER_ENABLED,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_max_call_stack_size_to_capture(
         self,
         *,
         size: int,
-        session_id: str | None = None,
     ) -> None:
         params = SetMaxCallStackSizeToCaptureParams(size=size)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=RuntimeCommand.SET_MAX_CALL_STACK_SIZE_TO_CAPTURE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def terminate_execution(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Terminate current or next JavaScript execution. Will cancel the termination
         when the outer-most script execution ends.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=RuntimeCommand.TERMINATE_EXECUTION,
             params=None,
-            session_id=session_id,
         )
 
     async def add_binding(
@@ -479,7 +439,6 @@ class Runtime:
         name: str,
         execution_context_id: ExecutionContextId | None = None,
         execution_context_name: str | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         If executionContextId is empty, adds binding with the given name on the global
@@ -494,17 +453,15 @@ class Runtime:
             execution_context_name=execution_context_name,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=RuntimeCommand.ADD_BINDING,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def remove_binding(
         self,
         *,
         name: str,
-        session_id: str | None = None,
     ) -> None:
         """
         This method does not remove binding function from global object but
@@ -512,17 +469,15 @@ class Runtime:
         """
         params = RemoveBindingParams(name=name)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=RuntimeCommand.REMOVE_BINDING,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def get_exception_details(
         self,
         *,
         error_object_id: RemoteObjectId,
-        session_id: str | None = None,
     ) -> GetExceptionDetailsResult:
         """
         This method tries to lookup and populate exception details for a JavaScript
@@ -532,9 +487,8 @@ class Runtime:
         """
         params = GetExceptionDetailsParams(error_object_id=error_object_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=RuntimeCommand.GET_EXCEPTION_DETAILS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetExceptionDetailsResult, result)

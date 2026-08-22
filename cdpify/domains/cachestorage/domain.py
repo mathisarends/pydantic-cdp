@@ -7,7 +7,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .commands import (
     CacheStorageCommand,
@@ -30,24 +30,22 @@ if TYPE_CHECKING:
 
 
 class CacheStorage:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def delete_cache(
         self,
         *,
         cache_id: CacheId,
-        session_id: str | None = None,
     ) -> None:
         """
         Deletes a cache.
         """
         params = DeleteCacheParams(cache_id=cache_id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=CacheStorageCommand.DELETE_CACHE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def delete_entry(
@@ -55,17 +53,15 @@ class CacheStorage:
         *,
         cache_id: CacheId,
         request: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Deletes a cache entry.
         """
         params = DeleteEntryParams(cache_id=cache_id, request=request)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=CacheStorageCommand.DELETE_ENTRY,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def request_cache_names(
@@ -74,7 +70,6 @@ class CacheStorage:
         security_origin: str | None = None,
         storage_key: str | None = None,
         storage_bucket: storage.StorageBucket | None = None,
-        session_id: str | None = None,
     ) -> RequestCacheNamesResult:
         """
         Requests cache names.
@@ -85,10 +80,9 @@ class CacheStorage:
             storage_bucket=storage_bucket,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=CacheStorageCommand.REQUEST_CACHE_NAMES,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(RequestCacheNamesResult, result)
 
@@ -98,7 +92,6 @@ class CacheStorage:
         cache_id: CacheId,
         request_url: str,
         request_headers: list[Header],
-        session_id: str | None = None,
     ) -> RequestCachedResponseResult:
         """
         Fetches cache entry.
@@ -107,10 +100,9 @@ class CacheStorage:
             cache_id=cache_id, request_url=request_url, request_headers=request_headers
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=CacheStorageCommand.REQUEST_CACHED_RESPONSE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(RequestCachedResponseResult, result)
 
@@ -121,7 +113,6 @@ class CacheStorage:
         skip_count: int | None = None,
         page_size: int | None = None,
         path_filter: str | None = None,
-        session_id: str | None = None,
     ) -> RequestEntriesResult:
         """
         Requests data from cache.
@@ -133,9 +124,8 @@ class CacheStorage:
             path_filter=path_filter,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=CacheStorageCommand.REQUEST_ENTRIES,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(RequestEntriesResult, result)

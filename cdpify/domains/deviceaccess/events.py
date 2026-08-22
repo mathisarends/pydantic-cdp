@@ -26,9 +26,3 @@ class DeviceRequestPromptedEvent:
 
     id: RequestId = field(metadata={"cdp_name": "id"})
     devices: list[PromptDevice] = field(metadata={"cdp_name": "devices"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )

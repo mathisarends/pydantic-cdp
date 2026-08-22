@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .commands import (
     AddCredentialParams,
@@ -33,14 +33,13 @@ from .types import (
 
 
 class WebAuthn:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def enable(
         self,
         *,
         enable_ui: bool | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Enable the WebAuthn domain and start intercepting credential storage and
@@ -48,40 +47,35 @@ class WebAuthn:
         """
         params = EnableParams(enable_ui=enable_ui)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=WebAuthnCommand.ENABLE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def disable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Disable the WebAuthn domain.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=WebAuthnCommand.DISABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def add_virtual_authenticator(
         self,
         *,
         options: VirtualAuthenticatorOptions,
-        session_id: str | None = None,
     ) -> AddVirtualAuthenticatorResult:
         """
         Creates and adds a virtual authenticator.
         """
         params = AddVirtualAuthenticatorParams(options=options)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=WebAuthnCommand.ADD_VIRTUAL_AUTHENTICATOR,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(AddVirtualAuthenticatorResult, result)
 
@@ -92,7 +86,6 @@ class WebAuthn:
         is_bogus_signature: bool | None = None,
         is_bad_uv: bool | None = None,
         is_bad_up: bool | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Resets parameters isBogusSignature, isBadUV, isBadUP to false if they are not
@@ -105,27 +98,24 @@ class WebAuthn:
             is_bad_up=is_bad_up,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=WebAuthnCommand.SET_RESPONSE_OVERRIDE_BITS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def remove_virtual_authenticator(
         self,
         *,
         authenticator_id: AuthenticatorId,
-        session_id: str | None = None,
     ) -> None:
         """
         Removes the given authenticator.
         """
         params = RemoveVirtualAuthenticatorParams(authenticator_id=authenticator_id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=WebAuthnCommand.REMOVE_VIRTUAL_AUTHENTICATOR,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def add_credential(
@@ -133,7 +123,6 @@ class WebAuthn:
         *,
         authenticator_id: AuthenticatorId,
         credential: Credential,
-        session_id: str | None = None,
     ) -> None:
         """
         Adds the credential to the specified authenticator.
@@ -142,10 +131,9 @@ class WebAuthn:
             authenticator_id=authenticator_id, credential=credential
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=WebAuthnCommand.ADD_CREDENTIAL,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def get_credential(
@@ -153,7 +141,6 @@ class WebAuthn:
         *,
         authenticator_id: AuthenticatorId,
         credential_id: str,
-        session_id: str | None = None,
     ) -> GetCredentialResult:
         """
         Returns a single credential stored in the given virtual authenticator that
@@ -163,10 +150,9 @@ class WebAuthn:
             authenticator_id=authenticator_id, credential_id=credential_id
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=WebAuthnCommand.GET_CREDENTIAL,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetCredentialResult, result)
 
@@ -174,17 +160,15 @@ class WebAuthn:
         self,
         *,
         authenticator_id: AuthenticatorId,
-        session_id: str | None = None,
     ) -> GetCredentialsResult:
         """
         Returns all the credentials stored in the given virtual authenticator.
         """
         params = GetCredentialsParams(authenticator_id=authenticator_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=WebAuthnCommand.GET_CREDENTIALS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetCredentialsResult, result)
 
@@ -193,7 +177,6 @@ class WebAuthn:
         *,
         authenticator_id: AuthenticatorId,
         credential_id: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Removes a credential from the authenticator.
@@ -202,27 +185,24 @@ class WebAuthn:
             authenticator_id=authenticator_id, credential_id=credential_id
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=WebAuthnCommand.REMOVE_CREDENTIAL,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def clear_credentials(
         self,
         *,
         authenticator_id: AuthenticatorId,
-        session_id: str | None = None,
     ) -> None:
         """
         Clears all the credentials from the specified device.
         """
         params = ClearCredentialsParams(authenticator_id=authenticator_id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=WebAuthnCommand.CLEAR_CREDENTIALS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_user_verified(
@@ -230,7 +210,6 @@ class WebAuthn:
         *,
         authenticator_id: AuthenticatorId,
         is_user_verified: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         Sets whether User Verification succeeds or fails for an authenticator. The
@@ -240,10 +219,9 @@ class WebAuthn:
             authenticator_id=authenticator_id, is_user_verified=is_user_verified
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=WebAuthnCommand.SET_USER_VERIFIED,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_automatic_presence_simulation(
@@ -251,7 +229,6 @@ class WebAuthn:
         *,
         authenticator_id: AuthenticatorId,
         enabled: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         Sets whether tests of user presence will succeed immediately (if true) or fail
@@ -261,10 +238,9 @@ class WebAuthn:
             authenticator_id=authenticator_id, enabled=enabled
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=WebAuthnCommand.SET_AUTOMATIC_PRESENCE_SIMULATION,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_credential_properties(
@@ -277,7 +253,6 @@ class WebAuthn:
         active_cmtg_key_index: int | None = None,
         generate_cmtg_key_on_next_operation: bool | None = None,
         sign_count: int | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Allows setting credential properties.
@@ -293,8 +268,7 @@ class WebAuthn:
             sign_count=sign_count,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=WebAuthnCommand.SET_CREDENTIAL_PROPERTIES,
             params=encode_cdp(params),
-            session_id=session_id,
         )

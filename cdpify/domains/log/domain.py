@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import encode_cdp
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .commands import (
     LogCommand,
@@ -17,76 +17,66 @@ from .types import (
 
 
 class Log:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def clear(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Clears the log.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=LogCommand.CLEAR,
             params=None,
-            session_id=session_id,
         )
 
     async def disable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Disables log domain, prevents further log entries from being reported to the
         client.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=LogCommand.DISABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def enable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Enables log domain, sends the entries collected so far to the client by means
         of the `entryAdded` notification.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=LogCommand.ENABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def start_violations_report(
         self,
         *,
         config: list[ViolationSetting],
-        session_id: str | None = None,
     ) -> None:
         """
         start violation reporting.
         """
         params = StartViolationsReportParams(config=config)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=LogCommand.START_VIOLATIONS_REPORT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def stop_violations_report(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Stop violation reporting.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=LogCommand.STOP_VIOLATIONS_REPORT,
             params=None,
-            session_id=session_id,
         )

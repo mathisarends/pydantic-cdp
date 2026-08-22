@@ -25,12 +25,6 @@ class LoadCompleteEvent:
     """
 
     root: AXNode = field(metadata={"cdp_name": "root"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -41,9 +35,3 @@ class NodesUpdatedEvent:
     """
 
     nodes: list[AXNode] = field(metadata={"cdp_name": "nodes"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )

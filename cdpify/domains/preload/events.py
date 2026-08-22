@@ -38,23 +38,11 @@ class RuleSetUpdatedEvent:
     """
 
     rule_set: RuleSet = field(metadata={"cdp_name": "ruleSet"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
 class RuleSetRemovedEvent:
     id: RuleSetId = field(metadata={"cdp_name": "id"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -74,12 +62,6 @@ class PreloadEnabledStateUpdatedEvent:
     disabled_by_holdback_prerender_speculation_rules: bool = field(
         metadata={"cdp_name": "disabledByHoldbackPrerenderSpeculationRules"}
     )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -97,12 +79,6 @@ class PrefetchStatusUpdatedEvent:
     status: PreloadingStatus = field(metadata={"cdp_name": "status"})
     prefetch_status: PrefetchStatus = field(metadata={"cdp_name": "prefetchStatus"})
     request_id: network.RequestId = field(metadata={"cdp_name": "requestId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -123,12 +99,6 @@ class PrerenderStatusUpdatedEvent:
     mismatched_headers: list[PrerenderMismatchedHeaders] | None = field(
         default=None, metadata={"cdp_name": "mismatchedHeaders"}
     )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -140,10 +110,4 @@ class PreloadingAttemptSourcesUpdatedEvent:
     loader_id: network.LoaderId = field(metadata={"cdp_name": "loaderId"})
     preloading_attempt_sources: list[PreloadingAttemptSource] = field(
         metadata={"cdp_name": "preloadingAttemptSources"}
-    )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
     )

@@ -31,12 +31,6 @@ class ToolsAddedEvent:
     """
 
     tools: list[Tool] = field(metadata={"cdp_name": "tools"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -46,12 +40,6 @@ class ToolsRemovedEvent:
     """
 
     tools: list[RemovedTool] = field(metadata={"cdp_name": "tools"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -64,12 +52,6 @@ class ToolInvokedEvent:
     frame_id: page.FrameId = field(metadata={"cdp_name": "frameId"})
     invocation_id: str = field(metadata={"cdp_name": "invocationId"})
     input: str = field(metadata={"cdp_name": "input"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -84,10 +66,4 @@ class ToolRespondedEvent:
     error_text: str | None = field(default=None, metadata={"cdp_name": "errorText"})
     exception: runtime.RemoteObject | None = field(
         default=None, metadata={"cdp_name": "exception"}
-    )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
     )

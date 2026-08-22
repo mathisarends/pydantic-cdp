@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import encode_cdp
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .commands import (
     CancelPromptParams,
@@ -19,33 +19,29 @@ from .types import (
 
 
 class DeviceAccess:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def enable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Enable events in this domain.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=DeviceAccessCommand.ENABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def disable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Disable events in this domain.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=DeviceAccessCommand.DISABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def select_prompt(
@@ -53,32 +49,28 @@ class DeviceAccess:
         *,
         id: RequestId,
         device_id: DeviceId,
-        session_id: str | None = None,
     ) -> None:
         """
         Select a device in response to a DeviceAccess.deviceRequestPrompted event.
         """
         params = SelectPromptParams(id=id, device_id=device_id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DeviceAccessCommand.SELECT_PROMPT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def cancel_prompt(
         self,
         *,
         id: RequestId,
-        session_id: str | None = None,
     ) -> None:
         """
         Cancel a prompt in response to a DeviceAccess.deviceRequestPrompted event.
         """
         params = CancelPromptParams(id=id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DeviceAccessCommand.CANCEL_PROMPT,
             params=encode_cdp(params),
-            session_id=session_id,
         )

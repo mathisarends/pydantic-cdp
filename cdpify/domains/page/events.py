@@ -57,12 +57,6 @@ class PageEvent(StrEnum):
 @dataclass(kw_only=True, slots=True)
 class DomContentEventFiredEvent:
     timestamp: network.MonotonicTime = field(metadata={"cdp_name": "timestamp"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -78,12 +72,6 @@ class FileChooserOpenedEvent:
     backend_node_id: dom.BackendNodeId | None = field(
         default=None, metadata={"cdp_name": "backendNodeId"}
     )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -97,12 +85,6 @@ class FrameAttachedEvent:
     stack: runtime.StackTrace | None = field(
         default=None, metadata={"cdp_name": "stack"}
     )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -112,12 +94,6 @@ class FrameClearedScheduledNavigationEvent:
     """
 
     frame_id: FrameId = field(metadata={"cdp_name": "frameId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -128,12 +104,6 @@ class FrameDetachedEvent:
 
     frame_id: FrameId = field(metadata={"cdp_name": "frameId"})
     reason: Literal["remove", "swap"] = field(metadata={"cdp_name": "reason"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -144,12 +114,6 @@ class FrameSubtreeWillBeDetachedEvent:
     """
 
     frame_id: FrameId = field(metadata={"cdp_name": "frameId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -161,12 +125,6 @@ class FrameNavigatedEvent:
 
     frame: Frame = field(metadata={"cdp_name": "frame"})
     type: NavigationType = field(metadata={"cdp_name": "type"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -176,22 +134,11 @@ class DocumentOpenedEvent:
     """
 
     frame: Frame = field(metadata={"cdp_name": "frame"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
 class FrameResizedEvent:
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
+    pass
 
 
 @dataclass(kw_only=True, slots=True)
@@ -220,12 +167,6 @@ class FrameStartedNavigatingEvent:
     ] = field(  # noqa: E501
         metadata={"cdp_name": "navigationType"},
     )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -241,12 +182,6 @@ class FrameRequestedNavigationEvent:
     disposition: ClientNavigationDisposition = field(
         metadata={"cdp_name": "disposition"}
     )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -259,12 +194,6 @@ class FrameScheduledNavigationEvent:
     delay: float = field(metadata={"cdp_name": "delay"})
     reason: ClientNavigationReason = field(metadata={"cdp_name": "reason"})
     url: str = field(metadata={"cdp_name": "url"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -274,12 +203,6 @@ class FrameStartedLoadingEvent:
     """
 
     frame_id: FrameId = field(metadata={"cdp_name": "frameId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -289,12 +212,6 @@ class FrameStoppedLoadingEvent:
     """
 
     frame_id: FrameId = field(metadata={"cdp_name": "frameId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -308,12 +225,6 @@ class DownloadWillBeginEvent:
     guid: str = field(metadata={"cdp_name": "guid"})
     url: str = field(metadata={"cdp_name": "url"})
     suggested_filename: str = field(metadata={"cdp_name": "suggestedFilename"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -329,12 +240,6 @@ class DownloadProgressEvent:
     state: Literal["inProgress", "completed", "canceled"] = field(
         metadata={"cdp_name": "state"}
     )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -343,12 +248,7 @@ class InterstitialHiddenEvent:
     Fired when interstitial page was hidden
     """
 
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
+    pass
 
 
 @dataclass(kw_only=True, slots=True)
@@ -357,12 +257,7 @@ class InterstitialShownEvent:
     Fired when interstitial page was shown
     """
 
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
+    pass
 
 
 @dataclass(kw_only=True, slots=True)
@@ -375,12 +270,6 @@ class JavascriptDialogClosedEvent:
     frame_id: FrameId = field(metadata={"cdp_name": "frameId"})
     result: bool = field(metadata={"cdp_name": "result"})
     user_input: str = field(metadata={"cdp_name": "userInput"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -398,12 +287,6 @@ class JavascriptDialogOpeningEvent:
     default_prompt: str | None = field(
         default=None, metadata={"cdp_name": "defaultPrompt"}
     )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -417,12 +300,6 @@ class LifecycleEventEvent:
     loader_id: network.LoaderId = field(metadata={"cdp_name": "loaderId"})
     name: str = field(metadata={"cdp_name": "name"})
     timestamp: network.MonotonicTime = field(metadata={"cdp_name": "timestamp"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -445,23 +322,11 @@ class BackForwardCacheNotUsedEvent:
         default=None,
         metadata={"cdp_name": "notRestoredExplanationsTree"},
     )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
 class LoadEventFiredEvent:
     timestamp: network.MonotonicTime = field(metadata={"cdp_name": "timestamp"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -476,12 +341,6 @@ class NavigatedWithinDocumentEvent:
     navigation_type: Literal["fragment", "historyApi", "other"] = field(
         metadata={"cdp_name": "navigationType"}
     )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -493,12 +352,6 @@ class ScreencastFrameEvent:
     data: str = field(metadata={"cdp_name": "data"})
     metadata: ScreencastFrameMetadata = field(metadata={"cdp_name": "metadata"})
     session_id: int = field(metadata={"cdp_name": "sessionId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -508,12 +361,6 @@ class ScreencastVisibilityChangedEvent:
     """
 
     visible: bool = field(metadata={"cdp_name": "visible"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -527,12 +374,6 @@ class WindowOpenEvent:
     window_name: str = field(metadata={"cdp_name": "windowName"})
     window_features: list[str] = field(metadata={"cdp_name": "windowFeatures"})
     user_gesture: bool = field(metadata={"cdp_name": "userGesture"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -543,9 +384,3 @@ class CompilationCacheProducedEvent:
 
     url: str = field(metadata={"cdp_name": "url"})
     data: str = field(metadata={"cdp_name": "data"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )

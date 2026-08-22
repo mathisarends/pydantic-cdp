@@ -43,12 +43,6 @@ class EstablishContextRequestedEvent:
     """
 
     request_id: str = field(metadata={"cdp_name": "requestId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -62,12 +56,6 @@ class ReleaseContextRequestedEvent:
 
     request_id: str = field(metadata={"cdp_name": "requestId"})
     context_id: int = field(metadata={"cdp_name": "contextId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -81,12 +69,6 @@ class ListReadersRequestedEvent:
 
     request_id: str = field(metadata={"cdp_name": "requestId"})
     context_id: int = field(metadata={"cdp_name": "contextId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -103,12 +85,6 @@ class GetStatusChangeRequestedEvent:
     context_id: int = field(metadata={"cdp_name": "contextId"})
     reader_states: list[ReaderStateIn] = field(metadata={"cdp_name": "readerStates"})
     timeout: int | None = field(default=None, metadata={"cdp_name": "timeout"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -122,12 +98,6 @@ class CancelRequestedEvent:
 
     request_id: str = field(metadata={"cdp_name": "requestId"})
     context_id: int = field(metadata={"cdp_name": "contextId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -146,12 +116,6 @@ class ConnectRequestedEvent:
     preferred_protocols: ProtocolSet = field(
         metadata={"cdp_name": "preferredProtocols"}
     )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -166,12 +130,6 @@ class DisconnectRequestedEvent:
     request_id: str = field(metadata={"cdp_name": "requestId"})
     handle: int = field(metadata={"cdp_name": "handle"})
     disposition: Disposition = field(metadata={"cdp_name": "disposition"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -187,12 +145,6 @@ class TransmitRequestedEvent:
     handle: int = field(metadata={"cdp_name": "handle"})
     data: str = field(metadata={"cdp_name": "data"})
     protocol: Protocol | None = field(default=None, metadata={"cdp_name": "protocol"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -208,12 +160,6 @@ class ControlRequestedEvent:
     handle: int = field(metadata={"cdp_name": "handle"})
     control_code: int = field(metadata={"cdp_name": "controlCode"})
     data: str = field(metadata={"cdp_name": "data"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -228,12 +174,6 @@ class GetAttribRequestedEvent:
     request_id: str = field(metadata={"cdp_name": "requestId"})
     handle: int = field(metadata={"cdp_name": "handle"})
     attrib_id: int = field(metadata={"cdp_name": "attribId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -249,12 +189,6 @@ class SetAttribRequestedEvent:
     handle: int = field(metadata={"cdp_name": "handle"})
     attrib_id: int = field(metadata={"cdp_name": "attribId"})
     data: str = field(metadata={"cdp_name": "data"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -268,12 +202,6 @@ class StatusRequestedEvent:
 
     request_id: str = field(metadata={"cdp_name": "requestId"})
     handle: int = field(metadata={"cdp_name": "handle"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -287,12 +215,6 @@ class BeginTransactionRequestedEvent:
 
     request_id: str = field(metadata={"cdp_name": "requestId"})
     handle: int = field(metadata={"cdp_name": "handle"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -307,9 +229,3 @@ class EndTransactionRequestedEvent:
     request_id: str = field(metadata={"cdp_name": "requestId"})
     handle: int = field(metadata={"cdp_name": "handle"})
     disposition: Disposition = field(metadata={"cdp_name": "disposition"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )

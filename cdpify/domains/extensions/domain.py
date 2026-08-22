@@ -7,7 +7,7 @@ from __future__ import annotations
 from typing import Any
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .commands import (
     ClearStorageItemsParams,
@@ -28,25 +28,23 @@ from .types import (
 
 
 class Extensions:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def trigger_action(
         self,
         *,
         id: str,
         target_id: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Runs an extension default action.
         """
         params = TriggerActionParams(id=id, target_id=target_id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=ExtensionsCommand.TRIGGER_ACTION,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def load_unpacked(
@@ -54,7 +52,6 @@ class Extensions:
         *,
         path: str,
         enable_in_incognito: bool | None = None,
-        session_id: str | None = None,
     ) -> LoadUnpackedResult:
         """
         Installs an unpacked extension from the filesystem similar to --load-extension
@@ -62,24 +59,21 @@ class Extensions:
         """
         params = LoadUnpackedParams(path=path, enable_in_incognito=enable_in_incognito)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=ExtensionsCommand.LOAD_UNPACKED,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(LoadUnpackedResult, result)
 
     async def get_extensions(
         self,
-        session_id: str | None = None,
     ) -> GetExtensionsResult:
         """
         Gets a list of all unpacked extensions.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=ExtensionsCommand.GET_EXTENSIONS,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetExtensionsResult, result)
 
@@ -87,17 +81,15 @@ class Extensions:
         self,
         *,
         id: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Uninstalls an unpacked extension (others not supported) from the profile.
         """
         params = UninstallParams(id=id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=ExtensionsCommand.UNINSTALL,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def get_storage_items(
@@ -106,7 +98,6 @@ class Extensions:
         id: str,
         storage_area: StorageArea,
         keys: list[str] | None = None,
-        session_id: str | None = None,
     ) -> GetStorageItemsResult:
         """
         Gets data from extension storage in the given `storageArea`. If `keys` is
@@ -114,10 +105,9 @@ class Extensions:
         """
         params = GetStorageItemsParams(id=id, storage_area=storage_area, keys=keys)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=ExtensionsCommand.GET_STORAGE_ITEMS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetStorageItemsResult, result)
 
@@ -127,17 +117,15 @@ class Extensions:
         id: str,
         storage_area: StorageArea,
         keys: list[str],
-        session_id: str | None = None,
     ) -> None:
         """
         Removes `keys` from extension storage in the given `storageArea`.
         """
         params = RemoveStorageItemsParams(id=id, storage_area=storage_area, keys=keys)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=ExtensionsCommand.REMOVE_STORAGE_ITEMS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def clear_storage_items(
@@ -145,17 +133,15 @@ class Extensions:
         *,
         id: str,
         storage_area: StorageArea,
-        session_id: str | None = None,
     ) -> None:
         """
         Clears extension storage in the given `storageArea`.
         """
         params = ClearStorageItemsParams(id=id, storage_area=storage_area)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=ExtensionsCommand.CLEAR_STORAGE_ITEMS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_storage_items(
@@ -164,7 +150,6 @@ class Extensions:
         id: str,
         storage_area: StorageArea,
         values: dict[str, Any],
-        session_id: str | None = None,
     ) -> None:
         """
         Sets `values` in extension storage in the given `storageArea`. The provided
@@ -172,8 +157,7 @@ class Extensions:
         """
         params = SetStorageItemsParams(id=id, storage_area=storage_area, values=values)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=ExtensionsCommand.SET_STORAGE_ITEMS,
             params=encode_cdp(params),
-            session_id=session_id,
         )

@@ -28,7 +28,7 @@ without working with raw JSON messages.
 - **Async throughout** — transport-neutral core with an optional WebSocket
   implementation
 - **Typed event streams** — consume CDP events with async iterators
-- **Multi-target support** — route commands through an active CDP session
+- **Multi-target support** — use immutable, concurrency-safe session views
 - **Low-level protocol access** — execute any CDP method through `execute()`
   when needed
 
@@ -89,7 +89,7 @@ Python's `snake_case`; `cdpify` handles conversion to and from CDP's wire format
 
 The generated client currently includes all 58 domains from the bundled CDP
 specifications. Each domain is available as a lazy property on `Client` and
-`ActiveSessionCDPClient`:
+`CDPSession`:
 
 | CDP domain | Python accessor | CDP domain | Python accessor |
 | --- | --- | --- | --- |
@@ -140,28 +140,83 @@ async for event in client.listen(
     print(event.request.method, event.request.url)
 ```
 
-`client.listen()` also accepts an optional `timeout` in seconds. Every event
-includes `cdp_session_id`, which is useful when working with multiple targets.
+`client.listen()` accepts an optional `timeout` in seconds and yields only
+events from the root connection. A session view applies the same rule to its
+bound target:
+
+```python
+tab = client.session("session-id")
+
+async for event in tab.listen(
+    event_name=NetworkEvent.REQUEST_WILL_BE_SENT,
+    event_type=RequestWillBeSentEvent,
+):
+    # This stream contains events from this session only.
+    print(event.request.url)
+```
+
+To observe the root connection and all attached sessions together, use
+`listen_all()`. Routing metadata is returned separately from the generated CDP
+event model:
+
+```python
+async for received in client.listen_all(
+    event_name=NetworkEvent.REQUEST_WILL_BE_SENT,
+    event_type=RequestWillBeSentEvent,
+):
+    print(received.session_id, received.value.request.url)
+```
+
+`received.session_id` is `None` for a root event. Generated event dataclasses
+contain only fields defined by the CDP specification.
 
 ## Working with target sessions
 
-`ActiveSessionCDPClient` keeps the same domain-based API while routing commands
-to the selected target session:
+Attach to a target in flat mode and create an immutable session view with
+`client.session()`. Every generated command on that view is routed to the bound
+session:
 
 ```python
-from cdpify import ActiveSessionCDPClient, Client
+from cdpify import Client
 
 
 async with Client(browser_ws_url) as root_client:
-    session = ActiveSessionCDPClient(root_client)
-    session.switch_to("session-id")
+    attached = await root_client.target.attach_to_target(
+        target_id="target-id",
+        flatten=True,
+    )
+    tab = root_client.session(attached.session_id)
 
-    await session.page.enable()
-    await session.runtime.evaluate(expression="console.log('Hello from CDP')")
+    await tab.page.enable()
+    await tab.runtime.evaluate(expression="console.log('Hello from CDP')")
 ```
 
-The `Browser` and `Target` domains remain bound to the root connection. You can
-also pass `session_id` explicitly to generated commands or to `execute()`.
+There is no mutable "active session". Create one view per attached target and
+use them safely from concurrent tasks:
+
+```python
+import asyncio
+
+
+tab_a = root_client.session(session_a)
+tab_b = root_client.session(session_b)
+
+await asyncio.gather(
+    tab_a.runtime.evaluate(expression="document.title"),
+    tab_b.runtime.evaluate(expression="document.title"),
+)
+```
+
+Session routing is transport metadata, not a generated command parameter.
+Generated methods therefore never accept an additional routing `session_id`.
+A real `sessionId` declared by the CDP specification remains a normal typed
+parameter. For low-level access, `root_client.execute()` optionally accepts a
+session ID, while `tab.execute()` is always bound and cannot be overridden:
+
+```python
+await root_client.execute("Page.enable", session_id=session_a)
+await tab.execute("Runtime.evaluate", {"expression": "1 + 1"})
+```
 
 ## Configuration
 

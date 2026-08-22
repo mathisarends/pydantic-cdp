@@ -11,54 +11,15 @@ from cdpify.domains.page.events import LifecycleEventEvent
 @dataclass(kw_only=True, slots=True)
 class _Sample:
     value: int = field(metadata={"cdp_name": "value"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
-class TestSessionCapture:
-    def test_regular_models_do_not_carry_session_metadata(self) -> None:
+class TestGeneratedModels:
+    def test_command_models_do_not_carry_session_metadata(self) -> None:
         params = GetOuterHTMLParams(backend_node_id=7)
 
         assert not hasattr(params, "cdp_session_id")
 
-    def test_captures_injected_cdp_session_id(self) -> None:
-        model = decode_cdp(_Sample, {"value": 1}, cdp_session_id="SESSION-A")
-        assert model.value == 1
-        assert model.cdp_session_id == "SESSION-A"
-
-    def test_defaults_to_none_for_root_session(self) -> None:
-        # Root-target events arrive with no session id.
-        model = decode_cdp(_Sample, {"value": 1})
-        assert model.cdp_session_id is None
-
-    def test_instances_do_not_share_session_id(self) -> None:
-        a = decode_cdp(_Sample, {"value": 1}, cdp_session_id="A")
-        b = decode_cdp(_Sample, {"value": 2}, cdp_session_id="B")
-        root = decode_cdp(_Sample, {"value": 3})
-        assert (a.cdp_session_id, b.cdp_session_id, root.cdp_session_id) == (
-            "A",
-            "B",
-            None,
-        )
-
-    def test_session_id_excluded_from_outbound_params(self) -> None:
-        model = decode_cdp(_Sample, {"value": 1}, cdp_session_id="A")
-        params = encode_cdp(model)
-        assert "cdpSessionId" not in params
-        assert "cdp_session_id" not in params
-
-    def test_models_are_mutable_and_slotted(self) -> None:
-        model = _Sample(value=1)
-
-        assert not hasattr(model, "__dict__")
-        model.value = 2
-        assert model.value == 2
-
-    def test_works_on_generated_event_models(self) -> None:
+    def test_event_models_do_not_carry_session_metadata(self) -> None:
         event = decode_cdp(
             LifecycleEventEvent,
             {
@@ -67,10 +28,17 @@ class TestSessionCapture:
                 "name": "networkIdle",
                 "timestamp": 12.5,
             },
-            cdp_session_id="SESSION-Z",
         )
+
         assert event.name == "networkIdle"
-        assert event.cdp_session_id == "SESSION-Z"
+        assert not hasattr(event, "cdp_session_id")
+
+    def test_models_are_mutable_and_slotted(self) -> None:
+        model = _Sample(value=1)
+
+        assert not hasattr(model, "__dict__")
+        model.value = 2
+        assert model.value == 2
 
 
 class TestAcronymFieldNames:

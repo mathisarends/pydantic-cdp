@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import decode_cdp
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .commands import (
     AdsCommand,
@@ -15,35 +15,31 @@ from .commands import (
 
 
 class Ads:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def get_ad_metrics(
         self,
-        session_id: str | None = None,
     ) -> GetAdMetricsResult:
         """
         Retrieves ad metrics for the current page.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=AdsCommand.GET_AD_METRICS,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetAdMetricsResult, result)
 
     async def get_ad_scripts(
         self,
-        session_id: str | None = None,
     ) -> GetAdScriptsResult:
         """
         Retrieves ad scripts for the current page. To minimize payload size, this only
         returns the newly tracked ad scripts since the last call to getAdScripts (i.e.,
         the delta).
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=AdsCommand.GET_AD_SCRIPTS,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetAdScriptsResult, result)

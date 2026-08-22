@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import encode_cdp
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .commands import (
     CastCommand,
@@ -18,14 +18,13 @@ from .commands import (
 
 
 class Cast:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def enable(
         self,
         *,
         presentation_url: str | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Starts observing for sinks that can be used for tab mirroring, and if set,
@@ -35,30 +34,26 @@ class Cast:
         """
         params = EnableParams(presentation_url=presentation_url)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=CastCommand.ENABLE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def disable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Stops observing for sinks and issues.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=CastCommand.DISABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def set_sink_to_use(
         self,
         *,
         sink_name: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Sets a sink to be used when the web page requests the browser to choose a sink
@@ -66,59 +61,52 @@ class Cast:
         """
         params = SetSinkToUseParams(sink_name=sink_name)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=CastCommand.SET_SINK_TO_USE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def start_desktop_mirroring(
         self,
         *,
         sink_name: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Starts mirroring the desktop to the sink.
         """
         params = StartDesktopMirroringParams(sink_name=sink_name)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=CastCommand.START_DESKTOP_MIRRORING,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def start_tab_mirroring(
         self,
         *,
         sink_name: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Starts mirroring the tab to the sink.
         """
         params = StartTabMirroringParams(sink_name=sink_name)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=CastCommand.START_TAB_MIRRORING,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def stop_casting(
         self,
         *,
         sink_name: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Stops the active Cast session on the sink.
         """
         params = StopCastingParams(sink_name=sink_name)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=CastCommand.STOP_CASTING,
             params=encode_cdp(params),
-            session_id=session_id,
         )

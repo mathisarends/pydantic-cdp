@@ -7,7 +7,7 @@ from __future__ import annotations
 from typing import Literal
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .commands import (
     GetCategoriesResult,
@@ -28,47 +28,41 @@ from .types import (
 
 
 class Tracing:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def end(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Stop trace events collection.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=TracingCommand.END,
             params=None,
-            session_id=session_id,
         )
 
     async def get_categories(
         self,
-        session_id: str | None = None,
     ) -> GetCategoriesResult:
         """
         Gets supported tracing categories.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=TracingCommand.GET_CATEGORIES,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetCategoriesResult, result)
 
     async def get_track_event_descriptor(
         self,
-        session_id: str | None = None,
     ) -> GetTrackEventDescriptorResult:
         """
         Return a descriptor for all available tracing categories.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=TracingCommand.GET_TRACK_EVENT_DESCRIPTOR,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetTrackEventDescriptorResult, result)
 
@@ -76,17 +70,15 @@ class Tracing:
         self,
         *,
         sync_id: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Record a clock sync marker in the trace.
         """
         params = RecordClockSyncMarkerParams(sync_id=sync_id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=TracingCommand.RECORD_CLOCK_SYNC_MARKER,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def request_memory_dump(
@@ -94,7 +86,6 @@ class Tracing:
         *,
         deterministic: bool | None = None,
         level_of_detail: MemoryDumpLevelOfDetail | None = None,
-        session_id: str | None = None,
     ) -> RequestMemoryDumpResult:
         """
         Request a global memory dump.
@@ -103,10 +94,9 @@ class Tracing:
             deterministic=deterministic, level_of_detail=level_of_detail
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=TracingCommand.REQUEST_MEMORY_DUMP,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(RequestMemoryDumpResult, result)
 
@@ -124,7 +114,6 @@ class Tracing:
         tracing_backend: TracingBackend | None = None,
         screenshot_max_size: int | None = None,
         screenshot_max_count: int | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Start trace events collection.
@@ -143,8 +132,7 @@ class Tracing:
             screenshot_max_count=screenshot_max_count,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=TracingCommand.START,
             params=encode_cdp(params),
-            session_id=session_id,
         )

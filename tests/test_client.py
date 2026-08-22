@@ -55,10 +55,6 @@ class _FakeTransport:
 @dataclass
 class _EventModel:
     value: int = field(metadata={"cdp_name": "value"})
-    cdp_session_id: str | None = field(
-        default=None,
-        metadata={"cdp": False},
-    )
 
 
 def test_requires_url_or_transport() -> None:
@@ -168,13 +164,13 @@ async def test_generated_domain_uses_transport_execute() -> None:
     transport = _FakeTransport()
     client = Client(transport=transport)
 
-    await client.tracing.end(session_id="S1")
+    await client.tracing.end()
 
     assert transport.executions == [
         {
             "method": "Tracing.end",
             "params": None,
-            "session_id": "S1",
+            "session_id": None,
             "timeout": None,
         }
     ]
@@ -194,7 +190,7 @@ async def test_connect_and_disconnect_manage_transport() -> None:
 
 
 @pytest.mark.asyncio
-async def test_listen_yields_typed_transport_events() -> None:
+async def test_listen_yields_only_typed_root_events() -> None:
     transport = _FakeTransport()
     client = Client(transport=transport)
     await client.connect()
@@ -205,14 +201,39 @@ async def test_listen_yields_typed_transport_events() -> None:
     transport.emit(
         TransportEvent(
             method="Test.event",
+            params={"value": 8},
+            session_id="S1",
+        )
+    )
+    transport.emit(TransportEvent(method="Test.event", params={"value": 7}))
+    event = await next_event_task
+
+    assert event.value == 7
+
+    await stream.aclose()
+    await client.disconnect()
+
+
+@pytest.mark.asyncio
+async def test_listen_all_preserves_session_metadata_in_envelope() -> None:
+    transport = _FakeTransport()
+    client = Client(transport=transport)
+    await client.connect()
+    stream = client.listen_all("Test.event", _EventModel, timeout=1.0)
+
+    next_event_task = asyncio.create_task(anext(stream))
+    await asyncio.sleep(0)
+    transport.emit(
+        TransportEvent(
+            method="Test.event",
             params={"value": 7},
             session_id="S1",
         )
     )
-    event = await next_event_task
+    received = await next_event_task
 
-    assert event.value == 7
-    assert event.cdp_session_id == "S1"
+    assert received.value == _EventModel(value=7)
+    assert received.session_id == "S1"
 
     await stream.aclose()
     await client.disconnect()

@@ -7,8 +7,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from cdpify.codec import decode_cdp, encode_cdp
+from cdpify.executor import CommandExecutor
 from cdpify.shared.decorators import deprecated
-from cdpify.transport import Transport
 
 from .commands import (
     ClearCookiesParams,
@@ -50,15 +50,14 @@ if TYPE_CHECKING:
 
 
 class Storage:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     @deprecated()
     async def get_storage_key_for_frame(
         self,
         *,
         frame_id: page.FrameId,
-        session_id: str | None = None,
     ) -> GetStorageKeyForFrameResult:
         """
         Returns a storage key given a frame id. Deprecated. Please use
@@ -66,10 +65,9 @@ class Storage:
         """
         params = GetStorageKeyForFrameParams(frame_id=frame_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=StorageCommand.GET_STORAGE_KEY_FOR_FRAME,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetStorageKeyForFrameResult, result)
 
@@ -77,7 +75,6 @@ class Storage:
         self,
         *,
         frame_id: page.FrameId | None = None,
-        session_id: str | None = None,
     ) -> GetStorageKeyResult:
         """
         Returns storage key for the given frame. If no frame ID is provided, the
@@ -85,10 +82,9 @@ class Storage:
         """
         params = GetStorageKeyParams(frame_id=frame_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=StorageCommand.GET_STORAGE_KEY,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetStorageKeyResult, result)
 
@@ -97,17 +93,15 @@ class Storage:
         *,
         origin: str,
         storage_types: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Clears storage for origin.
         """
         params = ClearDataForOriginParams(origin=origin, storage_types=storage_types)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=StorageCommand.CLEAR_DATA_FOR_ORIGIN,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def clear_data_for_storage_key(
@@ -115,7 +109,6 @@ class Storage:
         *,
         storage_key: str,
         storage_types: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Clears storage for storage key.
@@ -124,27 +117,24 @@ class Storage:
             storage_key=storage_key, storage_types=storage_types
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=StorageCommand.CLEAR_DATA_FOR_STORAGE_KEY,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def get_cookies(
         self,
         *,
         browser_context_id: browser.BrowserContextID | None = None,
-        session_id: str | None = None,
     ) -> GetCookiesResult:
         """
         Returns all browser cookies.
         """
         params = GetCookiesParams(browser_context_id=browser_context_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=StorageCommand.GET_COOKIES,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetCookiesResult, result)
 
@@ -153,7 +143,6 @@ class Storage:
         *,
         cookies: list[network.CookieParam],
         browser_context_id: browser.BrowserContextID | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Sets given cookies.
@@ -162,44 +151,39 @@ class Storage:
             cookies=cookies, browser_context_id=browser_context_id
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=StorageCommand.SET_COOKIES,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def clear_cookies(
         self,
         *,
         browser_context_id: browser.BrowserContextID | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Clears cookies.
         """
         params = ClearCookiesParams(browser_context_id=browser_context_id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=StorageCommand.CLEAR_COOKIES,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def get_usage_and_quota(
         self,
         *,
         origin: str,
-        session_id: str | None = None,
     ) -> GetUsageAndQuotaResult:
         """
         Returns usage and quota in bytes.
         """
         params = GetUsageAndQuotaParams(origin=origin)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=StorageCommand.GET_USAGE_AND_QUOTA,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetUsageAndQuotaResult, result)
 
@@ -208,24 +192,21 @@ class Storage:
         *,
         origin: str,
         quota_size: float | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Override quota for the specified origin
         """
         params = OverrideQuotaForOriginParams(origin=origin, quota_size=quota_size)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=StorageCommand.OVERRIDE_QUOTA_FOR_ORIGIN,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def track_cache_storage_for_origin(
         self,
         *,
         origin: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Registers origin to be notified when an update occurs to its cache storage
@@ -233,17 +214,15 @@ class Storage:
         """
         params = TrackCacheStorageForOriginParams(origin=origin)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=StorageCommand.TRACK_CACHE_STORAGE_FOR_ORIGIN,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def track_cache_storage_for_storage_key(
         self,
         *,
         storage_key: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Registers storage key to be notified when an update occurs to its cache storage
@@ -251,126 +230,111 @@ class Storage:
         """
         params = TrackCacheStorageForStorageKeyParams(storage_key=storage_key)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=StorageCommand.TRACK_CACHE_STORAGE_FOR_STORAGE_KEY,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def track_indexed_db_for_origin(
         self,
         *,
         origin: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Registers origin to be notified when an update occurs to its IndexedDB.
         """
         params = TrackIndexedDBForOriginParams(origin=origin)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=StorageCommand.TRACK_INDEXED_DB_FOR_ORIGIN,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def track_indexed_db_for_storage_key(
         self,
         *,
         storage_key: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Registers storage key to be notified when an update occurs to its IndexedDB.
         """
         params = TrackIndexedDBForStorageKeyParams(storage_key=storage_key)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=StorageCommand.TRACK_INDEXED_DB_FOR_STORAGE_KEY,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def untrack_cache_storage_for_origin(
         self,
         *,
         origin: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Unregisters origin from receiving notifications for cache storage.
         """
         params = UntrackCacheStorageForOriginParams(origin=origin)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=StorageCommand.UNTRACK_CACHE_STORAGE_FOR_ORIGIN,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def untrack_cache_storage_for_storage_key(
         self,
         *,
         storage_key: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Unregisters storage key from receiving notifications for cache storage.
         """
         params = UntrackCacheStorageForStorageKeyParams(storage_key=storage_key)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=StorageCommand.UNTRACK_CACHE_STORAGE_FOR_STORAGE_KEY,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def untrack_indexed_db_for_origin(
         self,
         *,
         origin: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Unregisters origin from receiving notifications for IndexedDB.
         """
         params = UntrackIndexedDBForOriginParams(origin=origin)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=StorageCommand.UNTRACK_INDEXED_DB_FOR_ORIGIN,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def untrack_indexed_db_for_storage_key(
         self,
         *,
         storage_key: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Unregisters storage key from receiving notifications for IndexedDB.
         """
         params = UntrackIndexedDBForStorageKeyParams(storage_key=storage_key)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=StorageCommand.UNTRACK_INDEXED_DB_FOR_STORAGE_KEY,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def get_trust_tokens(
         self,
-        session_id: str | None = None,
     ) -> GetTrustTokensResult:
         """
         Returns the number of stored Trust Tokens per issuer for the current browsing
         context.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=StorageCommand.GET_TRUST_TOKENS,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetTrustTokensResult, result)
 
@@ -378,7 +342,6 @@ class Storage:
         self,
         *,
         issuer_origin: str,
-        session_id: str | None = None,
     ) -> ClearTrustTokensResult:
         """
         Removes all Trust Tokens issued by the provided issuerOrigin. Leaves other
@@ -386,10 +349,9 @@ class Storage:
         """
         params = ClearTrustTokensParams(issuer_origin=issuer_origin)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=StorageCommand.CLEAR_TRUST_TOKENS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(ClearTrustTokensResult, result)
 
@@ -398,62 +360,54 @@ class Storage:
         *,
         storage_key: str,
         enable: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         Set tracking for a storage key's buckets.
         """
         params = SetStorageBucketTrackingParams(storage_key=storage_key, enable=enable)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=StorageCommand.SET_STORAGE_BUCKET_TRACKING,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def delete_storage_bucket(
         self,
         *,
         bucket: StorageBucket,
-        session_id: str | None = None,
     ) -> None:
         """
         Deletes the Storage Bucket with the given storage key and bucket name.
         """
         params = DeleteStorageBucketParams(bucket=bucket)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=StorageCommand.DELETE_STORAGE_BUCKET,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def run_bounce_tracking_mitigations(
         self,
-        session_id: str | None = None,
     ) -> RunBounceTrackingMitigationsResult:
         """
         Deletes state for sites identified as potential bounce trackers, immediately.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=StorageCommand.RUN_BOUNCE_TRACKING_MITIGATIONS,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(RunBounceTrackingMitigationsResult, result)
 
     async def get_related_website_sets(
         self,
-        session_id: str | None = None,
     ) -> GetRelatedWebsiteSetsResult:
         """
         Returns the effective Related Website Sets in use by this profile for the
         browser session. The effective Related Website Sets will not change during a
         browser session.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=StorageCommand.GET_RELATED_WEBSITE_SETS,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetRelatedWebsiteSetsResult, result)

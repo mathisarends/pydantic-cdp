@@ -39,12 +39,6 @@ class ContextCreatedEvent:
     """
 
     context: BaseAudioContext = field(metadata={"cdp_name": "context"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -54,12 +48,6 @@ class ContextWillBeDestroyedEvent:
     """
 
     context_id: GraphObjectId = field(metadata={"cdp_name": "contextId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -70,12 +58,6 @@ class ContextChangedEvent:
     """
 
     context: BaseAudioContext = field(metadata={"cdp_name": "context"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -85,12 +67,6 @@ class AudioListenerCreatedEvent:
     """
 
     listener: AudioListener = field(metadata={"cdp_name": "listener"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -101,12 +77,6 @@ class AudioListenerWillBeDestroyedEvent:
 
     context_id: GraphObjectId = field(metadata={"cdp_name": "contextId"})
     listener_id: GraphObjectId = field(metadata={"cdp_name": "listenerId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -116,12 +86,6 @@ class AudioNodeCreatedEvent:
     """
 
     node: AudioNode = field(metadata={"cdp_name": "node"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -132,12 +96,6 @@ class AudioNodeWillBeDestroyedEvent:
 
     context_id: GraphObjectId = field(metadata={"cdp_name": "contextId"})
     node_id: GraphObjectId = field(metadata={"cdp_name": "nodeId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -147,12 +105,6 @@ class AudioParamCreatedEvent:
     """
 
     param: AudioParam = field(metadata={"cdp_name": "param"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -164,12 +116,6 @@ class AudioParamWillBeDestroyedEvent:
     context_id: GraphObjectId = field(metadata={"cdp_name": "contextId"})
     node_id: GraphObjectId = field(metadata={"cdp_name": "nodeId"})
     param_id: GraphObjectId = field(metadata={"cdp_name": "paramId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -186,12 +132,6 @@ class NodesConnectedEvent:
     )
     destination_input_index: float | None = field(
         default=None, metadata={"cdp_name": "destinationInputIndex"}
-    )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
     )
 
 
@@ -211,12 +151,6 @@ class NodesDisconnectedEvent:
     destination_input_index: float | None = field(
         default=None, metadata={"cdp_name": "destinationInputIndex"}
     )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -231,12 +165,6 @@ class NodeParamConnectedEvent:
     source_output_index: float | None = field(
         default=None, metadata={"cdp_name": "sourceOutputIndex"}
     )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -250,10 +178,4 @@ class NodeParamDisconnectedEvent:
     destination_id: GraphObjectId = field(metadata={"cdp_name": "destinationId"})
     source_output_index: float | None = field(
         default=None, metadata={"cdp_name": "sourceOutputIndex"}
-    )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
     )

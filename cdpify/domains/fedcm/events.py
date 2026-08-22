@@ -25,12 +25,6 @@ class DialogShownEvent:
     accounts: list[Account] = field(metadata={"cdp_name": "accounts"})
     title: str = field(metadata={"cdp_name": "title"})
     subtitle: str | None = field(default=None, metadata={"cdp_name": "subtitle"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -41,9 +35,3 @@ class DialogClosedEvent:
     """
 
     dialog_id: str = field(metadata={"cdp_name": "dialogId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )

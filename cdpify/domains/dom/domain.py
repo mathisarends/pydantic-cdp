@@ -7,8 +7,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Literal
 
 from cdpify.codec import decode_cdp, encode_cdp
+from cdpify.executor import CommandExecutor
 from cdpify.shared.decorators import deprecated
-from cdpify.transport import Transport
 
 from .commands import (
     CollectClassNamesFromSubtreeParams,
@@ -104,24 +104,22 @@ if TYPE_CHECKING:
 
 
 class DOM:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def collect_class_names_from_subtree(
         self,
         *,
         node_id: NodeId,
-        session_id: str | None = None,
     ) -> CollectClassNamesFromSubtreeResult:
         """
         Collects class names for the node with given id and all of it's child nodes.
         """
         params = CollectClassNamesFromSubtreeParams(node_id=node_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMCommand.COLLECT_CLASS_NAMES_FROM_SUBTREE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(CollectClassNamesFromSubtreeResult, result)
 
@@ -131,7 +129,6 @@ class DOM:
         node_id: NodeId,
         target_node_id: NodeId,
         insert_before_node_id: NodeId | None = None,
-        session_id: str | None = None,
     ) -> CopyToResult:
         """
         Creates a deep copy of the specified node and places it into the target
@@ -143,10 +140,9 @@ class DOM:
             insert_before_node_id=insert_before_node_id,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMCommand.COPY_TO,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(CopyToResult, result)
 
@@ -158,7 +154,6 @@ class DOM:
         object_id: runtime.RemoteObjectId | None = None,
         depth: int | None = None,
         pierce: bool | None = None,
-        session_id: str | None = None,
     ) -> DescribeNodeResult:
         """
         Describes node given its id, does not require domain to be enabled. Does not
@@ -172,10 +167,9 @@ class DOM:
             pierce=pierce,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMCommand.DESCRIBE_NODE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(DescribeNodeResult, result)
 
@@ -186,7 +180,6 @@ class DOM:
         backend_node_id: BackendNodeId | None = None,
         object_id: runtime.RemoteObjectId | None = None,
         rect: Rect | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Scrolls the specified rect of the given node into view if not already visible.
@@ -200,30 +193,26 @@ class DOM:
             rect=rect,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMCommand.SCROLL_INTO_VIEW_IF_NEEDED,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def disable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Disables DOM agent for the given page.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMCommand.DISABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def discard_search_results(
         self,
         *,
         search_id: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Discards search results from the session with the given id. `getSearchResults`
@@ -231,27 +220,24 @@ class DOM:
         """
         params = DiscardSearchResultsParams(search_id=search_id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMCommand.DISCARD_SEARCH_RESULTS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def enable(
         self,
         *,
         include_whitespace: Literal["none", "all"] | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Enables DOM agent for the given page.
         """
         params = EnableParams(include_whitespace=include_whitespace)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMCommand.ENABLE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def focus(
@@ -260,7 +246,6 @@ class DOM:
         node_id: NodeId | None = None,
         backend_node_id: BackendNodeId | None = None,
         object_id: runtime.RemoteObjectId | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Focuses the given element.
@@ -269,27 +254,24 @@ class DOM:
             node_id=node_id, backend_node_id=backend_node_id, object_id=object_id
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMCommand.FOCUS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def get_attributes(
         self,
         *,
         node_id: NodeId,
-        session_id: str | None = None,
     ) -> GetAttributesResult:
         """
         Returns attributes for the specified node.
         """
         params = GetAttributesParams(node_id=node_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMCommand.GET_ATTRIBUTES,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetAttributesResult, result)
 
@@ -299,7 +281,6 @@ class DOM:
         node_id: NodeId | None = None,
         backend_node_id: BackendNodeId | None = None,
         object_id: runtime.RemoteObjectId | None = None,
-        session_id: str | None = None,
     ) -> GetBoxModelResult:
         """
         Returns boxes for the given node.
@@ -308,10 +289,9 @@ class DOM:
             node_id=node_id, backend_node_id=backend_node_id, object_id=object_id
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMCommand.GET_BOX_MODEL,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetBoxModelResult, result)
 
@@ -321,7 +301,6 @@ class DOM:
         node_id: NodeId | None = None,
         backend_node_id: BackendNodeId | None = None,
         object_id: runtime.RemoteObjectId | None = None,
-        session_id: str | None = None,
     ) -> GetContentQuadsResult:
         """
         Returns quads that describe node position on the page. This method might return
@@ -331,10 +310,9 @@ class DOM:
             node_id=node_id, backend_node_id=backend_node_id, object_id=object_id
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMCommand.GET_CONTENT_QUADS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetContentQuadsResult, result)
 
@@ -343,7 +321,6 @@ class DOM:
         *,
         depth: int | None = None,
         pierce: bool | None = None,
-        session_id: str | None = None,
     ) -> GetDocumentResult:
         """
         Returns the root DOM node (and optionally the subtree) to the caller.
@@ -351,10 +328,9 @@ class DOM:
         """
         params = GetDocumentParams(depth=depth, pierce=pierce)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMCommand.GET_DOCUMENT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetDocumentResult, result)
 
@@ -364,7 +340,6 @@ class DOM:
         *,
         depth: int | None = None,
         pierce: bool | None = None,
-        session_id: str | None = None,
     ) -> GetFlattenedDocumentResult:
         """
         Returns the root DOM node (and optionally the subtree) to the caller.
@@ -373,10 +348,9 @@ class DOM:
         """
         params = GetFlattenedDocumentParams(depth=depth, pierce=pierce)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMCommand.GET_FLATTENED_DOCUMENT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetFlattenedDocumentResult, result)
 
@@ -386,7 +360,6 @@ class DOM:
         node_id: NodeId,
         computed_styles: list[CSSComputedStyleProperty],
         pierce: bool | None = None,
-        session_id: str | None = None,
     ) -> GetNodesForSubtreeByStyleResult:
         """
         Finds nodes with a given computed style in a subtree.
@@ -395,10 +368,9 @@ class DOM:
             node_id=node_id, computed_styles=computed_styles, pierce=pierce
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMCommand.GET_NODES_FOR_SUBTREE_BY_STYLE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetNodesForSubtreeByStyleResult, result)
 
@@ -409,7 +381,6 @@ class DOM:
         y: int,
         include_user_agent_shadow_dom: bool | None = None,
         ignore_pointer_events_none: bool | None = None,
-        session_id: str | None = None,
     ) -> GetNodeForLocationResult:
         """
         Returns node id at given location. Depending on whether DOM domain is enabled,
@@ -422,10 +393,9 @@ class DOM:
             ignore_pointer_events_none=ignore_pointer_events_none,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMCommand.GET_NODE_FOR_LOCATION,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetNodeForLocationResult, result)
 
@@ -436,7 +406,6 @@ class DOM:
         backend_node_id: BackendNodeId | None = None,
         object_id: runtime.RemoteObjectId | None = None,
         include_shadow_dom: bool | None = None,
-        session_id: str | None = None,
     ) -> GetOuterHTMLResult:
         """
         Returns node's HTML markup.
@@ -448,10 +417,9 @@ class DOM:
             include_shadow_dom=include_shadow_dom,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMCommand.GET_OUTER_HTML,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetOuterHTMLResult, result)
 
@@ -459,17 +427,15 @@ class DOM:
         self,
         *,
         node_id: NodeId,
-        session_id: str | None = None,
     ) -> GetRelayoutBoundaryResult:
         """
         Returns the id of the nearest ancestor that is a relayout boundary.
         """
         params = GetRelayoutBoundaryParams(node_id=node_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMCommand.GET_RELAYOUT_BOUNDARY,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetRelayoutBoundaryResult, result)
 
@@ -479,7 +445,6 @@ class DOM:
         search_id: str,
         from_index: int,
         to_index: int,
-        session_id: str | None = None,
     ) -> GetSearchResultsResult:
         """
         Returns search results from given `fromIndex` to given `toIndex` from the
@@ -489,63 +454,54 @@ class DOM:
             search_id=search_id, from_index=from_index, to_index=to_index
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMCommand.GET_SEARCH_RESULTS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetSearchResultsResult, result)
 
     async def hide_highlight(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Hides any highlight.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMCommand.HIDE_HIGHLIGHT,
             params=None,
-            session_id=session_id,
         )
 
     async def highlight_node(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Highlights DOM node.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMCommand.HIGHLIGHT_NODE,
             params=None,
-            session_id=session_id,
         )
 
     async def highlight_rect(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Highlights given rectangle.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMCommand.HIGHLIGHT_RECT,
             params=None,
-            session_id=session_id,
         )
 
     async def mark_undoable_state(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Marks last undoable state.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMCommand.MARK_UNDOABLE_STATE,
             params=None,
-            session_id=session_id,
         )
 
     async def move_to(
@@ -554,7 +510,6 @@ class DOM:
         node_id: NodeId,
         target_node_id: NodeId,
         insert_before_node_id: NodeId | None = None,
-        session_id: str | None = None,
     ) -> MoveToResult:
         """
         Moves node into the new container, places it before the given anchor.
@@ -565,10 +520,9 @@ class DOM:
             insert_before_node_id=insert_before_node_id,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMCommand.MOVE_TO,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(MoveToResult, result)
 
@@ -577,7 +531,6 @@ class DOM:
         *,
         query: str,
         include_user_agent_shadow_dom: bool | None = None,
-        session_id: str | None = None,
     ) -> PerformSearchResult:
         """
         Searches for a given string in the DOM tree. Use `getSearchResults` to access
@@ -587,10 +540,9 @@ class DOM:
             query=query, include_user_agent_shadow_dom=include_user_agent_shadow_dom
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMCommand.PERFORM_SEARCH,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(PerformSearchResult, result)
 
@@ -598,7 +550,6 @@ class DOM:
         self,
         *,
         path: str,
-        session_id: str | None = None,
     ) -> PushNodeByPathToFrontendResult:
         """
         Requests that the node is sent to the caller given its path. // FIXME, use
@@ -606,10 +557,9 @@ class DOM:
         """
         params = PushNodeByPathToFrontendParams(path=path)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMCommand.PUSH_NODE_BY_PATH_TO_FRONTEND,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(PushNodeByPathToFrontendResult, result)
 
@@ -617,7 +567,6 @@ class DOM:
         self,
         *,
         backend_node_ids: list[BackendNodeId],
-        session_id: str | None = None,
     ) -> PushNodesByBackendIdsToFrontendResult:
         """
         Requests that a batch of nodes is sent to the caller given their backend node
@@ -627,10 +576,9 @@ class DOM:
             backend_node_ids=backend_node_ids
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMCommand.PUSH_NODES_BY_BACKEND_IDS_TO_FRONTEND,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(PushNodesByBackendIdsToFrontendResult, result)
 
@@ -639,17 +587,15 @@ class DOM:
         *,
         node_id: NodeId,
         selector: str,
-        session_id: str | None = None,
     ) -> QuerySelectorResult:
         """
         Executes `querySelector` on a given node.
         """
         params = QuerySelectorParams(node_id=node_id, selector=selector)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMCommand.QUERY_SELECTOR,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(QuerySelectorResult, result)
 
@@ -658,33 +604,29 @@ class DOM:
         *,
         node_id: NodeId,
         selector: str,
-        session_id: str | None = None,
     ) -> QuerySelectorAllResult:
         """
         Executes `querySelectorAll` on a given node.
         """
         params = QuerySelectorAllParams(node_id=node_id, selector=selector)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMCommand.QUERY_SELECTOR_ALL,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(QuerySelectorAllResult, result)
 
     async def get_top_layer_elements(
         self,
-        session_id: str | None = None,
     ) -> GetTopLayerElementsResult:
         """
         Returns NodeIds of current top layer elements. Top layer is rendered closest to
         the user within a viewport, therefore its elements always appear on top of all
         other content.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMCommand.GET_TOP_LAYER_ELEMENTS,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetTopLayerElementsResult, result)
 
@@ -693,31 +635,27 @@ class DOM:
         *,
         node_id: NodeId,
         relation: Literal["PopoverTarget", "InterestTarget", "CommandFor"],
-        session_id: str | None = None,
     ) -> GetElementByRelationResult:
         """
         Returns the NodeId of the matched element according to certain relations.
         """
         params = GetElementByRelationParams(node_id=node_id, relation=relation)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMCommand.GET_ELEMENT_BY_RELATION,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetElementByRelationResult, result)
 
     async def redo(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Re-does the last undone action.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMCommand.REDO,
             params=None,
-            session_id=session_id,
         )
 
     async def remove_attribute(
@@ -725,34 +663,30 @@ class DOM:
         *,
         node_id: NodeId,
         name: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Removes attribute with given name from an element with given id.
         """
         params = RemoveAttributeParams(node_id=node_id, name=name)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMCommand.REMOVE_ATTRIBUTE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def remove_node(
         self,
         *,
         node_id: NodeId,
-        session_id: str | None = None,
     ) -> None:
         """
         Removes node with given id.
         """
         params = RemoveNodeParams(node_id=node_id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMCommand.REMOVE_NODE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def request_child_nodes(
@@ -761,7 +695,6 @@ class DOM:
         node_id: NodeId,
         depth: int | None = None,
         pierce: bool | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Requests that children of the node with given id are returned to the caller in
@@ -770,17 +703,15 @@ class DOM:
         """
         params = RequestChildNodesParams(node_id=node_id, depth=depth, pierce=pierce)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMCommand.REQUEST_CHILD_NODES,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def request_node(
         self,
         *,
         object_id: runtime.RemoteObjectId,
-        session_id: str | None = None,
     ) -> RequestNodeResult:
         """
         Requests that the node is sent to the caller given the JavaScript node object
@@ -789,10 +720,9 @@ class DOM:
         """
         params = RequestNodeParams(object_id=object_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMCommand.REQUEST_NODE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(RequestNodeResult, result)
 
@@ -803,7 +733,6 @@ class DOM:
         backend_node_id: dom.BackendNodeId | None = None,
         object_group: str | None = None,
         execution_context_id: runtime.ExecutionContextId | None = None,
-        session_id: str | None = None,
     ) -> ResolveNodeResult:
         """
         Resolves the JavaScript node object for a given NodeId or BackendNodeId.
@@ -815,10 +744,9 @@ class DOM:
             execution_context_id=execution_context_id,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMCommand.RESOLVE_NODE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(ResolveNodeResult, result)
 
@@ -828,17 +756,15 @@ class DOM:
         node_id: NodeId,
         name: str,
         value: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Sets attribute for an element with given id.
         """
         params = SetAttributeValueParams(node_id=node_id, name=name, value=value)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMCommand.SET_ATTRIBUTE_VALUE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_attributes_as_text(
@@ -847,7 +773,6 @@ class DOM:
         node_id: NodeId,
         text: str,
         name: str | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Sets attributes on element with given id. This method is useful when user edits
@@ -855,10 +780,9 @@ class DOM:
         """
         params = SetAttributesAsTextParams(node_id=node_id, text=text, name=name)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMCommand.SET_ATTRIBUTES_AS_TEXT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_file_input_files(
@@ -868,7 +792,6 @@ class DOM:
         node_id: NodeId | None = None,
         backend_node_id: BackendNodeId | None = None,
         object_id: runtime.RemoteObjectId | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Sets files for the given file input element.
@@ -880,17 +803,15 @@ class DOM:
             object_id=object_id,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMCommand.SET_FILE_INPUT_FILES,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_node_stack_traces_enabled(
         self,
         *,
         enable: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         Sets if stack traces should be captured for Nodes. See
@@ -898,17 +819,15 @@ class DOM:
         """
         params = SetNodeStackTracesEnabledParams(enable=enable)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMCommand.SET_NODE_STACK_TRACES_ENABLED,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def get_node_stack_traces(
         self,
         *,
         node_id: NodeId,
-        session_id: str | None = None,
     ) -> GetNodeStackTracesResult:
         """
         Gets stack traces associated with a Node. As of now, only provides stack trace
@@ -916,10 +835,9 @@ class DOM:
         """
         params = GetNodeStackTracesParams(node_id=node_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMCommand.GET_NODE_STACK_TRACES,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetNodeStackTracesResult, result)
 
@@ -927,31 +845,27 @@ class DOM:
         self,
         *,
         object_id: runtime.RemoteObjectId,
-        session_id: str | None = None,
     ) -> GetFileInfoResult:
         """
         Returns file information for the given File wrapper.
         """
         params = GetFileInfoParams(object_id=object_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMCommand.GET_FILE_INFO,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetFileInfoResult, result)
 
     async def get_detached_dom_nodes(
         self,
-        session_id: str | None = None,
     ) -> GetDetachedDomNodesResult:
         """
         Returns list of detached nodes
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMCommand.GET_DETACHED_DOM_NODES,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetDetachedDomNodesResult, result)
 
@@ -959,7 +873,6 @@ class DOM:
         self,
         *,
         node_id: NodeId,
-        session_id: str | None = None,
     ) -> None:
         """
         Enables console to refer to the node with given id via $x (see Command Line API
@@ -967,10 +880,9 @@ class DOM:
         """
         params = SetInspectedNodeParams(node_id=node_id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMCommand.SET_INSPECTED_NODE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_node_name(
@@ -978,17 +890,15 @@ class DOM:
         *,
         node_id: NodeId,
         name: str,
-        session_id: str | None = None,
     ) -> SetNodeNameResult:
         """
         Sets node name for a node with given id.
         """
         params = SetNodeNameParams(node_id=node_id, name=name)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMCommand.SET_NODE_NAME,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(SetNodeNameResult, result)
 
@@ -997,17 +907,15 @@ class DOM:
         *,
         node_id: NodeId,
         value: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Sets node value for a node with given id.
         """
         params = SetNodeValueParams(node_id=node_id, value=value)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMCommand.SET_NODE_VALUE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_outer_html(
@@ -1015,47 +923,41 @@ class DOM:
         *,
         node_id: NodeId,
         outer_html: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Sets node HTML markup, returns new node id.
         """
         params = SetOuterHTMLParams(node_id=node_id, outer_html=outer_html)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMCommand.SET_OUTER_HTML,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def undo(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Undoes the last performed action.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMCommand.UNDO,
             params=None,
-            session_id=session_id,
         )
 
     async def get_frame_owner(
         self,
         *,
         frame_id: page.FrameId,
-        session_id: str | None = None,
     ) -> GetFrameOwnerResult:
         """
         Returns iframe node that owns iframe with the given domain.
         """
         params = GetFrameOwnerParams(frame_id=frame_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMCommand.GET_FRAME_OWNER,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetFrameOwnerResult, result)
 
@@ -1068,7 +970,6 @@ class DOM:
         logical_axes: LogicalAxes | None = None,
         queries_scroll_state: bool | None = None,
         queries_anchored: bool | None = None,
-        session_id: str | None = None,
     ) -> GetContainerForNodeResult:
         """
         Returns the query container of the given node based on container query
@@ -1086,10 +987,9 @@ class DOM:
             queries_anchored=queries_anchored,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMCommand.GET_CONTAINER_FOR_NODE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetContainerForNodeResult, result)
 
@@ -1097,7 +997,6 @@ class DOM:
         self,
         *,
         node_id: NodeId,
-        session_id: str | None = None,
     ) -> GetQueryingDescendantsForContainerResult:
         """
         Returns the descendants of a container query container that have container
@@ -1105,10 +1004,9 @@ class DOM:
         """
         params = GetQueryingDescendantsForContainerParams(node_id=node_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMCommand.GET_QUERYING_DESCENDANTS_FOR_CONTAINER,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetQueryingDescendantsForContainerResult, result)
 
@@ -1117,7 +1015,6 @@ class DOM:
         *,
         node_id: NodeId,
         anchor_specifier: str | None = None,
-        session_id: str | None = None,
     ) -> GetAnchorElementResult:
         """
         Returns the target anchor element of the given anchor query according to
@@ -1127,10 +1024,9 @@ class DOM:
             node_id=node_id, anchor_specifier=anchor_specifier
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMCommand.GET_ANCHOR_ELEMENT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetAnchorElementResult, result)
 
@@ -1140,7 +1036,6 @@ class DOM:
         node_id: NodeId,
         enable: bool,
         invoker_node_id: BackendNodeId | None = None,
-        session_id: str | None = None,
     ) -> ForceShowPopoverResult:
         """
         When enabling, this API force-opens the popover identified by nodeId and keeps
@@ -1150,10 +1045,9 @@ class DOM:
             node_id=node_id, enable=enable, invoker_node_id=invoker_node_id
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMCommand.FORCE_SHOW_POPOVER,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(ForceShowPopoverResult, result)
 
@@ -1162,7 +1056,6 @@ class DOM:
         *,
         node_id: NodeId,
         enable: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         When enabling, this API forces an element to gain interest in its target,
@@ -1170,8 +1063,7 @@ class DOM:
         """
         params = ForceShowInterestParams(node_id=node_id, enable=enable)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMCommand.FORCE_SHOW_INTEREST,
             params=encode_cdp(params),
-            session_id=session_id,
         )

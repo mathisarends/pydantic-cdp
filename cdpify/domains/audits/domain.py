@@ -7,7 +7,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Literal
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .commands import (
     AuditsCommand,
@@ -21,8 +21,8 @@ if TYPE_CHECKING:
 
 
 class Audits:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def get_encoded_response(
         self,
@@ -31,7 +31,6 @@ class Audits:
         encoding: Literal["webp", "jpeg", "png"],
         quality: float | None = None,
         size_only: bool | None = None,
-        session_id: str | None = None,
     ) -> GetEncodedResponseResult:
         """
         Returns the response body and size if it were re-encoded with the specified
@@ -44,52 +43,45 @@ class Audits:
             size_only=size_only,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=AuditsCommand.GET_ENCODED_RESPONSE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetEncodedResponseResult, result)
 
     async def disable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Disables issues domain, prevents further issues from being reported to the
         client.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=AuditsCommand.DISABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def enable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Enables issues domain, sends the issues collected so far to the client by means
         of the `issueAdded` event.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=AuditsCommand.ENABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def check_forms_issues(
         self,
-        session_id: str | None = None,
     ) -> CheckFormsIssuesResult:
         """
         Runs the form issues check for the target page. Found issues are reported using
         Audits.issueAdded event.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=AuditsCommand.CHECK_FORMS_ISSUES,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(CheckFormsIssuesResult, result)

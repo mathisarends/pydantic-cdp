@@ -32,12 +32,6 @@ class FontsUpdatedEvent:
     """
 
     font: FontFace | None = field(default=None, metadata={"cdp_name": "font"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -48,12 +42,7 @@ class MediaQueryResultChangedEvent:
     features.
     """
 
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
+    pass
 
 
 @dataclass(kw_only=True, slots=True)
@@ -63,12 +52,6 @@ class StyleSheetAddedEvent:
     """
 
     header: CSSStyleSheetHeader = field(metadata={"cdp_name": "header"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -78,12 +61,6 @@ class StyleSheetChangedEvent:
     """
 
     style_sheet_id: dom.StyleSheetId = field(metadata={"cdp_name": "styleSheetId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -93,20 +70,8 @@ class StyleSheetRemovedEvent:
     """
 
     style_sheet_id: dom.StyleSheetId = field(metadata={"cdp_name": "styleSheetId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
 class ComputedStyleUpdatedEvent:
     node_id: dom.NodeId = field(metadata={"cdp_name": "nodeId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )

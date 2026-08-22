@@ -7,8 +7,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from cdpify.codec import decode_cdp, encode_cdp
+from cdpify.executor import CommandExecutor
 from cdpify.shared.decorators import deprecated
-from cdpify.transport import Transport
 
 from .commands import (
     CanClearBrowserCacheResult,
@@ -77,78 +77,68 @@ if TYPE_CHECKING:
 
 
 class Network:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     @deprecated()
     async def can_clear_browser_cache(
         self,
-        session_id: str | None = None,
     ) -> CanClearBrowserCacheResult:
         """
         Tells whether clearing browser cache is supported.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=NetworkCommand.CAN_CLEAR_BROWSER_CACHE,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(CanClearBrowserCacheResult, result)
 
     @deprecated()
     async def can_clear_browser_cookies(
         self,
-        session_id: str | None = None,
     ) -> CanClearBrowserCookiesResult:
         """
         Tells whether clearing browser cookies is supported.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=NetworkCommand.CAN_CLEAR_BROWSER_COOKIES,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(CanClearBrowserCookiesResult, result)
 
     @deprecated()
     async def can_emulate_network_conditions(
         self,
-        session_id: str | None = None,
     ) -> CanEmulateNetworkConditionsResult:
         """
         Tells whether emulation of network conditions is supported.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=NetworkCommand.CAN_EMULATE_NETWORK_CONDITIONS,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(CanEmulateNetworkConditionsResult, result)
 
     async def clear_browser_cache(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Clears browser cache.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=NetworkCommand.CLEAR_BROWSER_CACHE,
             params=None,
-            session_id=session_id,
         )
 
     async def clear_browser_cookies(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Clears browser cookies.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=NetworkCommand.CLEAR_BROWSER_COOKIES,
             params=None,
-            session_id=session_id,
         )
 
     async def delete_cookies(
@@ -159,7 +149,6 @@ class Network:
         domain: str | None = None,
         path: str | None = None,
         partition_key: CookiePartitionKey | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Deletes browser cookies with matching name and url or domain/path/partitionKey
@@ -169,24 +158,21 @@ class Network:
             name=name, url=url, domain=domain, path=path, partition_key=partition_key
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=NetworkCommand.DELETE_COOKIES,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def disable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Disables network tracking, prevents network events from being sent to the
         client.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=NetworkCommand.DISABLE,
             params=None,
-            session_id=session_id,
         )
 
     @deprecated()
@@ -201,7 +187,6 @@ class Network:
         packet_loss: float | None = None,
         packet_queue_length: int | None = None,
         packet_reordering: bool | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Activates emulation of network conditions. This command is deprecated in favor
@@ -219,10 +204,9 @@ class Network:
             packet_reordering=packet_reordering,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=NetworkCommand.EMULATE_NETWORK_CONDITIONS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def emulate_network_conditions_by_rule(
@@ -231,7 +215,6 @@ class Network:
         offline: bool | None = None,
         emulate_offline_service_worker: bool | None = None,
         matched_network_conditions: list[NetworkConditions],
-        session_id: str | None = None,
     ) -> EmulateNetworkConditionsByRuleResult:
         """
         Activates emulation of network conditions for individual requests using URL
@@ -245,10 +228,9 @@ class Network:
             matched_network_conditions=matched_network_conditions,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=NetworkCommand.EMULATE_NETWORK_CONDITIONS_BY_RULE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(EmulateNetworkConditionsByRuleResult, result)
 
@@ -260,7 +242,6 @@ class Network:
         download_throughput: float,
         upload_throughput: float,
         connection_type: ConnectionType | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Override the state of navigator.onLine and navigator.connection.
@@ -273,10 +254,9 @@ class Network:
             connection_type=connection_type,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=NetworkCommand.OVERRIDE_NETWORK_STATE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def enable(
@@ -287,7 +267,6 @@ class Network:
         max_post_data_size: int | None = None,
         report_direct_socket_traffic: bool | None = None,
         enable_durable_messages: bool | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Enables network tracking, network events will now be delivered to the client.
@@ -300,10 +279,9 @@ class Network:
             enable_durable_messages=enable_durable_messages,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=NetworkCommand.ENABLE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def configure_durable_messages(
@@ -311,7 +289,6 @@ class Network:
         *,
         max_total_buffer_size: int | None = None,
         max_resource_buffer_size: int | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Configures storing response bodies outside of renderer, so that these survive a
@@ -323,26 +300,23 @@ class Network:
             max_resource_buffer_size=max_resource_buffer_size,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=NetworkCommand.CONFIGURE_DURABLE_MESSAGES,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     @deprecated()
     async def get_all_cookies(
         self,
-        session_id: str | None = None,
     ) -> GetAllCookiesResult:
         """
         Returns all browser cookies. Depending on the backend support, will return
         detailed cookie information in the `cookies` field. Deprecated. Use
         Storage.getCookies instead.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=NetworkCommand.GET_ALL_COOKIES,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetAllCookiesResult, result)
 
@@ -350,17 +324,15 @@ class Network:
         self,
         *,
         origin: str,
-        session_id: str | None = None,
     ) -> GetCertificateResult:
         """
         Returns the DER-encoded certificate.
         """
         params = GetCertificateParams(origin=origin)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=NetworkCommand.GET_CERTIFICATE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetCertificateResult, result)
 
@@ -368,7 +340,6 @@ class Network:
         self,
         *,
         urls: list[str] | None = None,
-        session_id: str | None = None,
     ) -> GetCookiesResult:
         """
         Returns all browser cookies for the current URL. Depending on the backend
@@ -376,10 +347,9 @@ class Network:
         """
         params = GetCookiesParams(urls=urls)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=NetworkCommand.GET_COOKIES,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetCookiesResult, result)
 
@@ -387,17 +357,15 @@ class Network:
         self,
         *,
         request_id: RequestId,
-        session_id: str | None = None,
     ) -> GetResponseBodyResult:
         """
         Returns content served for the given request.
         """
         params = GetResponseBodyParams(request_id=request_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=NetworkCommand.GET_RESPONSE_BODY,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetResponseBodyResult, result)
 
@@ -405,7 +373,6 @@ class Network:
         self,
         *,
         request_id: RequestId,
-        session_id: str | None = None,
     ) -> GetRequestPostDataResult:
         """
         Returns post data sent with the request. Returns an error when no data was sent
@@ -413,10 +380,9 @@ class Network:
         """
         params = GetRequestPostDataParams(request_id=request_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=NetworkCommand.GET_REQUEST_POST_DATA,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetRequestPostDataResult, result)
 
@@ -424,7 +390,6 @@ class Network:
         self,
         *,
         request_id: RequestId,
-        session_id: str | None = None,
     ) -> None:
         """
         This method sends a new XMLHttpRequest which is identical to the original one.
@@ -433,10 +398,9 @@ class Network:
         """
         params = ReplayXHRParams(request_id=request_id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=NetworkCommand.REPLAY_XHR,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def search_in_response_body(
@@ -446,7 +410,6 @@ class Network:
         query: str,
         case_sensitive: bool | None = None,
         is_regex: bool | None = None,
-        session_id: str | None = None,
     ) -> SearchInResponseBodyResult:
         """
         Searches for given string in response content.
@@ -458,10 +421,9 @@ class Network:
             is_regex=is_regex,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=NetworkCommand.SEARCH_IN_RESPONSE_BODY,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(SearchInResponseBodyResult, result)
 
@@ -470,51 +432,45 @@ class Network:
         *,
         url_patterns: list[BlockPattern] | None = None,
         urls: list[str] | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Blocks URLs from loading.
         """
         params = SetBlockedURLsParams(url_patterns=url_patterns, urls=urls)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=NetworkCommand.SET_BLOCKED_UR_LS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_bypass_service_worker(
         self,
         *,
         bypass: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         Toggles ignoring of service worker for each request.
         """
         params = SetBypassServiceWorkerParams(bypass=bypass)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=NetworkCommand.SET_BYPASS_SERVICE_WORKER,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_cache_disabled(
         self,
         *,
         cache_disabled: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         Toggles ignoring cache for each request. If `true`, cache will not be used.
         """
         params = SetCacheDisabledParams(cache_disabled=cache_disabled)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=NetworkCommand.SET_CACHE_DISABLED,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_cookie(
@@ -533,7 +489,6 @@ class Network:
         source_scheme: CookieSourceScheme | None = None,
         source_port: int | None = None,
         partition_key: CookiePartitionKey | None = None,
-        session_id: str | None = None,
     ) -> SetCookieResult:
         """
         Sets a cookie with the given cookie data; may overwrite equivalent cookies if
@@ -555,10 +510,9 @@ class Network:
             partition_key=partition_key,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=NetworkCommand.SET_COOKIE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(SetCookieResult, result)
 
@@ -566,24 +520,21 @@ class Network:
         self,
         *,
         cookies: list[CookieParam],
-        session_id: str | None = None,
     ) -> None:
         """
         Sets given cookies.
         """
         params = SetCookiesParams(cookies=cookies)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=NetworkCommand.SET_COOKIES,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_extra_http_headers(
         self,
         *,
         headers: Headers,
-        session_id: str | None = None,
     ) -> None:
         """
         Specifies whether to always send extra HTTP headers with the requests from this
@@ -591,27 +542,24 @@ class Network:
         """
         params = SetExtraHTTPHeadersParams(headers=headers)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=NetworkCommand.SET_EXTRA_HTTP_HEADERS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_attach_debug_stack(
         self,
         *,
         enabled: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         Specifies whether to attach a page script stack id in requests
         """
         params = SetAttachDebugStackParams(enabled=enabled)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=NetworkCommand.SET_ATTACH_DEBUG_STACK,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_user_agent_override(
@@ -621,7 +569,6 @@ class Network:
         accept_language: str | None = None,
         platform: str | None = None,
         user_agent_metadata: emulation.UserAgentMetadata | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Allows overriding user agent with the given string.
@@ -633,17 +580,15 @@ class Network:
             user_agent_metadata=user_agent_metadata,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=NetworkCommand.SET_USER_AGENT_OVERRIDE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def stream_resource_content(
         self,
         *,
         request_id: RequestId,
-        session_id: str | None = None,
     ) -> StreamResourceContentResult:
         """
         Enables streaming of the response for the given requestId. If enabled, the
@@ -651,10 +596,9 @@ class Network:
         """
         params = StreamResourceContentParams(request_id=request_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=NetworkCommand.STREAM_RESOURCE_CONTENT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(StreamResourceContentResult, result)
 
@@ -662,17 +606,15 @@ class Network:
         self,
         *,
         frame_id: page.FrameId | None = None,
-        session_id: str | None = None,
     ) -> GetSecurityIsolationStatusResult:
         """
         Returns information about the COEP/COOP isolation status.
         """
         params = GetSecurityIsolationStatusParams(frame_id=frame_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=NetworkCommand.GET_SECURITY_ISOLATION_STATUS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetSecurityIsolationStatusResult, result)
 
@@ -680,7 +622,6 @@ class Network:
         self,
         *,
         enable: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         Enables tracking for the Reporting API, events generated by the Reporting API
@@ -689,61 +630,54 @@ class Network:
         """
         params = EnableReportingApiParams(enable=enable)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=NetworkCommand.ENABLE_REPORTING_API,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def enable_device_bound_sessions(
         self,
         *,
         enable: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         Sets up tracking device bound sessions and fetching of initial set of sessions.
         """
         params = EnableDeviceBoundSessionsParams(enable=enable)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=NetworkCommand.ENABLE_DEVICE_BOUND_SESSIONS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def delete_device_bound_session(
         self,
         *,
         key: DeviceBoundSessionKey,
-        session_id: str | None = None,
     ) -> None:
         """
         Deletes a device bound session.
         """
         params = DeleteDeviceBoundSessionParams(key=key)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=NetworkCommand.DELETE_DEVICE_BOUND_SESSION,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def fetch_schemeful_site(
         self,
         *,
         origin: str,
-        session_id: str | None = None,
     ) -> FetchSchemefulSiteResult:
         """
         Fetches the schemeful site for a specific origin.
         """
         params = FetchSchemefulSiteParams(origin=origin)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=NetworkCommand.FETCH_SCHEMEFUL_SITE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(FetchSchemefulSiteResult, result)
 
@@ -753,17 +687,15 @@ class Network:
         frame_id: page.FrameId | None = None,
         url: str,
         options: LoadNetworkResourceOptions,
-        session_id: str | None = None,
     ) -> LoadNetworkResourceResult:
         """
         Fetches the resource and returns the content.
         """
         params = LoadNetworkResourceParams(frame_id=frame_id, url=url, options=options)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=NetworkCommand.LOAD_NETWORK_RESOURCE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(LoadNetworkResourceResult, result)
 
@@ -771,7 +703,6 @@ class Network:
         self,
         *,
         enable_third_party_cookie_restriction: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         Sets Controls for third-party cookie access Page reload is required before the
@@ -781,8 +712,7 @@ class Network:
             enable_third_party_cookie_restriction=enable_third_party_cookie_restriction
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=NetworkCommand.SET_COOKIE_CONTROLS,
             params=encode_cdp(params),
-            session_id=session_id,
         )

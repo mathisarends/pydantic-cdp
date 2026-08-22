@@ -25,12 +25,6 @@ class WorkerErrorReportedEvent:
     error_message: ServiceWorkerErrorMessage = field(
         metadata={"cdp_name": "errorMessage"}
     )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -38,20 +32,8 @@ class WorkerRegistrationUpdatedEvent:
     registrations: list[ServiceWorkerRegistration] = field(
         metadata={"cdp_name": "registrations"}
     )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
 class WorkerVersionUpdatedEvent:
     versions: list[ServiceWorkerVersion] = field(metadata={"cdp_name": "versions"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )

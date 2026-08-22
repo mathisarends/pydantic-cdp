@@ -24,12 +24,7 @@ class VirtualTimeBudgetExpiredEvent:
     has run out.
     """
 
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
+    pass
 
 
 @dataclass(kw_only=True, slots=True)
@@ -43,10 +38,4 @@ class ScreenOrientationLockChangedEvent:
     locked: bool = field(metadata={"cdp_name": "locked"})
     orientation: ScreenOrientation | None = field(
         default=None, metadata={"cdp_name": "orientation"}
-    )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
     )

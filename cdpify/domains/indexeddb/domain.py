@@ -7,7 +7,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .commands import (
     ClearObjectStoreParams,
@@ -32,8 +32,8 @@ if TYPE_CHECKING:
 
 
 class IndexedDB:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def clear_object_store(
         self,
@@ -43,7 +43,6 @@ class IndexedDB:
         storage_bucket: storage.StorageBucket | None = None,
         database_name: str,
         object_store_name: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Clears all entries from an object store.
@@ -56,10 +55,9 @@ class IndexedDB:
             object_store_name=object_store_name,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=IndexedDBCommand.CLEAR_OBJECT_STORE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def delete_database(
@@ -69,7 +67,6 @@ class IndexedDB:
         storage_key: str | None = None,
         storage_bucket: storage.StorageBucket | None = None,
         database_name: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Deletes a database.
@@ -81,10 +78,9 @@ class IndexedDB:
             database_name=database_name,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=IndexedDBCommand.DELETE_DATABASE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def delete_object_store_entries(
@@ -96,7 +92,6 @@ class IndexedDB:
         database_name: str,
         object_store_name: str,
         key_range: KeyRange,
-        session_id: str | None = None,
     ) -> None:
         """
         Delete a range of entries from an object store
@@ -110,36 +105,31 @@ class IndexedDB:
             key_range=key_range,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=IndexedDBCommand.DELETE_OBJECT_STORE_ENTRIES,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def disable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Disables events from backend.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=IndexedDBCommand.DISABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def enable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Enables events from backend.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=IndexedDBCommand.ENABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def request_data(
@@ -154,7 +144,6 @@ class IndexedDB:
         skip_count: int,
         page_size: int,
         key_range: KeyRange | None = None,
-        session_id: str | None = None,
     ) -> RequestDataResult:
         """
         Requests data from object store or index.
@@ -171,10 +160,9 @@ class IndexedDB:
             key_range=key_range,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=IndexedDBCommand.REQUEST_DATA,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(RequestDataResult, result)
 
@@ -186,7 +174,6 @@ class IndexedDB:
         storage_bucket: storage.StorageBucket | None = None,
         database_name: str,
         object_store_name: str,
-        session_id: str | None = None,
     ) -> GetMetadataResult:
         """
         Gets metadata of an object store.
@@ -199,10 +186,9 @@ class IndexedDB:
             object_store_name=object_store_name,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=IndexedDBCommand.GET_METADATA,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetMetadataResult, result)
 
@@ -213,7 +199,6 @@ class IndexedDB:
         storage_key: str | None = None,
         storage_bucket: storage.StorageBucket | None = None,
         database_name: str,
-        session_id: str | None = None,
     ) -> RequestDatabaseResult:
         """
         Requests database with given name in given frame.
@@ -225,10 +210,9 @@ class IndexedDB:
             database_name=database_name,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=IndexedDBCommand.REQUEST_DATABASE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(RequestDatabaseResult, result)
 
@@ -238,7 +222,6 @@ class IndexedDB:
         security_origin: str | None = None,
         storage_key: str | None = None,
         storage_bucket: storage.StorageBucket | None = None,
-        session_id: str | None = None,
     ) -> RequestDatabaseNamesResult:
         """
         Requests database names for given security origin.
@@ -249,9 +232,8 @@ class IndexedDB:
             storage_bucket=storage_bucket,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=IndexedDBCommand.REQUEST_DATABASE_NAMES,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(RequestDatabaseNamesResult, result)

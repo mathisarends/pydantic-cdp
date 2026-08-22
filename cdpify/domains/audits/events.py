@@ -19,9 +19,3 @@ class AuditsEvent(StrEnum):
 @dataclass(kw_only=True, slots=True)
 class IssueAddedEvent:
     issue: InspectorIssue = field(metadata={"cdp_name": "issue"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )

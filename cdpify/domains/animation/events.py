@@ -26,12 +26,6 @@ class AnimationCanceledEvent:
     """
 
     id: str = field(metadata={"cdp_name": "id"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -41,12 +35,6 @@ class AnimationCreatedEvent:
     """
 
     id: str = field(metadata={"cdp_name": "id"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -56,12 +44,6 @@ class AnimationStartedEvent:
     """
 
     animation: Animation = field(metadata={"cdp_name": "animation"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -71,9 +53,3 @@ class AnimationUpdatedEvent:
     """
 
     animation: Animation = field(metadata={"cdp_name": "animation"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )

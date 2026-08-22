@@ -40,12 +40,6 @@ class BindingCalledEvent:
     execution_context_id: ExecutionContextId = field(
         metadata={"cdp_name": "executionContextId"}
     )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -85,12 +79,6 @@ class ConsoleAPICalledEvent:
         default=None, metadata={"cdp_name": "stackTrace"}
     )
     context: str | None = field(default=None, metadata={"cdp_name": "context"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -101,12 +89,6 @@ class ExceptionRevokedEvent:
 
     reason: str = field(metadata={"cdp_name": "reason"})
     exception_id: int = field(metadata={"cdp_name": "exceptionId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -119,12 +101,6 @@ class ExceptionThrownEvent:
     exception_details: ExceptionDetails = field(
         metadata={"cdp_name": "exceptionDetails"}
     )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -134,12 +110,6 @@ class ExecutionContextCreatedEvent:
     """
 
     context: ExecutionContextDescription = field(metadata={"cdp_name": "context"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -154,12 +124,6 @@ class ExecutionContextDestroyedEvent:
     execution_context_unique_id: str = field(
         metadata={"cdp_name": "executionContextUniqueId"}
     )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -168,12 +132,7 @@ class ExecutionContextsClearedEvent:
     Issued when all executionContexts were cleared in browser
     """
 
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
+    pass
 
 
 @dataclass(kw_only=True, slots=True)
@@ -187,10 +146,4 @@ class InspectRequestedEvent:
     hints: dict[str, Any] = field(metadata={"cdp_name": "hints"})
     execution_context_id: ExecutionContextId | None = field(
         default=None, metadata={"cdp_name": "executionContextId"}
-    )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
     )

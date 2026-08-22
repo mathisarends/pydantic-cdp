@@ -4,7 +4,7 @@
 
 from functools import cached_property
 
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .accessibility import Accessibility
 from .ads import Ads
@@ -69,237 +69,237 @@ from .webmcp import WebMCP
 class CDPDomains:
     """Generated accessors for the configured CDP domains."""
 
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     @cached_property
     def accessibility(self) -> Accessibility:
-        return Accessibility(self._transport)
+        return Accessibility(self._executor)
 
     @cached_property
     def ads(self) -> Ads:
-        return Ads(self._transport)
+        return Ads(self._executor)
 
     @cached_property
     def animation(self) -> Animation:
-        return Animation(self._transport)
+        return Animation(self._executor)
 
     @cached_property
     def audits(self) -> Audits:
-        return Audits(self._transport)
+        return Audits(self._executor)
 
     @cached_property
     def autofill(self) -> Autofill:
-        return Autofill(self._transport)
+        return Autofill(self._executor)
 
     @cached_property
     def background_service(self) -> BackgroundService:
-        return BackgroundService(self._transport)
+        return BackgroundService(self._executor)
 
     @cached_property
     def bluetooth_emulation(self) -> BluetoothEmulation:
-        return BluetoothEmulation(self._transport)
+        return BluetoothEmulation(self._executor)
 
     @cached_property
     def browser(self) -> Browser:
-        return Browser(self._transport)
+        return Browser(self._executor)
 
     @cached_property
     def css(self) -> CSS:
-        return CSS(self._transport)
+        return CSS(self._executor)
 
     @cached_property
     def cache_storage(self) -> CacheStorage:
-        return CacheStorage(self._transport)
+        return CacheStorage(self._executor)
 
     @cached_property
     def cast(self) -> Cast:
-        return Cast(self._transport)
+        return Cast(self._executor)
 
     @cached_property
     def crash_report_context(self) -> CrashReportContext:
-        return CrashReportContext(self._transport)
+        return CrashReportContext(self._executor)
 
     @cached_property
     def dom(self) -> DOM:
-        return DOM(self._transport)
+        return DOM(self._executor)
 
     @cached_property
     def dom_debugger(self) -> DOMDebugger:
-        return DOMDebugger(self._transport)
+        return DOMDebugger(self._executor)
 
     @cached_property
     def dom_snapshot(self) -> DOMSnapshot:
-        return DOMSnapshot(self._transport)
+        return DOMSnapshot(self._executor)
 
     @cached_property
     def dom_storage(self) -> DOMStorage:
-        return DOMStorage(self._transport)
+        return DOMStorage(self._executor)
 
     @cached_property
     def device_access(self) -> DeviceAccess:
-        return DeviceAccess(self._transport)
+        return DeviceAccess(self._executor)
 
     @cached_property
     def device_orientation(self) -> DeviceOrientation:
-        return DeviceOrientation(self._transport)
+        return DeviceOrientation(self._executor)
 
     @cached_property
     def digital_credentials(self) -> DigitalCredentials:
-        return DigitalCredentials(self._transport)
+        return DigitalCredentials(self._executor)
 
     @cached_property
     def emulation(self) -> Emulation:
-        return Emulation(self._transport)
+        return Emulation(self._executor)
 
     @cached_property
     def event_breakpoints(self) -> EventBreakpoints:
-        return EventBreakpoints(self._transport)
+        return EventBreakpoints(self._executor)
 
     @cached_property
     def extensions(self) -> Extensions:
-        return Extensions(self._transport)
+        return Extensions(self._executor)
 
     @cached_property
     def fed_cm(self) -> FedCm:
-        return FedCm(self._transport)
+        return FedCm(self._executor)
 
     @cached_property
     def fetch(self) -> Fetch:
-        return Fetch(self._transport)
+        return Fetch(self._executor)
 
     @cached_property
     def file_system(self) -> FileSystem:
-        return FileSystem(self._transport)
+        return FileSystem(self._executor)
 
     @cached_property
     def headless_experimental(self) -> HeadlessExperimental:
-        return HeadlessExperimental(self._transport)
+        return HeadlessExperimental(self._executor)
 
     @cached_property
     def io(self) -> IO:
-        return IO(self._transport)
+        return IO(self._executor)
 
     @cached_property
     def indexed_db(self) -> IndexedDB:
-        return IndexedDB(self._transport)
+        return IndexedDB(self._executor)
 
     @cached_property
     def input(self) -> Input:
-        return Input(self._transport)
+        return Input(self._executor)
 
     @cached_property
     def inspector(self) -> Inspector:
-        return Inspector(self._transport)
+        return Inspector(self._executor)
 
     @cached_property
     def layer_tree(self) -> LayerTree:
-        return LayerTree(self._transport)
+        return LayerTree(self._executor)
 
     @cached_property
     def log(self) -> Log:
-        return Log(self._transport)
+        return Log(self._executor)
 
     @cached_property
     def media(self) -> Media:
-        return Media(self._transport)
+        return Media(self._executor)
 
     @cached_property
     def memory(self) -> Memory:
-        return Memory(self._transport)
+        return Memory(self._executor)
 
     @cached_property
     def network(self) -> Network:
-        return Network(self._transport)
+        return Network(self._executor)
 
     @cached_property
     def overlay(self) -> Overlay:
-        return Overlay(self._transport)
+        return Overlay(self._executor)
 
     @cached_property
     def pwa(self) -> PWA:
-        return PWA(self._transport)
+        return PWA(self._executor)
 
     @cached_property
     def page(self) -> Page:
-        return Page(self._transport)
+        return Page(self._executor)
 
     @cached_property
     def performance(self) -> Performance:
-        return Performance(self._transport)
+        return Performance(self._executor)
 
     @cached_property
     def performance_timeline(self) -> PerformanceTimeline:
-        return PerformanceTimeline(self._transport)
+        return PerformanceTimeline(self._executor)
 
     @cached_property
     def preload(self) -> Preload:
-        return Preload(self._transport)
+        return Preload(self._executor)
 
     @cached_property
     def security(self) -> Security:
-        return Security(self._transport)
+        return Security(self._executor)
 
     @cached_property
     def service_worker(self) -> ServiceWorker:
-        return ServiceWorker(self._transport)
+        return ServiceWorker(self._executor)
 
     @cached_property
     def smart_card_emulation(self) -> SmartCardEmulation:
-        return SmartCardEmulation(self._transport)
+        return SmartCardEmulation(self._executor)
 
     @cached_property
     def storage(self) -> Storage:
-        return Storage(self._transport)
+        return Storage(self._executor)
 
     @cached_property
     def system_info(self) -> SystemInfo:
-        return SystemInfo(self._transport)
+        return SystemInfo(self._executor)
 
     @cached_property
     def target(self) -> Target:
-        return Target(self._transport)
+        return Target(self._executor)
 
     @cached_property
     def tethering(self) -> Tethering:
-        return Tethering(self._transport)
+        return Tethering(self._executor)
 
     @cached_property
     def tracing(self) -> Tracing:
-        return Tracing(self._transport)
+        return Tracing(self._executor)
 
     @cached_property
     def web_audio(self) -> WebAudio:
-        return WebAudio(self._transport)
+        return WebAudio(self._executor)
 
     @cached_property
     def web_authn(self) -> WebAuthn:
-        return WebAuthn(self._transport)
+        return WebAuthn(self._executor)
 
     @cached_property
     def web_mcp(self) -> WebMCP:
-        return WebMCP(self._transport)
+        return WebMCP(self._executor)
 
     @cached_property
     def console(self) -> Console:
-        return Console(self._transport)
+        return Console(self._executor)
 
     @cached_property
     def debugger(self) -> Debugger:
-        return Debugger(self._transport)
+        return Debugger(self._executor)
 
     @cached_property
     def heap_profiler(self) -> HeapProfiler:
-        return HeapProfiler(self._transport)
+        return HeapProfiler(self._executor)
 
     @cached_property
     def profiler(self) -> Profiler:
-        return Profiler(self._transport)
+        return Profiler(self._executor)
 
     @cached_property
     def runtime(self) -> Runtime:
-        return Runtime(self._transport)
+        return Runtime(self._executor)
 
     @cached_property
     def schema(self) -> Schema:
-        return Schema(self._transport)
+        return Schema(self._executor)

@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .commands import (
     InspectorCommand,
@@ -12,31 +12,27 @@ from .commands import (
 
 
 class Inspector:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def disable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Disables inspector domain notifications.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=InspectorCommand.DISABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def enable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Enables inspector domain notifications.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=InspectorCommand.ENABLE,
             params=None,
-            session_id=session_id,
         )

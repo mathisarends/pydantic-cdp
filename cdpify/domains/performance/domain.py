@@ -7,8 +7,8 @@ from __future__ import annotations
 from typing import Literal
 
 from cdpify.codec import decode_cdp, encode_cdp
+from cdpify.executor import CommandExecutor
 from cdpify.shared.decorators import deprecated
-from cdpify.transport import Transport
 
 from .commands import (
     EnableParams,
@@ -19,37 +19,33 @@ from .commands import (
 
 
 class Performance:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def disable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Disable collecting and reporting metrics.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=PerformanceCommand.DISABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def enable(
         self,
         *,
         time_domain: Literal["timeTicks", "threadTicks"] | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Enable collecting and reporting metrics.
         """
         params = EnableParams(time_domain=time_domain)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=PerformanceCommand.ENABLE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     @deprecated()
@@ -57,7 +53,6 @@ class Performance:
         self,
         *,
         time_domain: Literal["timeTicks", "threadTicks"],
-        session_id: str | None = None,
     ) -> None:
         """
         Sets time domain to use for collecting and reporting duration metrics. Note
@@ -66,22 +61,19 @@ class Performance:
         """
         params = SetTimeDomainParams(time_domain=time_domain)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=PerformanceCommand.SET_TIME_DOMAIN,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def get_metrics(
         self,
-        session_id: str | None = None,
     ) -> GetMetricsResult:
         """
         Retrieve current values of run-time metrics.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=PerformanceCommand.GET_METRICS,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetMetricsResult, result)

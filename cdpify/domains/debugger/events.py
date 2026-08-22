@@ -35,12 +35,6 @@ class BreakpointResolvedEvent:
 
     breakpoint_id: BreakpointId = field(metadata={"cdp_name": "breakpointId"})
     location: Location = field(metadata={"cdp_name": "location"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -81,12 +75,6 @@ class PausedEvent:
     async_call_stack_trace_id: runtime.StackTraceId | None = field(
         default=None, metadata={"cdp_name": "asyncCallStackTraceId"}
     )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -95,12 +83,7 @@ class ResumedEvent:
     Fired when the virtual machine resumed execution.
     """
 
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
+    pass
 
 
 @dataclass(kw_only=True, slots=True)
@@ -140,12 +123,6 @@ class ScriptFailedToParseEvent:
     )
     embedder_name: str | None = field(
         default=None, metadata={"cdp_name": "embedderName"}
-    )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
     )
 
 
@@ -194,10 +171,4 @@ class ScriptParsedEvent:
     )
     resolved_breakpoints: list[ResolvedBreakpoint] | None = field(
         default=None, metadata={"cdp_name": "resolvedBreakpoints"}
-    )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
     )

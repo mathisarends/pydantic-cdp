@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .commands import (
     AnimationCommand,
@@ -23,64 +23,56 @@ from .commands import (
 
 
 class Animation:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def disable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Disables animation domain notifications.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=AnimationCommand.DISABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def enable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Enables animation domain notifications.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=AnimationCommand.ENABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def get_current_time(
         self,
         *,
         id: str,
-        session_id: str | None = None,
     ) -> GetCurrentTimeResult:
         """
         Returns the current time of the an animation.
         """
         params = GetCurrentTimeParams(id=id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=AnimationCommand.GET_CURRENT_TIME,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetCurrentTimeResult, result)
 
     async def get_playback_rate(
         self,
-        session_id: str | None = None,
     ) -> GetPlaybackRateResult:
         """
         Gets the playback rate of the document timeline.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=AnimationCommand.GET_PLAYBACK_RATE,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetPlaybackRateResult, result)
 
@@ -88,34 +80,30 @@ class Animation:
         self,
         *,
         animations: list[str],
-        session_id: str | None = None,
     ) -> None:
         """
         Releases a set of animations to no longer be manipulated.
         """
         params = ReleaseAnimationsParams(animations=animations)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=AnimationCommand.RELEASE_ANIMATIONS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def resolve_animation(
         self,
         *,
         animation_id: str,
-        session_id: str | None = None,
     ) -> ResolveAnimationResult:
         """
         Gets the remote object of the Animation.
         """
         params = ResolveAnimationParams(animation_id=animation_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=AnimationCommand.RESOLVE_ANIMATION,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(ResolveAnimationResult, result)
 
@@ -124,17 +112,15 @@ class Animation:
         *,
         animations: list[str],
         current_time: float,
-        session_id: str | None = None,
     ) -> None:
         """
         Seek a set of animations to a particular time within each animation.
         """
         params = SeekAnimationsParams(animations=animations, current_time=current_time)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=AnimationCommand.SEEK_ANIMATIONS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_paused(
@@ -142,34 +128,30 @@ class Animation:
         *,
         animations: list[str],
         paused: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         Sets the paused state of a set of animations.
         """
         params = SetPausedParams(animations=animations, paused=paused)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=AnimationCommand.SET_PAUSED,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_playback_rate(
         self,
         *,
         playback_rate: float,
-        session_id: str | None = None,
     ) -> None:
         """
         Sets the playback rate of the document timeline.
         """
         params = SetPlaybackRateParams(playback_rate=playback_rate)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=AnimationCommand.SET_PLAYBACK_RATE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_timing(
@@ -178,7 +160,6 @@ class Animation:
         animation_id: str,
         duration: float,
         delay: float,
-        session_id: str | None = None,
     ) -> None:
         """
         Sets the timing of an animation node.
@@ -187,8 +168,7 @@ class Animation:
             animation_id=animation_id, duration=duration, delay=delay
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=AnimationCommand.SET_TIMING,
             params=encode_cdp(params),
-            session_id=session_id,
         )

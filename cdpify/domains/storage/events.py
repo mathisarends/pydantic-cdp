@@ -31,12 +31,6 @@ class CacheStorageContentUpdatedEvent:
     storage_key: str = field(metadata={"cdp_name": "storageKey"})
     bucket_id: str = field(metadata={"cdp_name": "bucketId"})
     cache_name: str = field(metadata={"cdp_name": "cacheName"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -48,12 +42,6 @@ class CacheStorageListUpdatedEvent:
     origin: str = field(metadata={"cdp_name": "origin"})
     storage_key: str = field(metadata={"cdp_name": "storageKey"})
     bucket_id: str = field(metadata={"cdp_name": "bucketId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -67,12 +55,6 @@ class IndexedDBContentUpdatedEvent:
     bucket_id: str = field(metadata={"cdp_name": "bucketId"})
     database_name: str = field(metadata={"cdp_name": "databaseName"})
     object_store_name: str = field(metadata={"cdp_name": "objectStoreName"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -84,31 +66,13 @@ class IndexedDBListUpdatedEvent:
     origin: str = field(metadata={"cdp_name": "origin"})
     storage_key: str = field(metadata={"cdp_name": "storageKey"})
     bucket_id: str = field(metadata={"cdp_name": "bucketId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
 class StorageBucketCreatedOrUpdatedEvent:
     bucket_info: StorageBucketInfo = field(metadata={"cdp_name": "bucketInfo"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
 class StorageBucketDeletedEvent:
     bucket_id: str = field(metadata={"cdp_name": "bucketId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )

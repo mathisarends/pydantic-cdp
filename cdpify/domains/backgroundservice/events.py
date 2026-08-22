@@ -30,12 +30,6 @@ class RecordingStateChangedEvent:
 
     is_recording: bool = field(metadata={"cdp_name": "isRecording"})
     service: ServiceName = field(metadata={"cdp_name": "service"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -47,10 +41,4 @@ class BackgroundServiceEventReceivedEvent:
 
     background_service_event: BackgroundServiceEventType = field(
         metadata={"cdp_name": "backgroundServiceEvent"}
-    )
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
     )

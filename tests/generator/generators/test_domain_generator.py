@@ -6,14 +6,14 @@ def test_renders_domain_class(simple_domain: Domain) -> None:
     output = domain_generator.generate(simple_domain)
 
     assert "class Sample:" in output
-    assert "def __init__(self, transport: Transport) -> None:" in output
-    assert "self._transport = transport" in output
+    assert "def __init__(self, executor: CommandExecutor) -> None:" in output
+    assert "self._executor = executor" in output
 
 
-def test_depends_on_command_transport_abstraction(simple_domain: Domain) -> None:
+def test_depends_on_command_executor_abstraction(simple_domain: Domain) -> None:
     output = domain_generator.generate(simple_domain)
 
-    assert "from cdpify.transport import Transport" in output
+    assert "from cdpify.executor import CommandExecutor" in output
     assert "from cdpify.client import" not in output
 
 
@@ -22,11 +22,11 @@ def test_method_with_params(simple_domain: Domain) -> None:
 
     assert "async def get_node(" in output
     assert "node_id: NodeId," in output
-    assert "session_id: str | None = None," in output
+    assert "session_id: str | None = None," not in output
     assert "-> GetNodeResult:" in output
     assert "params = GetNodeParams(node_id=node_id)" in output
     assert "method=SampleCommand.GET_NODE" in output
-    assert "result = await self._transport.execute(" in output
+    assert "result = await self._executor.execute(" in output
     assert "from cdpify.codec import decode_cdp, encode_cdp" in output
     assert "params=encode_cdp(params)" in output
     assert "return decode_cdp(GetNodeResult, result)" in output
@@ -39,7 +39,7 @@ def test_method_without_params_or_returns(simple_domain: Domain) -> None:
     assert "-> None:" in output
     assert "params=None" in output
     clear_block = output.split("async def clear(")[1].split("async def")[0]
-    assert "await self._transport.execute(" in clear_block
+    assert "await self._executor.execute(" in clear_block
     assert "result =" not in clear_block
     assert "return" not in clear_block
 
@@ -63,9 +63,7 @@ def test_no_deprecated_import_when_no_deprecated_commands() -> None:
     assert "from cdpify.shared.decorators import deprecated" not in output
 
 
-def test_session_id_collision_renames_param() -> None:
-    """If a CDP command has its own `sessionId` param, it must be renamed
-    to avoid colliding with the implicit `session_id` keyword."""
+def test_protocol_session_id_keeps_its_natural_name() -> None:
     domain = Domain(
         domain="Target",
         commands=[
@@ -78,8 +76,8 @@ def test_session_id_collision_renames_param() -> None:
 
     output = domain_generator.generate(domain)
 
-    assert "attach_to_target_session_id: str," in output
-    assert "session_id: str | None = None," in output
+    assert "session_id: str," in output
+    assert "AttachToTargetParams(session_id=session_id)" in output
 
 
 def test_cross_domain_param_resolved_via_type_checking() -> None:

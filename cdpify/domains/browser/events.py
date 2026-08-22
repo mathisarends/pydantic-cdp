@@ -26,12 +26,6 @@ class DownloadWillBeginEvent:
     guid: str = field(metadata={"cdp_name": "guid"})
     url: str = field(metadata={"cdp_name": "url"})
     suggested_filename: str = field(metadata={"cdp_name": "suggestedFilename"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -47,9 +41,3 @@ class DownloadProgressEvent:
         metadata={"cdp_name": "state"}
     )
     file_path: str | None = field(default=None, metadata={"cdp_name": "filePath"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )

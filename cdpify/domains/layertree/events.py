@@ -24,20 +24,8 @@ class LayerTreeEvent(StrEnum):
 class LayerPaintedEvent:
     layer_id: LayerId = field(metadata={"cdp_name": "layerId"})
     clip: dom.Rect = field(metadata={"cdp_name": "clip"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
 class LayerTreeDidChangeEvent:
     layers: list[Layer] | None = field(default=None, metadata={"cdp_name": "layers"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )

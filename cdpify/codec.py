@@ -47,8 +47,6 @@ def encode_cdp(model: Any) -> dict[str, Any]:
 def decode_cdp[T](
     model_type: type[T],
     data: dict[str, Any],
-    *,
-    cdp_session_id: str | None = None,
 ) -> T:
     """Construct a generated CDP dataclass from its wire representation."""
     plan = _compile_model(model_type)
@@ -59,9 +57,6 @@ def decode_cdp[T](
         if model_field is None:
             continue
         converted[model_field.name] = _decode_value(value, model_field.annotation)
-
-    if "cdp_session_id" in plan.init_field_names:
-        converted["cdp_session_id"] = cdp_session_id
 
     missing = [
         model_field.name

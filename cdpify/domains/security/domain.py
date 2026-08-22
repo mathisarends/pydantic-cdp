@@ -5,8 +5,8 @@
 from __future__ import annotations
 
 from cdpify.codec import encode_cdp
+from cdpify.executor import CommandExecutor
 from cdpify.shared.decorators import deprecated
-from cdpify.transport import Transport
 
 from .commands import (
     HandleCertificateErrorParams,
@@ -20,50 +20,44 @@ from .types import (
 
 
 class Security:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def disable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Disables tracking security state changes.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=SecurityCommand.DISABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def enable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Enables tracking security state changes.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=SecurityCommand.ENABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def set_ignore_certificate_errors(
         self,
         *,
         ignore: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         Enable/disable whether all certificate errors should be ignored.
         """
         params = SetIgnoreCertificateErrorsParams(ignore=ignore)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=SecurityCommand.SET_IGNORE_CERTIFICATE_ERRORS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     @deprecated()
@@ -72,17 +66,15 @@ class Security:
         *,
         event_id: int,
         action: CertificateErrorAction,
-        session_id: str | None = None,
     ) -> None:
         """
         Handles a certificate error that fired a certificateError event.
         """
         params = HandleCertificateErrorParams(event_id=event_id, action=action)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=SecurityCommand.HANDLE_CERTIFICATE_ERROR,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     @deprecated()
@@ -90,7 +82,6 @@ class Security:
         self,
         *,
         override: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         Enable/disable overriding certificate errors. If enabled, all certificate error
@@ -99,8 +90,7 @@ class Security:
         """
         params = SetOverrideCertificateErrorsParams(override=override)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=SecurityCommand.SET_OVERRIDE_CERTIFICATE_ERRORS,
             params=encode_cdp(params),
-            session_id=session_id,
         )

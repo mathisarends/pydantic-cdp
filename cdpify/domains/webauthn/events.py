@@ -28,12 +28,6 @@ class CredentialAddedEvent:
 
     authenticator_id: AuthenticatorId = field(metadata={"cdp_name": "authenticatorId"})
     credential: Credential = field(metadata={"cdp_name": "credential"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -45,12 +39,6 @@ class CredentialDeletedEvent:
 
     authenticator_id: AuthenticatorId = field(metadata={"cdp_name": "authenticatorId"})
     credential_id: str = field(metadata={"cdp_name": "credentialId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -62,12 +50,6 @@ class CredentialUpdatedEvent:
 
     authenticator_id: AuthenticatorId = field(metadata={"cdp_name": "authenticatorId"})
     credential: Credential = field(metadata={"cdp_name": "credential"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -78,9 +60,3 @@ class CredentialAssertedEvent:
 
     authenticator_id: AuthenticatorId = field(metadata={"cdp_name": "authenticatorId"})
     credential: Credential = field(metadata={"cdp_name": "credential"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )

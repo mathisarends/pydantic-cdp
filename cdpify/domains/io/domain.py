@@ -7,7 +7,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .commands import (
     CloseParams,
@@ -26,24 +26,22 @@ if TYPE_CHECKING:
 
 
 class IO:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def close(
         self,
         *,
         handle: StreamHandle,
-        session_id: str | None = None,
     ) -> None:
         """
         Close the stream, discard any temporary backing storage.
         """
         params = CloseParams(handle=handle)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=IOCommand.CLOSE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def read(
@@ -52,17 +50,15 @@ class IO:
         handle: StreamHandle,
         offset: int | None = None,
         size: int | None = None,
-        session_id: str | None = None,
     ) -> ReadResult:
         """
         Read a chunk of the stream
         """
         params = ReadParams(handle=handle, offset=offset, size=size)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=IOCommand.READ,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(ReadResult, result)
 
@@ -70,16 +66,14 @@ class IO:
         self,
         *,
         object_id: runtime.RemoteObjectId,
-        session_id: str | None = None,
     ) -> ResolveBlobResult:
         """
         Return UUID of Blob object specified by a remote object id.
         """
         params = ResolveBlobParams(object_id=object_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=IOCommand.RESOLVE_BLOB,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(ResolveBlobResult, result)

@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .commands import (
     GetBestEffortCoverageResult,
@@ -19,41 +19,35 @@ from .commands import (
 
 
 class Profiler:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def disable(
         self,
-        session_id: str | None = None,
     ) -> None:
-        await self._transport.execute(
+        await self._executor.execute(
             method=ProfilerCommand.DISABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def enable(
         self,
-        session_id: str | None = None,
     ) -> None:
-        await self._transport.execute(
+        await self._executor.execute(
             method=ProfilerCommand.ENABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def get_best_effort_coverage(
         self,
-        session_id: str | None = None,
     ) -> GetBestEffortCoverageResult:
         """
         Collect coverage data for the current isolate. The coverage data may be
         incomplete due to garbage collection.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=ProfilerCommand.GET_BEST_EFFORT_COVERAGE,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetBestEffortCoverageResult, result)
 
@@ -61,7 +55,6 @@ class Profiler:
         self,
         *,
         interval: int,
-        session_id: str | None = None,
     ) -> None:
         """
         Changes CPU profiler sampling interval. Must be called before CPU profiles
@@ -69,20 +62,17 @@ class Profiler:
         """
         params = SetSamplingIntervalParams(interval=interval)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=ProfilerCommand.SET_SAMPLING_INTERVAL,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def start(
         self,
-        session_id: str | None = None,
     ) -> None:
-        await self._transport.execute(
+        await self._executor.execute(
             method=ProfilerCommand.START,
             params=None,
-            session_id=session_id,
         )
 
     async def start_precise_coverage(
@@ -91,7 +81,6 @@ class Profiler:
         call_count: bool | None = None,
         detailed: bool | None = None,
         allow_triggered_updates: bool | None = None,
-        session_id: str | None = None,
     ) -> StartPreciseCoverageResult:
         """
         Enable precise code coverage. Coverage data for JavaScript executed before
@@ -104,49 +93,42 @@ class Profiler:
             allow_triggered_updates=allow_triggered_updates,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=ProfilerCommand.START_PRECISE_COVERAGE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(StartPreciseCoverageResult, result)
 
     async def stop(
         self,
-        session_id: str | None = None,
     ) -> StopResult:
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=ProfilerCommand.STOP,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(StopResult, result)
 
     async def stop_precise_coverage(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Disable precise code coverage. Disabling releases unnecessary execution count
         records and allows executing optimized code.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=ProfilerCommand.STOP_PRECISE_COVERAGE,
             params=None,
-            session_id=session_id,
         )
 
     async def take_precise_coverage(
         self,
-        session_id: str | None = None,
     ) -> TakePreciseCoverageResult:
         """
         Collect coverage data for the current isolate, and resets execution counters.
         Precise code coverage needs to have started.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=ProfilerCommand.TAKE_PRECISE_COVERAGE,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(TakePreciseCoverageResult, result)

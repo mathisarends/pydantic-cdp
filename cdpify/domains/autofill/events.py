@@ -25,9 +25,3 @@ class AddressFormFilledEvent:
 
     filled_fields: list[FilledField] = field(metadata={"cdp_name": "filledFields"})
     address_ui: AddressUI = field(metadata={"cdp_name": "addressUi"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )

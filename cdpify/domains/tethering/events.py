@@ -20,9 +20,3 @@ class AcceptedEvent:
 
     port: int = field(metadata={"cdp_name": "port"})
     connection_id: str = field(metadata={"cdp_name": "connectionId"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )

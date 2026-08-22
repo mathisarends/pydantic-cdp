@@ -7,8 +7,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Literal
 
 from cdpify.codec import decode_cdp, encode_cdp
+from cdpify.executor import CommandExecutor
 from cdpify.shared.decorators import deprecated
-from cdpify.transport import Transport
 
 from .commands import (
     AddPrivacySandboxEnrollmentOverrideParams,
@@ -51,8 +51,8 @@ if TYPE_CHECKING:
 
 
 class Browser:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def set_permission(
         self,
@@ -62,7 +62,6 @@ class Browser:
         origin: str | None = None,
         embedded_origin: str | None = None,
         browser_context_id: BrowserContextID | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Set permission settings for given embedding and embedded origins.
@@ -75,10 +74,9 @@ class Browser:
             browser_context_id=browser_context_id,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=BrowserCommand.SET_PERMISSION,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     @deprecated()
@@ -88,7 +86,6 @@ class Browser:
         permissions: list[PermissionType],
         origin: str | None = None,
         browser_context_id: BrowserContextID | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Grant specific permissions to the given origin and reject all others.
@@ -100,27 +97,24 @@ class Browser:
             browser_context_id=browser_context_id,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=BrowserCommand.GRANT_PERMISSIONS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def reset_permissions(
         self,
         *,
         browser_context_id: BrowserContextID | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Reset all permission management for all origins.
         """
         params = ResetPermissionsParams(browser_context_id=browser_context_id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=BrowserCommand.RESET_PERMISSIONS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_download_behavior(
@@ -130,7 +124,6 @@ class Browser:
         browser_context_id: BrowserContextID | None = None,
         download_path: str | None = None,
         events_enabled: bool | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Set the behavior when downloading a file.
@@ -142,10 +135,9 @@ class Browser:
             events_enabled=events_enabled,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=BrowserCommand.SET_DOWNLOAD_BEHAVIOR,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def cancel_download(
@@ -153,84 +145,72 @@ class Browser:
         *,
         guid: str,
         browser_context_id: BrowserContextID | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Cancel a download if in progress
         """
         params = CancelDownloadParams(guid=guid, browser_context_id=browser_context_id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=BrowserCommand.CANCEL_DOWNLOAD,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def close(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Close browser gracefully.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=BrowserCommand.CLOSE,
             params=None,
-            session_id=session_id,
         )
 
     async def crash(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Crashes browser on the main thread.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=BrowserCommand.CRASH,
             params=None,
-            session_id=session_id,
         )
 
     async def crash_gpu_process(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Crashes GPU process.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=BrowserCommand.CRASH_GPU_PROCESS,
             params=None,
-            session_id=session_id,
         )
 
     async def get_version(
         self,
-        session_id: str | None = None,
     ) -> GetVersionResult:
         """
         Returns version information.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=BrowserCommand.GET_VERSION,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetVersionResult, result)
 
     async def get_browser_command_line(
         self,
-        session_id: str | None = None,
     ) -> GetBrowserCommandLineResult:
         """
         Returns the command line switches for the browser process if, and only if
         --enable-automation is on the commandline.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=BrowserCommand.GET_BROWSER_COMMAND_LINE,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetBrowserCommandLineResult, result)
 
@@ -239,17 +219,15 @@ class Browser:
         *,
         query: str | None = None,
         delta: bool | None = None,
-        session_id: str | None = None,
     ) -> GetHistogramsResult:
         """
         Get Chrome histograms.
         """
         params = GetHistogramsParams(query=query, delta=delta)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=BrowserCommand.GET_HISTOGRAMS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetHistogramsResult, result)
 
@@ -258,17 +236,15 @@ class Browser:
         *,
         name: str,
         delta: bool | None = None,
-        session_id: str | None = None,
     ) -> GetHistogramResult:
         """
         Get a Chrome histogram by name.
         """
         params = GetHistogramParams(name=name, delta=delta)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=BrowserCommand.GET_HISTOGRAM,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetHistogramResult, result)
 
@@ -276,17 +252,15 @@ class Browser:
         self,
         *,
         window_id: WindowID,
-        session_id: str | None = None,
     ) -> GetWindowBoundsResult:
         """
         Get position and size of the browser window.
         """
         params = GetWindowBoundsParams(window_id=window_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=BrowserCommand.GET_WINDOW_BOUNDS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetWindowBoundsResult, result)
 
@@ -294,17 +268,15 @@ class Browser:
         self,
         *,
         target_id: target.TargetID | None = None,
-        session_id: str | None = None,
     ) -> GetWindowForTargetResult:
         """
         Get the browser window that contains the devtools target.
         """
         params = GetWindowForTargetParams(target_id=target_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=BrowserCommand.GET_WINDOW_FOR_TARGET,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetWindowForTargetResult, result)
 
@@ -313,17 +285,15 @@ class Browser:
         *,
         window_id: WindowID,
         bounds: Bounds,
-        session_id: str | None = None,
     ) -> None:
         """
         Set position and/or size of the browser window.
         """
         params = SetWindowBoundsParams(window_id=window_id, bounds=bounds)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=BrowserCommand.SET_WINDOW_BOUNDS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_contents_size(
@@ -332,17 +302,15 @@ class Browser:
         window_id: WindowID,
         width: int | None = None,
         height: int | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Set size of the browser contents resizing browser window as necessary.
         """
         params = SetContentsSizeParams(window_id=window_id, width=width, height=height)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=BrowserCommand.SET_CONTENTS_SIZE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_dock_tile(
@@ -350,41 +318,36 @@ class Browser:
         *,
         badge_label: str | None = None,
         image: str | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Set dock tile details, platform-specific.
         """
         params = SetDockTileParams(badge_label=badge_label, image=image)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=BrowserCommand.SET_DOCK_TILE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def execute_browser_command(
         self,
         *,
         command_id: BrowserCommandId,
-        session_id: str | None = None,
     ) -> None:
         """
         Invoke custom browser commands used by telemetry.
         """
         params = ExecuteBrowserCommandParams(command_id=command_id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=BrowserCommand.EXECUTE_BROWSER_COMMAND,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def add_privacy_sandbox_enrollment_override(
         self,
         *,
         url: str,
-        session_id: str | None = None,
     ) -> None:
         """
         Allows a site to use privacy sandbox features that require enrollment without
@@ -392,24 +355,21 @@ class Browser:
         """
         params = AddPrivacySandboxEnrollmentOverrideParams(url=url)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=BrowserCommand.ADD_PRIVACY_SANDBOX_ENROLLMENT_OVERRIDE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def get_global_privacy_control(
         self,
-        session_id: str | None = None,
     ) -> GetGlobalPrivacyControlResult:
         """
         Gets the current globally-applied privacy control status See
         https://www.w3.org/TR/gpc/#get-global-privacy-control
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=BrowserCommand.GET_GLOBAL_PRIVACY_CONTROL,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetGlobalPrivacyControlResult, result)
 
@@ -417,7 +377,6 @@ class Browser:
         self,
         *,
         gpc: bool,
-        session_id: str | None = None,
     ) -> SetGlobalPrivacyControlResult:
         """
         Sets and then gets the current globally-applied privacy control status See
@@ -425,9 +384,8 @@ class Browser:
         """
         params = SetGlobalPrivacyControlParams(gpc=gpc)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=BrowserCommand.SET_GLOBAL_PRIVACY_CONTROL,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(SetGlobalPrivacyControlResult, result)

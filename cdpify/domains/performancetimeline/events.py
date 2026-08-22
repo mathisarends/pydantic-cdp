@@ -24,9 +24,3 @@ class TimelineEventAddedEvent:
     """
 
     event: TimelineEvent = field(metadata={"cdp_name": "event"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )

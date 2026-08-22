@@ -7,7 +7,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .commands import (
     AccessibilityCommand,
@@ -33,35 +33,31 @@ if TYPE_CHECKING:
 
 
 class Accessibility:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def disable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Disables the accessibility domain.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=AccessibilityCommand.DISABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def enable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Enables the accessibility domain which causes `AXNodeId`s to remain consistent
         between method calls. This turns on accessibility for the page, which can impact
         performance until accessibility is disabled.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=AccessibilityCommand.ENABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def get_partial_ax_tree(
@@ -71,7 +67,6 @@ class Accessibility:
         backend_node_id: dom.BackendNodeId | None = None,
         object_id: runtime.RemoteObjectId | None = None,
         fetch_relatives: bool | None = None,
-        session_id: str | None = None,
     ) -> GetPartialAXTreeResult:
         """
         Fetches the accessibility node and partial accessibility tree for this DOM
@@ -84,10 +79,9 @@ class Accessibility:
             fetch_relatives=fetch_relatives,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=AccessibilityCommand.GET_PARTIAL_AX_TREE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetPartialAXTreeResult, result)
 
@@ -96,17 +90,15 @@ class Accessibility:
         *,
         depth: int | None = None,
         frame_id: page.FrameId | None = None,
-        session_id: str | None = None,
     ) -> GetFullAXTreeResult:
         """
         Fetches the entire accessibility tree for the root Document
         """
         params = GetFullAXTreeParams(depth=depth, frame_id=frame_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=AccessibilityCommand.GET_FULL_AX_TREE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetFullAXTreeResult, result)
 
@@ -114,17 +106,15 @@ class Accessibility:
         self,
         *,
         frame_id: page.FrameId | None = None,
-        session_id: str | None = None,
     ) -> GetRootAXNodeResult:
         """
         Fetches the root node. Requires `enable()` to have been called previously.
         """
         params = GetRootAXNodeParams(frame_id=frame_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=AccessibilityCommand.GET_ROOT_AX_NODE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetRootAXNodeResult, result)
 
@@ -134,7 +124,6 @@ class Accessibility:
         node_id: dom.NodeId | None = None,
         backend_node_id: dom.BackendNodeId | None = None,
         object_id: runtime.RemoteObjectId | None = None,
-        session_id: str | None = None,
     ) -> GetAXNodeAndAncestorsResult:
         """
         Fetches a node and all ancestors up to and including the root. Requires
@@ -144,10 +133,9 @@ class Accessibility:
             node_id=node_id, backend_node_id=backend_node_id, object_id=object_id
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=AccessibilityCommand.GET_AX_NODE_AND_ANCESTORS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetAXNodeAndAncestorsResult, result)
 
@@ -156,7 +144,6 @@ class Accessibility:
         *,
         id: AXNodeId,
         frame_id: page.FrameId | None = None,
-        session_id: str | None = None,
     ) -> GetChildAXNodesResult:
         """
         Fetches a particular accessibility node by AXNodeId. Requires `enable()` to
@@ -164,10 +151,9 @@ class Accessibility:
         """
         params = GetChildAXNodesParams(id=id, frame_id=frame_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=AccessibilityCommand.GET_CHILD_AX_NODES,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetChildAXNodesResult, result)
 
@@ -179,7 +165,6 @@ class Accessibility:
         object_id: runtime.RemoteObjectId | None = None,
         accessible_name: str | None = None,
         role: str | None = None,
-        session_id: str | None = None,
     ) -> QueryAXTreeResult:
         """
         Query a DOM node's accessibility subtree for accessible name and role. This
@@ -197,9 +182,8 @@ class Accessibility:
             role=role,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=AccessibilityCommand.QUERY_AX_TREE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(QueryAXTreeResult, result)

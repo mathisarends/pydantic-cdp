@@ -7,8 +7,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from cdpify.codec import decode_cdp, encode_cdp
+from cdpify.executor import CommandExecutor
 from cdpify.shared.decorators import deprecated
-from cdpify.transport import Transport
 
 from .commands import (
     GetGridHighlightObjectsForTestParams,
@@ -65,33 +65,29 @@ if TYPE_CHECKING:
 
 
 class Overlay:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def disable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Disables domain notifications.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=OverlayCommand.DISABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def enable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Enables domain notifications.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=OverlayCommand.ENABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def get_highlight_object_for_test(
@@ -102,7 +98,6 @@ class Overlay:
         include_style: bool | None = None,
         color_format: ColorFormat | None = None,
         show_accessibility_info: bool | None = None,
-        session_id: str | None = None,
     ) -> GetHighlightObjectForTestResult:
         """
         For testing.
@@ -115,10 +110,9 @@ class Overlay:
             show_accessibility_info=show_accessibility_info,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=OverlayCommand.GET_HIGHLIGHT_OBJECT_FOR_TEST,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetHighlightObjectForTestResult, result)
 
@@ -126,17 +120,15 @@ class Overlay:
         self,
         *,
         node_ids: list[dom.NodeId],
-        session_id: str | None = None,
     ) -> GetGridHighlightObjectsForTestResult:
         """
         For Persistent Grid testing.
         """
         params = GetGridHighlightObjectsForTestParams(node_ids=node_ids)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=OverlayCommand.GET_GRID_HIGHLIGHT_OBJECTS_FOR_TEST,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetGridHighlightObjectsForTestResult, result)
 
@@ -144,31 +136,27 @@ class Overlay:
         self,
         *,
         node_id: dom.NodeId,
-        session_id: str | None = None,
     ) -> GetSourceOrderHighlightObjectForTestResult:
         """
         For Source Order Viewer testing.
         """
         params = GetSourceOrderHighlightObjectForTestParams(node_id=node_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=OverlayCommand.GET_SOURCE_ORDER_HIGHLIGHT_OBJECT_FOR_TEST,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetSourceOrderHighlightObjectForTestResult, result)
 
     async def hide_highlight(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Hides any highlight.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=OverlayCommand.HIDE_HIGHLIGHT,
             params=None,
-            session_id=session_id,
         )
 
     @deprecated()
@@ -178,7 +166,6 @@ class Overlay:
         frame_id: page.FrameId,
         content_color: dom.RGBA | None = None,
         content_outline_color: dom.RGBA | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Highlights owner element of the frame with given id. Deprecated: Doesn't work
@@ -192,10 +179,9 @@ class Overlay:
             content_outline_color=content_outline_color,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=OverlayCommand.HIGHLIGHT_FRAME,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def highlight_node(
@@ -206,7 +192,6 @@ class Overlay:
         backend_node_id: dom.BackendNodeId | None = None,
         object_id: runtime.RemoteObjectId | None = None,
         selector: str | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Highlights DOM node with given id or with the given JavaScript object wrapper.
@@ -220,10 +205,9 @@ class Overlay:
             selector=selector,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=OverlayCommand.HIGHLIGHT_NODE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def highlight_quad(
@@ -232,7 +216,6 @@ class Overlay:
         quad: dom.Quad,
         color: dom.RGBA | None = None,
         outline_color: dom.RGBA | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Highlights given quad. Coordinates are absolute with respect to the main frame
@@ -242,10 +225,9 @@ class Overlay:
             quad=quad, color=color, outline_color=outline_color
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=OverlayCommand.HIGHLIGHT_QUAD,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def highlight_rect(
@@ -257,7 +239,6 @@ class Overlay:
         height: int,
         color: dom.RGBA | None = None,
         outline_color: dom.RGBA | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Highlights given rectangle. Coordinates are absolute with respect to the main
@@ -274,10 +255,9 @@ class Overlay:
             outline_color=outline_color,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=OverlayCommand.HIGHLIGHT_RECT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def highlight_source_order(
@@ -287,7 +267,6 @@ class Overlay:
         node_id: dom.NodeId | None = None,
         backend_node_id: dom.BackendNodeId | None = None,
         object_id: runtime.RemoteObjectId | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Highlights the source order of the children of the DOM node with given id or
@@ -301,10 +280,9 @@ class Overlay:
             object_id=object_id,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=OverlayCommand.HIGHLIGHT_SOURCE_ORDER,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_inspect_mode(
@@ -312,7 +290,6 @@ class Overlay:
         *,
         mode: InspectMode,
         highlight_config: HighlightConfig | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Enters the 'inspect' mode. In this mode, elements that user is hovering over
@@ -321,82 +298,72 @@ class Overlay:
         """
         params = SetInspectModeParams(mode=mode, highlight_config=highlight_config)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=OverlayCommand.SET_INSPECT_MODE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_show_ad_highlights(
         self,
         *,
         show: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         Highlights owner element of all frames detected to be ads.
         """
         params = SetShowAdHighlightsParams(show=show)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=OverlayCommand.SET_SHOW_AD_HIGHLIGHTS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_paused_in_debugger_message(
         self,
         *,
         message: str | None = None,
-        session_id: str | None = None,
     ) -> None:
         params = SetPausedInDebuggerMessageParams(message=message)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=OverlayCommand.SET_PAUSED_IN_DEBUGGER_MESSAGE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_show_debug_borders(
         self,
         *,
         show: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         Requests that backend shows debug borders on layers
         """
         params = SetShowDebugBordersParams(show=show)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=OverlayCommand.SET_SHOW_DEBUG_BORDERS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_show_fps_counter(
         self,
         *,
         show: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         Requests that backend shows the FPS counter
         """
         params = SetShowFPSCounterParams(show=show)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=OverlayCommand.SET_SHOW_FPS_COUNTER,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_show_grid_overlays(
         self,
         *,
         grid_node_highlight_configs: list[GridNodeHighlightConfig],
-        session_id: str | None = None,
     ) -> None:
         """
         Highlight multiple elements with the CSS Grid overlay.
@@ -405,125 +372,110 @@ class Overlay:
             grid_node_highlight_configs=grid_node_highlight_configs
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=OverlayCommand.SET_SHOW_GRID_OVERLAYS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_show_flex_overlays(
         self,
         *,
         flex_node_highlight_configs: list[FlexNodeHighlightConfig],
-        session_id: str | None = None,
     ) -> None:
         params = SetShowFlexOverlaysParams(
             flex_node_highlight_configs=flex_node_highlight_configs
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=OverlayCommand.SET_SHOW_FLEX_OVERLAYS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_show_scroll_snap_overlays(
         self,
         *,
         scroll_snap_highlight_configs: list[ScrollSnapHighlightConfig],
-        session_id: str | None = None,
     ) -> None:
         params = SetShowScrollSnapOverlaysParams(
             scroll_snap_highlight_configs=scroll_snap_highlight_configs
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=OverlayCommand.SET_SHOW_SCROLL_SNAP_OVERLAYS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_show_container_query_overlays(
         self,
         *,
         container_query_highlight_configs: list[ContainerQueryHighlightConfig],
-        session_id: str | None = None,
     ) -> None:
         params = SetShowContainerQueryOverlaysParams(
             container_query_highlight_configs=container_query_highlight_configs
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=OverlayCommand.SET_SHOW_CONTAINER_QUERY_OVERLAYS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_show_inspected_element_anchor(
         self,
         *,
         inspected_element_anchor_config: InspectedElementAnchorConfig,
-        session_id: str | None = None,
     ) -> None:
         params = SetShowInspectedElementAnchorParams(
             inspected_element_anchor_config=inspected_element_anchor_config
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=OverlayCommand.SET_SHOW_INSPECTED_ELEMENT_ANCHOR,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_show_paint_rects(
         self,
         *,
         result: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         Requests that backend shows paint rectangles
         """
         params = SetShowPaintRectsParams(result=result)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=OverlayCommand.SET_SHOW_PAINT_RECTS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_show_layout_shift_regions(
         self,
         *,
         result: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         Requests that backend shows layout shift regions
         """
         params = SetShowLayoutShiftRegionsParams(result=result)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=OverlayCommand.SET_SHOW_LAYOUT_SHIFT_REGIONS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_show_scroll_bottleneck_rects(
         self,
         *,
         show: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         Requests that backend shows scroll bottleneck rects
         """
         params = SetShowScrollBottleneckRectsParams(show=show)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=OverlayCommand.SET_SHOW_SCROLL_BOTTLENECK_RECTS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     @deprecated()
@@ -531,17 +483,15 @@ class Overlay:
         self,
         *,
         show: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         Deprecated, no longer has any effect.
         """
         params = SetShowHitTestBordersParams(show=show)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=OverlayCommand.SET_SHOW_HIT_TEST_BORDERS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     @deprecated()
@@ -549,75 +499,66 @@ class Overlay:
         self,
         *,
         show: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         Deprecated, no longer has any effect.
         """
         params = SetShowWebVitalsParams(show=show)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=OverlayCommand.SET_SHOW_WEB_VITALS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_show_viewport_size_on_resize(
         self,
         *,
         show: bool,
-        session_id: str | None = None,
     ) -> None:
         """
         Paints viewport size upon main frame resize.
         """
         params = SetShowViewportSizeOnResizeParams(show=show)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=OverlayCommand.SET_SHOW_VIEWPORT_SIZE_ON_RESIZE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_show_hinge(
         self,
         *,
         hinge_config: HingeConfig | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Add a dual screen device hinge
         """
         params = SetShowHingeParams(hinge_config=hinge_config)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=OverlayCommand.SET_SHOW_HINGE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_show_display_cutout(
         self,
         *,
         display_cutout_config: DisplayCutoutConfig | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Add a display cutout overlay.
         """
         params = SetShowDisplayCutoutParams(display_cutout_config=display_cutout_config)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=OverlayCommand.SET_SHOW_DISPLAY_CUTOUT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_show_isolated_elements(
         self,
         *,
         isolated_element_highlight_configs: list[IsolatedElementHighlightConfig],
-        session_id: str | None = None,
     ) -> None:
         """
         Show elements in isolation mode with overlays.
@@ -626,17 +567,15 @@ class Overlay:
             isolated_element_highlight_configs=isolated_element_highlight_configs
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=OverlayCommand.SET_SHOW_ISOLATED_ELEMENTS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_show_window_controls_overlay(
         self,
         *,
         window_controls_overlay_config: WindowControlsOverlayConfig | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Show Window Controls Overlay for PWA
@@ -645,8 +584,7 @@ class Overlay:
             window_controls_overlay_config=window_controls_overlay_config
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=OverlayCommand.SET_SHOW_WINDOW_CONTROLS_OVERLAY,
             params=encode_cdp(params),
-            session_id=session_id,
         )

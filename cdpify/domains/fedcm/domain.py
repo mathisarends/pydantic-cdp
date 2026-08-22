@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import encode_cdp
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .commands import (
     ClickDialogButtonParams,
@@ -22,31 +22,27 @@ from .types import (
 
 
 class FedCm:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def enable(
         self,
         *,
         disable_rejection_delay: bool | None = None,
-        session_id: str | None = None,
     ) -> None:
         params = EnableParams(disable_rejection_delay=disable_rejection_delay)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=FedCmCommand.ENABLE,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def disable(
         self,
-        session_id: str | None = None,
     ) -> None:
-        await self._transport.execute(
+        await self._executor.execute(
             method=FedCmCommand.DISABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def select_account(
@@ -54,14 +50,12 @@ class FedCm:
         *,
         dialog_id: str,
         account_index: int,
-        session_id: str | None = None,
     ) -> None:
         params = SelectAccountParams(dialog_id=dialog_id, account_index=account_index)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=FedCmCommand.SELECT_ACCOUNT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def click_dialog_button(
@@ -69,16 +63,14 @@ class FedCm:
         *,
         dialog_id: str,
         dialog_button: DialogButton,
-        session_id: str | None = None,
     ) -> None:
         params = ClickDialogButtonParams(
             dialog_id=dialog_id, dialog_button=dialog_button
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=FedCmCommand.CLICK_DIALOG_BUTTON,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def open_url(
@@ -87,7 +79,6 @@ class FedCm:
         dialog_id: str,
         account_index: int,
         account_url_type: AccountUrlType,
-        session_id: str | None = None,
     ) -> None:
         params = OpenUrlParams(
             dialog_id=dialog_id,
@@ -95,10 +86,9 @@ class FedCm:
             account_url_type=account_url_type,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=FedCmCommand.OPEN_URL,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def dismiss_dialog(
@@ -106,28 +96,24 @@ class FedCm:
         *,
         dialog_id: str,
         trigger_cooldown: bool | None = None,
-        session_id: str | None = None,
     ) -> None:
         params = DismissDialogParams(
             dialog_id=dialog_id, trigger_cooldown=trigger_cooldown
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=FedCmCommand.DISMISS_DIALOG,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def reset_cooldown(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Resets the cooldown time, if any, to allow the next FedCM call to show a dialog
         even if one was recently dismissed by the user.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=FedCmCommand.RESET_COOLDOWN,
             params=None,
-            session_id=session_id,
         )

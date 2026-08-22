@@ -23,12 +23,6 @@ class DetachedEvent:
     """
 
     reason: str = field(metadata={"cdp_name": "reason"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -37,12 +31,7 @@ class TargetCrashedEvent:
     Fired when debugging target has crashed
     """
 
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
+    pass
 
 
 @dataclass(kw_only=True, slots=True)
@@ -51,12 +40,7 @@ class TargetReloadedAfterCrashEvent:
     Fired when debugging target has reloaded after crash
     """
 
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
+    pass
 
 
 @dataclass(kw_only=True, slots=True)
@@ -66,9 +50,4 @@ class WorkerScriptLoadedEvent:
     evaluated.
     """
 
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
+    pass

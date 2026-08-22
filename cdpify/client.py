@@ -3,9 +3,10 @@ import logging
 from collections.abc import AsyncIterator
 from typing import Any, Self
 
-from cdpify.codec import decode_cdp
-from cdpify.domains import Browser, CDPDomains, Target
-from cdpify.events import EventDispatcher, RawCDPEvent
+from cdpify.domains import CDPDomains
+from cdpify.events import EventRouter, ReceivedEvent
+from cdpify.executor import BoundCommandExecutor
+from cdpify.session import CDPSession
 from cdpify.transport import Transport, TransportEvent
 
 logger = logging.getLogger(__name__)
@@ -34,9 +35,9 @@ class Client(CDPDomains):
             )
 
         self._transport = transport
-        self._events = EventDispatcher()
+        self._event_router = EventRouter()
         self._event_loop_task: asyncio.Task[None] | None = None
-        super().__init__(transport)
+        super().__init__(BoundCommandExecutor(transport))
 
     @property
     def transport(self) -> Transport:
@@ -61,6 +62,10 @@ class Client(CDPDomains):
         await self._stop_event_loop()
         await self._transport.disconnect()
 
+    def session(self, session_id: str) -> CDPSession:
+        """Create an immutable domain view bound to ``session_id``."""
+        return CDPSession(self._transport, self._event_router, session_id)
+
     async def execute(
         self,
         method: str,
@@ -68,6 +73,7 @@ class Client(CDPDomains):
         session_id: str | None = None,
         timeout: float | None = None,
     ) -> dict[str, Any]:
+        """Execute a low-level command, optionally routed to a target session."""
         return await self._transport.execute(
             method=method,
             params=params,
@@ -81,22 +87,28 @@ class Client(CDPDomains):
         event_type: type[T],
         timeout: float | None = None,
     ) -> AsyncIterator[T]:
-        queue: asyncio.Queue[T] = asyncio.Queue()
+        """Listen for events emitted by the root CDP connection only."""
+        async for event in self._event_router.listen(
+            event_name,
+            event_type,
+            session_id=None,
+            timeout=timeout,
+        ):
+            yield event
 
-        async def handler(event: RawCDPEvent) -> None:
-            typed_event = decode_cdp(
-                event_type,
-                event.params,
-                cdp_session_id=event.session_id,
-            )
-            await queue.put(typed_event)
-
-        try:
-            self._events.add_handler(event_name, handler)
-            while True:
-                yield await asyncio.wait_for(queue.get(), timeout=timeout)
-        finally:
-            self._events.remove_handler(event_name, handler)
+    async def listen_all[T](
+        self,
+        event_name: str,
+        event_type: type[T],
+        timeout: float | None = None,
+    ) -> AsyncIterator[ReceivedEvent[T]]:
+        """Listen for matching events from the root and every target session."""
+        async for event in self._event_router.listen_all(
+            event_name,
+            event_type,
+            timeout=timeout,
+        ):
+            yield event
 
     async def _run_event_loop(self) -> None:
         try:
@@ -108,12 +120,8 @@ class Client(CDPDomains):
             logger.exception("Transport event loop error")
 
     async def _dispatch_event(self, event: TransportEvent) -> None:
-        raw_event = RawCDPEvent(
-            params=event.params,
-            session_id=event.session_id,
-        )
         logger.debug("Event: %s", event.method)
-        handled = await self._events.dispatch(event.method, raw_event)
+        handled = await self._event_router.dispatch(event)
         if not handled:
             logger.debug("Unhandled event: %s", event.method)
 
@@ -126,90 +134,6 @@ class Client(CDPDomains):
             except asyncio.CancelledError:
                 pass
         self._event_loop_task = None
-
-
-class ActiveSessionCDPClient(CDPDomains):
-    """CDP client view that routes commands to the active target session."""
-
-    def __init__(self, root_client: Client) -> None:
-        self._root_client = root_client
-        self._session_transport = _SessionTransport(root_client.transport)
-        super().__init__(self._session_transport)
-
-    @property
-    def session_id(self) -> str | None:
-        return self._session_transport.session_id
-
-    @property
-    def browser(self) -> Browser:
-        return self._root_client.browser
-
-    @property
-    def target(self) -> Target:
-        return self._root_client.target
-
-    def switch_to(self, session_id: str | None) -> None:
-        self._session_transport.session_id = session_id
-
-    async def listen[T](
-        self,
-        event_name: str,
-        event_type: type[T],
-        timeout: float | None = None,
-    ) -> AsyncIterator[T]:
-        async for event in self._root_client.listen(
-            event_name=event_name,
-            event_type=event_type,
-            timeout=timeout,
-        ):
-            yield event
-
-    async def execute(
-        self,
-        method: str,
-        params: dict[str, Any] | None = None,
-        session_id: str | None = None,
-        timeout: float | None = None,
-    ) -> dict[str, Any]:
-        return await self._session_transport.execute(
-            method=method,
-            params=params,
-            session_id=session_id,
-            timeout=timeout,
-        )
-
-
-class _SessionTransport:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
-        self.session_id: str | None = None
-
-    @property
-    def is_connected(self) -> bool:
-        return self._transport.is_connected
-
-    async def connect(self) -> None:
-        await self._transport.connect()
-
-    async def disconnect(self) -> None:
-        await self._transport.disconnect()
-
-    async def execute(
-        self,
-        method: str,
-        params: dict[str, Any] | None = None,
-        session_id: str | None = None,
-        timeout: float | None = None,
-    ) -> dict[str, Any]:
-        return await self._transport.execute(
-            method=method,
-            params=params,
-            session_id=session_id if session_id is not None else self.session_id,
-            timeout=timeout,
-        )
-
-    def events(self) -> AsyncIterator[TransportEvent]:
-        return self._transport.events()
 
 
 def _create_websocket_transport(

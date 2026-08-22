@@ -34,12 +34,6 @@ class PlayerPropertiesChangedEvent:
 
     player_id: PlayerId = field(metadata={"cdp_name": "playerId"})
     properties: list[PlayerProperty] = field(metadata={"cdp_name": "properties"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -51,12 +45,6 @@ class PlayerEventsAddedEvent:
 
     player_id: PlayerId = field(metadata={"cdp_name": "playerId"})
     events: list[PlayerEvent] = field(metadata={"cdp_name": "events"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -67,12 +55,6 @@ class PlayerMessagesLoggedEvent:
 
     player_id: PlayerId = field(metadata={"cdp_name": "playerId"})
     messages: list[PlayerMessage] = field(metadata={"cdp_name": "messages"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -83,12 +65,6 @@ class PlayerErrorsRaisedEvent:
 
     player_id: PlayerId = field(metadata={"cdp_name": "playerId"})
     errors: list[PlayerError] = field(metadata={"cdp_name": "errors"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )
 
 
 @dataclass(kw_only=True, slots=True)
@@ -100,9 +76,3 @@ class PlayerCreatedEvent:
     """
 
     player: Player = field(metadata={"cdp_name": "player"})
-    cdp_session_id: str | None = field(
-        default=None,
-        repr=False,
-        compare=False,
-        metadata={"cdp": False},
-    )

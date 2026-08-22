@@ -7,7 +7,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from cdpify.codec import encode_cdp
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .commands import (
     DigitalCredentialsCommand,
@@ -22,8 +22,8 @@ if TYPE_CHECKING:
 
 
 class DigitalCredentials:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def set_virtual_wallet_behavior(
         self,
@@ -32,7 +32,6 @@ class DigitalCredentials:
         protocol: str | None = None,
         response: dict[str, Any] | None = None,
         frame_id: page.FrameId | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Sets the behavior of the virtual wallet for digital credential requests issued
@@ -42,8 +41,7 @@ class DigitalCredentials:
             action=action, protocol=protocol, response=response, frame_id=frame_id
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DigitalCredentialsCommand.SET_VIRTUAL_WALLET_BEHAVIOR,
             params=encode_cdp(params),
-            session_id=session_id,
         )

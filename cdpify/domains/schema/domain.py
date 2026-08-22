@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import decode_cdp
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .commands import (
     GetDomainsResult,
@@ -14,19 +14,17 @@ from .commands import (
 
 
 class Schema:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def get_domains(
         self,
-        session_id: str | None = None,
     ) -> GetDomainsResult:
         """
         Returns supported domains.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=SchemaCommand.GET_DOMAINS,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetDomainsResult, result)

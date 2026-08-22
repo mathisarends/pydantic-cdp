@@ -7,7 +7,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .commands import (
     CompositingReasonsParams,
@@ -36,68 +36,60 @@ if TYPE_CHECKING:
 
 
 class LayerTree:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def compositing_reasons(
         self,
         *,
         layer_id: LayerId,
-        session_id: str | None = None,
     ) -> CompositingReasonsResult:
         """
         Provides the reasons why the given layer was composited.
         """
         params = CompositingReasonsParams(layer_id=layer_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=LayerTreeCommand.COMPOSITING_REASONS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(CompositingReasonsResult, result)
 
     async def disable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Disables compositing tree inspection.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=LayerTreeCommand.DISABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def enable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Enables compositing tree inspection.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=LayerTreeCommand.ENABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def load_snapshot(
         self,
         *,
         tiles: list[PictureTile],
-        session_id: str | None = None,
     ) -> LoadSnapshotResult:
         """
         Returns the snapshot identifier.
         """
         params = LoadSnapshotParams(tiles=tiles)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=LayerTreeCommand.LOAD_SNAPSHOT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(LoadSnapshotResult, result)
 
@@ -105,17 +97,15 @@ class LayerTree:
         self,
         *,
         layer_id: LayerId,
-        session_id: str | None = None,
     ) -> MakeSnapshotResult:
         """
         Returns the layer snapshot identifier.
         """
         params = MakeSnapshotParams(layer_id=layer_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=LayerTreeCommand.MAKE_SNAPSHOT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(MakeSnapshotResult, result)
 
@@ -126,7 +116,6 @@ class LayerTree:
         min_repeat_count: int | None = None,
         min_duration: float | None = None,
         clip_rect: dom.Rect | None = None,
-        session_id: str | None = None,
     ) -> ProfileSnapshotResult:
         params = ProfileSnapshotParams(
             snapshot_id=snapshot_id,
@@ -135,10 +124,9 @@ class LayerTree:
             clip_rect=clip_rect,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=LayerTreeCommand.PROFILE_SNAPSHOT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(ProfileSnapshotResult, result)
 
@@ -146,17 +134,15 @@ class LayerTree:
         self,
         *,
         snapshot_id: SnapshotId,
-        session_id: str | None = None,
     ) -> None:
         """
         Releases layer snapshot captured by the back-end.
         """
         params = ReleaseSnapshotParams(snapshot_id=snapshot_id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=LayerTreeCommand.RELEASE_SNAPSHOT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def replay_snapshot(
@@ -166,7 +152,6 @@ class LayerTree:
         from_step: int | None = None,
         to_step: int | None = None,
         scale: float | None = None,
-        session_id: str | None = None,
     ) -> ReplaySnapshotResult:
         """
         Replays the layer snapshot and returns the resulting bitmap.
@@ -175,10 +160,9 @@ class LayerTree:
             snapshot_id=snapshot_id, from_step=from_step, to_step=to_step, scale=scale
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=LayerTreeCommand.REPLAY_SNAPSHOT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(ReplaySnapshotResult, result)
 
@@ -186,16 +170,14 @@ class LayerTree:
         self,
         *,
         snapshot_id: SnapshotId,
-        session_id: str | None = None,
     ) -> SnapshotCommandLogResult:
         """
         Replays the layer snapshot and returns canvas log.
         """
         params = SnapshotCommandLogParams(snapshot_id=snapshot_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=LayerTreeCommand.SNAPSHOT_COMMAND_LOG,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(SnapshotCommandLogResult, result)

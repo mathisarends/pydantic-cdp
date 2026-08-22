@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .commands import (
     ClearParams,
@@ -21,62 +21,54 @@ from .types import (
 
 
 class DOMStorage:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def clear(
         self,
         *,
         storage_id: StorageId,
-        session_id: str | None = None,
     ) -> None:
         params = ClearParams(storage_id=storage_id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMStorageCommand.CLEAR,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def disable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Disables storage tracking, prevents storage events from being sent to the
         client.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMStorageCommand.DISABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def enable(
         self,
-        session_id: str | None = None,
     ) -> None:
         """
         Enables storage tracking, storage events will now be delivered to the client.
         """
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMStorageCommand.ENABLE,
             params=None,
-            session_id=session_id,
         )
 
     async def get_dom_storage_items(
         self,
         *,
         storage_id: StorageId,
-        session_id: str | None = None,
     ) -> GetDOMStorageItemsResult:
         params = GetDOMStorageItemsParams(storage_id=storage_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=DOMStorageCommand.GET_DOM_STORAGE_ITEMS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetDOMStorageItemsResult, result)
 
@@ -85,14 +77,12 @@ class DOMStorage:
         *,
         storage_id: StorageId,
         key: str,
-        session_id: str | None = None,
     ) -> None:
         params = RemoveDOMStorageItemParams(storage_id=storage_id, key=key)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMStorageCommand.REMOVE_DOM_STORAGE_ITEM,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_dom_storage_item(
@@ -101,12 +91,10 @@ class DOMStorage:
         storage_id: StorageId,
         key: str,
         value: str,
-        session_id: str | None = None,
     ) -> None:
         params = SetDOMStorageItemParams(storage_id=storage_id, key=key, value=value)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=DOMStorageCommand.SET_DOM_STORAGE_ITEM,
             params=encode_cdp(params),
-            session_id=session_id,
         )

@@ -7,8 +7,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from cdpify.codec import decode_cdp, encode_cdp
+from cdpify.executor import CommandExecutor
 from cdpify.shared.decorators import deprecated
-from cdpify.transport import Transport
 
 from .commands import (
     ActivateTargetParams,
@@ -53,24 +53,22 @@ if TYPE_CHECKING:
 
 
 class Target:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def activate_target(
         self,
         *,
         target_id: TargetID,
-        session_id: str | None = None,
     ) -> None:
         """
         Activates (focuses) the target.
         """
         params = ActivateTargetParams(target_id=target_id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=TargetCommand.ACTIVATE_TARGET,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def attach_to_target(
@@ -78,31 +76,27 @@ class Target:
         *,
         target_id: TargetID,
         flatten: bool | None = None,
-        session_id: str | None = None,
     ) -> AttachToTargetResult:
         """
         Attaches to the target with given id.
         """
         params = AttachToTargetParams(target_id=target_id, flatten=flatten)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=TargetCommand.ATTACH_TO_TARGET,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(AttachToTargetResult, result)
 
     async def attach_to_browser_target(
         self,
-        session_id: str | None = None,
     ) -> AttachToBrowserTargetResult:
         """
         Attaches to the browser target, only uses flat sessionId mode.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=TargetCommand.ATTACH_TO_BROWSER_TARGET,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(AttachToBrowserTargetResult, result)
 
@@ -110,17 +104,15 @@ class Target:
         self,
         *,
         target_id: TargetID,
-        session_id: str | None = None,
     ) -> CloseTargetResult:
         """
         Closes the target. If the target is a page that gets closed too.
         """
         params = CloseTargetParams(target_id=target_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=TargetCommand.CLOSE_TARGET,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(CloseTargetResult, result)
 
@@ -130,7 +122,6 @@ class Target:
         target_id: TargetID,
         binding_name: str | None = None,
         inherit_permissions: bool | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Inject object to the target's main frame that provides a communication channel
@@ -146,10 +137,9 @@ class Target:
             inherit_permissions=inherit_permissions,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=TargetCommand.EXPOSE_DEV_TOOLS_PROTOCOL,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def create_browser_context(
@@ -159,7 +149,6 @@ class Target:
         proxy_server: str | None = None,
         proxy_bypass_list: str | None = None,
         origins_with_universal_network_access: list[str] | None = None,
-        session_id: str | None = None,
     ) -> CreateBrowserContextResult:
         """
         Creates a new empty BrowserContext. Similar to an incognito profile but you can
@@ -172,24 +161,21 @@ class Target:
             origins_with_universal_network_access=origins_with_universal_network_access,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=TargetCommand.CREATE_BROWSER_CONTEXT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(CreateBrowserContextResult, result)
 
     async def get_browser_contexts(
         self,
-        session_id: str | None = None,
     ) -> GetBrowserContextsResult:
         """
         Returns all browser contexts created with `Target.createBrowserContext` method.
         """
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=TargetCommand.GET_BROWSER_CONTEXTS,
             params=None,
-            session_id=session_id,
         )
         return decode_cdp(GetBrowserContextsResult, result)
 
@@ -209,7 +195,6 @@ class Target:
         for_tab: bool | None = None,
         hidden: bool | None = None,
         focus: bool | None = None,
-        session_id: str | None = None,
     ) -> CreateTargetResult:
         """
         Creates a new page.
@@ -230,38 +215,32 @@ class Target:
             focus=focus,
         )
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=TargetCommand.CREATE_TARGET,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(CreateTargetResult, result)
 
     async def detach_from_target(
         self,
         *,
-        detach_from_target_session_id: SessionID | None = None,
+        session_id: SessionID | None = None,
         target_id: TargetID | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Detaches session with given id.
         """
-        params = DetachFromTargetParams(
-            session_id=detach_from_target_session_id, target_id=target_id
-        )
+        params = DetachFromTargetParams(session_id=session_id, target_id=target_id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=TargetCommand.DETACH_FROM_TARGET,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def dispose_browser_context(
         self,
         *,
         browser_context_id: browser.BrowserContextID,
-        session_id: str | None = None,
     ) -> None:
         """
         Deletes a BrowserContext. All the belonging pages will be closed without
@@ -269,27 +248,24 @@ class Target:
         """
         params = DisposeBrowserContextParams(browser_context_id=browser_context_id)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=TargetCommand.DISPOSE_BROWSER_CONTEXT,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def get_target_info(
         self,
         *,
         target_id: TargetID | None = None,
-        session_id: str | None = None,
     ) -> GetTargetInfoResult:
         """
         Returns information about a target.
         """
         params = GetTargetInfoParams(target_id=target_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=TargetCommand.GET_TARGET_INFO,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetTargetInfoResult, result)
 
@@ -297,17 +273,15 @@ class Target:
         self,
         *,
         filter: TargetFilter | None = None,
-        session_id: str | None = None,
     ) -> GetTargetsResult:
         """
         Retrieves a list of available targets.
         """
         params = GetTargetsParams(filter=filter)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=TargetCommand.GET_TARGETS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetTargetsResult, result)
 
@@ -316,24 +290,20 @@ class Target:
         self,
         *,
         message: str,
-        send_message_to_target_session_id: SessionID | None = None,
+        session_id: SessionID | None = None,
         target_id: TargetID | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Sends protocol message over session with given id. Consider using flat mode
         instead; see commands attachToTarget, setAutoAttach, and crbug.com/991325.
         """
         params = SendMessageToTargetParams(
-            message=message,
-            session_id=send_message_to_target_session_id,
-            target_id=target_id,
+            message=message, session_id=session_id, target_id=target_id
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=TargetCommand.SEND_MESSAGE_TO_TARGET,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_auto_attach(
@@ -343,7 +313,6 @@ class Target:
         wait_for_debugger_on_start: bool,
         flatten: bool | None = None,
         filter: TargetFilter | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Controls whether to automatically attach to new targets which are considered to
@@ -361,10 +330,9 @@ class Target:
             filter=filter,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=TargetCommand.SET_AUTO_ATTACH,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def auto_attach_related(
@@ -373,7 +341,6 @@ class Target:
         target_id: TargetID,
         wait_for_debugger_on_start: bool,
         filter: TargetFilter | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Adds the specified target to the list of targets that will be monitored for any
@@ -389,10 +356,9 @@ class Target:
             filter=filter,
         )
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=TargetCommand.AUTO_ATTACH_RELATED,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_discover_targets(
@@ -400,7 +366,6 @@ class Target:
         *,
         discover: bool,
         filter: TargetFilter | None = None,
-        session_id: str | None = None,
     ) -> None:
         """
         Controls whether to discover available targets and notify via
@@ -408,17 +373,15 @@ class Target:
         """
         params = SetDiscoverTargetsParams(discover=discover, filter=filter)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=TargetCommand.SET_DISCOVER_TARGETS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_remote_locations(
         self,
         *,
         locations: list[RemoteLocation],
-        session_id: str | None = None,
     ) -> None:
         """
         Enables target discovery for the specified locations, when `setDiscoverTargets`
@@ -426,17 +389,15 @@ class Target:
         """
         params = SetRemoteLocationsParams(locations=locations)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=TargetCommand.SET_REMOTE_LOCATIONS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def get_dev_tools_target(
         self,
         *,
         target_id: TargetID,
-        session_id: str | None = None,
     ) -> GetDevToolsTargetResult:
         """
         Gets the targetId of the DevTools page target opened for the given target (if
@@ -444,10 +405,9 @@ class Target:
         """
         params = GetDevToolsTargetParams(target_id=target_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=TargetCommand.GET_DEV_TOOLS_TARGET,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(GetDevToolsTargetResult, result)
 
@@ -456,16 +416,14 @@ class Target:
         *,
         target_id: TargetID,
         panel_id: str | None = None,
-        session_id: str | None = None,
     ) -> OpenDevToolsResult:
         """
         Opens a DevTools window for the target.
         """
         params = OpenDevToolsParams(target_id=target_id, panel_id=panel_id)
 
-        result = await self._transport.execute(
+        result = await self._executor.execute(
             method=TargetCommand.OPEN_DEV_TOOLS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
         return decode_cdp(OpenDevToolsResult, result)

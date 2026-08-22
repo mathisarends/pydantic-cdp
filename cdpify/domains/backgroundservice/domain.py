@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import encode_cdp
-from cdpify.transport import Transport
+from cdpify.executor import CommandExecutor
 
 from .commands import (
     BackgroundServiceCommand,
@@ -20,41 +20,37 @@ from .types import (
 
 
 class BackgroundService:
-    def __init__(self, transport: Transport) -> None:
-        self._transport = transport
+    def __init__(self, executor: CommandExecutor) -> None:
+        self._executor = executor
 
     async def start_observing(
         self,
         *,
         service: ServiceName,
-        session_id: str | None = None,
     ) -> None:
         """
         Enables event updates for the service.
         """
         params = StartObservingParams(service=service)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=BackgroundServiceCommand.START_OBSERVING,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def stop_observing(
         self,
         *,
         service: ServiceName,
-        session_id: str | None = None,
     ) -> None:
         """
         Disables event updates for the service.
         """
         params = StopObservingParams(service=service)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=BackgroundServiceCommand.STOP_OBSERVING,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def set_recording(
@@ -62,32 +58,28 @@ class BackgroundService:
         *,
         should_record: bool,
         service: ServiceName,
-        session_id: str | None = None,
     ) -> None:
         """
         Set the recording state for the service.
         """
         params = SetRecordingParams(should_record=should_record, service=service)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=BackgroundServiceCommand.SET_RECORDING,
             params=encode_cdp(params),
-            session_id=session_id,
         )
 
     async def clear_events(
         self,
         *,
         service: ServiceName,
-        session_id: str | None = None,
     ) -> None:
         """
         Clears all stored data for the service.
         """
         params = ClearEventsParams(service=service)
 
-        await self._transport.execute(
+        await self._executor.execute(
             method=BackgroundServiceCommand.CLEAR_EVENTS,
             params=encode_cdp(params),
-            session_id=session_id,
         )
