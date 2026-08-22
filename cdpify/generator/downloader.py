@@ -37,5 +37,5 @@ async def _fetch(client: httpx.AsyncClient, filename: str) -> dict:
     response.raise_for_status()
     data = response.json()
 
-    (_SPECS_DIR / filename).write_text(json.dumps(data, indent=2))
+    (_SPECS_DIR / filename).write_text(json.dumps(data, indent=2), encoding="utf-8")
     return data

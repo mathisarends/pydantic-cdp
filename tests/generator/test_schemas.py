@@ -1,9 +1,21 @@
 from cdpify.generator.schemas import (
     CDPSpecs,
+    Command,
     Domain,
     ProtocolSpec,
     ProtocolVersion,
 )
+
+
+def test_collection_defaults_are_not_shared() -> None:
+    first = Domain(domain="First")
+    second = Domain(domain="Second")
+
+    first.dependencies.append("Page")
+    first.commands.append(Command(name="enable"))
+
+    assert second.dependencies == []
+    assert second.commands == []
 
 
 class TestParameterAlias:

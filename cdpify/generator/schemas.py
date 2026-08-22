@@ -23,8 +23,8 @@ class Parameter(BaseModel):
 class Command(BaseModel):
     name: str
     description: str | None = None
-    parameters: list[Parameter] = []
-    returns: list[Parameter] = []
+    parameters: list[Parameter] = Field(default_factory=list)
+    returns: list[Parameter] = Field(default_factory=list)
     experimental: bool = False
     deprecated: bool = False
 
@@ -32,7 +32,7 @@ class Command(BaseModel):
 class Event(BaseModel):
     name: str
     description: str | None = None
-    parameters: list[Parameter] = []
+    parameters: list[Parameter] = Field(default_factory=list)
     experimental: bool = False
     deprecated: bool = False
 
@@ -42,7 +42,7 @@ class TypeDefinition(BaseModel):
     type: str
     description: str | None = None
     enum: list[str] | None = None
-    properties: list[Parameter] = []
+    properties: list[Parameter] = Field(default_factory=list)
     items: dict[str, Any] | None = None
 
 
@@ -51,10 +51,10 @@ class Domain(BaseModel):
     description: str | None = None
     experimental: bool = False
     deprecated: bool = False
-    dependencies: list[str] = []
-    types: list[TypeDefinition] = []
-    commands: list[Command] = []
-    events: list[Event] = []
+    dependencies: list[str] = Field(default_factory=list)
+    types: list[TypeDefinition] = Field(default_factory=list)
+    commands: list[Command] = Field(default_factory=list)
+    events: list[Event] = Field(default_factory=list)
 
 
 class ProtocolSpec(BaseModel):

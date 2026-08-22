@@ -42,8 +42,8 @@ _HAS_CONTENT: dict[type[BaseGenerator], Callable[[Domain], bool]] = {
 _DOMAIN_ACCESSORS_GENERATOR = DomainAccessorsGenerator()
 
 _RUFF_COMMANDS: tuple[list[str], ...] = (
-    ["ruff", "check", "--fix", str(_CDP_DIR)],
     ["ruff", "format", str(_CDP_DIR)],
+    ["ruff", "check", "--fix", str(_CDP_DIR)],
 )
 
 
@@ -110,7 +110,8 @@ def _format_with_ruff() -> None:
         for cmd in _RUFF_COMMANDS:
             result = subprocess.run(cmd, capture_output=True, text=True, check=False)
             if result.returncode != 0:
-                logger.warning(f"  ⚠️  {' '.join(cmd)}:\n{result.stderr}")
+                details = (result.stderr or result.stdout).strip()
+                raise RuntimeError(f"{' '.join(cmd)} failed:\n{details}")
         logger.info("  ✓ Code formatted successfully")
     except FileNotFoundError:
         logger.warning("  ⚠️  Ruff not found – install with: uv add ruff")
