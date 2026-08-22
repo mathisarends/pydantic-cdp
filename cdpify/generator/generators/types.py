@@ -62,7 +62,7 @@ class TypesGenerator(BaseGenerator):
         lines = []
         if type_def.description:
             lines.append(format_docstring(type_def.description, indent=0))
-        lines.append(f"{type_def.id} = Literal[{values}]")
+        lines.append(f"type {type_def.id} = Literal[{values}]")
         return "\n".join(lines)
 
     def _render_object(self, type_def: TypeDefinition, ctx: GenerationContext) -> str:
