@@ -1,157 +1,148 @@
 import logging
-import re
 import sys
-from dataclasses import asdict, dataclass, fields, is_dataclass
-from typing import Any, ClassVar, Self, get_args, get_origin, get_type_hints
+from dataclasses import MISSING, asdict, dataclass, field, fields, is_dataclass
+from typing import Any, Self, get_args, get_origin, get_type_hints
+
+from cdpify.shared.naming import to_cdp_case, to_snake_case
 
 logger = logging.getLogger(__name__)
 
+_CDP_FIELD_METADATA_KEY = "cdp"
 
-@dataclass
+
+@dataclass(kw_only=True, slots=True)
 class CDPModel:
-    _ACRONYMS: ClassVar[frozenset[str]] = frozenset(
-        {
-            "api",
-            "css",
-            "dom",
-            "html",
-            "json",
-            "pdf",
-            "spc",
-            "ssl",
-            "url",
-            "uuid",
-            "xml",
-            "xhr",
-            "ax",
-            "cpu",
-            "gpu",
-            "io",
-            "js",
-            "os",
-            "ui",
-            "uri",
-            "usb",
-            "wasm",
-            "http",
-            "https",
-        }
+    def to_cdp_params(self) -> dict[str, Any]:
+        return _serialize_model(self)
+
+    @classmethod
+    def from_cdp(
+        cls,
+        data: dict[str, Any],
+        *,
+        cdp_session_id: str | None = None,
+    ) -> Self:
+        return _deserialize_model(cls, data, cdp_session_id=cdp_session_id)
+
+
+@dataclass(kw_only=True, slots=True)
+class CDPEvent(CDPModel):
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={_CDP_FIELD_METADATA_KEY: False},
     )
 
-    def to_cdp_params(self) -> dict[str, Any]:
-        return {self._to_camel(k): v for k, v in asdict(self).items() if v is not None}
 
-    @classmethod
-    def from_cdp(cls, data: dict) -> Self:
-        snake_data = {cls._to_snake(k): v for k, v in data.items()}
-        resolved_types = cls._resolve_field_types()
+def _serialize_model(model: CDPModel) -> dict[str, Any]:
+    values = asdict(model)
+    return {
+        to_cdp_case(model_field.name): values[model_field.name]
+        for model_field in fields(model)
+        if model_field.metadata.get(_CDP_FIELD_METADATA_KEY, True)
+        and values[model_field.name] is not None
+    }
 
-        converted = {}
-        for field_name, value in snake_data.items():
-            if field_name not in resolved_types:
-                continue
 
-            field_type = resolved_types[field_name]
-            if field_type is Any:
-                converted[field_name] = value
-            else:
-                converted[field_name] = cls._deserialize_field(value, field_type)
+def _deserialize_model[T: CDPModel](
+    model_type: type[T],
+    data: dict[str, Any],
+    *,
+    cdp_session_id: str | None,
+) -> T:
+    resolved_types = _resolve_field_types(model_type)
+    converted: dict[str, Any] = {}
 
+    for cdp_name, value in data.items():
+        field_name = to_snake_case(cdp_name)
+        field_type = resolved_types.get(field_name)
+        if field_type is None:
+            continue
+        converted[field_name] = _deserialize_value(value, field_type)
+
+    if issubclass(model_type, CDPEvent):
+        converted["cdp_session_id"] = cdp_session_id
+
+    return _construct_model(model_type, converted, data)
+
+
+def _construct_model[T: CDPModel](
+    model_type: type[T],
+    converted: dict[str, Any],
+    data: dict[str, Any],
+) -> T:
+    init_fields = [
+        model_field for model_field in fields(model_type) if model_field.init
+    ]
+    model_fields = {model_field.name for model_field in init_fields}
+    values = {key: value for key, value in converted.items() if key in model_fields}
+    missing = [
+        model_field.name
+        for model_field in init_fields
+        if model_field.name not in values
+        and model_field.default is MISSING
+        and model_field.default_factory is MISSING
+    ]
+
+    if missing:
+        logger.warning(
+            "CDP spec mismatch for %s. Missing fields: %s. Data keys: %s",
+            model_type.__name__,
+            missing,
+            list(data.keys()),
+        )
+        values.update(dict.fromkeys(missing))
+
+    return model_type(**values)
+
+
+def _resolve_field_types(model_type: type[CDPModel]) -> dict[str, Any]:
+    try:
+        return get_type_hints(model_type)
+    except Exception:
+        pass
+
+    module = sys.modules.get(model_type.__module__)
+    globalns = getattr(module, "__dict__", {}) if module else {}
+    resolved: dict[str, Any] = {}
+
+    for model_field in fields(model_type):
+        annotation = model_type.__annotations__.get(model_field.name, model_field.type)
+        if not isinstance(annotation, str):
+            resolved[model_field.name] = annotation
+            continue
         try:
-            return cls(**converted)
-        except TypeError as e:
-            model_fields = {f.name for f in fields(cls)}
-            missing = [f.name for f in fields(cls) if f.name not in converted]
-            
-            logger.warning(
-                "CDP spec mismatch for %s: %s. Missing fields: %s. Data keys: %s",
-                cls.__name__,
-                e,
-                missing,
-                list(data.keys()),
-            )
-            
-            for field in fields(cls):
-                if field.name not in converted:
-                    converted[field.name] = None
-            filtered = {k: v for k, v in converted.items() if k in model_fields}
-            return cls(**filtered)
-
-    @classmethod
-    def _resolve_field_types(cls) -> dict[str, Any]:
-        """
-        Resolve type hints field by field, falling back to Any for unresolvable types.
-        """
-        try:
-            return get_type_hints(cls)
+            resolved[model_field.name] = eval(annotation, globalns)
         except Exception:
-            pass
+            resolved[model_field.name] = Any
 
-        # Fallback: resolve each annotation individually
-        module = sys.modules.get(cls.__module__)
-        globalns = getattr(module, "__dict__", {}) if module else {}
+    return resolved
 
-        resolved = {}
-        for f in fields(cls):
-            annotation = cls.__annotations__.get(f.name, f.type)
 
-            if not isinstance(annotation, str):
-                resolved[f.name] = annotation
-                continue
-
-            try:
-                resolved[f.name] = eval(annotation, globalns)
-            except Exception:
-                resolved[f.name] = Any
-
-        return resolved
-
-    @classmethod
-    def _to_camel(cls, s: str) -> str:
-        parts = s.split("_")
-
-        if not parts:
-            return s
-
-        result = [parts[0].lower()]
-
-        for part in parts[1:]:
-            lower = part.lower()
-            result.append(part.upper() if lower in cls._ACRONYMS else part.capitalize())
-
-        return "".join(result)
-
-    @classmethod
-    def _to_snake(cls, s: str) -> str:
-        s = re.sub(r"([a-z\d])([A-Z])", r"\1_\2", s)
-        s = re.sub(r"([A-Z]+)([A-Z][a-z])", r"\1_\2", s)
-        return s.lower()
-
-    @classmethod
-    def _deserialize_field(cls, value: Any, field_type: type) -> Any:
-        if value is None:
-            return None
-
-        origin = get_origin(field_type)
-        args = get_args(field_type)
-
-        if args and type(None) in args:
-            non_none_types = [arg for arg in args if arg is not type(None)]
-            if len(non_none_types) == 1:
-                return cls._deserialize_field(value, non_none_types[0])
-
-        if origin is list and args:
-            item_type = args[0]
-            return [cls._deserialize_field(item, item_type) for item in value]
-
-        if isinstance(value, dict) and cls._is_cdp_model(field_type):
-            return field_type.from_cdp(value)
-
+def _deserialize_value(value: Any, field_type: Any) -> Any:
+    if value is None or field_type is Any:
         return value
 
-    @staticmethod
-    def _is_cdp_model(field_type: type) -> bool:
-        try:
-            return is_dataclass(field_type) and issubclass(field_type, CDPModel)
-        except TypeError:
-            return False
+    origin = get_origin(field_type)
+    args = get_args(field_type)
+
+    if args and type(None) in args:
+        non_none_types = [arg for arg in args if arg is not type(None)]
+        if len(non_none_types) == 1:
+            return _deserialize_value(value, non_none_types[0])
+
+    if origin is list and args:
+        return [_deserialize_value(item, args[0]) for item in value]
+
+    if isinstance(value, dict) and _is_cdp_model(field_type):
+        return field_type.from_cdp(value)
+
+    return value
+
+
+def _is_cdp_model(field_type: Any) -> bool:
+    try:
+        return is_dataclass(field_type) and issubclass(field_type, CDPModel)
+    except TypeError:
+        return False
