@@ -7,7 +7,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.transport import Transport
 
 from .commands import (
     AccessibilityCommand,
@@ -33,8 +33,8 @@ if TYPE_CHECKING:
 
 
 class Accessibility:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def disable(
         self,
@@ -43,7 +43,7 @@ class Accessibility:
         """
         Disables the accessibility domain.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=AccessibilityCommand.DISABLE,
             params=None,
             session_id=session_id,
@@ -58,7 +58,7 @@ class Accessibility:
         between method calls. This turns on accessibility for the page, which can impact
         performance until accessibility is disabled.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=AccessibilityCommand.ENABLE,
             params=None,
             session_id=session_id,
@@ -84,7 +84,7 @@ class Accessibility:
             fetch_relatives=fetch_relatives,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=AccessibilityCommand.GET_PARTIAL_AX_TREE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -103,7 +103,7 @@ class Accessibility:
         """
         params = GetFullAXTreeParams(depth=depth, frame_id=frame_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=AccessibilityCommand.GET_FULL_AX_TREE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -121,7 +121,7 @@ class Accessibility:
         """
         params = GetRootAXNodeParams(frame_id=frame_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=AccessibilityCommand.GET_ROOT_AX_NODE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -144,7 +144,7 @@ class Accessibility:
             node_id=node_id, backend_node_id=backend_node_id, object_id=object_id
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=AccessibilityCommand.GET_AX_NODE_AND_ANCESTORS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -164,7 +164,7 @@ class Accessibility:
         """
         params = GetChildAXNodesParams(id=id, frame_id=frame_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=AccessibilityCommand.GET_CHILD_AX_NODES,
             params=encode_cdp(params),
             session_id=session_id,
@@ -197,7 +197,7 @@ class Accessibility:
             role=role,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=AccessibilityCommand.QUERY_AX_TREE,
             params=encode_cdp(params),
             session_id=session_id,

@@ -7,7 +7,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from cdpify.codec import encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.transport import Transport
 
 from .commands import (
     AutofillCommand,
@@ -24,8 +24,8 @@ if TYPE_CHECKING:
 
 
 class Autofill:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def trigger(
         self,
@@ -44,7 +44,7 @@ class Autofill:
             field_id=field_id, frame_id=frame_id, card=card, address=address
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=AutofillCommand.TRIGGER,
             params=encode_cdp(params),
             session_id=session_id,
@@ -61,7 +61,7 @@ class Autofill:
         """
         params = SetAddressesParams(addresses=addresses)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=AutofillCommand.SET_ADDRESSES,
             params=encode_cdp(params),
             session_id=session_id,
@@ -74,7 +74,7 @@ class Autofill:
         """
         Disables autofill domain notifications.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=AutofillCommand.DISABLE,
             params=None,
             session_id=session_id,
@@ -87,7 +87,7 @@ class Autofill:
         """
         Enables autofill domain notifications.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=AutofillCommand.ENABLE,
             params=None,
             session_id=session_id,

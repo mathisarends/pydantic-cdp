@@ -7,7 +7,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.transport import Transport
 
 from .commands import (
     CacheStorageCommand,
@@ -30,8 +30,8 @@ if TYPE_CHECKING:
 
 
 class CacheStorage:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def delete_cache(
         self,
@@ -44,7 +44,7 @@ class CacheStorage:
         """
         params = DeleteCacheParams(cache_id=cache_id)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=CacheStorageCommand.DELETE_CACHE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -62,7 +62,7 @@ class CacheStorage:
         """
         params = DeleteEntryParams(cache_id=cache_id, request=request)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=CacheStorageCommand.DELETE_ENTRY,
             params=encode_cdp(params),
             session_id=session_id,
@@ -85,7 +85,7 @@ class CacheStorage:
             storage_bucket=storage_bucket,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=CacheStorageCommand.REQUEST_CACHE_NAMES,
             params=encode_cdp(params),
             session_id=session_id,
@@ -107,7 +107,7 @@ class CacheStorage:
             cache_id=cache_id, request_url=request_url, request_headers=request_headers
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=CacheStorageCommand.REQUEST_CACHED_RESPONSE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -133,7 +133,7 @@ class CacheStorage:
             path_filter=path_filter,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=CacheStorageCommand.REQUEST_ENTRIES,
             params=encode_cdp(params),
             session_id=session_id,

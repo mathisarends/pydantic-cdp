@@ -7,7 +7,7 @@ from __future__ import annotations
 from typing import Any
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.transport import Transport
 
 from .commands import (
     ClearStorageItemsParams,
@@ -28,8 +28,8 @@ from .types import (
 
 
 class Extensions:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def trigger_action(
         self,
@@ -43,7 +43,7 @@ class Extensions:
         """
         params = TriggerActionParams(id=id, target_id=target_id)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=ExtensionsCommand.TRIGGER_ACTION,
             params=encode_cdp(params),
             session_id=session_id,
@@ -62,7 +62,7 @@ class Extensions:
         """
         params = LoadUnpackedParams(path=path, enable_in_incognito=enable_in_incognito)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=ExtensionsCommand.LOAD_UNPACKED,
             params=encode_cdp(params),
             session_id=session_id,
@@ -76,7 +76,7 @@ class Extensions:
         """
         Gets a list of all unpacked extensions.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=ExtensionsCommand.GET_EXTENSIONS,
             params=None,
             session_id=session_id,
@@ -94,7 +94,7 @@ class Extensions:
         """
         params = UninstallParams(id=id)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=ExtensionsCommand.UNINSTALL,
             params=encode_cdp(params),
             session_id=session_id,
@@ -114,7 +114,7 @@ class Extensions:
         """
         params = GetStorageItemsParams(id=id, storage_area=storage_area, keys=keys)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=ExtensionsCommand.GET_STORAGE_ITEMS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -134,7 +134,7 @@ class Extensions:
         """
         params = RemoveStorageItemsParams(id=id, storage_area=storage_area, keys=keys)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=ExtensionsCommand.REMOVE_STORAGE_ITEMS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -152,7 +152,7 @@ class Extensions:
         """
         params = ClearStorageItemsParams(id=id, storage_area=storage_area)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=ExtensionsCommand.CLEAR_STORAGE_ITEMS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -172,7 +172,7 @@ class Extensions:
         """
         params = SetStorageItemsParams(id=id, storage_area=storage_area, values=values)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=ExtensionsCommand.SET_STORAGE_ITEMS,
             params=encode_cdp(params),
             session_id=session_id,

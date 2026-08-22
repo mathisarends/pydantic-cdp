@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.transport import Transport
 
 from .commands import (
     BackgroundServiceCommand,
@@ -20,8 +20,8 @@ from .types import (
 
 
 class BackgroundService:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def start_observing(
         self,
@@ -34,7 +34,7 @@ class BackgroundService:
         """
         params = StartObservingParams(service=service)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=BackgroundServiceCommand.START_OBSERVING,
             params=encode_cdp(params),
             session_id=session_id,
@@ -51,7 +51,7 @@ class BackgroundService:
         """
         params = StopObservingParams(service=service)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=BackgroundServiceCommand.STOP_OBSERVING,
             params=encode_cdp(params),
             session_id=session_id,
@@ -69,7 +69,7 @@ class BackgroundService:
         """
         params = SetRecordingParams(should_record=should_record, service=service)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=BackgroundServiceCommand.SET_RECORDING,
             params=encode_cdp(params),
             session_id=session_id,
@@ -86,7 +86,7 @@ class BackgroundService:
         """
         params = ClearEventsParams(service=service)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=BackgroundServiceCommand.CLEAR_EVENTS,
             params=encode_cdp(params),
             session_id=session_id,

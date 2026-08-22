@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.transport import Transport
 
 from .commands import (
     GetBestEffortCoverageResult,
@@ -19,14 +19,14 @@ from .commands import (
 
 
 class Profiler:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def disable(
         self,
         session_id: str | None = None,
     ) -> None:
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=ProfilerCommand.DISABLE,
             params=None,
             session_id=session_id,
@@ -36,7 +36,7 @@ class Profiler:
         self,
         session_id: str | None = None,
     ) -> None:
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=ProfilerCommand.ENABLE,
             params=None,
             session_id=session_id,
@@ -50,7 +50,7 @@ class Profiler:
         Collect coverage data for the current isolate. The coverage data may be
         incomplete due to garbage collection.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=ProfilerCommand.GET_BEST_EFFORT_COVERAGE,
             params=None,
             session_id=session_id,
@@ -69,7 +69,7 @@ class Profiler:
         """
         params = SetSamplingIntervalParams(interval=interval)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=ProfilerCommand.SET_SAMPLING_INTERVAL,
             params=encode_cdp(params),
             session_id=session_id,
@@ -79,7 +79,7 @@ class Profiler:
         self,
         session_id: str | None = None,
     ) -> None:
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=ProfilerCommand.START,
             params=None,
             session_id=session_id,
@@ -104,7 +104,7 @@ class Profiler:
             allow_triggered_updates=allow_triggered_updates,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=ProfilerCommand.START_PRECISE_COVERAGE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -115,7 +115,7 @@ class Profiler:
         self,
         session_id: str | None = None,
     ) -> StopResult:
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=ProfilerCommand.STOP,
             params=None,
             session_id=session_id,
@@ -130,7 +130,7 @@ class Profiler:
         Disable precise code coverage. Disabling releases unnecessary execution count
         records and allows executing optimized code.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=ProfilerCommand.STOP_PRECISE_COVERAGE,
             params=None,
             session_id=session_id,
@@ -144,7 +144,7 @@ class Profiler:
         Collect coverage data for the current isolate, and resets execution counters.
         Precise code coverage needs to have started.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=ProfilerCommand.TAKE_PRECISE_COVERAGE,
             params=None,
             session_id=session_id,

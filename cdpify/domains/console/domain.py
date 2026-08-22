@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.transport import Transport
 
 from .commands import (
     ConsoleCommand,
@@ -12,8 +12,8 @@ from .commands import (
 
 
 class Console:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def clear_messages(
         self,
@@ -22,7 +22,7 @@ class Console:
         """
         Does nothing.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=ConsoleCommand.CLEAR_MESSAGES,
             params=None,
             session_id=session_id,
@@ -36,7 +36,7 @@ class Console:
         Disables console domain, prevents further console messages from being reported
         to the client.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=ConsoleCommand.DISABLE,
             params=None,
             session_id=session_id,
@@ -50,7 +50,7 @@ class Console:
         Enables console domain, sends the messages collected so far to the client by
         means of the `messageAdded` notification.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=ConsoleCommand.ENABLE,
             params=None,
             session_id=session_id,

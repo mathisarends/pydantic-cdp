@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.transport import Transport
 
 from .commands import (
     LogCommand,
@@ -17,8 +17,8 @@ from .types import (
 
 
 class Log:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def clear(
         self,
@@ -27,7 +27,7 @@ class Log:
         """
         Clears the log.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=LogCommand.CLEAR,
             params=None,
             session_id=session_id,
@@ -41,7 +41,7 @@ class Log:
         Disables log domain, prevents further log entries from being reported to the
         client.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=LogCommand.DISABLE,
             params=None,
             session_id=session_id,
@@ -55,7 +55,7 @@ class Log:
         Enables log domain, sends the entries collected so far to the client by means
         of the `entryAdded` notification.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=LogCommand.ENABLE,
             params=None,
             session_id=session_id,
@@ -72,7 +72,7 @@ class Log:
         """
         params = StartViolationsReportParams(config=config)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=LogCommand.START_VIOLATIONS_REPORT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -85,7 +85,7 @@ class Log:
         """
         Stop violation reporting.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=LogCommand.STOP_VIOLATIONS_REPORT,
             params=None,
             session_id=session_id,

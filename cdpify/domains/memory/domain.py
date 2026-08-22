@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.transport import Transport
 
 from .commands import (
     GetAllTimeSamplingProfileResult,
@@ -24,8 +24,8 @@ from .types import (
 
 
 class Memory:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def get_dom_counters(
         self,
@@ -34,7 +34,7 @@ class Memory:
         """
         Retruns current DOM object counters.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=MemoryCommand.GET_DOM_COUNTERS,
             params=None,
             session_id=session_id,
@@ -48,7 +48,7 @@ class Memory:
         """
         Retruns DOM object counters after preparing renderer for leak detection.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=MemoryCommand.GET_DOM_COUNTERS_FOR_LEAK_DETECTION,
             params=None,
             session_id=session_id,
@@ -63,7 +63,7 @@ class Memory:
         Prepares for leak detection by terminating workers, stopping spellcheckers,
         dropping non-essential internal caches, running garbage collections, etc.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=MemoryCommand.PREPARE_FOR_LEAK_DETECTION,
             params=None,
             session_id=session_id,
@@ -76,7 +76,7 @@ class Memory:
         """
         Simulate OomIntervention by purging V8 memory.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=MemoryCommand.FORCIBLY_PURGE_JAVA_SCRIPT_MEMORY,
             params=None,
             session_id=session_id,
@@ -93,7 +93,7 @@ class Memory:
         """
         params = SetPressureNotificationsSuppressedParams(suppressed=suppressed)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=MemoryCommand.SET_PRESSURE_NOTIFICATIONS_SUPPRESSED,
             params=encode_cdp(params),
             session_id=session_id,
@@ -110,7 +110,7 @@ class Memory:
         """
         params = SimulatePressureNotificationParams(level=level)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=MemoryCommand.SIMULATE_PRESSURE_NOTIFICATION,
             params=encode_cdp(params),
             session_id=session_id,
@@ -130,7 +130,7 @@ class Memory:
             sampling_interval=sampling_interval, suppress_randomness=suppress_randomness
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=MemoryCommand.START_SAMPLING,
             params=encode_cdp(params),
             session_id=session_id,
@@ -143,7 +143,7 @@ class Memory:
         """
         Stop collecting native memory profile.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=MemoryCommand.STOP_SAMPLING,
             params=None,
             session_id=session_id,
@@ -157,7 +157,7 @@ class Memory:
         Retrieve native memory allocations profile collected since renderer process
         startup.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=MemoryCommand.GET_ALL_TIME_SAMPLING_PROFILE,
             params=None,
             session_id=session_id,
@@ -172,7 +172,7 @@ class Memory:
         Retrieve native memory allocations profile collected since browser process
         startup.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=MemoryCommand.GET_BROWSER_SAMPLING_PROFILE,
             params=None,
             session_id=session_id,
@@ -187,7 +187,7 @@ class Memory:
         Retrieve native memory allocations profile collected since last `startSampling`
         call.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=MemoryCommand.GET_SAMPLING_PROFILE,
             params=None,
             session_id=session_id,

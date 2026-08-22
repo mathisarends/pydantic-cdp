@@ -7,7 +7,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.transport import Transport
 
 from .commands import (
     ContinueRequestParams,
@@ -34,8 +34,8 @@ if TYPE_CHECKING:
 
 
 class Fetch:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def disable(
         self,
@@ -44,7 +44,7 @@ class Fetch:
         """
         Disables the fetch domain.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=FetchCommand.DISABLE,
             params=None,
             session_id=session_id,
@@ -65,7 +65,7 @@ class Fetch:
             patterns=patterns, handle_auth_requests=handle_auth_requests
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=FetchCommand.ENABLE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -83,7 +83,7 @@ class Fetch:
         """
         params = FailRequestParams(request_id=request_id, error_reason=error_reason)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=FetchCommand.FAIL_REQUEST,
             params=encode_cdp(params),
             session_id=session_id,
@@ -112,7 +112,7 @@ class Fetch:
             response_phrase=response_phrase,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=FetchCommand.FULFILL_REQUEST,
             params=encode_cdp(params),
             session_id=session_id,
@@ -141,7 +141,7 @@ class Fetch:
             intercept_response=intercept_response,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=FetchCommand.CONTINUE_REQUEST,
             params=encode_cdp(params),
             session_id=session_id,
@@ -162,7 +162,7 @@ class Fetch:
             request_id=request_id, auth_challenge_response=auth_challenge_response
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=FetchCommand.CONTINUE_WITH_AUTH,
             params=encode_cdp(params),
             session_id=session_id,
@@ -191,7 +191,7 @@ class Fetch:
             binary_response_headers=binary_response_headers,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=FetchCommand.CONTINUE_RESPONSE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -215,7 +215,7 @@ class Fetch:
         """
         params = GetResponseBodyParams(request_id=request_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=FetchCommand.GET_RESPONSE_BODY,
             params=encode_cdp(params),
             session_id=session_id,
@@ -239,7 +239,7 @@ class Fetch:
         """
         params = TakeResponseBodyAsStreamParams(request_id=request_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=FetchCommand.TAKE_RESPONSE_BODY_AS_STREAM,
             params=encode_cdp(params),
             session_id=session_id,

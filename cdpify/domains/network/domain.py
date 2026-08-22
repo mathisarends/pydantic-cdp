@@ -7,8 +7,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
+from cdpify.transport import Transport
 
 from .commands import (
     CanClearBrowserCacheResult,
@@ -77,8 +77,8 @@ if TYPE_CHECKING:
 
 
 class Network:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     @deprecated()
     async def can_clear_browser_cache(
@@ -88,7 +88,7 @@ class Network:
         """
         Tells whether clearing browser cache is supported.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=NetworkCommand.CAN_CLEAR_BROWSER_CACHE,
             params=None,
             session_id=session_id,
@@ -103,7 +103,7 @@ class Network:
         """
         Tells whether clearing browser cookies is supported.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=NetworkCommand.CAN_CLEAR_BROWSER_COOKIES,
             params=None,
             session_id=session_id,
@@ -118,7 +118,7 @@ class Network:
         """
         Tells whether emulation of network conditions is supported.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=NetworkCommand.CAN_EMULATE_NETWORK_CONDITIONS,
             params=None,
             session_id=session_id,
@@ -132,7 +132,7 @@ class Network:
         """
         Clears browser cache.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=NetworkCommand.CLEAR_BROWSER_CACHE,
             params=None,
             session_id=session_id,
@@ -145,7 +145,7 @@ class Network:
         """
         Clears browser cookies.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=NetworkCommand.CLEAR_BROWSER_COOKIES,
             params=None,
             session_id=session_id,
@@ -169,7 +169,7 @@ class Network:
             name=name, url=url, domain=domain, path=path, partition_key=partition_key
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=NetworkCommand.DELETE_COOKIES,
             params=encode_cdp(params),
             session_id=session_id,
@@ -183,7 +183,7 @@ class Network:
         Disables network tracking, prevents network events from being sent to the
         client.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=NetworkCommand.DISABLE,
             params=None,
             session_id=session_id,
@@ -219,7 +219,7 @@ class Network:
             packet_reordering=packet_reordering,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=NetworkCommand.EMULATE_NETWORK_CONDITIONS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -245,7 +245,7 @@ class Network:
             matched_network_conditions=matched_network_conditions,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=NetworkCommand.EMULATE_NETWORK_CONDITIONS_BY_RULE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -273,7 +273,7 @@ class Network:
             connection_type=connection_type,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=NetworkCommand.OVERRIDE_NETWORK_STATE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -300,7 +300,7 @@ class Network:
             enable_durable_messages=enable_durable_messages,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=NetworkCommand.ENABLE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -323,7 +323,7 @@ class Network:
             max_resource_buffer_size=max_resource_buffer_size,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=NetworkCommand.CONFIGURE_DURABLE_MESSAGES,
             params=encode_cdp(params),
             session_id=session_id,
@@ -339,7 +339,7 @@ class Network:
         detailed cookie information in the `cookies` field. Deprecated. Use
         Storage.getCookies instead.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=NetworkCommand.GET_ALL_COOKIES,
             params=None,
             session_id=session_id,
@@ -357,7 +357,7 @@ class Network:
         """
         params = GetCertificateParams(origin=origin)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=NetworkCommand.GET_CERTIFICATE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -376,7 +376,7 @@ class Network:
         """
         params = GetCookiesParams(urls=urls)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=NetworkCommand.GET_COOKIES,
             params=encode_cdp(params),
             session_id=session_id,
@@ -394,7 +394,7 @@ class Network:
         """
         params = GetResponseBodyParams(request_id=request_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=NetworkCommand.GET_RESPONSE_BODY,
             params=encode_cdp(params),
             session_id=session_id,
@@ -413,7 +413,7 @@ class Network:
         """
         params = GetRequestPostDataParams(request_id=request_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=NetworkCommand.GET_REQUEST_POST_DATA,
             params=encode_cdp(params),
             session_id=session_id,
@@ -433,7 +433,7 @@ class Network:
         """
         params = ReplayXHRParams(request_id=request_id)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=NetworkCommand.REPLAY_XHR,
             params=encode_cdp(params),
             session_id=session_id,
@@ -458,7 +458,7 @@ class Network:
             is_regex=is_regex,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=NetworkCommand.SEARCH_IN_RESPONSE_BODY,
             params=encode_cdp(params),
             session_id=session_id,
@@ -477,7 +477,7 @@ class Network:
         """
         params = SetBlockedURLsParams(url_patterns=url_patterns, urls=urls)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=NetworkCommand.SET_BLOCKED_UR_LS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -494,7 +494,7 @@ class Network:
         """
         params = SetBypassServiceWorkerParams(bypass=bypass)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=NetworkCommand.SET_BYPASS_SERVICE_WORKER,
             params=encode_cdp(params),
             session_id=session_id,
@@ -511,7 +511,7 @@ class Network:
         """
         params = SetCacheDisabledParams(cache_disabled=cache_disabled)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=NetworkCommand.SET_CACHE_DISABLED,
             params=encode_cdp(params),
             session_id=session_id,
@@ -555,7 +555,7 @@ class Network:
             partition_key=partition_key,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=NetworkCommand.SET_COOKIE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -573,7 +573,7 @@ class Network:
         """
         params = SetCookiesParams(cookies=cookies)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=NetworkCommand.SET_COOKIES,
             params=encode_cdp(params),
             session_id=session_id,
@@ -591,7 +591,7 @@ class Network:
         """
         params = SetExtraHTTPHeadersParams(headers=headers)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=NetworkCommand.SET_EXTRA_HTTP_HEADERS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -608,7 +608,7 @@ class Network:
         """
         params = SetAttachDebugStackParams(enabled=enabled)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=NetworkCommand.SET_ATTACH_DEBUG_STACK,
             params=encode_cdp(params),
             session_id=session_id,
@@ -633,7 +633,7 @@ class Network:
             user_agent_metadata=user_agent_metadata,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=NetworkCommand.SET_USER_AGENT_OVERRIDE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -651,7 +651,7 @@ class Network:
         """
         params = StreamResourceContentParams(request_id=request_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=NetworkCommand.STREAM_RESOURCE_CONTENT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -669,7 +669,7 @@ class Network:
         """
         params = GetSecurityIsolationStatusParams(frame_id=frame_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=NetworkCommand.GET_SECURITY_ISOLATION_STATUS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -689,7 +689,7 @@ class Network:
         """
         params = EnableReportingApiParams(enable=enable)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=NetworkCommand.ENABLE_REPORTING_API,
             params=encode_cdp(params),
             session_id=session_id,
@@ -706,7 +706,7 @@ class Network:
         """
         params = EnableDeviceBoundSessionsParams(enable=enable)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=NetworkCommand.ENABLE_DEVICE_BOUND_SESSIONS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -723,7 +723,7 @@ class Network:
         """
         params = DeleteDeviceBoundSessionParams(key=key)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=NetworkCommand.DELETE_DEVICE_BOUND_SESSION,
             params=encode_cdp(params),
             session_id=session_id,
@@ -740,7 +740,7 @@ class Network:
         """
         params = FetchSchemefulSiteParams(origin=origin)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=NetworkCommand.FETCH_SCHEMEFUL_SITE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -760,7 +760,7 @@ class Network:
         """
         params = LoadNetworkResourceParams(frame_id=frame_id, url=url, options=options)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=NetworkCommand.LOAD_NETWORK_RESOURCE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -781,7 +781,7 @@ class Network:
             enable_third_party_cookie_restriction=enable_third_party_cookie_restriction
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=NetworkCommand.SET_COOKIE_CONTROLS,
             params=encode_cdp(params),
             session_id=session_id,

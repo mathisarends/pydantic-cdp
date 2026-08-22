@@ -7,8 +7,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
+from cdpify.transport import Transport
 
 from .commands import (
     ClearCookiesParams,
@@ -50,8 +50,8 @@ if TYPE_CHECKING:
 
 
 class Storage:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     @deprecated()
     async def get_storage_key_for_frame(
@@ -66,7 +66,7 @@ class Storage:
         """
         params = GetStorageKeyForFrameParams(frame_id=frame_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=StorageCommand.GET_STORAGE_KEY_FOR_FRAME,
             params=encode_cdp(params),
             session_id=session_id,
@@ -85,7 +85,7 @@ class Storage:
         """
         params = GetStorageKeyParams(frame_id=frame_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=StorageCommand.GET_STORAGE_KEY,
             params=encode_cdp(params),
             session_id=session_id,
@@ -104,7 +104,7 @@ class Storage:
         """
         params = ClearDataForOriginParams(origin=origin, storage_types=storage_types)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=StorageCommand.CLEAR_DATA_FOR_ORIGIN,
             params=encode_cdp(params),
             session_id=session_id,
@@ -124,7 +124,7 @@ class Storage:
             storage_key=storage_key, storage_types=storage_types
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=StorageCommand.CLEAR_DATA_FOR_STORAGE_KEY,
             params=encode_cdp(params),
             session_id=session_id,
@@ -141,7 +141,7 @@ class Storage:
         """
         params = GetCookiesParams(browser_context_id=browser_context_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=StorageCommand.GET_COOKIES,
             params=encode_cdp(params),
             session_id=session_id,
@@ -162,7 +162,7 @@ class Storage:
             cookies=cookies, browser_context_id=browser_context_id
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=StorageCommand.SET_COOKIES,
             params=encode_cdp(params),
             session_id=session_id,
@@ -179,7 +179,7 @@ class Storage:
         """
         params = ClearCookiesParams(browser_context_id=browser_context_id)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=StorageCommand.CLEAR_COOKIES,
             params=encode_cdp(params),
             session_id=session_id,
@@ -196,7 +196,7 @@ class Storage:
         """
         params = GetUsageAndQuotaParams(origin=origin)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=StorageCommand.GET_USAGE_AND_QUOTA,
             params=encode_cdp(params),
             session_id=session_id,
@@ -215,7 +215,7 @@ class Storage:
         """
         params = OverrideQuotaForOriginParams(origin=origin, quota_size=quota_size)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=StorageCommand.OVERRIDE_QUOTA_FOR_ORIGIN,
             params=encode_cdp(params),
             session_id=session_id,
@@ -233,7 +233,7 @@ class Storage:
         """
         params = TrackCacheStorageForOriginParams(origin=origin)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=StorageCommand.TRACK_CACHE_STORAGE_FOR_ORIGIN,
             params=encode_cdp(params),
             session_id=session_id,
@@ -251,7 +251,7 @@ class Storage:
         """
         params = TrackCacheStorageForStorageKeyParams(storage_key=storage_key)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=StorageCommand.TRACK_CACHE_STORAGE_FOR_STORAGE_KEY,
             params=encode_cdp(params),
             session_id=session_id,
@@ -268,7 +268,7 @@ class Storage:
         """
         params = TrackIndexedDBForOriginParams(origin=origin)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=StorageCommand.TRACK_INDEXED_DB_FOR_ORIGIN,
             params=encode_cdp(params),
             session_id=session_id,
@@ -285,7 +285,7 @@ class Storage:
         """
         params = TrackIndexedDBForStorageKeyParams(storage_key=storage_key)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=StorageCommand.TRACK_INDEXED_DB_FOR_STORAGE_KEY,
             params=encode_cdp(params),
             session_id=session_id,
@@ -302,7 +302,7 @@ class Storage:
         """
         params = UntrackCacheStorageForOriginParams(origin=origin)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=StorageCommand.UNTRACK_CACHE_STORAGE_FOR_ORIGIN,
             params=encode_cdp(params),
             session_id=session_id,
@@ -319,7 +319,7 @@ class Storage:
         """
         params = UntrackCacheStorageForStorageKeyParams(storage_key=storage_key)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=StorageCommand.UNTRACK_CACHE_STORAGE_FOR_STORAGE_KEY,
             params=encode_cdp(params),
             session_id=session_id,
@@ -336,7 +336,7 @@ class Storage:
         """
         params = UntrackIndexedDBForOriginParams(origin=origin)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=StorageCommand.UNTRACK_INDEXED_DB_FOR_ORIGIN,
             params=encode_cdp(params),
             session_id=session_id,
@@ -353,7 +353,7 @@ class Storage:
         """
         params = UntrackIndexedDBForStorageKeyParams(storage_key=storage_key)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=StorageCommand.UNTRACK_INDEXED_DB_FOR_STORAGE_KEY,
             params=encode_cdp(params),
             session_id=session_id,
@@ -367,7 +367,7 @@ class Storage:
         Returns the number of stored Trust Tokens per issuer for the current browsing
         context.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=StorageCommand.GET_TRUST_TOKENS,
             params=None,
             session_id=session_id,
@@ -386,7 +386,7 @@ class Storage:
         """
         params = ClearTrustTokensParams(issuer_origin=issuer_origin)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=StorageCommand.CLEAR_TRUST_TOKENS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -405,7 +405,7 @@ class Storage:
         """
         params = SetStorageBucketTrackingParams(storage_key=storage_key, enable=enable)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=StorageCommand.SET_STORAGE_BUCKET_TRACKING,
             params=encode_cdp(params),
             session_id=session_id,
@@ -422,7 +422,7 @@ class Storage:
         """
         params = DeleteStorageBucketParams(bucket=bucket)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=StorageCommand.DELETE_STORAGE_BUCKET,
             params=encode_cdp(params),
             session_id=session_id,
@@ -435,7 +435,7 @@ class Storage:
         """
         Deletes state for sites identified as potential bounce trackers, immediately.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=StorageCommand.RUN_BOUNCE_TRACKING_MITIGATIONS,
             params=None,
             session_id=session_id,
@@ -451,7 +451,7 @@ class Storage:
         browser session. The effective Related Website Sets will not change during a
         browser session.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=StorageCommand.GET_RELATED_WEBSITE_SETS,
             params=None,
             session_id=session_id,

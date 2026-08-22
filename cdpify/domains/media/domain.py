@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.transport import Transport
 
 from .commands import (
     MediaCommand,
@@ -12,8 +12,8 @@ from .commands import (
 
 
 class Media:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def enable(
         self,
@@ -22,7 +22,7 @@ class Media:
         """
         Enables the Media domain
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=MediaCommand.ENABLE,
             params=None,
             session_id=session_id,
@@ -35,7 +35,7 @@ class Media:
         """
         Disables the Media domain.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=MediaCommand.DISABLE,
             params=None,
             session_id=session_id,

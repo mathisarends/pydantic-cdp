@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.transport import Transport
 
 from .commands import (
     AddBindingParams,
@@ -48,8 +48,8 @@ from .types import (
 
 
 class Runtime:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def await_promise(
         self,
@@ -68,7 +68,7 @@ class Runtime:
             generate_preview=generate_preview,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=RuntimeCommand.AWAIT_PROMISE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -113,7 +113,7 @@ class Runtime:
             serialization_options=serialization_options,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=RuntimeCommand.CALL_FUNCTION_ON,
             params=encode_cdp(params),
             session_id=session_id,
@@ -139,7 +139,7 @@ class Runtime:
             execution_context_id=execution_context_id,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=RuntimeCommand.COMPILE_SCRIPT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -153,7 +153,7 @@ class Runtime:
         """
         Disables reporting of execution contexts creation.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=RuntimeCommand.DISABLE,
             params=None,
             session_id=session_id,
@@ -166,7 +166,7 @@ class Runtime:
         """
         Discards collected exceptions and console API calls.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=RuntimeCommand.DISCARD_CONSOLE_ENTRIES,
             params=None,
             session_id=session_id,
@@ -181,7 +181,7 @@ class Runtime:
         `executionContextCreated` event. When the reporting gets enabled the event will
         be sent immediately for each existing execution context.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=RuntimeCommand.ENABLE,
             params=None,
             session_id=session_id,
@@ -230,7 +230,7 @@ class Runtime:
             serialization_options=serialization_options,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=RuntimeCommand.EVALUATE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -244,7 +244,7 @@ class Runtime:
         """
         Returns the isolate id.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=RuntimeCommand.GET_ISOLATE_ID,
             params=None,
             session_id=session_id,
@@ -259,7 +259,7 @@ class Runtime:
         Returns the JavaScript heap usage. It is the total usage of the corresponding
         isolate not scoped to a particular Runtime.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=RuntimeCommand.GET_HEAP_USAGE,
             params=None,
             session_id=session_id,
@@ -288,7 +288,7 @@ class Runtime:
             non_indexed_properties_only=non_indexed_properties_only,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=RuntimeCommand.GET_PROPERTIES,
             params=encode_cdp(params),
             session_id=session_id,
@@ -308,7 +308,7 @@ class Runtime:
             execution_context_id=execution_context_id
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=RuntimeCommand.GLOBAL_LEXICAL_SCOPE_NAMES,
             params=encode_cdp(params),
             session_id=session_id,
@@ -326,7 +326,7 @@ class Runtime:
             prototype_object_id=prototype_object_id, object_group=object_group
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=RuntimeCommand.QUERY_OBJECTS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -344,7 +344,7 @@ class Runtime:
         """
         params = ReleaseObjectParams(object_id=object_id)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=RuntimeCommand.RELEASE_OBJECT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -361,7 +361,7 @@ class Runtime:
         """
         params = ReleaseObjectGroupParams(object_group=object_group)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=RuntimeCommand.RELEASE_OBJECT_GROUP,
             params=encode_cdp(params),
             session_id=session_id,
@@ -374,7 +374,7 @@ class Runtime:
         """
         Tells inspected instance to run if it was waiting for debugger to attach.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=RuntimeCommand.RUN_IF_WAITING_FOR_DEBUGGER,
             params=None,
             session_id=session_id,
@@ -407,7 +407,7 @@ class Runtime:
             await_promise=await_promise,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=RuntimeCommand.RUN_SCRIPT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -425,7 +425,7 @@ class Runtime:
         """
         params = SetAsyncCallStackDepthParams(max_depth=max_depth)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=RuntimeCommand.SET_ASYNC_CALL_STACK_DEPTH,
             params=encode_cdp(params),
             session_id=session_id,
@@ -439,7 +439,7 @@ class Runtime:
     ) -> None:
         params = SetCustomObjectFormatterEnabledParams(enabled=enabled)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=RuntimeCommand.SET_CUSTOM_OBJECT_FORMATTER_ENABLED,
             params=encode_cdp(params),
             session_id=session_id,
@@ -453,7 +453,7 @@ class Runtime:
     ) -> None:
         params = SetMaxCallStackSizeToCaptureParams(size=size)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=RuntimeCommand.SET_MAX_CALL_STACK_SIZE_TO_CAPTURE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -467,7 +467,7 @@ class Runtime:
         Terminate current or next JavaScript execution. Will cancel the termination
         when the outer-most script execution ends.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=RuntimeCommand.TERMINATE_EXECUTION,
             params=None,
             session_id=session_id,
@@ -494,7 +494,7 @@ class Runtime:
             execution_context_name=execution_context_name,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=RuntimeCommand.ADD_BINDING,
             params=encode_cdp(params),
             session_id=session_id,
@@ -512,7 +512,7 @@ class Runtime:
         """
         params = RemoveBindingParams(name=name)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=RuntimeCommand.REMOVE_BINDING,
             params=encode_cdp(params),
             session_id=session_id,
@@ -532,7 +532,7 @@ class Runtime:
         """
         params = GetExceptionDetailsParams(error_object_id=error_object_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=RuntimeCommand.GET_EXCEPTION_DETAILS,
             params=encode_cdp(params),
             session_id=session_id,

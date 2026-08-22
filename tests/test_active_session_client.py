@@ -1,9 +1,11 @@
+from collections.abc import AsyncIterator
 from dataclasses import dataclass, field
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
 from cdpify import ActiveSessionCDPClient, Client
+from cdpify.transport import TransportEvent
 
 
 @dataclass(kw_only=True, slots=True)
@@ -15,16 +17,33 @@ class _Event:
     )
 
 
+class _Transport:
+    def __init__(self) -> None:
+        self.is_connected = True
+        self.execute = AsyncMock(return_value={})
+
+    async def connect(self) -> None: ...
+
+    async def disconnect(self) -> None: ...
+
+    def events(self) -> AsyncIterator[TransportEvent]:
+        async def empty_stream() -> AsyncIterator[TransportEvent]:
+            if False:
+                yield TransportEvent("", {})
+
+        return empty_stream()
+
+
 @pytest.mark.asyncio
 async def test_routes_commands_to_active_session() -> None:
-    root_client = MagicMock(spec=Client)
-    root_client.send_raw = AsyncMock(return_value={})
+    transport = _Transport()
+    root_client = Client(transport=transport)  # type: ignore[arg-type]
     client = ActiveSessionCDPClient(root_client)
 
     client.switch_to("session-2")
     await client.page.enable()
 
-    root_client.send_raw.assert_awaited_once_with(
+    transport.execute.assert_awaited_once_with(
         method="Page.enable",
         params={},
         session_id="session-2",
@@ -34,14 +53,14 @@ async def test_routes_commands_to_active_session() -> None:
 
 @pytest.mark.asyncio
 async def test_explicit_session_overrides_active_session() -> None:
-    root_client = MagicMock(spec=Client)
-    root_client.send_raw = AsyncMock(return_value={})
+    transport = _Transport()
+    root_client = Client(transport=transport)  # type: ignore[arg-type]
     client = ActiveSessionCDPClient(root_client)
     client.switch_to("active-session")
 
-    await client.send_raw("Runtime.evaluate", session_id="explicit-session")
+    await client.execute("Runtime.evaluate", session_id="explicit-session")
 
-    root_client.send_raw.assert_awaited_once_with(
+    transport.execute.assert_awaited_once_with(
         method="Runtime.evaluate",
         params=None,
         session_id="explicit-session",
@@ -50,7 +69,7 @@ async def test_explicit_session_overrides_active_session() -> None:
 
 
 def test_uses_root_browser_and_target_domains() -> None:
-    root_client = MagicMock(spec=Client)
+    root_client = Client(transport=_Transport())  # type: ignore[arg-type]
     client = ActiveSessionCDPClient(root_client)
 
     assert client.browser is root_client.browser
@@ -64,8 +83,8 @@ async def test_delegates_event_listening_to_root_client() -> None:
     async def event_stream():
         yield expected
 
-    root_client = MagicMock(spec=Client)
-    root_client.listen.return_value = event_stream()
+    root_client = Client(transport=_Transport())  # type: ignore[arg-type]
+    root_client.listen = MagicMock(return_value=event_stream())  # type: ignore[method-assign]
     client = ActiveSessionCDPClient(root_client)
 
     event = await anext(client.listen("Test.event", _Event, timeout=1.0))

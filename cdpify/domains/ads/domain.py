@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import decode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.transport import Transport
 
 from .commands import (
     AdsCommand,
@@ -15,8 +15,8 @@ from .commands import (
 
 
 class Ads:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def get_ad_metrics(
         self,
@@ -25,7 +25,7 @@ class Ads:
         """
         Retrieves ad metrics for the current page.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=AdsCommand.GET_AD_METRICS,
             params=None,
             session_id=session_id,
@@ -41,7 +41,7 @@ class Ads:
         returns the newly tracked ad scripts since the last call to getAdScripts (i.e.,
         the delta).
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=AdsCommand.GET_AD_SCRIPTS,
             params=None,
             session_id=session_id,

@@ -7,7 +7,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.transport import Transport
 
 from .commands import (
     CompositingReasonsParams,
@@ -36,8 +36,8 @@ if TYPE_CHECKING:
 
 
 class LayerTree:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def compositing_reasons(
         self,
@@ -50,7 +50,7 @@ class LayerTree:
         """
         params = CompositingReasonsParams(layer_id=layer_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=LayerTreeCommand.COMPOSITING_REASONS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -64,7 +64,7 @@ class LayerTree:
         """
         Disables compositing tree inspection.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=LayerTreeCommand.DISABLE,
             params=None,
             session_id=session_id,
@@ -77,7 +77,7 @@ class LayerTree:
         """
         Enables compositing tree inspection.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=LayerTreeCommand.ENABLE,
             params=None,
             session_id=session_id,
@@ -94,7 +94,7 @@ class LayerTree:
         """
         params = LoadSnapshotParams(tiles=tiles)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=LayerTreeCommand.LOAD_SNAPSHOT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -112,7 +112,7 @@ class LayerTree:
         """
         params = MakeSnapshotParams(layer_id=layer_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=LayerTreeCommand.MAKE_SNAPSHOT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -135,7 +135,7 @@ class LayerTree:
             clip_rect=clip_rect,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=LayerTreeCommand.PROFILE_SNAPSHOT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -153,7 +153,7 @@ class LayerTree:
         """
         params = ReleaseSnapshotParams(snapshot_id=snapshot_id)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=LayerTreeCommand.RELEASE_SNAPSHOT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -175,7 +175,7 @@ class LayerTree:
             snapshot_id=snapshot_id, from_step=from_step, to_step=to_step, scale=scale
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=LayerTreeCommand.REPLAY_SNAPSHOT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -193,7 +193,7 @@ class LayerTree:
         """
         params = SnapshotCommandLogParams(snapshot_id=snapshot_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=LayerTreeCommand.SNAPSHOT_COMMAND_LOG,
             params=encode_cdp(params),
             session_id=session_id,

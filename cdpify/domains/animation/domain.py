@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.transport import Transport
 
 from .commands import (
     AnimationCommand,
@@ -23,8 +23,8 @@ from .commands import (
 
 
 class Animation:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def disable(
         self,
@@ -33,7 +33,7 @@ class Animation:
         """
         Disables animation domain notifications.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=AnimationCommand.DISABLE,
             params=None,
             session_id=session_id,
@@ -46,7 +46,7 @@ class Animation:
         """
         Enables animation domain notifications.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=AnimationCommand.ENABLE,
             params=None,
             session_id=session_id,
@@ -63,7 +63,7 @@ class Animation:
         """
         params = GetCurrentTimeParams(id=id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=AnimationCommand.GET_CURRENT_TIME,
             params=encode_cdp(params),
             session_id=session_id,
@@ -77,7 +77,7 @@ class Animation:
         """
         Gets the playback rate of the document timeline.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=AnimationCommand.GET_PLAYBACK_RATE,
             params=None,
             session_id=session_id,
@@ -95,7 +95,7 @@ class Animation:
         """
         params = ReleaseAnimationsParams(animations=animations)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=AnimationCommand.RELEASE_ANIMATIONS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -112,7 +112,7 @@ class Animation:
         """
         params = ResolveAnimationParams(animation_id=animation_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=AnimationCommand.RESOLVE_ANIMATION,
             params=encode_cdp(params),
             session_id=session_id,
@@ -131,7 +131,7 @@ class Animation:
         """
         params = SeekAnimationsParams(animations=animations, current_time=current_time)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=AnimationCommand.SEEK_ANIMATIONS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -149,7 +149,7 @@ class Animation:
         """
         params = SetPausedParams(animations=animations, paused=paused)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=AnimationCommand.SET_PAUSED,
             params=encode_cdp(params),
             session_id=session_id,
@@ -166,7 +166,7 @@ class Animation:
         """
         params = SetPlaybackRateParams(playback_rate=playback_rate)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=AnimationCommand.SET_PLAYBACK_RATE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -187,7 +187,7 @@ class Animation:
             animation_id=animation_id, duration=duration, delay=delay
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=AnimationCommand.SET_TIMING,
             params=encode_cdp(params),
             session_id=session_id,

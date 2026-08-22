@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.transport import Transport
 
 from .commands import (
     AddCredentialParams,
@@ -33,8 +33,8 @@ from .types import (
 
 
 class WebAuthn:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def enable(
         self,
@@ -48,7 +48,7 @@ class WebAuthn:
         """
         params = EnableParams(enable_ui=enable_ui)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=WebAuthnCommand.ENABLE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -61,7 +61,7 @@ class WebAuthn:
         """
         Disable the WebAuthn domain.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=WebAuthnCommand.DISABLE,
             params=None,
             session_id=session_id,
@@ -78,7 +78,7 @@ class WebAuthn:
         """
         params = AddVirtualAuthenticatorParams(options=options)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=WebAuthnCommand.ADD_VIRTUAL_AUTHENTICATOR,
             params=encode_cdp(params),
             session_id=session_id,
@@ -105,7 +105,7 @@ class WebAuthn:
             is_bad_up=is_bad_up,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=WebAuthnCommand.SET_RESPONSE_OVERRIDE_BITS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -122,7 +122,7 @@ class WebAuthn:
         """
         params = RemoveVirtualAuthenticatorParams(authenticator_id=authenticator_id)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=WebAuthnCommand.REMOVE_VIRTUAL_AUTHENTICATOR,
             params=encode_cdp(params),
             session_id=session_id,
@@ -142,7 +142,7 @@ class WebAuthn:
             authenticator_id=authenticator_id, credential=credential
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=WebAuthnCommand.ADD_CREDENTIAL,
             params=encode_cdp(params),
             session_id=session_id,
@@ -163,7 +163,7 @@ class WebAuthn:
             authenticator_id=authenticator_id, credential_id=credential_id
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=WebAuthnCommand.GET_CREDENTIAL,
             params=encode_cdp(params),
             session_id=session_id,
@@ -181,7 +181,7 @@ class WebAuthn:
         """
         params = GetCredentialsParams(authenticator_id=authenticator_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=WebAuthnCommand.GET_CREDENTIALS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -202,7 +202,7 @@ class WebAuthn:
             authenticator_id=authenticator_id, credential_id=credential_id
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=WebAuthnCommand.REMOVE_CREDENTIAL,
             params=encode_cdp(params),
             session_id=session_id,
@@ -219,7 +219,7 @@ class WebAuthn:
         """
         params = ClearCredentialsParams(authenticator_id=authenticator_id)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=WebAuthnCommand.CLEAR_CREDENTIALS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -240,7 +240,7 @@ class WebAuthn:
             authenticator_id=authenticator_id, is_user_verified=is_user_verified
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=WebAuthnCommand.SET_USER_VERIFIED,
             params=encode_cdp(params),
             session_id=session_id,
@@ -261,7 +261,7 @@ class WebAuthn:
             authenticator_id=authenticator_id, enabled=enabled
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=WebAuthnCommand.SET_AUTOMATIC_PRESENCE_SIMULATION,
             params=encode_cdp(params),
             session_id=session_id,
@@ -293,7 +293,7 @@ class WebAuthn:
             sign_count=sign_count,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=WebAuthnCommand.SET_CREDENTIAL_PROPERTIES,
             params=encode_cdp(params),
             session_id=session_id,

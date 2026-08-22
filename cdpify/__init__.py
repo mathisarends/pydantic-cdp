@@ -6,12 +6,15 @@ from .exceptions import (
     CDPException,
     CDPTimeoutException,
 )
+from .transport import Transport, TransportEvent
 
 __all__ = [
     "Client",
     "ActiveSessionCDPClient",
     "decode_cdp",
     "encode_cdp",
+    "Transport",
+    "TransportEvent",
     "CDPException",
     "CDPConnectionException",
     "CDPCommandException",

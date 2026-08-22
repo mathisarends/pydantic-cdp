@@ -5,8 +5,8 @@
 from __future__ import annotations
 
 from cdpify.codec import encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
+from cdpify.transport import Transport
 
 from .commands import (
     HandleCertificateErrorParams,
@@ -20,8 +20,8 @@ from .types import (
 
 
 class Security:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def disable(
         self,
@@ -30,7 +30,7 @@ class Security:
         """
         Disables tracking security state changes.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=SecurityCommand.DISABLE,
             params=None,
             session_id=session_id,
@@ -43,7 +43,7 @@ class Security:
         """
         Enables tracking security state changes.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=SecurityCommand.ENABLE,
             params=None,
             session_id=session_id,
@@ -60,7 +60,7 @@ class Security:
         """
         params = SetIgnoreCertificateErrorsParams(ignore=ignore)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=SecurityCommand.SET_IGNORE_CERTIFICATE_ERRORS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -79,7 +79,7 @@ class Security:
         """
         params = HandleCertificateErrorParams(event_id=event_id, action=action)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=SecurityCommand.HANDLE_CERTIFICATE_ERROR,
             params=encode_cdp(params),
             session_id=session_id,
@@ -99,7 +99,7 @@ class Security:
         """
         params = SetOverrideCertificateErrorsParams(override=override)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=SecurityCommand.SET_OVERRIDE_CERTIFICATE_ERRORS,
             params=encode_cdp(params),
             session_id=session_id,

@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.transport import Transport
 
 from .commands import (
     BindParams,
@@ -15,8 +15,8 @@ from .commands import (
 
 
 class Tethering:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def bind(
         self,
@@ -29,7 +29,7 @@ class Tethering:
         """
         params = BindParams(port=port)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=TetheringCommand.BIND,
             params=encode_cdp(params),
             session_id=session_id,
@@ -46,7 +46,7 @@ class Tethering:
         """
         params = UnbindParams(port=port)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=TetheringCommand.UNBIND,
             params=encode_cdp(params),
             session_id=session_id,

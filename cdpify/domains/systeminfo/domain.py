@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.transport import Transport
 
 from .commands import (
     GetFeatureStateParams,
@@ -17,8 +17,8 @@ from .commands import (
 
 
 class SystemInfo:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def get_info(
         self,
@@ -27,7 +27,7 @@ class SystemInfo:
         """
         Returns information about the system.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=SystemInfoCommand.GET_INFO,
             params=None,
             session_id=session_id,
@@ -45,7 +45,7 @@ class SystemInfo:
         """
         params = GetFeatureStateParams(feature_state=feature_state)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=SystemInfoCommand.GET_FEATURE_STATE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -59,7 +59,7 @@ class SystemInfo:
         """
         Returns information about all running processes.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=SystemInfoCommand.GET_PROCESS_INFO,
             params=None,
             session_id=session_id,

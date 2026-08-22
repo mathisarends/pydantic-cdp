@@ -7,8 +7,8 @@ from __future__ import annotations
 from typing import Literal
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
+from cdpify.transport import Transport
 
 from .commands import (
     EnableParams,
@@ -19,8 +19,8 @@ from .commands import (
 
 
 class Performance:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def disable(
         self,
@@ -29,7 +29,7 @@ class Performance:
         """
         Disable collecting and reporting metrics.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PerformanceCommand.DISABLE,
             params=None,
             session_id=session_id,
@@ -46,7 +46,7 @@ class Performance:
         """
         params = EnableParams(time_domain=time_domain)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PerformanceCommand.ENABLE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -66,7 +66,7 @@ class Performance:
         """
         params = SetTimeDomainParams(time_domain=time_domain)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PerformanceCommand.SET_TIME_DOMAIN,
             params=encode_cdp(params),
             session_id=session_id,
@@ -79,7 +79,7 @@ class Performance:
         """
         Retrieve current values of run-time metrics.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=PerformanceCommand.GET_METRICS,
             params=None,
             session_id=session_id,

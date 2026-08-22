@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.transport import Transport
 
 from .commands import (
     EventBreakpointsCommand,
@@ -15,8 +15,8 @@ from .commands import (
 
 
 class EventBreakpoints:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def set_instrumentation_breakpoint(
         self,
@@ -29,7 +29,7 @@ class EventBreakpoints:
         """
         params = SetInstrumentationBreakpointParams(event_name=event_name)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EventBreakpointsCommand.SET_INSTRUMENTATION_BREAKPOINT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -46,7 +46,7 @@ class EventBreakpoints:
         """
         params = RemoveInstrumentationBreakpointParams(event_name=event_name)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EventBreakpointsCommand.REMOVE_INSTRUMENTATION_BREAKPOINT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -59,7 +59,7 @@ class EventBreakpoints:
         """
         Removes all breakpoints
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EventBreakpointsCommand.DISABLE,
             params=None,
             session_id=session_id,

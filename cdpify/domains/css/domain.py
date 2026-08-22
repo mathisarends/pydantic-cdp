@@ -7,8 +7,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
+from cdpify.transport import Transport
 
 from .commands import (
     AddRuleParams,
@@ -85,8 +85,8 @@ if TYPE_CHECKING:
 
 
 class CSS:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def add_rule(
         self,
@@ -108,7 +108,7 @@ class CSS:
             node_for_property_syntax_validation=node_for_property_syntax_validation,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=CSSCommand.ADD_RULE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -126,7 +126,7 @@ class CSS:
         """
         params = CollectClassNamesParams(style_sheet_id=style_sheet_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=CSSCommand.COLLECT_CLASS_NAMES,
             params=encode_cdp(params),
             session_id=session_id,
@@ -146,7 +146,7 @@ class CSS:
         """
         params = CreateStyleSheetParams(frame_id=frame_id, force=force)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=CSSCommand.CREATE_STYLE_SHEET,
             params=encode_cdp(params),
             session_id=session_id,
@@ -160,7 +160,7 @@ class CSS:
         """
         Disables the CSS agent for the given page.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=CSSCommand.DISABLE,
             params=None,
             session_id=session_id,
@@ -174,7 +174,7 @@ class CSS:
         Enables the CSS agent for the given page. Clients should not assume that the
         CSS agent has been enabled until the result of this command is received.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=CSSCommand.ENABLE,
             params=None,
             session_id=session_id,
@@ -195,7 +195,7 @@ class CSS:
             node_id=node_id, forced_pseudo_classes=forced_pseudo_classes
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=CSSCommand.FORCE_PSEUDO_STATE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -213,7 +213,7 @@ class CSS:
         """
         params = ForceStartingStyleParams(node_id=node_id, forced=forced)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=CSSCommand.FORCE_STARTING_STYLE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -227,7 +227,7 @@ class CSS:
     ) -> GetBackgroundColorsResult:
         params = GetBackgroundColorsParams(node_id=node_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=CSSCommand.GET_BACKGROUND_COLORS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -245,7 +245,7 @@ class CSS:
         """
         params = GetComputedStyleForNodeParams(node_id=node_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=CSSCommand.GET_COMPUTED_STYLE_FOR_NODE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -281,7 +281,7 @@ class CSS:
             pseudo_identifier=pseudo_identifier,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=CSSCommand.RESOLVE_VALUES,
             params=encode_cdp(params),
             session_id=session_id,
@@ -297,7 +297,7 @@ class CSS:
     ) -> GetLonghandPropertiesResult:
         params = GetLonghandPropertiesParams(shorthand_name=shorthand_name, value=value)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=CSSCommand.GET_LONGHAND_PROPERTIES,
             params=encode_cdp(params),
             session_id=session_id,
@@ -316,7 +316,7 @@ class CSS:
         """
         params = GetInlineStylesForNodeParams(node_id=node_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=CSSCommand.GET_INLINE_STYLES_FOR_NODE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -335,7 +335,7 @@ class CSS:
         """
         params = GetAnimatedStylesForNodeParams(node_id=node_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=CSSCommand.GET_ANIMATED_STYLES_FOR_NODE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -353,7 +353,7 @@ class CSS:
         """
         params = GetMatchedStylesForNodeParams(node_id=node_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=CSSCommand.GET_MATCHED_STYLES_FOR_NODE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -368,7 +368,7 @@ class CSS:
         Returns the values of the default UA-defined environment variables used in
         env()
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=CSSCommand.GET_ENVIRONMENT_VARIABLES,
             params=None,
             session_id=session_id,
@@ -382,7 +382,7 @@ class CSS:
         """
         Returns all media queries parsed by the rendering engine.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=CSSCommand.GET_MEDIA_QUERIES,
             params=None,
             session_id=session_id,
@@ -401,7 +401,7 @@ class CSS:
         """
         params = GetPlatformFontsForNodeParams(node_id=node_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=CSSCommand.GET_PLATFORM_FONTS_FOR_NODE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -419,7 +419,7 @@ class CSS:
         """
         params = GetStyleSheetTextParams(style_sheet_id=style_sheet_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=CSSCommand.GET_STYLE_SHEET_TEXT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -440,7 +440,7 @@ class CSS:
         """
         params = GetLayersForNodeParams(node_id=node_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=CSSCommand.GET_LAYERS_FOR_NODE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -462,7 +462,7 @@ class CSS:
             style_sheet_id=style_sheet_id, selector_text=selector_text
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=CSSCommand.GET_LOCATION_FOR_SELECTOR,
             params=encode_cdp(params),
             session_id=session_id,
@@ -484,7 +484,7 @@ class CSS:
         """
         params = TrackComputedStyleUpdatesForNodeParams(node_id=node_id)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=CSSCommand.TRACK_COMPUTED_STYLE_UPDATES_FOR_NODE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -509,7 +509,7 @@ class CSS:
             properties_to_track=properties_to_track
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=CSSCommand.TRACK_COMPUTED_STYLE_UPDATES,
             params=encode_cdp(params),
             session_id=session_id,
@@ -522,7 +522,7 @@ class CSS:
         """
         Polls the next batch of computed style updates.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=CSSCommand.TAKE_COMPUTED_STYLE_UPDATES,
             params=None,
             session_id=session_id,
@@ -545,7 +545,7 @@ class CSS:
             node_id=node_id, property_name=property_name, value=value
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=CSSCommand.SET_EFFECTIVE_PROPERTY_VALUE_FOR_NODE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -566,7 +566,7 @@ class CSS:
             style_sheet_id=style_sheet_id, range=range, property_name=property_name
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=CSSCommand.SET_PROPERTY_RULE_PROPERTY_NAME,
             params=encode_cdp(params),
             session_id=session_id,
@@ -588,7 +588,7 @@ class CSS:
             style_sheet_id=style_sheet_id, range=range, key_text=key_text
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=CSSCommand.SET_KEYFRAME_KEY,
             params=encode_cdp(params),
             session_id=session_id,
@@ -610,7 +610,7 @@ class CSS:
             style_sheet_id=style_sheet_id, range=range, text=text
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=CSSCommand.SET_MEDIA_TEXT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -634,7 +634,7 @@ class CSS:
             style_sheet_id=style_sheet_id, range=range, text=text
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=CSSCommand.SET_CONTAINER_QUERY_TEXT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -653,7 +653,7 @@ class CSS:
             style_sheet_id=style_sheet_id, range=range, text=text
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=CSSCommand.SET_CONTAINER_QUERY_CONDITION_TEXT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -675,7 +675,7 @@ class CSS:
             style_sheet_id=style_sheet_id, range=range, text=text
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=CSSCommand.SET_SUPPORTS_TEXT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -697,7 +697,7 @@ class CSS:
             style_sheet_id=style_sheet_id, range=range, text=text
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=CSSCommand.SET_NAVIGATION_TEXT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -719,7 +719,7 @@ class CSS:
             style_sheet_id=style_sheet_id, range=range, text=text
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=CSSCommand.SET_SCOPE_TEXT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -741,7 +741,7 @@ class CSS:
             style_sheet_id=style_sheet_id, range=range, selector=selector
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=CSSCommand.SET_RULE_SELECTOR,
             params=encode_cdp(params),
             session_id=session_id,
@@ -760,7 +760,7 @@ class CSS:
         """
         params = SetStyleSheetTextParams(style_sheet_id=style_sheet_id, text=text)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=CSSCommand.SET_STYLE_SHEET_TEXT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -782,7 +782,7 @@ class CSS:
             node_for_property_syntax_validation=node_for_property_syntax_validation,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=CSSCommand.SET_STYLE_TEXTS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -796,7 +796,7 @@ class CSS:
         """
         Enables the selector recording.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=CSSCommand.START_RULE_USAGE_TRACKING,
             params=None,
             session_id=session_id,
@@ -810,7 +810,7 @@ class CSS:
         Stop tracking rule usage and return the list of rules that were used since last
         call to `takeCoverageDelta` (or since start of coverage instrumentation).
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=CSSCommand.STOP_RULE_USAGE_TRACKING,
             params=None,
             session_id=session_id,
@@ -825,7 +825,7 @@ class CSS:
         Obtain list of rules that became used since last call to this method (or since
         start of coverage instrumentation).
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=CSSCommand.TAKE_COVERAGE_DELTA,
             params=None,
             session_id=session_id,
@@ -843,7 +843,7 @@ class CSS:
         """
         params = SetLocalFontsEnabledParams(enabled=enabled)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=CSSCommand.SET_LOCAL_FONTS_ENABLED,
             params=encode_cdp(params),
             session_id=session_id,

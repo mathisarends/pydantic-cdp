@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.transport import Transport
 
 from .commands import (
     ChangeAppUserSettingsParams,
@@ -26,8 +26,8 @@ from .types import (
 
 
 class PWA:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def get_os_app_state(
         self,
@@ -40,7 +40,7 @@ class PWA:
         """
         params = GetOsAppStateParams(manifest_id=manifest_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=PWACommand.GET_OS_APP_STATE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -74,7 +74,7 @@ class PWA:
             manifest_id=manifest_id, install_url_or_bundle_url=install_url_or_bundle_url
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PWACommand.INSTALL,
             params=encode_cdp(params),
             session_id=session_id,
@@ -91,7 +91,7 @@ class PWA:
         """
         params = UninstallParams(manifest_id=manifest_id)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PWACommand.UNINSTALL,
             params=encode_cdp(params),
             session_id=session_id,
@@ -111,7 +111,7 @@ class PWA:
         """
         params = LaunchParams(manifest_id=manifest_id, url=url)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=PWACommand.LAUNCH,
             params=encode_cdp(params),
             session_id=session_id,
@@ -139,7 +139,7 @@ class PWA:
         """
         params = LaunchFilesInAppParams(manifest_id=manifest_id, files=files)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=PWACommand.LAUNCH_FILES_IN_APP,
             params=encode_cdp(params),
             session_id=session_id,
@@ -159,7 +159,7 @@ class PWA:
         """
         params = OpenCurrentPageInAppParams(manifest_id=manifest_id)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PWACommand.OPEN_CURRENT_PAGE_IN_APP,
             params=encode_cdp(params),
             session_id=session_id,
@@ -187,7 +187,7 @@ class PWA:
             display_mode=display_mode,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PWACommand.CHANGE_APP_USER_SETTINGS,
             params=encode_cdp(params),
             session_id=session_id,

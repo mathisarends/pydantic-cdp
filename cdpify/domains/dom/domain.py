@@ -7,8 +7,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Literal
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
+from cdpify.transport import Transport
 
 from .commands import (
     CollectClassNamesFromSubtreeParams,
@@ -104,8 +104,8 @@ if TYPE_CHECKING:
 
 
 class DOM:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def collect_class_names_from_subtree(
         self,
@@ -118,7 +118,7 @@ class DOM:
         """
         params = CollectClassNamesFromSubtreeParams(node_id=node_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMCommand.COLLECT_CLASS_NAMES_FROM_SUBTREE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -143,7 +143,7 @@ class DOM:
             insert_before_node_id=insert_before_node_id,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMCommand.COPY_TO,
             params=encode_cdp(params),
             session_id=session_id,
@@ -172,7 +172,7 @@ class DOM:
             pierce=pierce,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMCommand.DESCRIBE_NODE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -200,7 +200,7 @@ class DOM:
             rect=rect,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMCommand.SCROLL_INTO_VIEW_IF_NEEDED,
             params=encode_cdp(params),
             session_id=session_id,
@@ -213,7 +213,7 @@ class DOM:
         """
         Disables DOM agent for the given page.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMCommand.DISABLE,
             params=None,
             session_id=session_id,
@@ -231,7 +231,7 @@ class DOM:
         """
         params = DiscardSearchResultsParams(search_id=search_id)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMCommand.DISCARD_SEARCH_RESULTS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -248,7 +248,7 @@ class DOM:
         """
         params = EnableParams(include_whitespace=include_whitespace)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMCommand.ENABLE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -269,7 +269,7 @@ class DOM:
             node_id=node_id, backend_node_id=backend_node_id, object_id=object_id
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMCommand.FOCUS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -286,7 +286,7 @@ class DOM:
         """
         params = GetAttributesParams(node_id=node_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMCommand.GET_ATTRIBUTES,
             params=encode_cdp(params),
             session_id=session_id,
@@ -308,7 +308,7 @@ class DOM:
             node_id=node_id, backend_node_id=backend_node_id, object_id=object_id
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMCommand.GET_BOX_MODEL,
             params=encode_cdp(params),
             session_id=session_id,
@@ -331,7 +331,7 @@ class DOM:
             node_id=node_id, backend_node_id=backend_node_id, object_id=object_id
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMCommand.GET_CONTENT_QUADS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -351,7 +351,7 @@ class DOM:
         """
         params = GetDocumentParams(depth=depth, pierce=pierce)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMCommand.GET_DOCUMENT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -373,7 +373,7 @@ class DOM:
         """
         params = GetFlattenedDocumentParams(depth=depth, pierce=pierce)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMCommand.GET_FLATTENED_DOCUMENT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -395,7 +395,7 @@ class DOM:
             node_id=node_id, computed_styles=computed_styles, pierce=pierce
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMCommand.GET_NODES_FOR_SUBTREE_BY_STYLE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -422,7 +422,7 @@ class DOM:
             ignore_pointer_events_none=ignore_pointer_events_none,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMCommand.GET_NODE_FOR_LOCATION,
             params=encode_cdp(params),
             session_id=session_id,
@@ -448,7 +448,7 @@ class DOM:
             include_shadow_dom=include_shadow_dom,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMCommand.GET_OUTER_HTML,
             params=encode_cdp(params),
             session_id=session_id,
@@ -466,7 +466,7 @@ class DOM:
         """
         params = GetRelayoutBoundaryParams(node_id=node_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMCommand.GET_RELAYOUT_BOUNDARY,
             params=encode_cdp(params),
             session_id=session_id,
@@ -489,7 +489,7 @@ class DOM:
             search_id=search_id, from_index=from_index, to_index=to_index
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMCommand.GET_SEARCH_RESULTS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -503,7 +503,7 @@ class DOM:
         """
         Hides any highlight.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMCommand.HIDE_HIGHLIGHT,
             params=None,
             session_id=session_id,
@@ -516,7 +516,7 @@ class DOM:
         """
         Highlights DOM node.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMCommand.HIGHLIGHT_NODE,
             params=None,
             session_id=session_id,
@@ -529,7 +529,7 @@ class DOM:
         """
         Highlights given rectangle.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMCommand.HIGHLIGHT_RECT,
             params=None,
             session_id=session_id,
@@ -542,7 +542,7 @@ class DOM:
         """
         Marks last undoable state.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMCommand.MARK_UNDOABLE_STATE,
             params=None,
             session_id=session_id,
@@ -565,7 +565,7 @@ class DOM:
             insert_before_node_id=insert_before_node_id,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMCommand.MOVE_TO,
             params=encode_cdp(params),
             session_id=session_id,
@@ -587,7 +587,7 @@ class DOM:
             query=query, include_user_agent_shadow_dom=include_user_agent_shadow_dom
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMCommand.PERFORM_SEARCH,
             params=encode_cdp(params),
             session_id=session_id,
@@ -606,7 +606,7 @@ class DOM:
         """
         params = PushNodeByPathToFrontendParams(path=path)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMCommand.PUSH_NODE_BY_PATH_TO_FRONTEND,
             params=encode_cdp(params),
             session_id=session_id,
@@ -627,7 +627,7 @@ class DOM:
             backend_node_ids=backend_node_ids
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMCommand.PUSH_NODES_BY_BACKEND_IDS_TO_FRONTEND,
             params=encode_cdp(params),
             session_id=session_id,
@@ -646,7 +646,7 @@ class DOM:
         """
         params = QuerySelectorParams(node_id=node_id, selector=selector)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMCommand.QUERY_SELECTOR,
             params=encode_cdp(params),
             session_id=session_id,
@@ -665,7 +665,7 @@ class DOM:
         """
         params = QuerySelectorAllParams(node_id=node_id, selector=selector)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMCommand.QUERY_SELECTOR_ALL,
             params=encode_cdp(params),
             session_id=session_id,
@@ -681,7 +681,7 @@ class DOM:
         the user within a viewport, therefore its elements always appear on top of all
         other content.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMCommand.GET_TOP_LAYER_ELEMENTS,
             params=None,
             session_id=session_id,
@@ -700,7 +700,7 @@ class DOM:
         """
         params = GetElementByRelationParams(node_id=node_id, relation=relation)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMCommand.GET_ELEMENT_BY_RELATION,
             params=encode_cdp(params),
             session_id=session_id,
@@ -714,7 +714,7 @@ class DOM:
         """
         Re-does the last undone action.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMCommand.REDO,
             params=None,
             session_id=session_id,
@@ -732,7 +732,7 @@ class DOM:
         """
         params = RemoveAttributeParams(node_id=node_id, name=name)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMCommand.REMOVE_ATTRIBUTE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -749,7 +749,7 @@ class DOM:
         """
         params = RemoveNodeParams(node_id=node_id)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMCommand.REMOVE_NODE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -770,7 +770,7 @@ class DOM:
         """
         params = RequestChildNodesParams(node_id=node_id, depth=depth, pierce=pierce)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMCommand.REQUEST_CHILD_NODES,
             params=encode_cdp(params),
             session_id=session_id,
@@ -789,7 +789,7 @@ class DOM:
         """
         params = RequestNodeParams(object_id=object_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMCommand.REQUEST_NODE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -815,7 +815,7 @@ class DOM:
             execution_context_id=execution_context_id,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMCommand.RESOLVE_NODE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -835,7 +835,7 @@ class DOM:
         """
         params = SetAttributeValueParams(node_id=node_id, name=name, value=value)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMCommand.SET_ATTRIBUTE_VALUE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -855,7 +855,7 @@ class DOM:
         """
         params = SetAttributesAsTextParams(node_id=node_id, text=text, name=name)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMCommand.SET_ATTRIBUTES_AS_TEXT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -880,7 +880,7 @@ class DOM:
             object_id=object_id,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMCommand.SET_FILE_INPUT_FILES,
             params=encode_cdp(params),
             session_id=session_id,
@@ -898,7 +898,7 @@ class DOM:
         """
         params = SetNodeStackTracesEnabledParams(enable=enable)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMCommand.SET_NODE_STACK_TRACES_ENABLED,
             params=encode_cdp(params),
             session_id=session_id,
@@ -916,7 +916,7 @@ class DOM:
         """
         params = GetNodeStackTracesParams(node_id=node_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMCommand.GET_NODE_STACK_TRACES,
             params=encode_cdp(params),
             session_id=session_id,
@@ -934,7 +934,7 @@ class DOM:
         """
         params = GetFileInfoParams(object_id=object_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMCommand.GET_FILE_INFO,
             params=encode_cdp(params),
             session_id=session_id,
@@ -948,7 +948,7 @@ class DOM:
         """
         Returns list of detached nodes
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMCommand.GET_DETACHED_DOM_NODES,
             params=None,
             session_id=session_id,
@@ -967,7 +967,7 @@ class DOM:
         """
         params = SetInspectedNodeParams(node_id=node_id)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMCommand.SET_INSPECTED_NODE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -985,7 +985,7 @@ class DOM:
         """
         params = SetNodeNameParams(node_id=node_id, name=name)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMCommand.SET_NODE_NAME,
             params=encode_cdp(params),
             session_id=session_id,
@@ -1004,7 +1004,7 @@ class DOM:
         """
         params = SetNodeValueParams(node_id=node_id, value=value)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMCommand.SET_NODE_VALUE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -1022,7 +1022,7 @@ class DOM:
         """
         params = SetOuterHTMLParams(node_id=node_id, outer_html=outer_html)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMCommand.SET_OUTER_HTML,
             params=encode_cdp(params),
             session_id=session_id,
@@ -1035,7 +1035,7 @@ class DOM:
         """
         Undoes the last performed action.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMCommand.UNDO,
             params=None,
             session_id=session_id,
@@ -1052,7 +1052,7 @@ class DOM:
         """
         params = GetFrameOwnerParams(frame_id=frame_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMCommand.GET_FRAME_OWNER,
             params=encode_cdp(params),
             session_id=session_id,
@@ -1086,7 +1086,7 @@ class DOM:
             queries_anchored=queries_anchored,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMCommand.GET_CONTAINER_FOR_NODE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -1105,7 +1105,7 @@ class DOM:
         """
         params = GetQueryingDescendantsForContainerParams(node_id=node_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMCommand.GET_QUERYING_DESCENDANTS_FOR_CONTAINER,
             params=encode_cdp(params),
             session_id=session_id,
@@ -1127,7 +1127,7 @@ class DOM:
             node_id=node_id, anchor_specifier=anchor_specifier
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMCommand.GET_ANCHOR_ELEMENT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -1150,7 +1150,7 @@ class DOM:
             node_id=node_id, enable=enable, invoker_node_id=invoker_node_id
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMCommand.FORCE_SHOW_POPOVER,
             params=encode_cdp(params),
             session_id=session_id,
@@ -1170,7 +1170,7 @@ class DOM:
         """
         params = ForceShowInterestParams(node_id=node_id, enable=enable)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMCommand.FORCE_SHOW_INTEREST,
             params=encode_cdp(params),
             session_id=session_id,

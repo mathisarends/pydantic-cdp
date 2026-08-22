@@ -2,14 +2,17 @@
 
 from functools import cached_property
 
-from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.transport import Transport
 {{ domains | map(attribute="import_statement") | join("\n") }}
 
-class CDPDomains(CDPCommandSender):
+class CDPDomains:
     """Generated accessors for the configured CDP domains."""
+
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 {% for domain in domains %}
 
     @cached_property
     def {{ domain.property_name }}(self) -> {{ domain.name }}:
-        return {{ domain.name }}(self)
+        return {{ domain.name }}(self._transport)
 {% endfor %}

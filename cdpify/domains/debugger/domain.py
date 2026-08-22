@@ -7,8 +7,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Literal
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
+from cdpify.transport import Transport
 
 from .commands import (
     ContinueToLocationParams,
@@ -71,8 +71,8 @@ if TYPE_CHECKING:
 
 
 class Debugger:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def continue_to_location(
         self,
@@ -88,7 +88,7 @@ class Debugger:
             location=location, target_call_frames=target_call_frames
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DebuggerCommand.CONTINUE_TO_LOCATION,
             params=encode_cdp(params),
             session_id=session_id,
@@ -101,7 +101,7 @@ class Debugger:
         """
         Disables debugger for given page.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DebuggerCommand.DISABLE,
             params=None,
             session_id=session_id,
@@ -119,7 +119,7 @@ class Debugger:
         """
         params = EnableParams(max_scripts_cache_size=max_scripts_cache_size)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DebuggerCommand.ENABLE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -157,7 +157,7 @@ class Debugger:
             scope_number=scope_number,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DebuggerCommand.EVALUATE_ON_CALL_FRAME,
             params=encode_cdp(params),
             session_id=session_id,
@@ -180,7 +180,7 @@ class Debugger:
             start=start, end=end, restrict_to_function=restrict_to_function
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DebuggerCommand.GET_POSSIBLE_BREAKPOINTS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -198,7 +198,7 @@ class Debugger:
         """
         params = GetScriptSourceParams(script_id=script_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DebuggerCommand.GET_SCRIPT_SOURCE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -213,7 +213,7 @@ class Debugger:
     ) -> DisassembleWasmModuleResult:
         params = DisassembleWasmModuleParams(script_id=script_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DebuggerCommand.DISASSEMBLE_WASM_MODULE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -233,7 +233,7 @@ class Debugger:
         """
         params = NextWasmDisassemblyChunkParams(stream_id=stream_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DebuggerCommand.NEXT_WASM_DISASSEMBLY_CHUNK,
             params=encode_cdp(params),
             session_id=session_id,
@@ -252,7 +252,7 @@ class Debugger:
         """
         params = GetWasmBytecodeParams(script_id=script_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DebuggerCommand.GET_WASM_BYTECODE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -270,7 +270,7 @@ class Debugger:
         """
         params = GetStackTraceParams(stack_trace_id=stack_trace_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DebuggerCommand.GET_STACK_TRACE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -284,7 +284,7 @@ class Debugger:
         """
         Stops on the next JavaScript statement.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DebuggerCommand.PAUSE,
             params=None,
             session_id=session_id,
@@ -299,7 +299,7 @@ class Debugger:
     ) -> None:
         params = PauseOnAsyncCallParams(parent_stack_trace_id=parent_stack_trace_id)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DebuggerCommand.PAUSE_ON_ASYNC_CALL,
             params=encode_cdp(params),
             session_id=session_id,
@@ -316,7 +316,7 @@ class Debugger:
         """
         params = RemoveBreakpointParams(breakpoint_id=breakpoint_id)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DebuggerCommand.REMOVE_BREAKPOINT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -343,7 +343,7 @@ class Debugger:
         """
         params = RestartFrameParams(call_frame_id=call_frame_id, mode=mode)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DebuggerCommand.RESTART_FRAME,
             params=encode_cdp(params),
             session_id=session_id,
@@ -361,7 +361,7 @@ class Debugger:
         """
         params = ResumeParams(terminate_on_resume=terminate_on_resume)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DebuggerCommand.RESUME,
             params=encode_cdp(params),
             session_id=session_id,
@@ -386,7 +386,7 @@ class Debugger:
             is_regex=is_regex,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DebuggerCommand.SEARCH_IN_CONTENT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -404,7 +404,7 @@ class Debugger:
         """
         params = SetAsyncCallStackDepthParams(max_depth=max_depth)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DebuggerCommand.SET_ASYNC_CALL_STACK_DEPTH,
             params=encode_cdp(params),
             session_id=session_id,
@@ -424,7 +424,7 @@ class Debugger:
         """
         params = SetBlackboxExecutionContextsParams(unique_ids=unique_ids)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DebuggerCommand.SET_BLACKBOX_EXECUTION_CONTEXTS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -447,7 +447,7 @@ class Debugger:
             patterns=patterns, skip_anonymous=skip_anonymous
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DebuggerCommand.SET_BLACKBOX_PATTERNS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -468,7 +468,7 @@ class Debugger:
         """
         params = SetBlackboxedRangesParams(script_id=script_id, positions=positions)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DebuggerCommand.SET_BLACKBOXED_RANGES,
             params=encode_cdp(params),
             session_id=session_id,
@@ -486,7 +486,7 @@ class Debugger:
         """
         params = SetBreakpointParams(location=location, condition=condition)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DebuggerCommand.SET_BREAKPOINT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -506,7 +506,7 @@ class Debugger:
         """
         params = SetInstrumentationBreakpointParams(instrumentation=instrumentation)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DebuggerCommand.SET_INSTRUMENTATION_BREAKPOINT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -540,7 +540,7 @@ class Debugger:
             condition=condition,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DebuggerCommand.SET_BREAKPOINT_BY_URL,
             params=encode_cdp(params),
             session_id=session_id,
@@ -563,7 +563,7 @@ class Debugger:
             object_id=object_id, condition=condition
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DebuggerCommand.SET_BREAKPOINT_ON_FUNCTION_CALL,
             params=encode_cdp(params),
             session_id=session_id,
@@ -581,7 +581,7 @@ class Debugger:
         """
         params = SetBreakpointsActiveParams(active=active)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DebuggerCommand.SET_BREAKPOINTS_ACTIVE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -600,7 +600,7 @@ class Debugger:
         """
         params = SetPauseOnExceptionsParams(state=state)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DebuggerCommand.SET_PAUSE_ON_EXCEPTIONS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -617,7 +617,7 @@ class Debugger:
         """
         params = SetReturnValueParams(new_value=new_value)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DebuggerCommand.SET_RETURN_VALUE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -644,7 +644,7 @@ class Debugger:
             allow_top_frame_editing=allow_top_frame_editing,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DebuggerCommand.SET_SCRIPT_SOURCE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -663,7 +663,7 @@ class Debugger:
         """
         params = SetSkipAllPausesParams(skip=skip)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DebuggerCommand.SET_SKIP_ALL_PAUSES,
             params=encode_cdp(params),
             session_id=session_id,
@@ -689,7 +689,7 @@ class Debugger:
             call_frame_id=call_frame_id,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DebuggerCommand.SET_VARIABLE_VALUE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -709,7 +709,7 @@ class Debugger:
             break_on_async_call=break_on_async_call, skip_list=skip_list
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DebuggerCommand.STEP_INTO,
             params=encode_cdp(params),
             session_id=session_id,
@@ -722,7 +722,7 @@ class Debugger:
         """
         Steps out of the function call.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DebuggerCommand.STEP_OUT,
             params=None,
             session_id=session_id,
@@ -739,7 +739,7 @@ class Debugger:
         """
         params = StepOverParams(skip_list=skip_list)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DebuggerCommand.STEP_OVER,
             params=encode_cdp(params),
             session_id=session_id,

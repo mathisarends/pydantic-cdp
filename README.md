@@ -25,20 +25,24 @@ without working with raw JSON messages.
   shared protocol types
 - **Complete domain coverage** — access all 58 generated CDP domains through
   properties such as `client.page`, `client.network`, and `client.runtime`
-- **Async throughout** — built on `asyncio` and `websockets`
+- **Async throughout** — transport-neutral core with an optional WebSocket
+  implementation
 - **Typed event streams** — consume CDP events with async iterators
 - **Multi-target support** — route commands through an active CDP session
-- **Raw protocol access** — call any CDP method through `send_raw()` when needed
+- **Low-level protocol access** — execute any CDP method through `execute()`
+  when needed
 
 ## Installation
 
 ```bash
-pip install cdpify
+pip install "cdpify[websocket]"
 ```
 
-Requires Python 3.12 or newer. The normal installation pulls in only the CDP
-runtime dependencies. Install the optional generator dependencies only when
-regenerating the protocol modules:
+Requires Python 3.12 or newer. The WebSocket extra provides the recommended
+default transport used by `Client(url)`. Install `cdpify` without an extra when
+supplying your own `Transport` implementation.
+
+Install the generator dependencies only when regenerating protocol modules:
 
 ```bash
 pip install "cdpify[generator]"
@@ -157,7 +161,7 @@ async with Client(browser_ws_url) as root_client:
 ```
 
 The `Browser` and `Target` domains remain bound to the root connection. You can
-also pass `session_id` explicitly to generated commands or to `send_raw()`.
+also pass `session_id` explicitly to generated commands or to `execute()`.
 
 ## Configuration
 
@@ -170,10 +174,19 @@ client = Client(
 )
 ```
 
+For another transport protocol, implement the exported `Transport` protocol
+and inject it directly:
+
+```python
+from cdpify import Client
+
+client = Client(transport=my_transport)
+```
+
 For methods not covered by the generated API, use the low-level escape hatch:
 
 ```python
-result = await client.send_raw(
+result = await client.execute(
     "Runtime.evaluate",
     {"expression": "1 + 1", "returnByValue": True},
 )

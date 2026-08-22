@@ -7,8 +7,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
+from cdpify.transport import Transport
 
 from .commands import (
     GetGridHighlightObjectsForTestParams,
@@ -65,8 +65,8 @@ if TYPE_CHECKING:
 
 
 class Overlay:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def disable(
         self,
@@ -75,7 +75,7 @@ class Overlay:
         """
         Disables domain notifications.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=OverlayCommand.DISABLE,
             params=None,
             session_id=session_id,
@@ -88,7 +88,7 @@ class Overlay:
         """
         Enables domain notifications.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=OverlayCommand.ENABLE,
             params=None,
             session_id=session_id,
@@ -115,7 +115,7 @@ class Overlay:
             show_accessibility_info=show_accessibility_info,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=OverlayCommand.GET_HIGHLIGHT_OBJECT_FOR_TEST,
             params=encode_cdp(params),
             session_id=session_id,
@@ -133,7 +133,7 @@ class Overlay:
         """
         params = GetGridHighlightObjectsForTestParams(node_ids=node_ids)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=OverlayCommand.GET_GRID_HIGHLIGHT_OBJECTS_FOR_TEST,
             params=encode_cdp(params),
             session_id=session_id,
@@ -151,7 +151,7 @@ class Overlay:
         """
         params = GetSourceOrderHighlightObjectForTestParams(node_id=node_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=OverlayCommand.GET_SOURCE_ORDER_HIGHLIGHT_OBJECT_FOR_TEST,
             params=encode_cdp(params),
             session_id=session_id,
@@ -165,7 +165,7 @@ class Overlay:
         """
         Hides any highlight.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=OverlayCommand.HIDE_HIGHLIGHT,
             params=None,
             session_id=session_id,
@@ -192,7 +192,7 @@ class Overlay:
             content_outline_color=content_outline_color,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=OverlayCommand.HIGHLIGHT_FRAME,
             params=encode_cdp(params),
             session_id=session_id,
@@ -220,7 +220,7 @@ class Overlay:
             selector=selector,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=OverlayCommand.HIGHLIGHT_NODE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -242,7 +242,7 @@ class Overlay:
             quad=quad, color=color, outline_color=outline_color
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=OverlayCommand.HIGHLIGHT_QUAD,
             params=encode_cdp(params),
             session_id=session_id,
@@ -274,7 +274,7 @@ class Overlay:
             outline_color=outline_color,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=OverlayCommand.HIGHLIGHT_RECT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -301,7 +301,7 @@ class Overlay:
             object_id=object_id,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=OverlayCommand.HIGHLIGHT_SOURCE_ORDER,
             params=encode_cdp(params),
             session_id=session_id,
@@ -321,7 +321,7 @@ class Overlay:
         """
         params = SetInspectModeParams(mode=mode, highlight_config=highlight_config)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=OverlayCommand.SET_INSPECT_MODE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -338,7 +338,7 @@ class Overlay:
         """
         params = SetShowAdHighlightsParams(show=show)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=OverlayCommand.SET_SHOW_AD_HIGHLIGHTS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -352,7 +352,7 @@ class Overlay:
     ) -> None:
         params = SetPausedInDebuggerMessageParams(message=message)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=OverlayCommand.SET_PAUSED_IN_DEBUGGER_MESSAGE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -369,7 +369,7 @@ class Overlay:
         """
         params = SetShowDebugBordersParams(show=show)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=OverlayCommand.SET_SHOW_DEBUG_BORDERS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -386,7 +386,7 @@ class Overlay:
         """
         params = SetShowFPSCounterParams(show=show)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=OverlayCommand.SET_SHOW_FPS_COUNTER,
             params=encode_cdp(params),
             session_id=session_id,
@@ -405,7 +405,7 @@ class Overlay:
             grid_node_highlight_configs=grid_node_highlight_configs
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=OverlayCommand.SET_SHOW_GRID_OVERLAYS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -421,7 +421,7 @@ class Overlay:
             flex_node_highlight_configs=flex_node_highlight_configs
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=OverlayCommand.SET_SHOW_FLEX_OVERLAYS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -437,7 +437,7 @@ class Overlay:
             scroll_snap_highlight_configs=scroll_snap_highlight_configs
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=OverlayCommand.SET_SHOW_SCROLL_SNAP_OVERLAYS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -453,7 +453,7 @@ class Overlay:
             container_query_highlight_configs=container_query_highlight_configs
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=OverlayCommand.SET_SHOW_CONTAINER_QUERY_OVERLAYS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -469,7 +469,7 @@ class Overlay:
             inspected_element_anchor_config=inspected_element_anchor_config
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=OverlayCommand.SET_SHOW_INSPECTED_ELEMENT_ANCHOR,
             params=encode_cdp(params),
             session_id=session_id,
@@ -486,7 +486,7 @@ class Overlay:
         """
         params = SetShowPaintRectsParams(result=result)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=OverlayCommand.SET_SHOW_PAINT_RECTS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -503,7 +503,7 @@ class Overlay:
         """
         params = SetShowLayoutShiftRegionsParams(result=result)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=OverlayCommand.SET_SHOW_LAYOUT_SHIFT_REGIONS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -520,7 +520,7 @@ class Overlay:
         """
         params = SetShowScrollBottleneckRectsParams(show=show)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=OverlayCommand.SET_SHOW_SCROLL_BOTTLENECK_RECTS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -538,7 +538,7 @@ class Overlay:
         """
         params = SetShowHitTestBordersParams(show=show)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=OverlayCommand.SET_SHOW_HIT_TEST_BORDERS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -556,7 +556,7 @@ class Overlay:
         """
         params = SetShowWebVitalsParams(show=show)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=OverlayCommand.SET_SHOW_WEB_VITALS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -573,7 +573,7 @@ class Overlay:
         """
         params = SetShowViewportSizeOnResizeParams(show=show)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=OverlayCommand.SET_SHOW_VIEWPORT_SIZE_ON_RESIZE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -590,7 +590,7 @@ class Overlay:
         """
         params = SetShowHingeParams(hinge_config=hinge_config)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=OverlayCommand.SET_SHOW_HINGE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -607,7 +607,7 @@ class Overlay:
         """
         params = SetShowDisplayCutoutParams(display_cutout_config=display_cutout_config)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=OverlayCommand.SET_SHOW_DISPLAY_CUTOUT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -626,7 +626,7 @@ class Overlay:
             isolated_element_highlight_configs=isolated_element_highlight_configs
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=OverlayCommand.SET_SHOW_ISOLATED_ELEMENTS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -645,7 +645,7 @@ class Overlay:
             window_controls_overlay_config=window_controls_overlay_config
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=OverlayCommand.SET_SHOW_WINDOW_CONTROLS_OVERLAY,
             params=encode_cdp(params),
             session_id=session_id,

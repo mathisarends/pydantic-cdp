@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.transport import Transport
 
 from .commands import (
     DeviceOrientationCommand,
@@ -14,8 +14,8 @@ from .commands import (
 
 
 class DeviceOrientation:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def clear_device_orientation_override(
         self,
@@ -24,7 +24,7 @@ class DeviceOrientation:
         """
         Clears the overridden Device Orientation.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DeviceOrientationCommand.CLEAR_DEVICE_ORIENTATION_OVERRIDE,
             params=None,
             session_id=session_id,
@@ -43,7 +43,7 @@ class DeviceOrientation:
         """
         params = SetDeviceOrientationOverrideParams(alpha=alpha, beta=beta, gamma=gamma)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DeviceOrientationCommand.SET_DEVICE_ORIENTATION_OVERRIDE,
             params=encode_cdp(params),
             session_id=session_id,

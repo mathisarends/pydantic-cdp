@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.transport import Transport
 
 from .commands import (
     CastCommand,
@@ -18,8 +18,8 @@ from .commands import (
 
 
 class Cast:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def enable(
         self,
@@ -35,7 +35,7 @@ class Cast:
         """
         params = EnableParams(presentation_url=presentation_url)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=CastCommand.ENABLE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -48,7 +48,7 @@ class Cast:
         """
         Stops observing for sinks and issues.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=CastCommand.DISABLE,
             params=None,
             session_id=session_id,
@@ -66,7 +66,7 @@ class Cast:
         """
         params = SetSinkToUseParams(sink_name=sink_name)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=CastCommand.SET_SINK_TO_USE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -83,7 +83,7 @@ class Cast:
         """
         params = StartDesktopMirroringParams(sink_name=sink_name)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=CastCommand.START_DESKTOP_MIRRORING,
             params=encode_cdp(params),
             session_id=session_id,
@@ -100,7 +100,7 @@ class Cast:
         """
         params = StartTabMirroringParams(sink_name=sink_name)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=CastCommand.START_TAB_MIRRORING,
             params=encode_cdp(params),
             session_id=session_id,
@@ -117,7 +117,7 @@ class Cast:
         """
         params = StopCastingParams(sink_name=sink_name)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=CastCommand.STOP_CASTING,
             params=encode_cdp(params),
             session_id=session_id,

@@ -7,7 +7,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Literal
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.transport import Transport
 
 from .commands import (
     AuditsCommand,
@@ -21,8 +21,8 @@ if TYPE_CHECKING:
 
 
 class Audits:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def get_encoded_response(
         self,
@@ -44,7 +44,7 @@ class Audits:
             size_only=size_only,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=AuditsCommand.GET_ENCODED_RESPONSE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -59,7 +59,7 @@ class Audits:
         Disables issues domain, prevents further issues from being reported to the
         client.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=AuditsCommand.DISABLE,
             params=None,
             session_id=session_id,
@@ -73,7 +73,7 @@ class Audits:
         Enables issues domain, sends the issues collected so far to the client by means
         of the `issueAdded` event.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=AuditsCommand.ENABLE,
             params=None,
             session_id=session_id,
@@ -87,7 +87,7 @@ class Audits:
         Runs the form issues check for the target page. Found issues are reported using
         Audits.issueAdded event.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=AuditsCommand.CHECK_FORMS_ISSUES,
             params=None,
             session_id=session_id,

@@ -7,7 +7,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.transport import Transport
 
 from .commands import (
     CloseParams,
@@ -26,8 +26,8 @@ if TYPE_CHECKING:
 
 
 class IO:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def close(
         self,
@@ -40,7 +40,7 @@ class IO:
         """
         params = CloseParams(handle=handle)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=IOCommand.CLOSE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -59,7 +59,7 @@ class IO:
         """
         params = ReadParams(handle=handle, offset=offset, size=size)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=IOCommand.READ,
             params=encode_cdp(params),
             session_id=session_id,
@@ -77,7 +77,7 @@ class IO:
         """
         params = ResolveBlobParams(object_id=object_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=IOCommand.RESOLVE_BLOB,
             params=encode_cdp(params),
             session_id=session_id,

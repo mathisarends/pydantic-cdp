@@ -7,7 +7,7 @@ from __future__ import annotations
 from typing import Literal
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.transport import Transport
 
 from .commands import (
     GetCategoriesResult,
@@ -28,8 +28,8 @@ from .types import (
 
 
 class Tracing:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def end(
         self,
@@ -38,7 +38,7 @@ class Tracing:
         """
         Stop trace events collection.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=TracingCommand.END,
             params=None,
             session_id=session_id,
@@ -51,7 +51,7 @@ class Tracing:
         """
         Gets supported tracing categories.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=TracingCommand.GET_CATEGORIES,
             params=None,
             session_id=session_id,
@@ -65,7 +65,7 @@ class Tracing:
         """
         Return a descriptor for all available tracing categories.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=TracingCommand.GET_TRACK_EVENT_DESCRIPTOR,
             params=None,
             session_id=session_id,
@@ -83,7 +83,7 @@ class Tracing:
         """
         params = RecordClockSyncMarkerParams(sync_id=sync_id)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=TracingCommand.RECORD_CLOCK_SYNC_MARKER,
             params=encode_cdp(params),
             session_id=session_id,
@@ -103,7 +103,7 @@ class Tracing:
             deterministic=deterministic, level_of_detail=level_of_detail
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=TracingCommand.REQUEST_MEMORY_DUMP,
             params=encode_cdp(params),
             session_id=session_id,
@@ -143,7 +143,7 @@ class Tracing:
             screenshot_max_count=screenshot_max_count,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=TracingCommand.START,
             params=encode_cdp(params),
             session_id=session_id,

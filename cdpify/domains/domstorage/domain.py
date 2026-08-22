@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.transport import Transport
 
 from .commands import (
     ClearParams,
@@ -21,8 +21,8 @@ from .types import (
 
 
 class DOMStorage:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def clear(
         self,
@@ -32,7 +32,7 @@ class DOMStorage:
     ) -> None:
         params = ClearParams(storage_id=storage_id)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMStorageCommand.CLEAR,
             params=encode_cdp(params),
             session_id=session_id,
@@ -46,7 +46,7 @@ class DOMStorage:
         Disables storage tracking, prevents storage events from being sent to the
         client.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMStorageCommand.DISABLE,
             params=None,
             session_id=session_id,
@@ -59,7 +59,7 @@ class DOMStorage:
         """
         Enables storage tracking, storage events will now be delivered to the client.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMStorageCommand.ENABLE,
             params=None,
             session_id=session_id,
@@ -73,7 +73,7 @@ class DOMStorage:
     ) -> GetDOMStorageItemsResult:
         params = GetDOMStorageItemsParams(storage_id=storage_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMStorageCommand.GET_DOM_STORAGE_ITEMS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -89,7 +89,7 @@ class DOMStorage:
     ) -> None:
         params = RemoveDOMStorageItemParams(storage_id=storage_id, key=key)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMStorageCommand.REMOVE_DOM_STORAGE_ITEM,
             params=encode_cdp(params),
             session_id=session_id,
@@ -105,7 +105,7 @@ class DOMStorage:
     ) -> None:
         params = SetDOMStorageItemParams(storage_id=storage_id, key=key, value=value)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMStorageCommand.SET_DOM_STORAGE_ITEM,
             params=encode_cdp(params),
             session_id=session_id,

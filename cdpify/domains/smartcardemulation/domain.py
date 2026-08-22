@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.transport import Transport
 
 from .commands import (
     ReportBeginTransactionResultParams,
@@ -29,8 +29,8 @@ from .types import (
 
 
 class SmartCardEmulation:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def enable(
         self,
@@ -39,7 +39,7 @@ class SmartCardEmulation:
         """
         Enables the |SmartCardEmulation| domain.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=SmartCardEmulationCommand.ENABLE,
             params=None,
             session_id=session_id,
@@ -52,7 +52,7 @@ class SmartCardEmulation:
         """
         Disables the |SmartCardEmulation| domain.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=SmartCardEmulationCommand.DISABLE,
             params=None,
             session_id=session_id,
@@ -76,7 +76,7 @@ class SmartCardEmulation:
             request_id=request_id, context_id=context_id
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=SmartCardEmulationCommand.REPORT_ESTABLISH_CONTEXT_RESULT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -97,7 +97,7 @@ class SmartCardEmulation:
         """
         params = ReportReleaseContextResultParams(request_id=request_id)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=SmartCardEmulationCommand.REPORT_RELEASE_CONTEXT_RESULT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -119,7 +119,7 @@ class SmartCardEmulation:
         """
         params = ReportListReadersResultParams(request_id=request_id, readers=readers)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=SmartCardEmulationCommand.REPORT_LIST_READERS_RESULT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -143,7 +143,7 @@ class SmartCardEmulation:
             request_id=request_id, reader_states=reader_states
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=SmartCardEmulationCommand.REPORT_GET_STATUS_CHANGE_RESULT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -167,7 +167,7 @@ class SmartCardEmulation:
             request_id=request_id, handle=handle
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=SmartCardEmulationCommand.REPORT_BEGIN_TRANSACTION_RESULT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -201,7 +201,7 @@ class SmartCardEmulation:
         """
         params = ReportPlainResultParams(request_id=request_id)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=SmartCardEmulationCommand.REPORT_PLAIN_RESULT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -226,7 +226,7 @@ class SmartCardEmulation:
             request_id=request_id, handle=handle, active_protocol=active_protocol
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=SmartCardEmulationCommand.REPORT_CONNECT_RESULT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -257,7 +257,7 @@ class SmartCardEmulation:
         """
         params = ReportDataResultParams(request_id=request_id, data=data)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=SmartCardEmulationCommand.REPORT_DATA_RESULT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -288,7 +288,7 @@ class SmartCardEmulation:
             protocol=protocol,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=SmartCardEmulationCommand.REPORT_STATUS_RESULT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -306,7 +306,7 @@ class SmartCardEmulation:
         """
         params = ReportErrorParams(request_id=request_id, result_code=result_code)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=SmartCardEmulationCommand.REPORT_ERROR,
             params=encode_cdp(params),
             session_id=session_id,

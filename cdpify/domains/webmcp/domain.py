@@ -7,7 +7,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.transport import Transport
 
 from .commands import (
     CancelInvocationParams,
@@ -21,8 +21,8 @@ if TYPE_CHECKING:
 
 
 class WebMCP:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def enable(
         self,
@@ -32,7 +32,7 @@ class WebMCP:
         Enables the WebMCP domain, allowing events to be sent. Enabling the domain will
         trigger a toolsAdded event for all currently registered tools.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=WebMCPCommand.ENABLE,
             params=None,
             session_id=session_id,
@@ -45,7 +45,7 @@ class WebMCP:
         """
         Disables the WebMCP domain.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=WebMCPCommand.DISABLE,
             params=None,
             session_id=session_id,
@@ -64,7 +64,7 @@ class WebMCP:
         """
         params = InvokeToolParams(frame_id=frame_id, tool_name=tool_name, input=input)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=WebMCPCommand.INVOKE_TOOL,
             params=encode_cdp(params),
             session_id=session_id,
@@ -82,7 +82,7 @@ class WebMCP:
         """
         params = CancelInvocationParams(invocation_id=invocation_id)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=WebMCPCommand.CANCEL_INVOCATION,
             params=encode_cdp(params),
             session_id=session_id,

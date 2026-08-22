@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.transport import Transport
 
 from .commands import (
     CancelPromptParams,
@@ -19,8 +19,8 @@ from .types import (
 
 
 class DeviceAccess:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def enable(
         self,
@@ -29,7 +29,7 @@ class DeviceAccess:
         """
         Enable events in this domain.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DeviceAccessCommand.ENABLE,
             params=None,
             session_id=session_id,
@@ -42,7 +42,7 @@ class DeviceAccess:
         """
         Disable events in this domain.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DeviceAccessCommand.DISABLE,
             params=None,
             session_id=session_id,
@@ -60,7 +60,7 @@ class DeviceAccess:
         """
         params = SelectPromptParams(id=id, device_id=device_id)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DeviceAccessCommand.SELECT_PROMPT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -77,7 +77,7 @@ class DeviceAccess:
         """
         params = CancelPromptParams(id=id)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DeviceAccessCommand.CANCEL_PROMPT,
             params=encode_cdp(params),
             session_id=session_id,

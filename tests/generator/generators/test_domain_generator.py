@@ -6,14 +6,14 @@ def test_renders_domain_class(simple_domain: Domain) -> None:
     output = domain_generator.generate(simple_domain)
 
     assert "class Sample:" in output
-    assert "def __init__(self, command_sender: CDPCommandSender) -> None:" in output
-    assert "self._command_sender = command_sender" in output
+    assert "def __init__(self, transport: Transport) -> None:" in output
+    assert "self._transport = transport" in output
 
 
 def test_depends_on_command_transport_abstraction(simple_domain: Domain) -> None:
     output = domain_generator.generate(simple_domain)
 
-    assert "from cdpify.shared.command_sender import CDPCommandSender" in output
+    assert "from cdpify.transport import Transport" in output
     assert "from cdpify.client import" not in output
 
 
@@ -26,7 +26,7 @@ def test_method_with_params(simple_domain: Domain) -> None:
     assert "-> GetNodeResult:" in output
     assert "params = GetNodeParams(node_id=node_id)" in output
     assert "method=SampleCommand.GET_NODE" in output
-    assert "result = await self._command_sender.send_raw(" in output
+    assert "result = await self._transport.execute(" in output
     assert "from cdpify.codec import decode_cdp, encode_cdp" in output
     assert "params=encode_cdp(params)" in output
     assert "return decode_cdp(GetNodeResult, result)" in output
@@ -39,7 +39,7 @@ def test_method_without_params_or_returns(simple_domain: Domain) -> None:
     assert "-> None:" in output
     assert "params=None" in output
     clear_block = output.split("async def clear(")[1].split("async def")[0]
-    assert "await self._command_sender.send_raw(" in clear_block
+    assert "await self._transport.execute(" in clear_block
     assert "result =" not in clear_block
     assert "return" not in clear_block
 

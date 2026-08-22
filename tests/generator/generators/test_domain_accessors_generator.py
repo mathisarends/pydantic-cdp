@@ -5,9 +5,13 @@ from cdpify.generator.schemas import Domain
 def test_generates_typed_cached_domain_accessors() -> None:
     output = accessors.generate([Domain(domain="Page"), Domain(domain="DOMStorage")])
 
-    assert "class CDPDomains(CDPCommandSender):" in output
+    assert "from cdpify.transport import Transport" in output
+    assert "class CDPDomains:" in output
+    assert "def __init__(self, transport: Transport) -> None:" in output
+    assert "self._transport = transport" in output
     assert "from .page import Page" in output
     assert "from .domstorage import DOMStorage" in output
     assert "@cached_property" in output
     assert "def page(self) -> Page:" in output
     assert "def dom_storage(self) -> DOMStorage:" in output
+    assert "return Page(self._transport)" in output

@@ -7,7 +7,7 @@ from __future__ import annotations
 from typing import Literal
 
 from cdpify.codec import encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.transport import Transport
 
 from .commands import (
     DispatchDragEventParams,
@@ -34,8 +34,8 @@ from .types import (
 
 
 class Input:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def dispatch_drag_event(
         self,
@@ -54,7 +54,7 @@ class Input:
             type=type, x=x, y=y, data=data, modifiers=modifiers
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=InputCommand.DISPATCH_DRAG_EVENT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -101,7 +101,7 @@ class Input:
             commands=commands,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=InputCommand.DISPATCH_KEY_EVENT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -119,7 +119,7 @@ class Input:
         """
         params = InsertTextParams(text=text)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=InputCommand.INSERT_TEXT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -148,7 +148,7 @@ class Input:
             replacement_end=replacement_end,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=InputCommand.IME_SET_COMPOSITION,
             params=encode_cdp(params),
             session_id=session_id,
@@ -197,7 +197,7 @@ class Input:
             pointer_type=pointer_type,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=InputCommand.DISPATCH_MOUSE_EVENT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -222,7 +222,7 @@ class Input:
             timestamp=timestamp,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=InputCommand.DISPATCH_TOUCH_EVENT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -235,7 +235,7 @@ class Input:
         """
         Cancels any active dragging in the page.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=InputCommand.CANCEL_DRAGGING,
             params=None,
             session_id=session_id,
@@ -270,7 +270,7 @@ class Input:
             click_count=click_count,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=InputCommand.EMULATE_TOUCH_FROM_MOUSE_EVENT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -287,7 +287,7 @@ class Input:
         """
         params = SetIgnoreInputEventsParams(ignore=ignore)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=InputCommand.SET_IGNORE_INPUT_EVENTS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -306,7 +306,7 @@ class Input:
         """
         params = SetInterceptDragsParams(enabled=enabled)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=InputCommand.SET_INTERCEPT_DRAGS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -334,7 +334,7 @@ class Input:
             gesture_source_type=gesture_source_type,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=InputCommand.SYNTHESIZE_PINCH_GESTURE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -376,7 +376,7 @@ class Input:
             interaction_marker_name=interaction_marker_name,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=InputCommand.SYNTHESIZE_SCROLL_GESTURE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -404,7 +404,7 @@ class Input:
             gesture_source_type=gesture_source_type,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=InputCommand.SYNTHESIZE_TAP_GESTURE,
             params=encode_cdp(params),
             session_id=session_id,

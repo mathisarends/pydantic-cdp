@@ -7,8 +7,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Literal
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
+from cdpify.transport import Transport
 
 from .commands import (
     AddPrivacySandboxEnrollmentOverrideParams,
@@ -51,8 +51,8 @@ if TYPE_CHECKING:
 
 
 class Browser:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def set_permission(
         self,
@@ -75,7 +75,7 @@ class Browser:
             browser_context_id=browser_context_id,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=BrowserCommand.SET_PERMISSION,
             params=encode_cdp(params),
             session_id=session_id,
@@ -100,7 +100,7 @@ class Browser:
             browser_context_id=browser_context_id,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=BrowserCommand.GRANT_PERMISSIONS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -117,7 +117,7 @@ class Browser:
         """
         params = ResetPermissionsParams(browser_context_id=browser_context_id)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=BrowserCommand.RESET_PERMISSIONS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -142,7 +142,7 @@ class Browser:
             events_enabled=events_enabled,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=BrowserCommand.SET_DOWNLOAD_BEHAVIOR,
             params=encode_cdp(params),
             session_id=session_id,
@@ -160,7 +160,7 @@ class Browser:
         """
         params = CancelDownloadParams(guid=guid, browser_context_id=browser_context_id)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=BrowserCommand.CANCEL_DOWNLOAD,
             params=encode_cdp(params),
             session_id=session_id,
@@ -173,7 +173,7 @@ class Browser:
         """
         Close browser gracefully.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=BrowserCommand.CLOSE,
             params=None,
             session_id=session_id,
@@ -186,7 +186,7 @@ class Browser:
         """
         Crashes browser on the main thread.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=BrowserCommand.CRASH,
             params=None,
             session_id=session_id,
@@ -199,7 +199,7 @@ class Browser:
         """
         Crashes GPU process.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=BrowserCommand.CRASH_GPU_PROCESS,
             params=None,
             session_id=session_id,
@@ -212,7 +212,7 @@ class Browser:
         """
         Returns version information.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=BrowserCommand.GET_VERSION,
             params=None,
             session_id=session_id,
@@ -227,7 +227,7 @@ class Browser:
         Returns the command line switches for the browser process if, and only if
         --enable-automation is on the commandline.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=BrowserCommand.GET_BROWSER_COMMAND_LINE,
             params=None,
             session_id=session_id,
@@ -246,7 +246,7 @@ class Browser:
         """
         params = GetHistogramsParams(query=query, delta=delta)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=BrowserCommand.GET_HISTOGRAMS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -265,7 +265,7 @@ class Browser:
         """
         params = GetHistogramParams(name=name, delta=delta)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=BrowserCommand.GET_HISTOGRAM,
             params=encode_cdp(params),
             session_id=session_id,
@@ -283,7 +283,7 @@ class Browser:
         """
         params = GetWindowBoundsParams(window_id=window_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=BrowserCommand.GET_WINDOW_BOUNDS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -301,7 +301,7 @@ class Browser:
         """
         params = GetWindowForTargetParams(target_id=target_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=BrowserCommand.GET_WINDOW_FOR_TARGET,
             params=encode_cdp(params),
             session_id=session_id,
@@ -320,7 +320,7 @@ class Browser:
         """
         params = SetWindowBoundsParams(window_id=window_id, bounds=bounds)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=BrowserCommand.SET_WINDOW_BOUNDS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -339,7 +339,7 @@ class Browser:
         """
         params = SetContentsSizeParams(window_id=window_id, width=width, height=height)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=BrowserCommand.SET_CONTENTS_SIZE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -357,7 +357,7 @@ class Browser:
         """
         params = SetDockTileParams(badge_label=badge_label, image=image)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=BrowserCommand.SET_DOCK_TILE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -374,7 +374,7 @@ class Browser:
         """
         params = ExecuteBrowserCommandParams(command_id=command_id)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=BrowserCommand.EXECUTE_BROWSER_COMMAND,
             params=encode_cdp(params),
             session_id=session_id,
@@ -392,7 +392,7 @@ class Browser:
         """
         params = AddPrivacySandboxEnrollmentOverrideParams(url=url)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=BrowserCommand.ADD_PRIVACY_SANDBOX_ENROLLMENT_OVERRIDE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -406,7 +406,7 @@ class Browser:
         Gets the current globally-applied privacy control status See
         https://www.w3.org/TR/gpc/#get-global-privacy-control
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=BrowserCommand.GET_GLOBAL_PRIVACY_CONTROL,
             params=None,
             session_id=session_id,
@@ -425,7 +425,7 @@ class Browser:
         """
         params = SetGlobalPrivacyControlParams(gpc=gpc)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=BrowserCommand.SET_GLOBAL_PRIVACY_CONTROL,
             params=encode_cdp(params),
             session_id=session_id,

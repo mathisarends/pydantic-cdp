@@ -1,0 +1,161 @@
+import asyncio
+import json
+from unittest.mock import AsyncMock
+
+import pytest
+
+from cdpify.exceptions import (
+    CDPCommandException,
+    CDPConnectionException,
+    CDPTimeoutException,
+)
+from cdpify.transports.websocket import (
+    WebSocketTransport,
+    _build_message,
+    _create_pending_request,
+)
+
+
+class _FakeWebSocket:
+    def __init__(self) -> None:
+        self.sent_messages: list[str] = []
+        self.closed = False
+
+    async def send(self, payload: str) -> None:
+        self.sent_messages.append(payload)
+
+    async def close(self) -> None:
+        self.closed = True
+
+
+def test_builds_cdp_message() -> None:
+    assert _build_message(3, "Page.enable", None, "S1") == {
+        "id": 3,
+        "method": "Page.enable",
+        "params": {},
+        "sessionId": "S1",
+    }
+
+
+@pytest.mark.asyncio
+async def test_creates_and_registers_pending_request() -> None:
+    pending: dict[int, asyncio.Future[dict[str, object]]] = {}
+
+    future = _create_pending_request(pending, 3)
+
+    assert pending == {3: future}
+
+
+@pytest.mark.asyncio
+async def test_handle_response_sets_result_and_command_error() -> None:
+    transport = WebSocketTransport("ws://example")
+    ok_future = _create_pending_request(transport._pending_requests, 1)
+    err_future = _create_pending_request(transport._pending_requests, 2)
+
+    transport._handle_response({"id": 1, "result": {"ok": True}})
+    transport._handle_response({"id": 2, "error": {"code": 9, "message": "failed"}})
+
+    assert await ok_future == {"ok": True}
+    with pytest.raises(CDPCommandException):
+        await err_future
+
+
+@pytest.mark.asyncio
+async def test_process_message_exposes_transport_event() -> None:
+    transport = WebSocketTransport("ws://example")
+
+    await transport._process_message(
+        json.dumps(
+            {
+                "method": "Runtime.consoleAPICalled",
+                "params": {"value": 1},
+                "sessionId": "S1",
+            }
+        )
+    )
+    event = await anext(transport.events())
+
+    assert event.method == "Runtime.consoleAPICalled"
+    assert event.params == {"value": 1}
+    assert event.session_id == "S1"
+
+
+@pytest.mark.asyncio
+async def test_send_serializes_payload_as_json() -> None:
+    transport = WebSocketTransport("ws://example")
+    transport._ws = _FakeWebSocket()  # type: ignore[assignment]
+
+    await transport._send(
+        3,
+        "Page.enable",
+        {"id": 3, "method": "Page.enable", "params": {}},
+    )
+
+    assert transport._ws.sent_messages == [  # type: ignore[union-attr]
+        json.dumps({"id": 3, "method": "Page.enable", "params": {}})
+    ]
+
+
+@pytest.mark.asyncio
+async def test_await_response_raises_timeout() -> None:
+    transport = WebSocketTransport("ws://example")
+    unresolved: asyncio.Future[dict[str, object]] = asyncio.Future()
+
+    with pytest.raises(CDPTimeoutException):
+        await transport._await_response(
+            1,
+            "Page.enable",
+            unresolved,  # type: ignore[arg-type]
+            timeout=0.001,
+        )
+
+
+@pytest.mark.asyncio
+async def test_execute_requires_connection() -> None:
+    transport = WebSocketTransport("ws://example")
+
+    with pytest.raises(CDPConnectionException):
+        await transport.execute("Runtime.enable")
+
+
+@pytest.mark.asyncio
+async def test_execute_removes_pending_request_after_failure() -> None:
+    transport = WebSocketTransport("ws://example")
+    transport._ws = _FakeWebSocket()  # type: ignore[assignment]
+    transport._send = AsyncMock()  # type: ignore[method-assign]
+    transport._await_response = AsyncMock(  # type: ignore[method-assign]
+        side_effect=CDPTimeoutException("timeout")
+    )
+
+    with pytest.raises(CDPTimeoutException):
+        await transport.execute("Runtime.enable")
+
+    assert transport._pending_requests == {}
+
+
+@pytest.mark.asyncio
+async def test_disconnect_cancels_pending_requests_and_closes_websocket() -> None:
+    transport = WebSocketTransport("ws://example")
+    websocket = _FakeWebSocket()
+    transport._ws = websocket  # type: ignore[assignment]
+    pending = _create_pending_request(transport._pending_requests, 1)
+    transport._message_loop_task = asyncio.create_task(asyncio.sleep(10))
+
+    await transport.disconnect()
+
+    assert websocket.closed is True
+    assert transport.is_connected is False
+    with pytest.raises(CDPConnectionException):
+        await pending
+
+
+@pytest.mark.asyncio
+async def test_process_message_warns_for_unknown_payload(
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    transport = WebSocketTransport("ws://example")
+
+    with caplog.at_level("WARNING"):
+        await transport._process_message(json.dumps({"foo": "bar"}))
+
+    assert "Unknown CDP message format" in caplog.text

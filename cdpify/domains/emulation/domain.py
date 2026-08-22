@@ -7,8 +7,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Literal
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
+from cdpify.transport import Transport
 
 from .commands import (
     AddScreenParams,
@@ -84,8 +84,8 @@ if TYPE_CHECKING:
 
 
 class Emulation:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     @deprecated()
     async def can_emulate(
@@ -95,7 +95,7 @@ class Emulation:
         """
         Tells whether emulation is supported.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=EmulationCommand.CAN_EMULATE,
             params=None,
             session_id=session_id,
@@ -109,7 +109,7 @@ class Emulation:
         """
         Clears the overridden device metrics.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.CLEAR_DEVICE_METRICS_OVERRIDE,
             params=None,
             session_id=session_id,
@@ -122,7 +122,7 @@ class Emulation:
         """
         Clears the overridden Geolocation Position and Error.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.CLEAR_GEOLOCATION_OVERRIDE,
             params=None,
             session_id=session_id,
@@ -135,7 +135,7 @@ class Emulation:
         """
         Requests that page scale factor is reset to initial values.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.RESET_PAGE_SCALE_FACTOR,
             params=None,
             session_id=session_id,
@@ -152,7 +152,7 @@ class Emulation:
         """
         params = SetFocusEmulationEnabledParams(enabled=enabled)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_FOCUS_EMULATION_ENABLED,
             params=encode_cdp(params),
             session_id=session_id,
@@ -169,7 +169,7 @@ class Emulation:
         """
         params = SetAutoDarkModeOverrideParams(enabled=enabled)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_AUTO_DARK_MODE_OVERRIDE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -186,7 +186,7 @@ class Emulation:
         """
         params = SetCPUThrottlingRateParams(rate=rate)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_CPU_THROTTLING_RATE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -204,7 +204,7 @@ class Emulation:
         """
         params = SetDefaultBackgroundColorOverrideParams(color=color)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_DEFAULT_BACKGROUND_COLOR_OVERRIDE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -223,7 +223,7 @@ class Emulation:
         """
         params = SetSafeAreaInsetsOverrideParams(insets=insets)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_SAFE_AREA_INSETS_OVERRIDE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -245,7 +245,7 @@ class Emulation:
         """
         params = SetVirtualKeyboardGeometryOverrideParams(keyboard_rect=keyboard_rect)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_VIRTUAL_KEYBOARD_GEOMETRY_OVERRIDE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -296,7 +296,7 @@ class Emulation:
             screen_orientation_lock_emulation=screen_orientation_lock_emulation,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_DEVICE_METRICS_OVERRIDE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -314,7 +314,7 @@ class Emulation:
         """
         params = SetDevicePostureOverrideParams(posture=posture)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_DEVICE_POSTURE_OVERRIDE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -329,7 +329,7 @@ class Emulation:
         setDevicePostureOverride() and starts using posture information from the
         platform again. Does nothing if no override is set.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.CLEAR_DEVICE_POSTURE_OVERRIDE,
             params=None,
             session_id=session_id,
@@ -347,7 +347,7 @@ class Emulation:
         """
         params = SetDisplayFeaturesOverrideParams(features=features)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_DISPLAY_FEATURES_OVERRIDE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -362,7 +362,7 @@ class Emulation:
         or setDisplayFeaturesOverride() and starts using display features from the
         platform again. Does nothing if no override is set.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.CLEAR_DISPLAY_FEATURES_OVERRIDE,
             params=None,
             session_id=session_id,
@@ -376,7 +376,7 @@ class Emulation:
     ) -> None:
         params = SetScrollbarsHiddenParams(hidden=hidden)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_SCROLLBARS_HIDDEN,
             params=encode_cdp(params),
             session_id=session_id,
@@ -390,7 +390,7 @@ class Emulation:
     ) -> None:
         params = SetDocumentCookieDisabledParams(disabled=disabled)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_DOCUMENT_COOKIE_DISABLED,
             params=encode_cdp(params),
             session_id=session_id,
@@ -407,7 +407,7 @@ class Emulation:
             enabled=enabled, configuration=configuration
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_EMIT_TOUCH_EVENTS_FOR_MOUSE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -425,7 +425,7 @@ class Emulation:
         """
         params = SetEmulatedMediaParams(media=media, features=features)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_EMULATED_MEDIA,
             params=encode_cdp(params),
             session_id=session_id,
@@ -450,7 +450,7 @@ class Emulation:
         """
         params = SetEmulatedVisionDeficiencyParams(type=type)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_EMULATED_VISION_DEFICIENCY,
             params=encode_cdp(params),
             session_id=session_id,
@@ -467,7 +467,7 @@ class Emulation:
         """
         params = SetEmulatedOSTextScaleParams(scale=scale)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_EMULATED_OS_TEXT_SCALE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -499,7 +499,7 @@ class Emulation:
             speed=speed,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_GEOLOCATION_OVERRIDE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -513,7 +513,7 @@ class Emulation:
     ) -> GetOverriddenSensorInformationResult:
         params = GetOverriddenSensorInformationParams(type=type)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=EmulationCommand.GET_OVERRIDDEN_SENSOR_INFORMATION,
             params=encode_cdp(params),
             session_id=session_id,
@@ -539,7 +539,7 @@ class Emulation:
             enabled=enabled, type=type, metadata=metadata
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_SENSOR_OVERRIDE_ENABLED,
             params=encode_cdp(params),
             session_id=session_id,
@@ -558,7 +558,7 @@ class Emulation:
         """
         params = SetSensorOverrideReadingsParams(type=type, reading=reading)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_SENSOR_OVERRIDE_READINGS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -582,7 +582,7 @@ class Emulation:
             enabled=enabled, source=source, metadata=metadata
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_PRESSURE_SOURCE_OVERRIDE_ENABLED,
             params=encode_cdp(params),
             session_id=session_id,
@@ -602,7 +602,7 @@ class Emulation:
         """
         params = SetPressureStateOverrideParams(source=source, state=state)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_PRESSURE_STATE_OVERRIDE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -622,7 +622,7 @@ class Emulation:
             is_user_active=is_user_active, is_screen_unlocked=is_screen_unlocked
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_IDLE_OVERRIDE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -635,7 +635,7 @@ class Emulation:
         """
         Clears Idle state overrides.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.CLEAR_IDLE_OVERRIDE,
             params=None,
             session_id=session_id,
@@ -653,7 +653,7 @@ class Emulation:
         """
         params = SetNavigatorOverridesParams(platform=platform)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_NAVIGATOR_OVERRIDES,
             params=encode_cdp(params),
             session_id=session_id,
@@ -670,7 +670,7 @@ class Emulation:
         """
         params = SetPageScaleFactorParams(page_scale_factor=page_scale_factor)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_PAGE_SCALE_FACTOR,
             params=encode_cdp(params),
             session_id=session_id,
@@ -687,7 +687,7 @@ class Emulation:
         """
         params = SetScriptExecutionDisabledParams(value=value)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_SCRIPT_EXECUTION_DISABLED,
             params=encode_cdp(params),
             session_id=session_id,
@@ -707,7 +707,7 @@ class Emulation:
             enabled=enabled, max_touch_points=max_touch_points
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_TOUCH_EMULATION_ENABLED,
             params=encode_cdp(params),
             session_id=session_id,
@@ -734,7 +734,7 @@ class Emulation:
             initial_virtual_time=initial_virtual_time,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=EmulationCommand.SET_VIRTUAL_TIME_POLICY,
             params=encode_cdp(params),
             session_id=session_id,
@@ -752,7 +752,7 @@ class Emulation:
         """
         params = SetLocaleOverrideParams(locale=locale)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_LOCALE_OVERRIDE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -769,7 +769,7 @@ class Emulation:
         """
         params = SetTimezoneOverrideParams(timezone_id=timezone_id)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_TIMEZONE_OVERRIDE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -790,7 +790,7 @@ class Emulation:
         """
         params = SetVisibleSizeParams(width=width, height=height)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_VISIBLE_SIZE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -804,7 +804,7 @@ class Emulation:
     ) -> None:
         params = SetDisabledImageTypesParams(image_types=image_types)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_DISABLED_IMAGE_TYPES,
             params=encode_cdp(params),
             session_id=session_id,
@@ -821,7 +821,7 @@ class Emulation:
         """
         params = SetDataSaverOverrideParams(data_saver_enabled=data_saver_enabled)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_DATA_SAVER_OVERRIDE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -837,7 +837,7 @@ class Emulation:
             hardware_concurrency=hardware_concurrency
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_HARDWARE_CONCURRENCY_OVERRIDE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -855,7 +855,7 @@ class Emulation:
         """
         params = SetCPUPerformanceOverrideParams(performance_tier=performance_tier)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_CPU_PERFORMANCE_OVERRIDE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -881,7 +881,7 @@ class Emulation:
             user_agent_metadata=user_agent_metadata,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_USER_AGENT_OVERRIDE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -898,7 +898,7 @@ class Emulation:
         """
         params = SetAutomationOverrideParams(enabled=enabled)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_AUTOMATION_OVERRIDE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -917,7 +917,7 @@ class Emulation:
         """
         params = SetSmallViewportHeightDifferenceOverrideParams(difference=difference)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_SMALL_VIEWPORT_HEIGHT_DIFFERENCE_OVERRIDE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -932,7 +932,7 @@ class Emulation:
         configuration is returned, whereas in headless mode, a virtual headless screen
         configuration is provided instead.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=EmulationCommand.GET_SCREEN_INFOS,
             params=None,
             session_id=session_id,
@@ -970,7 +970,7 @@ class Emulation:
             is_internal=is_internal,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=EmulationCommand.ADD_SCREEN,
             params=encode_cdp(params),
             session_id=session_id,
@@ -1010,7 +1010,7 @@ class Emulation:
             is_internal=is_internal,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=EmulationCommand.UPDATE_SCREEN,
             params=encode_cdp(params),
             session_id=session_id,
@@ -1028,7 +1028,7 @@ class Emulation:
         """
         params = RemoveScreenParams(screen_id=screen_id)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.REMOVE_SCREEN,
             params=encode_cdp(params),
             session_id=session_id,
@@ -1047,7 +1047,7 @@ class Emulation:
         """
         params = SetPrimaryScreenParams(screen_id=screen_id)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=EmulationCommand.SET_PRIMARY_SCREEN,
             params=encode_cdp(params),
             session_id=session_id,

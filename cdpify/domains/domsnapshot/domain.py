@@ -5,8 +5,8 @@
 from __future__ import annotations
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
+from cdpify.transport import Transport
 
 from .commands import (
     CaptureSnapshotParams,
@@ -18,8 +18,8 @@ from .commands import (
 
 
 class DOMSnapshot:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def disable(
         self,
@@ -28,7 +28,7 @@ class DOMSnapshot:
         """
         Disables DOM snapshot agent for the given page.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMSnapshotCommand.DISABLE,
             params=None,
             session_id=session_id,
@@ -41,7 +41,7 @@ class DOMSnapshot:
         """
         Enables DOM snapshot agent for the given page.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMSnapshotCommand.ENABLE,
             params=None,
             session_id=session_id,
@@ -70,7 +70,7 @@ class DOMSnapshot:
             include_user_agent_shadow_tree=include_user_agent_shadow_tree,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMSnapshotCommand.GET_SNAPSHOT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -101,7 +101,7 @@ class DOMSnapshot:
             include_text_color_opacities=include_text_color_opacities,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMSnapshotCommand.CAPTURE_SNAPSHOT,
             params=encode_cdp(params),
             session_id=session_id,

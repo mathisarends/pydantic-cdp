@@ -7,7 +7,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.transport import Transport
 
 from .commands import (
     ClearObjectStoreParams,
@@ -32,8 +32,8 @@ if TYPE_CHECKING:
 
 
 class IndexedDB:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def clear_object_store(
         self,
@@ -56,7 +56,7 @@ class IndexedDB:
             object_store_name=object_store_name,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=IndexedDBCommand.CLEAR_OBJECT_STORE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -81,7 +81,7 @@ class IndexedDB:
             database_name=database_name,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=IndexedDBCommand.DELETE_DATABASE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -110,7 +110,7 @@ class IndexedDB:
             key_range=key_range,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=IndexedDBCommand.DELETE_OBJECT_STORE_ENTRIES,
             params=encode_cdp(params),
             session_id=session_id,
@@ -123,7 +123,7 @@ class IndexedDB:
         """
         Disables events from backend.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=IndexedDBCommand.DISABLE,
             params=None,
             session_id=session_id,
@@ -136,7 +136,7 @@ class IndexedDB:
         """
         Enables events from backend.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=IndexedDBCommand.ENABLE,
             params=None,
             session_id=session_id,
@@ -171,7 +171,7 @@ class IndexedDB:
             key_range=key_range,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=IndexedDBCommand.REQUEST_DATA,
             params=encode_cdp(params),
             session_id=session_id,
@@ -199,7 +199,7 @@ class IndexedDB:
             object_store_name=object_store_name,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=IndexedDBCommand.GET_METADATA,
             params=encode_cdp(params),
             session_id=session_id,
@@ -225,7 +225,7 @@ class IndexedDB:
             database_name=database_name,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=IndexedDBCommand.REQUEST_DATABASE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -249,7 +249,7 @@ class IndexedDB:
             storage_bucket=storage_bucket,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=IndexedDBCommand.REQUEST_DATABASE_NAMES,
             params=encode_cdp(params),
             session_id=session_id,

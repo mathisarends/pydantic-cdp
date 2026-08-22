@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.transport import Transport
 
 from .commands import (
     PreloadCommand,
@@ -12,14 +12,14 @@ from .commands import (
 
 
 class Preload:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def enable(
         self,
         session_id: str | None = None,
     ) -> None:
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PreloadCommand.ENABLE,
             params=None,
             session_id=session_id,
@@ -29,7 +29,7 @@ class Preload:
         self,
         session_id: str | None = None,
     ) -> None:
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PreloadCommand.DISABLE,
             params=None,
             session_id=session_id,

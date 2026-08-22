@@ -7,8 +7,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
+from cdpify.transport import Transport
 
 from .commands import (
     ActivateTargetParams,
@@ -53,8 +53,8 @@ if TYPE_CHECKING:
 
 
 class Target:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def activate_target(
         self,
@@ -67,7 +67,7 @@ class Target:
         """
         params = ActivateTargetParams(target_id=target_id)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=TargetCommand.ACTIVATE_TARGET,
             params=encode_cdp(params),
             session_id=session_id,
@@ -85,7 +85,7 @@ class Target:
         """
         params = AttachToTargetParams(target_id=target_id, flatten=flatten)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=TargetCommand.ATTACH_TO_TARGET,
             params=encode_cdp(params),
             session_id=session_id,
@@ -99,7 +99,7 @@ class Target:
         """
         Attaches to the browser target, only uses flat sessionId mode.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=TargetCommand.ATTACH_TO_BROWSER_TARGET,
             params=None,
             session_id=session_id,
@@ -117,7 +117,7 @@ class Target:
         """
         params = CloseTargetParams(target_id=target_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=TargetCommand.CLOSE_TARGET,
             params=encode_cdp(params),
             session_id=session_id,
@@ -146,7 +146,7 @@ class Target:
             inherit_permissions=inherit_permissions,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=TargetCommand.EXPOSE_DEV_TOOLS_PROTOCOL,
             params=encode_cdp(params),
             session_id=session_id,
@@ -172,7 +172,7 @@ class Target:
             origins_with_universal_network_access=origins_with_universal_network_access,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=TargetCommand.CREATE_BROWSER_CONTEXT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -186,7 +186,7 @@ class Target:
         """
         Returns all browser contexts created with `Target.createBrowserContext` method.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=TargetCommand.GET_BROWSER_CONTEXTS,
             params=None,
             session_id=session_id,
@@ -230,7 +230,7 @@ class Target:
             focus=focus,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=TargetCommand.CREATE_TARGET,
             params=encode_cdp(params),
             session_id=session_id,
@@ -251,7 +251,7 @@ class Target:
             session_id=detach_from_target_session_id, target_id=target_id
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=TargetCommand.DETACH_FROM_TARGET,
             params=encode_cdp(params),
             session_id=session_id,
@@ -269,7 +269,7 @@ class Target:
         """
         params = DisposeBrowserContextParams(browser_context_id=browser_context_id)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=TargetCommand.DISPOSE_BROWSER_CONTEXT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -286,7 +286,7 @@ class Target:
         """
         params = GetTargetInfoParams(target_id=target_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=TargetCommand.GET_TARGET_INFO,
             params=encode_cdp(params),
             session_id=session_id,
@@ -304,7 +304,7 @@ class Target:
         """
         params = GetTargetsParams(filter=filter)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=TargetCommand.GET_TARGETS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -330,7 +330,7 @@ class Target:
             target_id=target_id,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=TargetCommand.SEND_MESSAGE_TO_TARGET,
             params=encode_cdp(params),
             session_id=session_id,
@@ -361,7 +361,7 @@ class Target:
             filter=filter,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=TargetCommand.SET_AUTO_ATTACH,
             params=encode_cdp(params),
             session_id=session_id,
@@ -389,7 +389,7 @@ class Target:
             filter=filter,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=TargetCommand.AUTO_ATTACH_RELATED,
             params=encode_cdp(params),
             session_id=session_id,
@@ -408,7 +408,7 @@ class Target:
         """
         params = SetDiscoverTargetsParams(discover=discover, filter=filter)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=TargetCommand.SET_DISCOVER_TARGETS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -426,7 +426,7 @@ class Target:
         """
         params = SetRemoteLocationsParams(locations=locations)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=TargetCommand.SET_REMOTE_LOCATIONS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -444,7 +444,7 @@ class Target:
         """
         params = GetDevToolsTargetParams(target_id=target_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=TargetCommand.GET_DEV_TOOLS_TARGET,
             params=encode_cdp(params),
             session_id=session_id,
@@ -463,7 +463,7 @@ class Target:
         """
         params = OpenDevToolsParams(target_id=target_id, panel_id=panel_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=TargetCommand.OPEN_DEV_TOOLS,
             params=encode_cdp(params),
             session_id=session_id,

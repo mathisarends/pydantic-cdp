@@ -7,8 +7,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
+from cdpify.transport import Transport
 
 from .commands import (
     DOMDebuggerCommand,
@@ -34,8 +34,8 @@ if TYPE_CHECKING:
 
 
 class DOMDebugger:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def get_event_listeners(
         self,
@@ -52,7 +52,7 @@ class DOMDebugger:
             object_id=object_id, depth=depth, pierce=pierce
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=DOMDebuggerCommand.GET_EVENT_LISTENERS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -71,7 +71,7 @@ class DOMDebugger:
         """
         params = RemoveDOMBreakpointParams(node_id=node_id, type=type)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMDebuggerCommand.REMOVE_DOM_BREAKPOINT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -91,7 +91,7 @@ class DOMDebugger:
             event_name=event_name, target_name=target_name
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMDebuggerCommand.REMOVE_EVENT_LISTENER_BREAKPOINT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -109,7 +109,7 @@ class DOMDebugger:
         """
         params = RemoveInstrumentationBreakpointParams(event_name=event_name)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMDebuggerCommand.REMOVE_INSTRUMENTATION_BREAKPOINT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -126,7 +126,7 @@ class DOMDebugger:
         """
         params = RemoveXHRBreakpointParams(url=url)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMDebuggerCommand.REMOVE_XHR_BREAKPOINT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -143,7 +143,7 @@ class DOMDebugger:
         """
         params = SetBreakOnCSPViolationParams(violation_types=violation_types)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMDebuggerCommand.SET_BREAK_ON_CSP_VIOLATION,
             params=encode_cdp(params),
             session_id=session_id,
@@ -161,7 +161,7 @@ class DOMDebugger:
         """
         params = SetDOMBreakpointParams(node_id=node_id, type=type)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMDebuggerCommand.SET_DOM_BREAKPOINT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -181,7 +181,7 @@ class DOMDebugger:
             event_name=event_name, target_name=target_name
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMDebuggerCommand.SET_EVENT_LISTENER_BREAKPOINT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -199,7 +199,7 @@ class DOMDebugger:
         """
         params = SetInstrumentationBreakpointParams(event_name=event_name)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMDebuggerCommand.SET_INSTRUMENTATION_BREAKPOINT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -216,7 +216,7 @@ class DOMDebugger:
         """
         params = SetXHRBreakpointParams(url=url)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DOMDebuggerCommand.SET_XHR_BREAKPOINT,
             params=encode_cdp(params),
             session_id=session_id,

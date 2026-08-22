@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.transport import Transport
 
 from .commands import (
     FileSystemCommand,
@@ -18,8 +18,8 @@ from .types import (
 
 
 class FileSystem:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def get_directory(
         self,
@@ -31,7 +31,7 @@ class FileSystem:
             bucket_file_system_locator=bucket_file_system_locator
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=FileSystemCommand.GET_DIRECTORY,
             params=encode_cdp(params),
             session_id=session_id,

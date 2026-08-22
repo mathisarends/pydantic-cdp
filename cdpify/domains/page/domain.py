@@ -7,8 +7,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Literal
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
+from cdpify.transport import Transport
 
 from .commands import (
     AddCompilationCacheParams,
@@ -96,8 +96,8 @@ if TYPE_CHECKING:
 
 
 class Page:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     @deprecated()
     async def add_script_to_evaluate_on_load(
@@ -111,7 +111,7 @@ class Page:
         """
         params = AddScriptToEvaluateOnLoadParams(script_source=script_source)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=PageCommand.ADD_SCRIPT_TO_EVALUATE_ON_LOAD,
             params=encode_cdp(params),
             session_id=session_id,
@@ -138,7 +138,7 @@ class Page:
             run_immediately=run_immediately,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=PageCommand.ADD_SCRIPT_TO_EVALUATE_ON_NEW_DOCUMENT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -152,7 +152,7 @@ class Page:
         """
         Brings page to front (activates tab).
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.BRING_TO_FRONT,
             params=None,
             session_id=session_id,
@@ -181,7 +181,7 @@ class Page:
             optimize_for_speed=optimize_for_speed,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=PageCommand.CAPTURE_SCREENSHOT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -200,7 +200,7 @@ class Page:
         """
         params = CaptureSnapshotParams(format=format)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=PageCommand.CAPTURE_SNAPSHOT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -215,7 +215,7 @@ class Page:
         """
         Clears the overridden device metrics.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.CLEAR_DEVICE_METRICS_OVERRIDE,
             params=None,
             session_id=session_id,
@@ -229,7 +229,7 @@ class Page:
         """
         Clears the overridden Device Orientation.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.CLEAR_DEVICE_ORIENTATION_OVERRIDE,
             params=None,
             session_id=session_id,
@@ -243,7 +243,7 @@ class Page:
         """
         Clears the overridden Geolocation Position and Error.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.CLEAR_GEOLOCATION_OVERRIDE,
             params=None,
             session_id=session_id,
@@ -268,7 +268,7 @@ class Page:
             content_security_policy=content_security_policy,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=PageCommand.CREATE_ISOLATED_WORLD,
             params=encode_cdp(params),
             session_id=session_id,
@@ -288,7 +288,7 @@ class Page:
         """
         params = DeleteCookieParams(cookie_name=cookie_name, url=url)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.DELETE_COOKIE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -301,7 +301,7 @@ class Page:
         """
         Disables page domain notifications.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.DISABLE,
             params=None,
             session_id=session_id,
@@ -320,7 +320,7 @@ class Page:
             enable_file_chooser_opened_event=enable_file_chooser_opened_event
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.ENABLE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -340,7 +340,7 @@ class Page:
         """
         params = GetAppManifestParams(manifest_id=manifest_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=PageCommand.GET_APP_MANIFEST,
             params=encode_cdp(params),
             session_id=session_id,
@@ -351,7 +351,7 @@ class Page:
         self,
         session_id: str | None = None,
     ) -> GetInstallabilityErrorsResult:
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=PageCommand.GET_INSTALLABILITY_ERRORS,
             params=None,
             session_id=session_id,
@@ -367,7 +367,7 @@ class Page:
         Deprecated because it's not guaranteed that the returned icon is in fact the
         one used for PWA installation.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=PageCommand.GET_MANIFEST_ICONS,
             params=None,
             session_id=session_id,
@@ -382,7 +382,7 @@ class Page:
         Returns the unique (PWA) app id. Only returns values if the feature flag
         'WebAppEnableManifestId' is enabled
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=PageCommand.GET_APP_ID,
             params=None,
             session_id=session_id,
@@ -397,7 +397,7 @@ class Page:
     ) -> GetAdScriptAncestryResult:
         params = GetAdScriptAncestryParams(frame_id=frame_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=PageCommand.GET_AD_SCRIPT_ANCESTRY,
             params=encode_cdp(params),
             session_id=session_id,
@@ -411,7 +411,7 @@ class Page:
         """
         Returns present frame tree structure.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=PageCommand.GET_FRAME_TREE,
             params=None,
             session_id=session_id,
@@ -426,7 +426,7 @@ class Page:
         Returns metrics relating to the layouting of the page, such as viewport
         bounds/scale.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=PageCommand.GET_LAYOUT_METRICS,
             params=None,
             session_id=session_id,
@@ -440,7 +440,7 @@ class Page:
         """
         Returns navigation history for the current page.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=PageCommand.GET_NAVIGATION_HISTORY,
             params=None,
             session_id=session_id,
@@ -454,7 +454,7 @@ class Page:
         """
         Resets navigation history for the current page.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.RESET_NAVIGATION_HISTORY,
             params=None,
             session_id=session_id,
@@ -472,7 +472,7 @@ class Page:
         """
         params = GetResourceContentParams(frame_id=frame_id, url=url)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=PageCommand.GET_RESOURCE_CONTENT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -486,7 +486,7 @@ class Page:
         """
         Returns present frame / resource tree structure.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=PageCommand.GET_RESOURCE_TREE,
             params=None,
             session_id=session_id,
@@ -506,7 +506,7 @@ class Page:
         """
         params = HandleJavaScriptDialogParams(accept=accept, prompt_text=prompt_text)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.HANDLE_JAVA_SCRIPT_DIALOG,
             params=encode_cdp(params),
             session_id=session_id,
@@ -533,7 +533,7 @@ class Page:
             referrer_policy=referrer_policy,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=PageCommand.NAVIGATE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -551,7 +551,7 @@ class Page:
         """
         params = NavigateToHistoryEntryParams(entry_id=entry_id)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.NAVIGATE_TO_HISTORY_ENTRY,
             params=encode_cdp(params),
             session_id=session_id,
@@ -602,7 +602,7 @@ class Page:
             generate_document_outline=generate_document_outline,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=PageCommand.PRINT_TO_PDF,
             params=encode_cdp(params),
             session_id=session_id,
@@ -626,7 +626,7 @@ class Page:
             loader_id=loader_id,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.RELOAD,
             params=encode_cdp(params),
             session_id=session_id,
@@ -644,7 +644,7 @@ class Page:
         """
         params = RemoveScriptToEvaluateOnLoadParams(identifier=identifier)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.REMOVE_SCRIPT_TO_EVALUATE_ON_LOAD,
             params=encode_cdp(params),
             session_id=session_id,
@@ -661,7 +661,7 @@ class Page:
         """
         params = RemoveScriptToEvaluateOnNewDocumentParams(identifier=identifier)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.REMOVE_SCRIPT_TO_EVALUATE_ON_NEW_DOCUMENT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -678,7 +678,7 @@ class Page:
         """
         params = ScreencastFrameAckParams(session_id=screencast_frame_ack_session_id)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.SCREENCAST_FRAME_ACK,
             params=encode_cdp(params),
             session_id=session_id,
@@ -705,7 +705,7 @@ class Page:
             is_regex=is_regex,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=PageCommand.SEARCH_IN_RESOURCE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -723,7 +723,7 @@ class Page:
         """
         params = SetAdBlockingEnabledParams(enabled=enabled)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.SET_AD_BLOCKING_ENABLED,
             params=encode_cdp(params),
             session_id=session_id,
@@ -740,7 +740,7 @@ class Page:
         """
         params = SetBypassCSPParams(enabled=enabled)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.SET_BYPASS_CSP,
             params=encode_cdp(params),
             session_id=session_id,
@@ -757,7 +757,7 @@ class Page:
         """
         params = GetPermissionsPolicyStateParams(frame_id=frame_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=PageCommand.GET_PERMISSIONS_POLICY_STATE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -775,7 +775,7 @@ class Page:
         """
         params = GetOriginTrialsParams(frame_id=frame_id)
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=PageCommand.GET_ORIGIN_TRIALS,
             params=encode_cdp(params),
             session_id=session_id,
@@ -820,7 +820,7 @@ class Page:
             viewport=viewport,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.SET_DEVICE_METRICS_OVERRIDE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -840,7 +840,7 @@ class Page:
         """
         params = SetDeviceOrientationOverrideParams(alpha=alpha, beta=beta, gamma=gamma)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.SET_DEVICE_ORIENTATION_OVERRIDE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -860,7 +860,7 @@ class Page:
             font_families=font_families, for_scripts=for_scripts
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.SET_FONT_FAMILIES,
             params=encode_cdp(params),
             session_id=session_id,
@@ -877,7 +877,7 @@ class Page:
         """
         params = SetFontSizesParams(font_sizes=font_sizes)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.SET_FONT_SIZES,
             params=encode_cdp(params),
             session_id=session_id,
@@ -895,7 +895,7 @@ class Page:
         """
         params = SetDocumentContentParams(frame_id=frame_id, html=html)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.SET_DOCUMENT_CONTENT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -916,7 +916,7 @@ class Page:
             behavior=behavior, download_path=download_path
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.SET_DOWNLOAD_BEHAVIOR,
             params=encode_cdp(params),
             session_id=session_id,
@@ -939,7 +939,7 @@ class Page:
             latitude=latitude, longitude=longitude, accuracy=accuracy
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.SET_GEOLOCATION_OVERRIDE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -956,7 +956,7 @@ class Page:
         """
         params = SetLifecycleEventsEnabledParams(enabled=enabled)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.SET_LIFECYCLE_EVENTS_ENABLED,
             params=encode_cdp(params),
             session_id=session_id,
@@ -977,7 +977,7 @@ class Page:
             enabled=enabled, configuration=configuration
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.SET_TOUCH_EMULATION_ENABLED,
             params=encode_cdp(params),
             session_id=session_id,
@@ -1008,7 +1008,7 @@ class Page:
             send_last_frame=send_last_frame,
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.START_SCREENCAST,
             params=encode_cdp(params),
             session_id=session_id,
@@ -1033,7 +1033,7 @@ class Page:
             frame_rate=frame_rate,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=PageCommand.START_SCREEN_RECORDING,
             params=encode_cdp(params),
             session_id=session_id,
@@ -1047,7 +1047,7 @@ class Page:
         """
         Stops screencast video recording.
         """
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=PageCommand.STOP_SCREEN_RECORDING,
             params=None,
             session_id=session_id,
@@ -1061,7 +1061,7 @@ class Page:
         """
         Force the page stop all navigations and pending resource fetches.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.STOP_LOADING,
             params=None,
             session_id=session_id,
@@ -1074,7 +1074,7 @@ class Page:
         """
         Crashes renderer on the IO thread, generates minidumps.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.CRASH,
             params=None,
             session_id=session_id,
@@ -1087,7 +1087,7 @@ class Page:
         """
         Tries to close page, running its beforeunload hooks, if any.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.CLOSE,
             params=None,
             session_id=session_id,
@@ -1105,7 +1105,7 @@ class Page:
         """
         params = SetWebLifecycleStateParams(state=state)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.SET_WEB_LIFECYCLE_STATE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -1118,7 +1118,7 @@ class Page:
         """
         Stops sending each frame in the `screencastFrame`.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.STOP_SCREENCAST,
             params=None,
             session_id=session_id,
@@ -1140,7 +1140,7 @@ class Page:
         """
         params = ProduceCompilationCacheParams(scripts=scripts)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.PRODUCE_COMPILATION_CACHE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -1159,7 +1159,7 @@ class Page:
         """
         params = AddCompilationCacheParams(url=url, data=data)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.ADD_COMPILATION_CACHE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -1172,7 +1172,7 @@ class Page:
         """
         Clears seeded compilation cache.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.CLEAR_COMPILATION_CACHE,
             params=None,
             session_id=session_id,
@@ -1196,7 +1196,7 @@ class Page:
         """
         params = SetSPCTransactionModeParams(mode=mode)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.SET_SPC_TRANSACTION_MODE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -1214,7 +1214,7 @@ class Page:
         """
         params = SetRPHRegistrationModeParams(mode=mode)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.SET_RPH_REGISTRATION_MODE,
             params=encode_cdp(params),
             session_id=session_id,
@@ -1232,7 +1232,7 @@ class Page:
         """
         params = GenerateTestReportParams(message=message, group=group)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.GENERATE_TEST_REPORT,
             params=encode_cdp(params),
             session_id=session_id,
@@ -1246,7 +1246,7 @@ class Page:
         Pauses page execution. Can be resumed using generic
         Runtime.runIfWaitingForDebugger.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.WAIT_FOR_DEBUGGER,
             params=None,
             session_id=session_id,
@@ -1266,7 +1266,7 @@ class Page:
         """
         params = SetInterceptFileChooserDialogParams(enabled=enabled, cancel=cancel)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.SET_INTERCEPT_FILE_CHOOSER_DIALOG,
             params=encode_cdp(params),
             session_id=session_id,
@@ -1287,7 +1287,7 @@ class Page:
         """
         params = SetPrerenderingAllowedParams(is_allowed=is_allowed)
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=PageCommand.SET_PRERENDERING_ALLOWED,
             params=encode_cdp(params),
             session_id=session_id,
@@ -1307,7 +1307,7 @@ class Page:
             include_actionable_information=include_actionable_information
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=PageCommand.GET_ANNOTATED_PAGE_CONTENT,
             params=encode_cdp(params),
             session_id=session_id,

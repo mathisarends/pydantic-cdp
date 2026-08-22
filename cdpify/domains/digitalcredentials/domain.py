@@ -7,7 +7,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from cdpify.codec import encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.transport import Transport
 
 from .commands import (
     DigitalCredentialsCommand,
@@ -22,8 +22,8 @@ if TYPE_CHECKING:
 
 
 class DigitalCredentials:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def set_virtual_wallet_behavior(
         self,
@@ -42,7 +42,7 @@ class DigitalCredentials:
             action=action, protocol=protocol, response=response, frame_id=frame_id
         )
 
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=DigitalCredentialsCommand.SET_VIRTUAL_WALLET_BEHAVIOR,
             params=encode_cdp(params),
             session_id=session_id,

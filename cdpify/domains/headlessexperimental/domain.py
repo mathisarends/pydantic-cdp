@@ -5,8 +5,8 @@
 from __future__ import annotations
 
 from cdpify.codec import decode_cdp, encode_cdp
-from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
+from cdpify.transport import Transport
 
 from .commands import (
     BeginFrameParams,
@@ -19,8 +19,8 @@ from .types import (
 
 
 class HeadlessExperimental:
-    def __init__(self, command_sender: CDPCommandSender) -> None:
-        self._command_sender = command_sender
+    def __init__(self, transport: Transport) -> None:
+        self._transport = transport
 
     async def begin_frame(
         self,
@@ -45,7 +45,7 @@ class HeadlessExperimental:
             screenshot=screenshot,
         )
 
-        result = await self._command_sender.send_raw(
+        result = await self._transport.execute(
             method=HeadlessExperimentalCommand.BEGIN_FRAME,
             params=encode_cdp(params),
             session_id=session_id,
@@ -60,7 +60,7 @@ class HeadlessExperimental:
         """
         Disables headless events for the target.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=HeadlessExperimentalCommand.DISABLE,
             params=None,
             session_id=session_id,
@@ -74,7 +74,7 @@ class HeadlessExperimental:
         """
         Enables headless events for the target.
         """
-        await self._command_sender.send_raw(
+        await self._transport.execute(
             method=HeadlessExperimentalCommand.ENABLE,
             params=None,
             session_id=session_id,
