@@ -5,13 +5,11 @@ from cdpify.generator.formatting import format_python_tree
 from cdpify.generator.generators import accessors, client, commands, events, init, types
 from cdpify.generator.schemas import Domain
 
-_CDP_DIR = Path(__file__).parent.parent / "domains"
 
-
-def generate_all_domains(domains: list[Domain]) -> None:
+def generate_domains(domains: list[Domain], output_dir: Path) -> None:
     generated_files = _render_files(domains)
-    _replace_output(generated_files)
-    format_python_tree(_CDP_DIR)
+    _replace_output(generated_files, output_dir)
+    format_python_tree(output_dir)
 
 
 def _render_files(domains: list[Domain]) -> dict[Path, str]:
@@ -43,10 +41,10 @@ def _render_domain(domain: Domain) -> dict[Path, str]:
     return files
 
 
-def _replace_output(files: dict[Path, str]) -> None:
-    shutil.rmtree(_CDP_DIR, ignore_errors=True)
+def _replace_output(files: dict[Path, str], output_dir: Path) -> None:
+    shutil.rmtree(output_dir, ignore_errors=True)
 
     for relative_path, source in files.items():
-        output_path = _CDP_DIR / relative_path
+        output_path = output_dir / relative_path
         output_path.parent.mkdir(parents=True, exist_ok=True)
         output_path.write_text(source, encoding="utf-8")

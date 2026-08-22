@@ -9,14 +9,14 @@ _BASE_URL = (
     "https://raw.githubusercontent.com/"
     "ChromeDevTools/devtools-protocol/refs/heads/master/json"
 )
-_SPECS_DIR = Path(__file__).parent.parent.parent / "specs"
 
 
-def download_specs() -> CDPSpecs:
-    _SPECS_DIR.mkdir(exist_ok=True)
+def download_specs(destination: Path) -> CDPSpecs:
+    """Download the protocol specifications and save them to ``destination``."""
+    destination.mkdir(parents=True, exist_ok=True)
 
-    browser = _fetch("browser_protocol.json")
-    js = _fetch("js_protocol.json")
+    browser = _fetch("browser_protocol.json", destination)
+    js = _fetch("js_protocol.json", destination)
 
     return CDPSpecs(
         browser=ProtocolSpec.model_validate(browser),
@@ -24,9 +24,11 @@ def download_specs() -> CDPSpecs:
     )
 
 
-def _fetch(filename: str) -> dict[str, Any]:
+def _fetch(filename: str, destination: Path) -> dict[str, Any]:
     with urlopen(f"{_BASE_URL}/{filename}", timeout=30) as response:
         data = cast(dict[str, Any], json.load(response))
 
-    (_SPECS_DIR / filename).write_text(json.dumps(data, indent=2), encoding="utf-8")
+    (destination / filename).write_text(
+        f"{json.dumps(data, indent=2)}\n", encoding="utf-8"
+    )
     return data

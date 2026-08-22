@@ -148,6 +148,15 @@ To download the latest protocol definitions and regenerate all domain clients:
 uv run python -m cdpify.generator
 ```
 
+Generate only selected domains by repeating `--domain`:
+
+```bash
+uv run python -m cdpify.generator --domain Page --domain Runtime
+```
+
+Use `--spec-dir` and `--output-dir` to override where downloaded specifications
+and generated modules are written.
+
 The generated output lives in `cdpify/domains/` and should not be edited by
 hand. The repository also refreshes the upstream specification automatically
 once a week and opens a pull request when generated code changes.
