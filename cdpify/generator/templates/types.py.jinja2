@@ -1,6 +1,6 @@
 {{ header }}
 
-from __future__ import annotations
+{{ future_annotations }}
 {% if typing_names %}
 
 from typing import {{ typing_names | join(", ") }}
@@ -9,9 +9,9 @@ from typing import {{ typing_names | join(", ") }}
 from dataclasses import dataclass
 
 from cdpify.shared.models import CDPModel
-{% for module in cross_domain_modules %}
-from cdpify.domains import {{ module }}
-{% endfor %}
+{% if cross_domain_modules %}
+{{ cross_domain_modules | map("prefix_domain_import") | join("\n") }}
+{% endif %}
 {% if definitions %}
 {% for definition in definitions %}
 
@@ -21,9 +21,7 @@ class {{ definition.name }}(CDPModel):
 {% if definition.docstring %}
 {{ definition.docstring }}
 {% endif %}
-{% for field in definition.fields %}
-    {{ field.name }}: {{ field.annotation }}{% if field.optional %} | None = None{% endif %}
-{% endfor %}
+    {{ definition.fields | map(attribute="declaration") | join("\n    ") }}
 {% else %}
 {% if definition.docstring %}
 {{ definition.docstring }}

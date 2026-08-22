@@ -6,6 +6,8 @@ from cdpify.generator.generators.utils import (
     resolve_type,
     to_snake_case,
 )
+from cdpify.generator.generators.views import FieldView, TypeDefinitionView
+from cdpify.generator.rendering import render_template
 from cdpify.generator.schemas import Domain, Parameter, TypeDefinition
 
 OPTIONAL_OVERRIDES: dict[str, set[str]] = {
@@ -19,83 +21,69 @@ class TypesGenerator(BaseGenerator):
 
     def generate(self, domain: Domain) -> str:
         ctx = GenerationContext()
-        type_defs = self._generate_type_defs(domain.types, ctx)
-        cross_domain = ctx.cross_domain_import(type_checking=False)
-
-        sections = [
-            self.HEADER,
-            FUTURE_ANNOTATIONS,
-            self._build_imports(ctx),
-            cross_domain,
-            type_defs or "# No types defined",
-        ]
-        return "\n\n".join(filter(None, sections))
-
-    def _build_imports(self, ctx: GenerationContext) -> str:
-        return "\n".join(
-            filter(
-                None,
-                [
-                    ctx.typing_import(),
-                    "from dataclasses import dataclass",
-                    "from cdpify.shared.models import CDPModel",
-                ],
-            )
+        definitions = tuple(
+            self._build_type_view(type_def, ctx) for type_def in domain.types
+        )
+        return render_template(
+            "types.py.jinja2",
+            header=self.HEADER,
+            future_annotations=FUTURE_ANNOTATIONS,
+            typing_names=ctx.sorted_typing_names,
+            cross_domain_modules=ctx.cross_domain_modules,
+            definitions=definitions,
         )
 
-    def _generate_type_defs(
-        self, types: list[TypeDefinition], ctx: GenerationContext
-    ) -> str:
-        return "\n\n".join(self._render_type_def(t, ctx) for t in types)
-
-    def _render_type_def(self, type_def: TypeDefinition, ctx: GenerationContext) -> str:
+    def _build_type_view(
+        self, type_def: TypeDefinition, ctx: GenerationContext
+    ) -> TypeDefinitionView:
         if type_def.enum:
-            return self._render_enum(type_def, ctx)
+            return self._build_enum_view(type_def, ctx)
         if type_def.properties:
-            return self._render_object(type_def, ctx)
-        return self._render_alias(type_def, ctx)
+            return self._build_object_view(type_def, ctx)
+        return self._build_alias_view(type_def, ctx)
 
-    def _render_enum(self, type_def: TypeDefinition, ctx: GenerationContext) -> str:
+    def _build_enum_view(
+        self, type_def: TypeDefinition, ctx: GenerationContext
+    ) -> TypeDefinitionView:
         ctx.use_typing("Literal")
         values = ", ".join(f'"{v}"' for v in type_def.enum)
+        return TypeDefinitionView(
+            kind="enum",
+            name=type_def.id,
+            annotation=f"Literal[{values}]",
+            docstring=self._docstring(type_def.description, indent=0),
+        )
 
-        lines = []
-        if type_def.description:
-            lines.append(format_docstring(type_def.description, indent=0))
-        lines.append(f"type {type_def.id} = Literal[{values}]")
-        return "\n".join(lines)
+    def _build_object_view(
+        self, type_def: TypeDefinition, ctx: GenerationContext
+    ) -> TypeDefinitionView:
+        return TypeDefinitionView(
+            kind="object",
+            name=type_def.id,
+            docstring=self._docstring(type_def.description, indent=4),
+            fields=tuple(
+                self._build_field_view(prop, type_def.id, ctx)
+                for prop in type_def.properties
+            ),
+        )
 
-    def _render_object(self, type_def: TypeDefinition, ctx: GenerationContext) -> str:
-        lines = [
-            "@dataclass(kw_only=True, slots=True)",
-            f"class {type_def.id}(CDPModel):",
-        ]
-
-        if type_def.description:
-            lines.extend(
-                format_docstring(type_def.description, indent=4).rstrip().splitlines()
-            )
-
-        for prop in type_def.properties:
-            lines.append(f"    {self._render_field(prop, type_def.id, ctx)}")
-
-        return "\n".join(lines)
-
-    def _render_alias(self, type_def: TypeDefinition, ctx: GenerationContext) -> str:
+    def _build_alias_view(
+        self, type_def: TypeDefinition, ctx: GenerationContext
+    ) -> TypeDefinitionView:
         py_type = map_cdp_type(
             Parameter(name=type_def.id, type=type_def.type, optional=False)
         )
         ctx.track_type_string(py_type)
+        return TypeDefinitionView(
+            kind="alias",
+            name=type_def.id,
+            annotation=py_type,
+            docstring=self._docstring(type_def.description, indent=0),
+        )
 
-        lines = []
-        if type_def.description:
-            lines.append(format_docstring(type_def.description, indent=0))
-        lines.append(f"{type_def.id} = {py_type}")
-        return "\n".join(lines)
-
-    def _render_field(
+    def _build_field_view(
         self, param: Parameter, type_id: str, ctx: GenerationContext
-    ) -> str:
+    ) -> FieldView:
         field_name = to_snake_case(param.name)
         py_type = resolve_type(param)
 
@@ -106,6 +94,7 @@ class TypesGenerator(BaseGenerator):
         is_optional = param.optional or param.name in OPTIONAL_OVERRIDES.get(
             type_id, set()
         )
-        if is_optional:
-            return f"{field_name}: {py_type} | None = None"
-        return f"{field_name}: {py_type}"
+        return FieldView(field_name, py_type, optional=is_optional)
+
+    def _docstring(self, text: str | None, *, indent: int) -> str | None:
+        return format_docstring(text, indent=indent) if text else None

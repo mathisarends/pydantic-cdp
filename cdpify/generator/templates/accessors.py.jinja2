@@ -3,9 +3,7 @@
 from functools import cached_property
 
 from cdpify.shared.command_sender import CDPCommandSender
-{% for domain in domains %}
-from .{{ domain.module }} import {{ domain.name }}Client
-{% endfor %}
+{{ domains | map(attribute="import_statement") | join("\n") }}
 
 class CDPDomains(CDPCommandSender):
     """Generated accessors for the configured CDP domains."""

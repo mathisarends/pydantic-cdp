@@ -1,5 +1,7 @@
 from cdpify.generator.generators.base import BaseGenerator
 from cdpify.generator.generators.utils import to_pascal_case
+from cdpify.generator.generators.views import ImportBlockView
+from cdpify.generator.rendering import render_template
 from cdpify.generator.schemas import Domain
 
 
@@ -14,16 +16,22 @@ class InitGenerator(BaseGenerator):
 
         all_names = sorted([*type_names, *command_names, *event_names, client_name])
 
-        sections = [
-            self.HEADER,
-            f'"""CDP {domain.domain} Domain."""',
-            self._import_block("types", type_names),
-            self._import_block("commands", command_names),
-            self._import_block("events", event_names),
-            f"from .client import {client_name}",
-            self._exports_block(all_names),
-        ]
-        return "\n\n".join(filter(None, sections))
+        return render_template(
+            "domain_init.py.jinja2",
+            header=self.HEADER,
+            domain_name=domain.domain,
+            import_blocks=tuple(
+                ImportBlockView(module, tuple(names))
+                for module, names in (
+                    ("types", type_names),
+                    ("commands", command_names),
+                    ("events", event_names),
+                )
+                if names
+            ),
+            client_name=client_name,
+            exports=tuple(all_names),
+        )
 
     def _command_names(self, domain: Domain) -> list[str]:
         if not domain.commands:
@@ -45,20 +53,3 @@ class InitGenerator(BaseGenerator):
         names = [f"{domain.domain}Event"]
         names.extend(f"{to_pascal_case(e.name)}Event" for e in domain.events)
         return sorted(names)
-
-    def _import_block(self, module: str, names: list[str]) -> str:
-        if not names:
-            return ""
-        if len(names) <= 3:
-            return f"from .{module} import {', '.join(names)}"
-
-        lines = [f"from .{module} import ("]
-        lines.extend(f"    {name}," for name in names)
-        lines.append(")")
-        return "\n".join(lines)
-
-    def _exports_block(self, names: list[str]) -> str:
-        lines = ["__all__ = ["]
-        lines.extend(f'    "{name}",' for name in names)
-        lines.append("]")
-        return "\n".join(lines)

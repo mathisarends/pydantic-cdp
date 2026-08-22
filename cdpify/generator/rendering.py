@@ -5,7 +5,7 @@ from jinja2 import Environment, PackageLoader, StrictUndefined
 
 @lru_cache(maxsize=1)
 def _environment() -> Environment:
-    return Environment(
+    environment = Environment(
         loader=PackageLoader("cdpify.generator", "templates"),
         autoescape=False,
         keep_trailing_newline=True,
@@ -13,6 +13,10 @@ def _environment() -> Environment:
         trim_blocks=True,
         undefined=StrictUndefined,
     )
+    environment.filters["prefix_domain_import"] = (
+        lambda module: f"from cdpify.domains import {module}"
+    )
+    return environment
 
 
 def render_template(template_name: str, **context: object) -> str:

@@ -1,6 +1,6 @@
 {{ header }}
 
-from __future__ import annotations
+{{ future_annotations }}
 {% if typing_names %}
 
 from typing import {{ typing_names | join(", ") }}
@@ -13,20 +13,16 @@ from cdpify.shared.models import CDPModel
 {% if local_type_names %}
 
 from .types import (
-{% for name in local_type_names %}
-    {{ name }},
-{% endfor %}
+    {{ local_type_names | join(",\n    ") }},
 )
 {% endif %}
-{% for module in cross_domain_modules %}
-from cdpify.domains import {{ module }}
-{% endfor %}
+{% if cross_domain_modules %}
+{{ cross_domain_modules | map("prefix_domain_import") | join("\n") }}
+{% endif %}
 {% if command_members %}
 
 class {{ domain_name }}Command(StrEnum):
-{% for member in command_members %}
-    {{ member.name }} = "{{ member.value }}"
-{% endfor %}
+    {{ command_members | map(attribute="assignment") | join("\n    ") }}
 {% endif %}
 {% if models %}
 {% for model in models %}
@@ -36,9 +32,7 @@ class {{ model.name }}({{ model.base }}):
 {% if model.docstring %}
 {{ model.docstring }}
 {% endif %}
-{% for field in model.fields %}
-    {{ field.name }}: {{ field.annotation }}{% if field.optional %} | None = None{% endif %}
-{% endfor %}
+    {{ model.fields | map(attribute="declaration") | join("\n    ") }}
 {% endfor %}
 {% else %}
 

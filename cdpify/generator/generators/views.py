@@ -7,11 +7,20 @@ class FieldView:
     annotation: str
     optional: bool = False
 
+    @property
+    def declaration(self) -> str:
+        suffix = " | None = None" if self.optional else ""
+        return f"{self.name}: {self.annotation}{suffix}"
+
 
 @dataclass(frozen=True, slots=True)
 class EnumMemberView:
     name: str
     value: str
+
+    @property
+    def assignment(self) -> str:
+        return f'{self.name} = "{self.value}"'
 
 
 @dataclass(frozen=True, slots=True)
@@ -49,6 +58,14 @@ class DomainView:
     name: str
     module: str
     property_name: str
+
+    @property
+    def import_statement(self) -> str:
+        return f"from .{self.module} import {self.name}Client"
+
+    @property
+    def client_export(self) -> str:
+        return f'"{self.name}Client",'
 
 
 @dataclass(frozen=True, slots=True)

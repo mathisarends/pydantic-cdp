@@ -1,13 +1,9 @@
 {{ header }}
 
 from .accessors import CDPDomains
-{% for domain in domains %}
-from .{{ domain.module }} import {{ domain.name }}Client
-{% endfor %}
+{{ domains | map(attribute="import_statement") | join("\n") }}
 
 __all__ = [
     "CDPDomains",
-{% for domain in domains %}
-    "{{ domain.name }}Client",
-{% endfor %}
+    {{ domains | map(attribute="client_export") | join("\n    ") }}
 ]

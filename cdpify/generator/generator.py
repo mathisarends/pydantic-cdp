@@ -14,6 +14,9 @@ from cdpify.generator.generators import (
     TypesGenerator,
 )
 from cdpify.generator.generators.base import HEADER
+from cdpify.generator.generators.utils import to_snake_case
+from cdpify.generator.generators.views import DomainView
+from cdpify.generator.rendering import render_template
 from cdpify.generator.schemas import Domain
 
 logger = logging.getLogger(__name__)
@@ -52,9 +55,9 @@ def generate_all_domains(domains: list[Domain]) -> None:
         _generate_domain(domain)
 
     (_CDP_DIR / _DOMAIN_ACCESSORS_GENERATOR.filename).write_text(
-        _DOMAIN_ACCESSORS_GENERATOR.generate(domains)
+        _DOMAIN_ACCESSORS_GENERATOR.generate(domains), encoding="utf-8"
     )
-    (_CDP_DIR / "__init__.py").write_text(_build_root_init(domains))
+    (_CDP_DIR / "__init__.py").write_text(_build_root_init(domains), encoding="utf-8")
     _format_with_ruff()
 
     logger.info("\n✅ Generation complete!")
@@ -80,23 +83,24 @@ def _generate_domain(domain: Domain) -> None:
         has_content = _HAS_CONTENT.get(type(generator))
         if has_content and not has_content(domain):
             continue
-        (domain_dir / generator.filename).write_text(generator.generate(domain))
+        (domain_dir / generator.filename).write_text(
+            generator.generate(domain), encoding="utf-8"
+        )
 
 
 def _build_root_init(domains: list[Domain]) -> str:
-    imports = "\n".join(
-        [
-            "from .accessors import CDPDomains",
-            *(f"from .{d.domain.lower()} import {d.domain}Client" for d in domains),
-        ]
+    return render_template(
+        "root_init.py.jinja2",
+        header=HEADER,
+        domains=tuple(
+            DomainView(
+                name=domain.domain,
+                module=domain.domain.lower(),
+                property_name=to_snake_case(domain.domain),
+            )
+            for domain in domains
+        ),
     )
-    exports = "\n".join(
-        ["__all__ = [", '    "CDPDomains",']
-        + [f'    "{d.domain}Client",' for d in domains]
-        + ["]"]
-    )
-
-    return f"{HEADER}\n\n{imports}\n\n{exports}\n"
 
 
 def _format_with_ruff() -> None:

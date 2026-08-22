@@ -1,6 +1,6 @@
 {{ header }}
 
-from __future__ import annotations
+{{ future_annotations }}
 {% if typing_names %}
 
 from typing import {{ typing_names | join(", ") }}
@@ -13,16 +13,12 @@ from cdpify.shared.decorators import deprecated
 {% if command_imports %}
 
 from .commands import (
-{% for name in command_imports %}
-    {{ name }},
-{% endfor %}
+    {{ command_imports | join(",\n    ") }},
 )
 {% endif %}
 {% if local_type_names %}
 from .types import (
-{% for name in local_type_names %}
-    {{ name }},
-{% endfor %}
+    {{ local_type_names | join(",\n    ") }},
 )
 {% endif %}
 {% if cross_domain_modules %}
@@ -43,9 +39,7 @@ class {{ domain_name }}Client:
         self,
 {% if method.parameters %}
         *,
-{% for parameter in method.parameters %}
-        {{ parameter.name }}: {{ parameter.annotation }}{% if parameter.optional %} | None = None{% endif %},
-{% endfor %}
+        {{ method.parameters | map(attribute="declaration") | join(",\n        ") }},
 {% endif %}
         session_id: str | None = None,
     ) -> {{ method.return_type }}:

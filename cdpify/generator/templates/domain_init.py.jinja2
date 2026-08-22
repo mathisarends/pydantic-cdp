@@ -3,9 +3,7 @@
 from .{{ block.module }} import {{ block.names | join(", ") }}
 {% else %}
 from .{{ block.module }} import (
-{% for name in block.names %}
-    {{ name }},
-{% endfor %}
+    {{ block.names | join(",\n    ") }},
 )
 {% endif %}
 {% endmacro %}
@@ -20,7 +18,5 @@ from .{{ block.module }} import (
 from .client import {{ client_name }}
 
 __all__ = [
-{% for name in exports %}
-    "{{ name }}",
-{% endfor %}
+    "{{ exports | join('",\n    "') }}",
 ]
