@@ -1,4 +1,4 @@
-from cdpify.generator.generators.base import BaseGenerator
+from cdpify.generator.generators.base import FUTURE_ANNOTATIONS, BaseGenerator
 from cdpify.generator.generators.context import GenerationContext
 from cdpify.generator.generators.utils import (
     format_docstring,
@@ -28,7 +28,7 @@ class EventsGenerator(BaseGenerator):
         models = self._render_models(domain, aliases, ctx)
         cross_domain = ctx.cross_domain_import(type_checking=False)
 
-        sections = [self.HEADER]
+        sections = [self.HEADER, FUTURE_ANNOTATIONS]
         if models:
             sections.append(
                 self._build_imports(

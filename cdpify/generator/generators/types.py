@@ -1,4 +1,4 @@
-from cdpify.generator.generators.base import BaseGenerator
+from cdpify.generator.generators.base import FUTURE_ANNOTATIONS, BaseGenerator
 from cdpify.generator.generators.context import GenerationContext
 from cdpify.generator.generators.utils import (
     format_docstring,
@@ -24,6 +24,7 @@ class TypesGenerator(BaseGenerator):
 
         sections = [
             self.HEADER,
+            FUTURE_ANNOTATIONS,
             self._build_imports(ctx),
             cross_domain,
             type_defs or "# No types defined",

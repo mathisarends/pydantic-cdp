@@ -78,7 +78,7 @@ def test_cross_domain_ref_uses_runtime_import() -> None:
     assert "target: dom.NodeId" in output
     assert "if TYPE_CHECKING:" not in output
     assert "TYPE_CHECKING" not in output
-    assert "from __future__ import annotations" not in output
+    assert "from __future__ import annotations" in output
 
 
 def test_optional_override_for_request_will_be_sent() -> None:

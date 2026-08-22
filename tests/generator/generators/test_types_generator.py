@@ -6,7 +6,7 @@ def test_generates_header_and_dataclass_imports(simple_domain: Domain) -> None:
     output = TypesGenerator().generate(simple_domain)
 
     assert "auto-generated" in output
-    assert "from __future__ import annotations" not in output
+    assert "from __future__ import annotations" in output
     assert "from dataclasses import dataclass" in output
     assert "from cdpify.shared.models import CDPModel" in output
 

@@ -8,6 +8,8 @@ HEADER = (
     "# Generated from Chrome DevTools Protocol specifications."
 )
 
+FUTURE_ANNOTATIONS = "from __future__ import annotations"
+
 
 class BaseGenerator(abc.ABC):
     filename: str

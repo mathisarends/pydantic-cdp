@@ -1,4 +1,4 @@
-from cdpify.generator.generators.base import BaseGenerator
+from cdpify.generator.generators.base import FUTURE_ANNOTATIONS, BaseGenerator
 from cdpify.generator.generators.context import GenerationContext
 from cdpify.generator.generators.utils import (
     format_docstring,
@@ -21,12 +21,14 @@ class CommandsGenerator(BaseGenerator):
         models = self._render_models(domain.commands, ctx)
         # Cross-domain imports must remain runtime imports so that
         # `get_type_hints()` (used by CDPModel.from_cdp) can resolve forward
-        # references like `dom.Rect`. Python 3.14 defers annotation evaluation,
-        # avoiding the circular-import problem until first deserialization.
+        # references like `dom.Rect`. `from __future__ import annotations`
+        # defers annotation evaluation, avoiding the circular-import problem
+        # until first deserialization.
         cross_domain = ctx.cross_domain_import(type_checking=False)
 
         sections = [
             self.HEADER,
+            FUTURE_ANNOTATIONS,
             self._build_imports(ctx),
             cross_domain,
             self._render_enum(domain),
