@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+from cdpify.codec import encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -36,7 +37,7 @@ class Cast:
 
         await self._command_sender.send_raw(
             method=CastCommand.ENABLE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -67,7 +68,7 @@ class Cast:
 
         await self._command_sender.send_raw(
             method=CastCommand.SET_SINK_TO_USE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -84,7 +85,7 @@ class Cast:
 
         await self._command_sender.send_raw(
             method=CastCommand.START_DESKTOP_MIRRORING,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -101,7 +102,7 @@ class Cast:
 
         await self._command_sender.send_raw(
             method=CastCommand.START_TAB_MIRRORING,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -118,6 +119,6 @@ class Cast:
 
         await self._command_sender.send_raw(
             method=CastCommand.STOP_CASTING,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )

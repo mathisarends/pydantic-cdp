@@ -75,7 +75,6 @@ def _build_event_model(
     class_name = f"{to_pascal_case(event.name)}Event"
     return ModelView(
         name=class_name,
-        base="CDPEvent",
         docstring=(
             format_docstring(event.description, indent=4) if event.description else None
         ),
@@ -99,4 +98,9 @@ def _build_field_view(
     is_optional = param.optional or param.name in _OPTIONAL_OVERRIDES.get(
         event_fqn, set()
     )
-    return FieldView(field_name, py_type, optional=is_optional)
+    return FieldView(
+        field_name,
+        py_type,
+        optional=is_optional,
+        cdp_name=param.name,
+    )

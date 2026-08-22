@@ -4,12 +4,11 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Literal
 
 from cdpify.domains import dom, network, page
-from cdpify.shared.models import CDPModel
 
 from .types import (
     DevicePosture,
@@ -91,60 +90,60 @@ class EmulationCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class CanEmulateResult(CDPModel):
-    result: bool
+class CanEmulateResult:
+    result: bool = field(metadata={"cdp_name": "result"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetFocusEmulationEnabledParams(CDPModel):
+class SetFocusEmulationEnabledParams:
     """
     Enables or disables simulating a focused and active page.
     """
 
-    enabled: bool
+    enabled: bool = field(metadata={"cdp_name": "enabled"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetAutoDarkModeOverrideParams(CDPModel):
+class SetAutoDarkModeOverrideParams:
     """
     Automatically render all web contents using a dark theme.
     """
 
-    enabled: bool | None = None
+    enabled: bool | None = field(default=None, metadata={"cdp_name": "enabled"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetCPUThrottlingRateParams(CDPModel):
+class SetCPUThrottlingRateParams:
     """
     Enables CPU throttling to emulate slow CPUs.
     """
 
-    rate: float
+    rate: float = field(metadata={"cdp_name": "rate"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetDefaultBackgroundColorOverrideParams(CDPModel):
+class SetDefaultBackgroundColorOverrideParams:
     """
     Sets or clears an override of the default background color of the frame. This
     override is used if the content does not specify one.
     """
 
-    color: dom.RGBA | None = None
+    color: dom.RGBA | None = field(default=None, metadata={"cdp_name": "color"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetSafeAreaInsetsOverrideParams(CDPModel):
+class SetSafeAreaInsetsOverrideParams:
     """
     Overrides the values for env(safe-area-inset-*) and env(safe-area-max-inset-*).
     Unset values will cause the respective variables to be undefined, even if previously
     overridden.
     """
 
-    insets: SafeAreaInsets
+    insets: SafeAreaInsets = field(metadata={"cdp_name": "insets"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetVirtualKeyboardGeometryOverrideParams(CDPModel):
+class SetVirtualKeyboardGeometryOverrideParams:
     """
     Overrides virtual keyboard geometry in CSS pixels, relative to the top-level
     viewport. The provided rect is used for navigator.virtualKeyboard.boundingRect,
@@ -154,83 +153,105 @@ class SetVirtualKeyboardGeometryOverrideParams(CDPModel):
     to the nearest CSS pixel. Omitting the rect clears the override.
     """
 
-    keyboard_rect: dom.Rect | None = None
+    keyboard_rect: dom.Rect | None = field(
+        default=None, metadata={"cdp_name": "keyboardRect"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetDeviceMetricsOverrideParams(CDPModel):
+class SetDeviceMetricsOverrideParams:
     """
     Overrides the values of device screen dimensions (window.screen.width,
     window.screen.height, window.innerWidth, window.innerHeight, and
     "device-width"/"device-height"-related CSS media query results).
     """
 
-    width: int
-    height: int
-    device_scale_factor: float
-    mobile: bool
-    scale: float | None = None
-    screen_width: int | None = None
-    screen_height: int | None = None
-    position_x: int | None = None
-    position_y: int | None = None
-    dont_set_visible_size: bool | None = None
-    screen_orientation: ScreenOrientation | None = None
-    viewport: page.Viewport | None = None
-    display_feature: DisplayFeature | None = None
-    device_posture: DevicePosture | None = None
-    scrollbar_type: Literal["overlay", "default"] | None = None
-    screen_orientation_lock_emulation: bool | None = None
+    width: int = field(metadata={"cdp_name": "width"})
+    height: int = field(metadata={"cdp_name": "height"})
+    device_scale_factor: float = field(metadata={"cdp_name": "deviceScaleFactor"})
+    mobile: bool = field(metadata={"cdp_name": "mobile"})
+    scale: float | None = field(default=None, metadata={"cdp_name": "scale"})
+    screen_width: int | None = field(default=None, metadata={"cdp_name": "screenWidth"})
+    screen_height: int | None = field(
+        default=None, metadata={"cdp_name": "screenHeight"}
+    )
+    position_x: int | None = field(default=None, metadata={"cdp_name": "positionX"})
+    position_y: int | None = field(default=None, metadata={"cdp_name": "positionY"})
+    dont_set_visible_size: bool | None = field(
+        default=None, metadata={"cdp_name": "dontSetVisibleSize"}
+    )
+    screen_orientation: ScreenOrientation | None = field(
+        default=None, metadata={"cdp_name": "screenOrientation"}
+    )
+    viewport: page.Viewport | None = field(
+        default=None, metadata={"cdp_name": "viewport"}
+    )
+    display_feature: DisplayFeature | None = field(
+        default=None, metadata={"cdp_name": "displayFeature"}
+    )
+    device_posture: DevicePosture | None = field(
+        default=None, metadata={"cdp_name": "devicePosture"}
+    )
+    scrollbar_type: Literal["overlay", "default"] | None = field(
+        default=None, metadata={"cdp_name": "scrollbarType"}
+    )
+    screen_orientation_lock_emulation: bool | None = field(
+        default=None, metadata={"cdp_name": "screenOrientationLockEmulation"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetDevicePostureOverrideParams(CDPModel):
+class SetDevicePostureOverrideParams:
     """
     Start reporting the given posture value to the Device Posture API. This override
     can also be set in setDeviceMetricsOverride().
     """
 
-    posture: DevicePosture
+    posture: DevicePosture = field(metadata={"cdp_name": "posture"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetDisplayFeaturesOverrideParams(CDPModel):
+class SetDisplayFeaturesOverrideParams:
     """
     Start using the given display features to pupulate the Viewport Segments API. This
     override can also be set in setDeviceMetricsOverride().
     """
 
-    features: list[DisplayFeature]
+    features: list[DisplayFeature] = field(metadata={"cdp_name": "features"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetScrollbarsHiddenParams(CDPModel):
-    hidden: bool
+class SetScrollbarsHiddenParams:
+    hidden: bool = field(metadata={"cdp_name": "hidden"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetDocumentCookieDisabledParams(CDPModel):
-    disabled: bool
+class SetDocumentCookieDisabledParams:
+    disabled: bool = field(metadata={"cdp_name": "disabled"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetEmitTouchEventsForMouseParams(CDPModel):
-    enabled: bool
-    configuration: Literal["mobile", "desktop"] | None = None
+class SetEmitTouchEventsForMouseParams:
+    enabled: bool = field(metadata={"cdp_name": "enabled"})
+    configuration: Literal["mobile", "desktop"] | None = field(
+        default=None, metadata={"cdp_name": "configuration"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetEmulatedMediaParams(CDPModel):
+class SetEmulatedMediaParams:
     """
     Emulates the given media type or media feature for CSS media queries.
     """
 
-    media: str | None = None
-    features: list[MediaFeature] | None = None
+    media: str | None = field(default=None, metadata={"cdp_name": "media"})
+    features: list[MediaFeature] | None = field(
+        default=None, metadata={"cdp_name": "features"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetEmulatedVisionDeficiencyParams(CDPModel):
+class SetEmulatedVisionDeficiencyParams:
     """
     Emulates the given vision deficiency.
     """
@@ -243,46 +264,52 @@ class SetEmulatedVisionDeficiencyParams(CDPModel):
         "deuteranopia",
         "protanopia",
         "tritanopia",
-    ]
+    ] = field(  # noqa: E501
+        metadata={"cdp_name": "type"},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetEmulatedOSTextScaleParams(CDPModel):
+class SetEmulatedOSTextScaleParams:
     """
     Emulates the given OS text scale.
     """
 
-    scale: float | None = None
+    scale: float | None = field(default=None, metadata={"cdp_name": "scale"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetGeolocationOverrideParams(CDPModel):
+class SetGeolocationOverrideParams:
     """
     Overrides the Geolocation Position or Error. Omitting latitude, longitude or
     accuracy emulates position unavailable.
     """
 
-    latitude: float | None = None
-    longitude: float | None = None
-    accuracy: float | None = None
-    altitude: float | None = None
-    altitude_accuracy: float | None = None
-    heading: float | None = None
-    speed: float | None = None
+    latitude: float | None = field(default=None, metadata={"cdp_name": "latitude"})
+    longitude: float | None = field(default=None, metadata={"cdp_name": "longitude"})
+    accuracy: float | None = field(default=None, metadata={"cdp_name": "accuracy"})
+    altitude: float | None = field(default=None, metadata={"cdp_name": "altitude"})
+    altitude_accuracy: float | None = field(
+        default=None, metadata={"cdp_name": "altitudeAccuracy"}
+    )
+    heading: float | None = field(default=None, metadata={"cdp_name": "heading"})
+    speed: float | None = field(default=None, metadata={"cdp_name": "speed"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetOverriddenSensorInformationParams(CDPModel):
-    type: SensorType
+class GetOverriddenSensorInformationParams:
+    type: SensorType = field(metadata={"cdp_name": "type"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetOverriddenSensorInformationResult(CDPModel):
-    requested_sampling_frequency: float
+class GetOverriddenSensorInformationResult:
+    requested_sampling_frequency: float = field(
+        metadata={"cdp_name": "requestedSamplingFrequency"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetSensorOverrideEnabledParams(CDPModel):
+class SetSensorOverrideEnabledParams:
     """
     Overrides a platform sensor of a given type. If |enabled| is true, calls to
     Sensor.start() will use a virtual sensor as backend rather than fetching data from a
@@ -291,24 +318,26 @@ class SetSensorOverrideEnabledParams(CDPModel):
     sensor instead.
     """
 
-    enabled: bool
-    type: SensorType
-    metadata: SensorMetadata | None = None
+    enabled: bool = field(metadata={"cdp_name": "enabled"})
+    type: SensorType = field(metadata={"cdp_name": "type"})
+    metadata: SensorMetadata | None = field(
+        default=None, metadata={"cdp_name": "metadata"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetSensorOverrideReadingsParams(CDPModel):
+class SetSensorOverrideReadingsParams:
     """
     Updates the sensor readings reported by a sensor type previously overridden by
     setSensorOverrideEnabled.
     """
 
-    type: SensorType
-    reading: SensorReading
+    type: SensorType = field(metadata={"cdp_name": "type"})
+    reading: SensorReading = field(metadata={"cdp_name": "reading"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetPressureSourceOverrideEnabledParams(CDPModel):
+class SetPressureSourceOverrideEnabledParams:
     """
     Overrides a pressure source of a given type, as used by the Compute Pressure API,
     so that updates to PressureObserver.observe() are provided via
@@ -316,247 +345,273 @@ class SetPressureSourceOverrideEnabledParams(CDPModel):
     data.
     """
 
-    enabled: bool
-    source: PressureSource
-    metadata: PressureMetadata | None = None
+    enabled: bool = field(metadata={"cdp_name": "enabled"})
+    source: PressureSource = field(metadata={"cdp_name": "source"})
+    metadata: PressureMetadata | None = field(
+        default=None, metadata={"cdp_name": "metadata"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetPressureStateOverrideParams(CDPModel):
+class SetPressureStateOverrideParams:
     """
     Provides a given pressure state that will be processed and eventually be delivered
     to PressureObserver users. |source| must have been previously overridden by
     setPressureSourceOverrideEnabled.
     """
 
-    source: PressureSource
-    state: PressureState
+    source: PressureSource = field(metadata={"cdp_name": "source"})
+    state: PressureState = field(metadata={"cdp_name": "state"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetIdleOverrideParams(CDPModel):
+class SetIdleOverrideParams:
     """
     Overrides the Idle state.
     """
 
-    is_user_active: bool
-    is_screen_unlocked: bool
+    is_user_active: bool = field(metadata={"cdp_name": "isUserActive"})
+    is_screen_unlocked: bool = field(metadata={"cdp_name": "isScreenUnlocked"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetNavigatorOverridesParams(CDPModel):
+class SetNavigatorOverridesParams:
     """
     Overrides value returned by the javascript navigator object.
     """
 
-    platform: str
+    platform: str = field(metadata={"cdp_name": "platform"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetPageScaleFactorParams(CDPModel):
+class SetPageScaleFactorParams:
     """
     Sets a specified page scale factor.
     """
 
-    page_scale_factor: float
+    page_scale_factor: float = field(metadata={"cdp_name": "pageScaleFactor"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetScriptExecutionDisabledParams(CDPModel):
+class SetScriptExecutionDisabledParams:
     """
     Switches script execution in the page.
     """
 
-    value: bool
+    value: bool = field(metadata={"cdp_name": "value"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetTouchEmulationEnabledParams(CDPModel):
+class SetTouchEmulationEnabledParams:
     """
     Enables touch on platforms which do not support them.
     """
 
-    enabled: bool
-    max_touch_points: int | None = None
+    enabled: bool = field(metadata={"cdp_name": "enabled"})
+    max_touch_points: int | None = field(
+        default=None, metadata={"cdp_name": "maxTouchPoints"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetVirtualTimePolicyParams(CDPModel):
+class SetVirtualTimePolicyParams:
     """
     Turns on virtual time for all frames (replacing real-time with a synthetic time
     source) and sets the current virtual time policy. Note this supersedes any previous
     time budget.
     """
 
-    policy: VirtualTimePolicy
-    budget: float | None = None
-    max_virtual_time_task_starvation_count: int | None = None
-    initial_virtual_time: network.TimeSinceEpoch | None = None
+    policy: VirtualTimePolicy = field(metadata={"cdp_name": "policy"})
+    budget: float | None = field(default=None, metadata={"cdp_name": "budget"})
+    max_virtual_time_task_starvation_count: int | None = field(
+        default=None, metadata={"cdp_name": "maxVirtualTimeTaskStarvationCount"}
+    )
+    initial_virtual_time: network.TimeSinceEpoch | None = field(
+        default=None, metadata={"cdp_name": "initialVirtualTime"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetVirtualTimePolicyResult(CDPModel):
-    virtual_time_ticks_base: float
+class SetVirtualTimePolicyResult:
+    virtual_time_ticks_base: float = field(
+        metadata={"cdp_name": "virtualTimeTicksBase"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetLocaleOverrideParams(CDPModel):
+class SetLocaleOverrideParams:
     """
     Overrides default host system locale with the specified one.
     """
 
-    locale: str | None = None
+    locale: str | None = field(default=None, metadata={"cdp_name": "locale"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetTimezoneOverrideParams(CDPModel):
+class SetTimezoneOverrideParams:
     """
     Overrides default host system timezone with the specified one.
     """
 
-    timezone_id: str
+    timezone_id: str = field(metadata={"cdp_name": "timezoneId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetVisibleSizeParams(CDPModel):
+class SetVisibleSizeParams:
     """
     Resizes the frame/viewport of the page. Note that this does not affect the frame's
     container (e.g. browser window). Can be used to produce screenshots of the specified
     size. Not supported on Android.
     """
 
-    width: int
-    height: int
+    width: int = field(metadata={"cdp_name": "width"})
+    height: int = field(metadata={"cdp_name": "height"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetDisabledImageTypesParams(CDPModel):
-    image_types: list[DisabledImageType]
+class SetDisabledImageTypesParams:
+    image_types: list[DisabledImageType] = field(metadata={"cdp_name": "imageTypes"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetDataSaverOverrideParams(CDPModel):
+class SetDataSaverOverrideParams:
     """
     Override the value of navigator.connection.saveData
     """
 
-    data_saver_enabled: bool | None = None
+    data_saver_enabled: bool | None = field(
+        default=None, metadata={"cdp_name": "dataSaverEnabled"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetHardwareConcurrencyOverrideParams(CDPModel):
-    hardware_concurrency: int
+class SetHardwareConcurrencyOverrideParams:
+    hardware_concurrency: int = field(metadata={"cdp_name": "hardwareConcurrency"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetCPUPerformanceOverrideParams(CDPModel):
+class SetCPUPerformanceOverrideParams:
     """
     Overrides the value of navigator.cpuPerformance
     """
 
-    performance_tier: Literal["unknown", "low", "mid", "high", "ultra"] | None = None
+    performance_tier: Literal["unknown", "low", "mid", "high", "ultra"] | None = field(
+        default=None, metadata={"cdp_name": "performanceTier"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetUserAgentOverrideParams(CDPModel):
+class SetUserAgentOverrideParams:
     """
     Allows overriding user agent with the given string. `userAgentMetadata` must be set
     for Client Hint headers to be sent.
     """
 
-    user_agent: str
-    accept_language: str | None = None
-    platform: str | None = None
-    user_agent_metadata: UserAgentMetadata | None = None
+    user_agent: str = field(metadata={"cdp_name": "userAgent"})
+    accept_language: str | None = field(
+        default=None, metadata={"cdp_name": "acceptLanguage"}
+    )
+    platform: str | None = field(default=None, metadata={"cdp_name": "platform"})
+    user_agent_metadata: UserAgentMetadata | None = field(
+        default=None, metadata={"cdp_name": "userAgentMetadata"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetAutomationOverrideParams(CDPModel):
+class SetAutomationOverrideParams:
     """
     Allows overriding the automation flag.
     """
 
-    enabled: bool
+    enabled: bool = field(metadata={"cdp_name": "enabled"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetSmallViewportHeightDifferenceOverrideParams(CDPModel):
+class SetSmallViewportHeightDifferenceOverrideParams:
     """
     Allows overriding the difference between the small and large viewport sizes, which
     determine the value of the `svh` and `lvh` unit, respectively. Only supported for
     top-level frames.
     """
 
-    difference: int
+    difference: int = field(metadata={"cdp_name": "difference"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetScreenInfosResult(CDPModel):
-    screen_infos: list[ScreenInfo]
+class GetScreenInfosResult:
+    screen_infos: list[ScreenInfo] = field(metadata={"cdp_name": "screenInfos"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AddScreenParams(CDPModel):
+class AddScreenParams:
     """
     Add a new screen to the device. Only supported in headless mode.
     """
 
-    left: int
-    top: int
-    width: int
-    height: int
-    work_area_insets: WorkAreaInsets | None = None
-    device_pixel_ratio: float | None = None
-    rotation: int | None = None
-    color_depth: int | None = None
-    label: str | None = None
-    is_internal: bool | None = None
+    left: int = field(metadata={"cdp_name": "left"})
+    top: int = field(metadata={"cdp_name": "top"})
+    width: int = field(metadata={"cdp_name": "width"})
+    height: int = field(metadata={"cdp_name": "height"})
+    work_area_insets: WorkAreaInsets | None = field(
+        default=None, metadata={"cdp_name": "workAreaInsets"}
+    )
+    device_pixel_ratio: float | None = field(
+        default=None, metadata={"cdp_name": "devicePixelRatio"}
+    )
+    rotation: int | None = field(default=None, metadata={"cdp_name": "rotation"})
+    color_depth: int | None = field(default=None, metadata={"cdp_name": "colorDepth"})
+    label: str | None = field(default=None, metadata={"cdp_name": "label"})
+    is_internal: bool | None = field(default=None, metadata={"cdp_name": "isInternal"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AddScreenResult(CDPModel):
-    screen_info: ScreenInfo
+class AddScreenResult:
+    screen_info: ScreenInfo = field(metadata={"cdp_name": "screenInfo"})
 
 
 @dataclass(kw_only=True, slots=True)
-class UpdateScreenParams(CDPModel):
+class UpdateScreenParams:
     """
     Updates specified screen parameters. Only supported in headless mode.
     """
 
-    screen_id: ScreenId
-    left: int | None = None
-    top: int | None = None
-    width: int | None = None
-    height: int | None = None
-    work_area_insets: WorkAreaInsets | None = None
-    device_pixel_ratio: float | None = None
-    rotation: int | None = None
-    color_depth: int | None = None
-    label: str | None = None
-    is_internal: bool | None = None
+    screen_id: ScreenId = field(metadata={"cdp_name": "screenId"})
+    left: int | None = field(default=None, metadata={"cdp_name": "left"})
+    top: int | None = field(default=None, metadata={"cdp_name": "top"})
+    width: int | None = field(default=None, metadata={"cdp_name": "width"})
+    height: int | None = field(default=None, metadata={"cdp_name": "height"})
+    work_area_insets: WorkAreaInsets | None = field(
+        default=None, metadata={"cdp_name": "workAreaInsets"}
+    )
+    device_pixel_ratio: float | None = field(
+        default=None, metadata={"cdp_name": "devicePixelRatio"}
+    )
+    rotation: int | None = field(default=None, metadata={"cdp_name": "rotation"})
+    color_depth: int | None = field(default=None, metadata={"cdp_name": "colorDepth"})
+    label: str | None = field(default=None, metadata={"cdp_name": "label"})
+    is_internal: bool | None = field(default=None, metadata={"cdp_name": "isInternal"})
 
 
 @dataclass(kw_only=True, slots=True)
-class UpdateScreenResult(CDPModel):
-    screen_info: ScreenInfo
+class UpdateScreenResult:
+    screen_info: ScreenInfo = field(metadata={"cdp_name": "screenInfo"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RemoveScreenParams(CDPModel):
+class RemoveScreenParams:
     """
     Remove screen from the device. Only supported in headless mode.
     """
 
-    screen_id: ScreenId
+    screen_id: ScreenId = field(metadata={"cdp_name": "screenId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetPrimaryScreenParams(CDPModel):
+class SetPrimaryScreenParams:
     """
     Set primary screen. Only supported in headless mode. Note that this changes the
     coordinate system origin to the top-left of the new primary screen, updating the
     bounds and work areas of all existing screens accordingly.
     """
 
-    screen_id: ScreenId
+    screen_id: ScreenId = field(metadata={"cdp_name": "screenId"})

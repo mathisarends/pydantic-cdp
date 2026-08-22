@@ -4,11 +4,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Literal
 
 from cdpify.domains import network, serviceworker
-from cdpify.shared.models import CDPModel
 
 """
 The Background Service that will be associated with the commands/events. Every
@@ -25,22 +24,24 @@ type ServiceName = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class EventMetadata(CDPModel):
+class EventMetadata:
     """
     A key-value pair for additional event information to pass along.
     """
 
-    key: str
-    value: str
+    key: str = field(metadata={"cdp_name": "key"})
+    value: str = field(metadata={"cdp_name": "value"})
 
 
 @dataclass(kw_only=True, slots=True)
-class BackgroundServiceEvent(CDPModel):
-    timestamp: network.TimeSinceEpoch
-    origin: str
-    service_worker_registration_id: serviceworker.RegistrationID
-    service: ServiceName
-    event_name: str
-    instance_id: str
-    event_metadata: list[EventMetadata]
-    storage_key: str
+class BackgroundServiceEvent:
+    timestamp: network.TimeSinceEpoch = field(metadata={"cdp_name": "timestamp"})
+    origin: str = field(metadata={"cdp_name": "origin"})
+    service_worker_registration_id: serviceworker.RegistrationID = field(
+        metadata={"cdp_name": "serviceWorkerRegistrationId"}
+    )
+    service: ServiceName = field(metadata={"cdp_name": "service"})
+    event_name: str = field(metadata={"cdp_name": "eventName"})
+    instance_id: str = field(metadata={"cdp_name": "instanceId"})
+    event_metadata: list[EventMetadata] = field(metadata={"cdp_name": "eventMetadata"})
+    storage_key: str = field(metadata={"cdp_name": "storageKey"})

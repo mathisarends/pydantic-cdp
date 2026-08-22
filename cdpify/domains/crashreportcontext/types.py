@@ -4,18 +4,17 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from cdpify.domains import page
-from cdpify.shared.models import CDPModel
 
 
 @dataclass(kw_only=True, slots=True)
-class CrashReportContextEntry(CDPModel):
+class CrashReportContextEntry:
     """
     Key-value pair in CrashReportContext.
     """
 
-    key: str
-    value: str
-    frame_id: page.FrameId
+    key: str = field(metadata={"cdp_name": "key"})
+    value: str = field(metadata={"cdp_name": "value"})
+    frame_id: page.FrameId = field(metadata={"cdp_name": "frameId"})

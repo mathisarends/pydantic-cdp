@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from cdpify.codec import decode_cdp, encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -41,7 +42,7 @@ class IO:
 
         await self._command_sender.send_raw(
             method=IOCommand.CLOSE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -60,10 +61,10 @@ class IO:
 
         result = await self._command_sender.send_raw(
             method=IOCommand.READ,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return ReadResult.from_cdp(result)
+        return decode_cdp(ReadResult, result)
 
     async def resolve_blob(
         self,
@@ -78,7 +79,7 @@ class IO:
 
         result = await self._command_sender.send_raw(
             method=IOCommand.RESOLVE_BLOB,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return ResolveBlobResult.from_cdp(result)
+        return decode_cdp(ResolveBlobResult, result)

@@ -4,78 +4,93 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Literal
 
 from cdpify.domains import dom
-from cdpify.shared.models import CDPModel
 
 
 @dataclass(kw_only=True, slots=True)
-class Animation(CDPModel):
+class Animation:
     """
     Animation instance.
     """
 
-    id: str
-    name: str
-    paused_state: bool
-    play_state: str
-    playback_rate: float
-    start_time: float
-    current_time: float
-    type: Literal["CSSTransition", "CSSAnimation", "WebAnimation"]
-    source: AnimationEffect | None = None
-    css_id: str | None = None
-    view_or_scroll_timeline: ViewOrScrollTimeline | None = None
+    id: str = field(metadata={"cdp_name": "id"})
+    name: str = field(metadata={"cdp_name": "name"})
+    paused_state: bool = field(metadata={"cdp_name": "pausedState"})
+    play_state: str = field(metadata={"cdp_name": "playState"})
+    playback_rate: float = field(metadata={"cdp_name": "playbackRate"})
+    start_time: float = field(metadata={"cdp_name": "startTime"})
+    current_time: float = field(metadata={"cdp_name": "currentTime"})
+    type: Literal["CSSTransition", "CSSAnimation", "WebAnimation"] = field(
+        metadata={"cdp_name": "type"}
+    )
+    source: AnimationEffect | None = field(
+        default=None, metadata={"cdp_name": "source"}
+    )
+    css_id: str | None = field(default=None, metadata={"cdp_name": "cssId"})
+    view_or_scroll_timeline: ViewOrScrollTimeline | None = field(
+        default=None, metadata={"cdp_name": "viewOrScrollTimeline"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ViewOrScrollTimeline(CDPModel):
+class ViewOrScrollTimeline:
     """
     Timeline instance
     """
 
-    source_node_id: dom.BackendNodeId | None = None
-    start_offset: float | None = None
-    end_offset: float | None = None
-    subject_node_id: dom.BackendNodeId | None = None
-    axis: dom.ScrollOrientation
+    source_node_id: dom.BackendNodeId | None = field(
+        default=None, metadata={"cdp_name": "sourceNodeId"}
+    )
+    start_offset: float | None = field(
+        default=None, metadata={"cdp_name": "startOffset"}
+    )
+    end_offset: float | None = field(default=None, metadata={"cdp_name": "endOffset"})
+    subject_node_id: dom.BackendNodeId | None = field(
+        default=None, metadata={"cdp_name": "subjectNodeId"}
+    )
+    axis: dom.ScrollOrientation = field(metadata={"cdp_name": "axis"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AnimationEffect(CDPModel):
+class AnimationEffect:
     """
     AnimationEffect instance
     """
 
-    delay: float
-    end_delay: float
-    iteration_start: float
-    iterations: float | None = None
-    duration: float
-    direction: str
-    fill: str
-    backend_node_id: dom.BackendNodeId | None = None
-    keyframes_rule: KeyframesRule | None = None
-    easing: str
+    delay: float = field(metadata={"cdp_name": "delay"})
+    end_delay: float = field(metadata={"cdp_name": "endDelay"})
+    iteration_start: float = field(metadata={"cdp_name": "iterationStart"})
+    iterations: float | None = field(default=None, metadata={"cdp_name": "iterations"})
+    duration: float = field(metadata={"cdp_name": "duration"})
+    direction: str = field(metadata={"cdp_name": "direction"})
+    fill: str = field(metadata={"cdp_name": "fill"})
+    backend_node_id: dom.BackendNodeId | None = field(
+        default=None, metadata={"cdp_name": "backendNodeId"}
+    )
+    keyframes_rule: KeyframesRule | None = field(
+        default=None, metadata={"cdp_name": "keyframesRule"}
+    )
+    easing: str = field(metadata={"cdp_name": "easing"})
 
 
 @dataclass(kw_only=True, slots=True)
-class KeyframesRule(CDPModel):
+class KeyframesRule:
     """
     Keyframes Rule
     """
 
-    name: str | None = None
-    keyframes: list[KeyframeStyle]
+    name: str | None = field(default=None, metadata={"cdp_name": "name"})
+    keyframes: list[KeyframeStyle] = field(metadata={"cdp_name": "keyframes"})
 
 
 @dataclass(kw_only=True, slots=True)
-class KeyframeStyle(CDPModel):
+class KeyframeStyle:
     """
     Keyframe Style
     """
 
-    offset: str
-    easing: str
+    offset: str = field(metadata={"cdp_name": "offset"})
+    easing: str = field(metadata={"cdp_name": "easing"})

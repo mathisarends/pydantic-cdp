@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPEvent
 
 from .types import (
     InsecureContentStatus,
@@ -24,7 +22,7 @@ class SecurityEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class CertificateErrorEvent(CDPEvent):
+class CertificateErrorEvent:
     """
     There is a certificate error. If overriding certificate errors is enabled, then it
     should be handled with the `handleCertificateError` command. Note: this event does
@@ -32,28 +30,54 @@ class CertificateErrorEvent(CDPEvent):
     target should override certificate errors at the same time.
     """
 
-    event_id: int
-    error_type: str
-    request_url: str
+    event_id: int = field(metadata={"cdp_name": "eventId"})
+    error_type: str = field(metadata={"cdp_name": "errorType"})
+    request_url: str = field(metadata={"cdp_name": "requestURL"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class VisibleSecurityStateChangedEvent(CDPEvent):
+class VisibleSecurityStateChangedEvent:
     """
     The security state of the page changed.
     """
 
-    visible_security_state: VisibleSecurityState
+    visible_security_state: VisibleSecurityState = field(
+        metadata={"cdp_name": "visibleSecurityState"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SecurityStateChangedEvent(CDPEvent):
+class SecurityStateChangedEvent:
     """
     The security state of the page changed. No longer being sent.
     """
 
-    security_state: SecurityState
-    scheme_is_cryptographic: bool
-    explanations: list[SecurityStateExplanation]
-    insecure_content_status: InsecureContentStatus
-    summary: str | None = None
+    security_state: SecurityState = field(metadata={"cdp_name": "securityState"})
+    scheme_is_cryptographic: bool = field(
+        metadata={"cdp_name": "schemeIsCryptographic"}
+    )
+    explanations: list[SecurityStateExplanation] = field(
+        metadata={"cdp_name": "explanations"}
+    )
+    insecure_content_status: InsecureContentStatus = field(
+        metadata={"cdp_name": "insecureContentStatus"}
+    )
+    summary: str | None = field(default=None, metadata={"cdp_name": "summary"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

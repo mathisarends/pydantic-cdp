@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from cdpify.codec import decode_cdp, encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
 
@@ -67,10 +68,10 @@ class Storage:
 
         result = await self._command_sender.send_raw(
             method=StorageCommand.GET_STORAGE_KEY_FOR_FRAME,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetStorageKeyForFrameResult.from_cdp(result)
+        return decode_cdp(GetStorageKeyForFrameResult, result)
 
     async def get_storage_key(
         self,
@@ -86,10 +87,10 @@ class Storage:
 
         result = await self._command_sender.send_raw(
             method=StorageCommand.GET_STORAGE_KEY,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetStorageKeyResult.from_cdp(result)
+        return decode_cdp(GetStorageKeyResult, result)
 
     async def clear_data_for_origin(
         self,
@@ -105,7 +106,7 @@ class Storage:
 
         await self._command_sender.send_raw(
             method=StorageCommand.CLEAR_DATA_FOR_ORIGIN,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -125,7 +126,7 @@ class Storage:
 
         await self._command_sender.send_raw(
             method=StorageCommand.CLEAR_DATA_FOR_STORAGE_KEY,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -142,10 +143,10 @@ class Storage:
 
         result = await self._command_sender.send_raw(
             method=StorageCommand.GET_COOKIES,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetCookiesResult.from_cdp(result)
+        return decode_cdp(GetCookiesResult, result)
 
     async def set_cookies(
         self,
@@ -163,7 +164,7 @@ class Storage:
 
         await self._command_sender.send_raw(
             method=StorageCommand.SET_COOKIES,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -180,7 +181,7 @@ class Storage:
 
         await self._command_sender.send_raw(
             method=StorageCommand.CLEAR_COOKIES,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -197,10 +198,10 @@ class Storage:
 
         result = await self._command_sender.send_raw(
             method=StorageCommand.GET_USAGE_AND_QUOTA,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetUsageAndQuotaResult.from_cdp(result)
+        return decode_cdp(GetUsageAndQuotaResult, result)
 
     async def override_quota_for_origin(
         self,
@@ -216,7 +217,7 @@ class Storage:
 
         await self._command_sender.send_raw(
             method=StorageCommand.OVERRIDE_QUOTA_FOR_ORIGIN,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -234,7 +235,7 @@ class Storage:
 
         await self._command_sender.send_raw(
             method=StorageCommand.TRACK_CACHE_STORAGE_FOR_ORIGIN,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -252,7 +253,7 @@ class Storage:
 
         await self._command_sender.send_raw(
             method=StorageCommand.TRACK_CACHE_STORAGE_FOR_STORAGE_KEY,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -269,7 +270,7 @@ class Storage:
 
         await self._command_sender.send_raw(
             method=StorageCommand.TRACK_INDEXED_DB_FOR_ORIGIN,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -286,7 +287,7 @@ class Storage:
 
         await self._command_sender.send_raw(
             method=StorageCommand.TRACK_INDEXED_DB_FOR_STORAGE_KEY,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -303,7 +304,7 @@ class Storage:
 
         await self._command_sender.send_raw(
             method=StorageCommand.UNTRACK_CACHE_STORAGE_FOR_ORIGIN,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -320,7 +321,7 @@ class Storage:
 
         await self._command_sender.send_raw(
             method=StorageCommand.UNTRACK_CACHE_STORAGE_FOR_STORAGE_KEY,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -337,7 +338,7 @@ class Storage:
 
         await self._command_sender.send_raw(
             method=StorageCommand.UNTRACK_INDEXED_DB_FOR_ORIGIN,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -354,7 +355,7 @@ class Storage:
 
         await self._command_sender.send_raw(
             method=StorageCommand.UNTRACK_INDEXED_DB_FOR_STORAGE_KEY,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -371,7 +372,7 @@ class Storage:
             params=None,
             session_id=session_id,
         )
-        return GetTrustTokensResult.from_cdp(result)
+        return decode_cdp(GetTrustTokensResult, result)
 
     async def clear_trust_tokens(
         self,
@@ -387,10 +388,10 @@ class Storage:
 
         result = await self._command_sender.send_raw(
             method=StorageCommand.CLEAR_TRUST_TOKENS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return ClearTrustTokensResult.from_cdp(result)
+        return decode_cdp(ClearTrustTokensResult, result)
 
     async def set_storage_bucket_tracking(
         self,
@@ -406,7 +407,7 @@ class Storage:
 
         await self._command_sender.send_raw(
             method=StorageCommand.SET_STORAGE_BUCKET_TRACKING,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -423,7 +424,7 @@ class Storage:
 
         await self._command_sender.send_raw(
             method=StorageCommand.DELETE_STORAGE_BUCKET,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -439,7 +440,7 @@ class Storage:
             params=None,
             session_id=session_id,
         )
-        return RunBounceTrackingMitigationsResult.from_cdp(result)
+        return decode_cdp(RunBounceTrackingMitigationsResult, result)
 
     async def get_related_website_sets(
         self,
@@ -455,4 +456,4 @@ class Storage:
             params=None,
             session_id=session_id,
         )
-        return GetRelatedWebsiteSetsResult.from_cdp(result)
+        return decode_cdp(GetRelatedWebsiteSetsResult, result)

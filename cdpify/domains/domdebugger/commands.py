@@ -4,11 +4,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 
 from cdpify.domains import dom, runtime
-from cdpify.shared.models import CDPModel
 
 from .types import (
     CSPViolationType,
@@ -31,101 +30,103 @@ class DOMDebuggerCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class GetEventListenersParams(CDPModel):
+class GetEventListenersParams:
     """
     Returns event listeners of the given object.
     """
 
-    object_id: runtime.RemoteObjectId
-    depth: int | None = None
-    pierce: bool | None = None
+    object_id: runtime.RemoteObjectId = field(metadata={"cdp_name": "objectId"})
+    depth: int | None = field(default=None, metadata={"cdp_name": "depth"})
+    pierce: bool | None = field(default=None, metadata={"cdp_name": "pierce"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetEventListenersResult(CDPModel):
-    listeners: list[EventListener]
+class GetEventListenersResult:
+    listeners: list[EventListener] = field(metadata={"cdp_name": "listeners"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RemoveDOMBreakpointParams(CDPModel):
+class RemoveDOMBreakpointParams:
     """
     Removes DOM breakpoint that was set using `setDOMBreakpoint`.
     """
 
-    node_id: dom.NodeId
-    type: DOMBreakpointType
+    node_id: dom.NodeId = field(metadata={"cdp_name": "nodeId"})
+    type: DOMBreakpointType = field(metadata={"cdp_name": "type"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RemoveEventListenerBreakpointParams(CDPModel):
+class RemoveEventListenerBreakpointParams:
     """
     Removes breakpoint on particular DOM event.
     """
 
-    event_name: str
-    target_name: str | None = None
+    event_name: str = field(metadata={"cdp_name": "eventName"})
+    target_name: str | None = field(default=None, metadata={"cdp_name": "targetName"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RemoveInstrumentationBreakpointParams(CDPModel):
+class RemoveInstrumentationBreakpointParams:
     """
     Removes breakpoint on particular native event.
     """
 
-    event_name: str
+    event_name: str = field(metadata={"cdp_name": "eventName"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RemoveXHRBreakpointParams(CDPModel):
+class RemoveXHRBreakpointParams:
     """
     Removes breakpoint from XMLHttpRequest.
     """
 
-    url: str
+    url: str = field(metadata={"cdp_name": "url"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetBreakOnCSPViolationParams(CDPModel):
+class SetBreakOnCSPViolationParams:
     """
     Sets breakpoint on particular CSP violations.
     """
 
-    violation_types: list[CSPViolationType]
+    violation_types: list[CSPViolationType] = field(
+        metadata={"cdp_name": "violationTypes"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetDOMBreakpointParams(CDPModel):
+class SetDOMBreakpointParams:
     """
     Sets breakpoint on particular operation with DOM.
     """
 
-    node_id: dom.NodeId
-    type: DOMBreakpointType
+    node_id: dom.NodeId = field(metadata={"cdp_name": "nodeId"})
+    type: DOMBreakpointType = field(metadata={"cdp_name": "type"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetEventListenerBreakpointParams(CDPModel):
+class SetEventListenerBreakpointParams:
     """
     Sets breakpoint on particular DOM event.
     """
 
-    event_name: str
-    target_name: str | None = None
+    event_name: str = field(metadata={"cdp_name": "eventName"})
+    target_name: str | None = field(default=None, metadata={"cdp_name": "targetName"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetInstrumentationBreakpointParams(CDPModel):
+class SetInstrumentationBreakpointParams:
     """
     Sets breakpoint on particular native event.
     """
 
-    event_name: str
+    event_name: str = field(metadata={"cdp_name": "eventName"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetXHRBreakpointParams(CDPModel):
+class SetXHRBreakpointParams:
     """
     Sets breakpoint on XMLHttpRequest.
     """
 
-    url: str
+    url: str = field(metadata={"cdp_name": "url"})

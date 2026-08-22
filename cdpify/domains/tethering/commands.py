@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPModel
 
 
 class TetheringCommand(StrEnum):
@@ -16,18 +14,18 @@ class TetheringCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class BindParams(CDPModel):
+class BindParams:
     """
     Request browser port binding.
     """
 
-    port: int
+    port: int = field(metadata={"cdp_name": "port"})
 
 
 @dataclass(kw_only=True, slots=True)
-class UnbindParams(CDPModel):
+class UnbindParams:
     """
     Request browser port unbinding.
     """
 
-    port: int
+    port: int = field(metadata={"cdp_name": "port"})

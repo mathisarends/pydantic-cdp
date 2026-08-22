@@ -4,12 +4,11 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Any
 
 from cdpify.domains import io
-from cdpify.shared.models import CDPEvent
 
 from .types import (
     StreamCompression,
@@ -24,31 +23,57 @@ class TracingEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class BufferUsageEvent(CDPEvent):
-    percent_full: float | None = None
-    event_count: float | None = None
-    value: float | None = None
+class BufferUsageEvent:
+    percent_full: float | None = field(
+        default=None, metadata={"cdp_name": "percentFull"}
+    )
+    event_count: float | None = field(default=None, metadata={"cdp_name": "eventCount"})
+    value: float | None = field(default=None, metadata={"cdp_name": "value"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DataCollectedEvent(CDPEvent):
+class DataCollectedEvent:
     """
     Contains a bucket of collected trace events. When tracing is stopped collected
     events will be sent as a sequence of dataCollected events followed by
     tracingComplete event.
     """
 
-    value: list[dict[str, Any]]
+    value: list[dict[str, Any]] = field(metadata={"cdp_name": "value"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class TracingCompleteEvent(CDPEvent):
+class TracingCompleteEvent:
     """
     Signals that tracing is stopped and there is no trace buffers pending flush, all
     data were delivered via dataCollected events.
     """
 
-    data_loss_occurred: bool
-    stream: io.StreamHandle | None = None
-    trace_format: StreamFormat | None = None
-    stream_compression: StreamCompression | None = None
+    data_loss_occurred: bool = field(metadata={"cdp_name": "dataLossOccurred"})
+    stream: io.StreamHandle | None = field(
+        default=None, metadata={"cdp_name": "stream"}
+    )
+    trace_format: StreamFormat | None = field(
+        default=None, metadata={"cdp_name": "traceFormat"}
+    )
+    stream_compression: StreamCompression | None = field(
+        default=None, metadata={"cdp_name": "streamCompression"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

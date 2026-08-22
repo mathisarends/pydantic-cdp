@@ -4,10 +4,9 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from cdpify.domains import runtime
-from cdpify.shared.models import CDPModel
 
 """
 Heap snapshot object id.
@@ -16,34 +15,34 @@ HeapSnapshotObjectId = str
 
 
 @dataclass(kw_only=True, slots=True)
-class SamplingHeapProfileNode(CDPModel):
+class SamplingHeapProfileNode:
     """
     Sampling Heap Profile node. Holds callsite information, allocation statistics and
     child nodes.
     """
 
-    call_frame: runtime.CallFrame
-    self_size: float
-    id: int
-    children: list[SamplingHeapProfileNode]
+    call_frame: runtime.CallFrame = field(metadata={"cdp_name": "callFrame"})
+    self_size: float = field(metadata={"cdp_name": "selfSize"})
+    id: int = field(metadata={"cdp_name": "id"})
+    children: list[SamplingHeapProfileNode] = field(metadata={"cdp_name": "children"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SamplingHeapProfileSample(CDPModel):
+class SamplingHeapProfileSample:
     """
     A single sample from a sampling profile.
     """
 
-    size: float
-    node_id: int
-    ordinal: float
+    size: float = field(metadata={"cdp_name": "size"})
+    node_id: int = field(metadata={"cdp_name": "nodeId"})
+    ordinal: float = field(metadata={"cdp_name": "ordinal"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SamplingHeapProfile(CDPModel):
+class SamplingHeapProfile:
     """
     Sampling profile.
     """
 
-    head: SamplingHeapProfileNode
-    samples: list[SamplingHeapProfileSample]
+    head: SamplingHeapProfileNode = field(metadata={"cdp_name": "head"})
+    samples: list[SamplingHeapProfileSample] = field(metadata={"cdp_name": "samples"})

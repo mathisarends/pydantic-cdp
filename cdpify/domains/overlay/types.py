@@ -4,172 +4,290 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Literal
 
 from cdpify.domains import dom
-from cdpify.shared.models import CDPModel
 
 
 @dataclass(kw_only=True, slots=True)
-class SourceOrderConfig(CDPModel):
+class SourceOrderConfig:
     """
     Configuration data for drawing the source order of an elements children.
     """
 
-    parent_outline_color: dom.RGBA
-    child_outline_color: dom.RGBA
+    parent_outline_color: dom.RGBA = field(metadata={"cdp_name": "parentOutlineColor"})
+    child_outline_color: dom.RGBA = field(metadata={"cdp_name": "childOutlineColor"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GridHighlightConfig(CDPModel):
+class GridHighlightConfig:
     """
     Configuration data for the highlighting of Grid elements.
     """
 
-    show_grid_extension_lines: bool | None = None
-    show_positive_line_numbers: bool | None = None
-    show_negative_line_numbers: bool | None = None
-    show_area_names: bool | None = None
-    show_line_names: bool | None = None
-    show_track_sizes: bool | None = None
-    grid_border_color: dom.RGBA | None = None
-    cell_border_color: dom.RGBA | None = None
-    row_line_color: dom.RGBA | None = None
-    column_line_color: dom.RGBA | None = None
-    grid_border_dash: bool | None = None
-    cell_border_dash: bool | None = None
-    row_line_dash: bool | None = None
-    column_line_dash: bool | None = None
-    row_gap_color: dom.RGBA | None = None
-    row_hatch_color: dom.RGBA | None = None
-    column_gap_color: dom.RGBA | None = None
-    column_hatch_color: dom.RGBA | None = None
-    area_border_color: dom.RGBA | None = None
-    grid_background_color: dom.RGBA | None = None
+    show_grid_extension_lines: bool | None = field(
+        default=None, metadata={"cdp_name": "showGridExtensionLines"}
+    )
+    show_positive_line_numbers: bool | None = field(
+        default=None, metadata={"cdp_name": "showPositiveLineNumbers"}
+    )
+    show_negative_line_numbers: bool | None = field(
+        default=None, metadata={"cdp_name": "showNegativeLineNumbers"}
+    )
+    show_area_names: bool | None = field(
+        default=None, metadata={"cdp_name": "showAreaNames"}
+    )
+    show_line_names: bool | None = field(
+        default=None, metadata={"cdp_name": "showLineNames"}
+    )
+    show_track_sizes: bool | None = field(
+        default=None, metadata={"cdp_name": "showTrackSizes"}
+    )
+    grid_border_color: dom.RGBA | None = field(
+        default=None, metadata={"cdp_name": "gridBorderColor"}
+    )
+    cell_border_color: dom.RGBA | None = field(
+        default=None, metadata={"cdp_name": "cellBorderColor"}
+    )
+    row_line_color: dom.RGBA | None = field(
+        default=None, metadata={"cdp_name": "rowLineColor"}
+    )
+    column_line_color: dom.RGBA | None = field(
+        default=None, metadata={"cdp_name": "columnLineColor"}
+    )
+    grid_border_dash: bool | None = field(
+        default=None, metadata={"cdp_name": "gridBorderDash"}
+    )
+    cell_border_dash: bool | None = field(
+        default=None, metadata={"cdp_name": "cellBorderDash"}
+    )
+    row_line_dash: bool | None = field(
+        default=None, metadata={"cdp_name": "rowLineDash"}
+    )
+    column_line_dash: bool | None = field(
+        default=None, metadata={"cdp_name": "columnLineDash"}
+    )
+    row_gap_color: dom.RGBA | None = field(
+        default=None, metadata={"cdp_name": "rowGapColor"}
+    )
+    row_hatch_color: dom.RGBA | None = field(
+        default=None, metadata={"cdp_name": "rowHatchColor"}
+    )
+    column_gap_color: dom.RGBA | None = field(
+        default=None, metadata={"cdp_name": "columnGapColor"}
+    )
+    column_hatch_color: dom.RGBA | None = field(
+        default=None, metadata={"cdp_name": "columnHatchColor"}
+    )
+    area_border_color: dom.RGBA | None = field(
+        default=None, metadata={"cdp_name": "areaBorderColor"}
+    )
+    grid_background_color: dom.RGBA | None = field(
+        default=None, metadata={"cdp_name": "gridBackgroundColor"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class FlexContainerHighlightConfig(CDPModel):
+class FlexContainerHighlightConfig:
     """
     Configuration data for the highlighting of Flex container elements.
     """
 
-    container_border: LineStyle | None = None
-    line_separator: LineStyle | None = None
-    item_separator: LineStyle | None = None
-    main_distributed_space: BoxStyle | None = None
-    cross_distributed_space: BoxStyle | None = None
-    row_gap_space: BoxStyle | None = None
-    column_gap_space: BoxStyle | None = None
-    cross_alignment: LineStyle | None = None
+    container_border: LineStyle | None = field(
+        default=None, metadata={"cdp_name": "containerBorder"}
+    )
+    line_separator: LineStyle | None = field(
+        default=None, metadata={"cdp_name": "lineSeparator"}
+    )
+    item_separator: LineStyle | None = field(
+        default=None, metadata={"cdp_name": "itemSeparator"}
+    )
+    main_distributed_space: BoxStyle | None = field(
+        default=None, metadata={"cdp_name": "mainDistributedSpace"}
+    )
+    cross_distributed_space: BoxStyle | None = field(
+        default=None, metadata={"cdp_name": "crossDistributedSpace"}
+    )
+    row_gap_space: BoxStyle | None = field(
+        default=None, metadata={"cdp_name": "rowGapSpace"}
+    )
+    column_gap_space: BoxStyle | None = field(
+        default=None, metadata={"cdp_name": "columnGapSpace"}
+    )
+    cross_alignment: LineStyle | None = field(
+        default=None, metadata={"cdp_name": "crossAlignment"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class FlexItemHighlightConfig(CDPModel):
+class FlexItemHighlightConfig:
     """
     Configuration data for the highlighting of Flex item elements.
     """
 
-    base_size_box: BoxStyle | None = None
-    base_size_border: LineStyle | None = None
-    flexibility_arrow: LineStyle | None = None
+    base_size_box: BoxStyle | None = field(
+        default=None, metadata={"cdp_name": "baseSizeBox"}
+    )
+    base_size_border: LineStyle | None = field(
+        default=None, metadata={"cdp_name": "baseSizeBorder"}
+    )
+    flexibility_arrow: LineStyle | None = field(
+        default=None, metadata={"cdp_name": "flexibilityArrow"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class LineStyle(CDPModel):
+class LineStyle:
     """
     Style information for drawing a line.
     """
 
-    color: dom.RGBA | None = None
-    pattern: Literal["dashed", "dotted"] | None = None
+    color: dom.RGBA | None = field(default=None, metadata={"cdp_name": "color"})
+    pattern: Literal["dashed", "dotted"] | None = field(
+        default=None, metadata={"cdp_name": "pattern"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class BoxStyle(CDPModel):
+class BoxStyle:
     """
     Style information for drawing a box.
     """
 
-    fill_color: dom.RGBA | None = None
-    hatch_color: dom.RGBA | None = None
+    fill_color: dom.RGBA | None = field(
+        default=None, metadata={"cdp_name": "fillColor"}
+    )
+    hatch_color: dom.RGBA | None = field(
+        default=None, metadata={"cdp_name": "hatchColor"}
+    )
 
 
 type ContrastAlgorithm = Literal["aa", "aaa", "apca"]
 
 
 @dataclass(kw_only=True, slots=True)
-class HighlightConfig(CDPModel):
+class HighlightConfig:
     """
     Configuration data for the highlighting of page elements.
     """
 
-    show_info: bool | None = None
-    show_styles: bool | None = None
-    show_rulers: bool | None = None
-    show_accessibility_info: bool | None = None
-    show_extension_lines: bool | None = None
-    content_color: dom.RGBA | None = None
-    padding_color: dom.RGBA | None = None
-    border_color: dom.RGBA | None = None
-    margin_color: dom.RGBA | None = None
-    event_target_color: dom.RGBA | None = None
-    shape_color: dom.RGBA | None = None
-    shape_margin_color: dom.RGBA | None = None
-    css_grid_color: dom.RGBA | None = None
-    color_format: ColorFormat | None = None
-    grid_highlight_config: GridHighlightConfig | None = None
-    flex_container_highlight_config: FlexContainerHighlightConfig | None = None
-    flex_item_highlight_config: FlexItemHighlightConfig | None = None
-    contrast_algorithm: ContrastAlgorithm | None = None
+    show_info: bool | None = field(default=None, metadata={"cdp_name": "showInfo"})
+    show_styles: bool | None = field(default=None, metadata={"cdp_name": "showStyles"})
+    show_rulers: bool | None = field(default=None, metadata={"cdp_name": "showRulers"})
+    show_accessibility_info: bool | None = field(
+        default=None, metadata={"cdp_name": "showAccessibilityInfo"}
+    )
+    show_extension_lines: bool | None = field(
+        default=None, metadata={"cdp_name": "showExtensionLines"}
+    )
+    content_color: dom.RGBA | None = field(
+        default=None, metadata={"cdp_name": "contentColor"}
+    )
+    padding_color: dom.RGBA | None = field(
+        default=None, metadata={"cdp_name": "paddingColor"}
+    )
+    border_color: dom.RGBA | None = field(
+        default=None, metadata={"cdp_name": "borderColor"}
+    )
+    margin_color: dom.RGBA | None = field(
+        default=None, metadata={"cdp_name": "marginColor"}
+    )
+    event_target_color: dom.RGBA | None = field(
+        default=None, metadata={"cdp_name": "eventTargetColor"}
+    )
+    shape_color: dom.RGBA | None = field(
+        default=None, metadata={"cdp_name": "shapeColor"}
+    )
+    shape_margin_color: dom.RGBA | None = field(
+        default=None, metadata={"cdp_name": "shapeMarginColor"}
+    )
+    css_grid_color: dom.RGBA | None = field(
+        default=None, metadata={"cdp_name": "cssGridColor"}
+    )
+    color_format: ColorFormat | None = field(
+        default=None, metadata={"cdp_name": "colorFormat"}
+    )
+    grid_highlight_config: GridHighlightConfig | None = field(
+        default=None, metadata={"cdp_name": "gridHighlightConfig"}
+    )
+    flex_container_highlight_config: FlexContainerHighlightConfig | None = field(
+        default=None, metadata={"cdp_name": "flexContainerHighlightConfig"}
+    )
+    flex_item_highlight_config: FlexItemHighlightConfig | None = field(
+        default=None, metadata={"cdp_name": "flexItemHighlightConfig"}
+    )
+    contrast_algorithm: ContrastAlgorithm | None = field(
+        default=None, metadata={"cdp_name": "contrastAlgorithm"}
+    )
     container_query_container_highlight_config: (
         ContainerQueryContainerHighlightConfig | None
-    ) = None
+    ) = field(  # noqa: E501
+        default=None,
+        metadata={"cdp_name": "containerQueryContainerHighlightConfig"},
+    )
 
 
 type ColorFormat = Literal["rgb", "hsl", "hwb", "hex"]
 
 
 @dataclass(kw_only=True, slots=True)
-class GridNodeHighlightConfig(CDPModel):
+class GridNodeHighlightConfig:
     """
     Configurations for Persistent Grid Highlight
     """
 
-    grid_highlight_config: GridHighlightConfig
-    node_id: dom.NodeId
+    grid_highlight_config: GridHighlightConfig = field(
+        metadata={"cdp_name": "gridHighlightConfig"}
+    )
+    node_id: dom.NodeId = field(metadata={"cdp_name": "nodeId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class FlexNodeHighlightConfig(CDPModel):
-    flex_container_highlight_config: FlexContainerHighlightConfig
-    node_id: dom.NodeId
+class FlexNodeHighlightConfig:
+    flex_container_highlight_config: FlexContainerHighlightConfig = field(
+        metadata={"cdp_name": "flexContainerHighlightConfig"}
+    )
+    node_id: dom.NodeId = field(metadata={"cdp_name": "nodeId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ScrollSnapContainerHighlightConfig(CDPModel):
-    snapport_border: LineStyle | None = None
-    snap_area_border: LineStyle | None = None
-    scroll_margin_color: dom.RGBA | None = None
-    scroll_padding_color: dom.RGBA | None = None
+class ScrollSnapContainerHighlightConfig:
+    snapport_border: LineStyle | None = field(
+        default=None, metadata={"cdp_name": "snapportBorder"}
+    )
+    snap_area_border: LineStyle | None = field(
+        default=None, metadata={"cdp_name": "snapAreaBorder"}
+    )
+    scroll_margin_color: dom.RGBA | None = field(
+        default=None, metadata={"cdp_name": "scrollMarginColor"}
+    )
+    scroll_padding_color: dom.RGBA | None = field(
+        default=None, metadata={"cdp_name": "scrollPaddingColor"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ScrollSnapHighlightConfig(CDPModel):
-    scroll_snap_container_highlight_config: ScrollSnapContainerHighlightConfig
-    node_id: dom.NodeId
+class ScrollSnapHighlightConfig:
+    scroll_snap_container_highlight_config: ScrollSnapContainerHighlightConfig = field(
+        metadata={"cdp_name": "scrollSnapContainerHighlightConfig"}
+    )
+    node_id: dom.NodeId = field(metadata={"cdp_name": "nodeId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class HingeConfig(CDPModel):
+class HingeConfig:
     """
     Configuration for dual screen hinge
     """
 
-    rect: dom.Rect
-    content_color: dom.RGBA | None = None
-    outline_color: dom.RGBA | None = None
+    rect: dom.Rect = field(metadata={"cdp_name": "rect"})
+    content_color: dom.RGBA | None = field(
+        default=None, metadata={"cdp_name": "contentColor"}
+    )
+    outline_color: dom.RGBA | None = field(
+        default=None, metadata={"cdp_name": "outlineColor"}
+    )
 
 
 """
@@ -179,56 +297,74 @@ type DisplayCutoutShape = Literal["pill", "notch", "circle", "rectangle"]
 
 
 @dataclass(kw_only=True, slots=True)
-class DisplayCutoutConfig(CDPModel):
+class DisplayCutoutConfig:
     """
     Configuration for a display cutout.
     """
 
-    rect: dom.Rect
-    shape: DisplayCutoutShape
-    border_radius: int | None = None
-    upper_radius: int | None = None
-    lower_radius: int | None = None
-    cx: int | None = None
-    cy: int | None = None
-    radius: int | None = None
-    content_color: dom.RGBA | None = None
+    rect: dom.Rect = field(metadata={"cdp_name": "rect"})
+    shape: DisplayCutoutShape = field(metadata={"cdp_name": "shape"})
+    border_radius: int | None = field(
+        default=None, metadata={"cdp_name": "borderRadius"}
+    )
+    upper_radius: int | None = field(default=None, metadata={"cdp_name": "upperRadius"})
+    lower_radius: int | None = field(default=None, metadata={"cdp_name": "lowerRadius"})
+    cx: int | None = field(default=None, metadata={"cdp_name": "cx"})
+    cy: int | None = field(default=None, metadata={"cdp_name": "cy"})
+    radius: int | None = field(default=None, metadata={"cdp_name": "radius"})
+    content_color: dom.RGBA | None = field(
+        default=None, metadata={"cdp_name": "contentColor"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class WindowControlsOverlayConfig(CDPModel):
+class WindowControlsOverlayConfig:
     """
     Configuration for Window Controls Overlay
     """
 
-    show_css: bool
-    selected_platform: str
-    theme_color: str
+    show_css: bool = field(metadata={"cdp_name": "showCSS"})
+    selected_platform: str = field(metadata={"cdp_name": "selectedPlatform"})
+    theme_color: str = field(metadata={"cdp_name": "themeColor"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ContainerQueryHighlightConfig(CDPModel):
-    container_query_container_highlight_config: ContainerQueryContainerHighlightConfig
-    node_id: dom.NodeId
+class ContainerQueryHighlightConfig:
+    container_query_container_highlight_config: ContainerQueryContainerHighlightConfig = field(  # noqa: E501
+        metadata={"cdp_name": "containerQueryContainerHighlightConfig"},
+    )
+    node_id: dom.NodeId = field(metadata={"cdp_name": "nodeId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ContainerQueryContainerHighlightConfig(CDPModel):
-    container_border: LineStyle | None = None
-    descendant_border: LineStyle | None = None
+class ContainerQueryContainerHighlightConfig:
+    container_border: LineStyle | None = field(
+        default=None, metadata={"cdp_name": "containerBorder"}
+    )
+    descendant_border: LineStyle | None = field(
+        default=None, metadata={"cdp_name": "descendantBorder"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class IsolatedElementHighlightConfig(CDPModel):
-    isolation_mode_highlight_config: IsolationModeHighlightConfig
-    node_id: dom.NodeId
+class IsolatedElementHighlightConfig:
+    isolation_mode_highlight_config: IsolationModeHighlightConfig = field(
+        metadata={"cdp_name": "isolationModeHighlightConfig"}
+    )
+    node_id: dom.NodeId = field(metadata={"cdp_name": "nodeId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class IsolationModeHighlightConfig(CDPModel):
-    resizer_color: dom.RGBA | None = None
-    resizer_handle_color: dom.RGBA | None = None
-    mask_color: dom.RGBA | None = None
+class IsolationModeHighlightConfig:
+    resizer_color: dom.RGBA | None = field(
+        default=None, metadata={"cdp_name": "resizerColor"}
+    )
+    resizer_handle_color: dom.RGBA | None = field(
+        default=None, metadata={"cdp_name": "resizerHandleColor"}
+    )
+    mask_color: dom.RGBA | None = field(
+        default=None, metadata={"cdp_name": "maskColor"}
+    )
 
 
 type InspectMode = Literal[
@@ -237,6 +373,8 @@ type InspectMode = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class InspectedElementAnchorConfig(CDPModel):
-    node_id: dom.NodeId | None = None
-    backend_node_id: dom.BackendNodeId | None = None
+class InspectedElementAnchorConfig:
+    node_id: dom.NodeId | None = field(default=None, metadata={"cdp_name": "nodeId"})
+    backend_node_id: dom.BackendNodeId | None = field(
+        default=None, metadata={"cdp_name": "backendNodeId"}
+    )

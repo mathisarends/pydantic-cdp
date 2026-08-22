@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal
 
+from cdpify.codec import decode_cdp, encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -45,10 +46,10 @@ class Audits:
 
         result = await self._command_sender.send_raw(
             method=AuditsCommand.GET_ENCODED_RESPONSE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetEncodedResponseResult.from_cdp(result)
+        return decode_cdp(GetEncodedResponseResult, result)
 
     async def disable(
         self,
@@ -91,4 +92,4 @@ class Audits:
             params=None,
             session_id=session_id,
         )
-        return CheckFormsIssuesResult.from_cdp(result)
+        return decode_cdp(CheckFormsIssuesResult, result)

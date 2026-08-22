@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+from cdpify.codec import decode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -29,7 +30,7 @@ class Ads:
             params=None,
             session_id=session_id,
         )
-        return GetAdMetricsResult.from_cdp(result)
+        return decode_cdp(GetAdMetricsResult, result)
 
     async def get_ad_scripts(
         self,
@@ -45,4 +46,4 @@ class Ads:
             params=None,
             session_id=session_id,
         )
-        return GetAdScriptsResult.from_cdp(result)
+        return decode_cdp(GetAdScriptsResult, result)

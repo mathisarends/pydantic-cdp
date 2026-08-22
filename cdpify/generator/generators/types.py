@@ -93,7 +93,12 @@ def _build_field_view(
     is_optional = param.optional or param.name in _OPTIONAL_OVERRIDES.get(
         type_id, set()
     )
-    return FieldView(field_name, py_type, optional=is_optional)
+    return FieldView(
+        field_name,
+        py_type,
+        optional=is_optional,
+        cdp_name=param.name,
+    )
 
 
 def _docstring(text: str | None, *, indent: int) -> str | None:

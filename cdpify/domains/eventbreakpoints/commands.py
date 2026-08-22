@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPModel
 
 
 class EventBreakpointsCommand(StrEnum):
@@ -19,18 +17,18 @@ class EventBreakpointsCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class SetInstrumentationBreakpointParams(CDPModel):
+class SetInstrumentationBreakpointParams:
     """
     Sets breakpoint on particular native event.
     """
 
-    event_name: str
+    event_name: str = field(metadata={"cdp_name": "eventName"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RemoveInstrumentationBreakpointParams(CDPModel):
+class RemoveInstrumentationBreakpointParams:
     """
     Removes breakpoint on particular native event.
     """
 
-    event_name: str
+    event_name: str = field(metadata={"cdp_name": "eventName"})

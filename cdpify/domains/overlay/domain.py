@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from cdpify.codec import decode_cdp, encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
 
@@ -116,10 +117,10 @@ class Overlay:
 
         result = await self._command_sender.send_raw(
             method=OverlayCommand.GET_HIGHLIGHT_OBJECT_FOR_TEST,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetHighlightObjectForTestResult.from_cdp(result)
+        return decode_cdp(GetHighlightObjectForTestResult, result)
 
     async def get_grid_highlight_objects_for_test(
         self,
@@ -134,10 +135,10 @@ class Overlay:
 
         result = await self._command_sender.send_raw(
             method=OverlayCommand.GET_GRID_HIGHLIGHT_OBJECTS_FOR_TEST,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetGridHighlightObjectsForTestResult.from_cdp(result)
+        return decode_cdp(GetGridHighlightObjectsForTestResult, result)
 
     async def get_source_order_highlight_object_for_test(
         self,
@@ -152,10 +153,10 @@ class Overlay:
 
         result = await self._command_sender.send_raw(
             method=OverlayCommand.GET_SOURCE_ORDER_HIGHLIGHT_OBJECT_FOR_TEST,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetSourceOrderHighlightObjectForTestResult.from_cdp(result)
+        return decode_cdp(GetSourceOrderHighlightObjectForTestResult, result)
 
     async def hide_highlight(
         self,
@@ -193,7 +194,7 @@ class Overlay:
 
         await self._command_sender.send_raw(
             method=OverlayCommand.HIGHLIGHT_FRAME,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -221,7 +222,7 @@ class Overlay:
 
         await self._command_sender.send_raw(
             method=OverlayCommand.HIGHLIGHT_NODE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -243,7 +244,7 @@ class Overlay:
 
         await self._command_sender.send_raw(
             method=OverlayCommand.HIGHLIGHT_QUAD,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -275,7 +276,7 @@ class Overlay:
 
         await self._command_sender.send_raw(
             method=OverlayCommand.HIGHLIGHT_RECT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -302,7 +303,7 @@ class Overlay:
 
         await self._command_sender.send_raw(
             method=OverlayCommand.HIGHLIGHT_SOURCE_ORDER,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -322,7 +323,7 @@ class Overlay:
 
         await self._command_sender.send_raw(
             method=OverlayCommand.SET_INSPECT_MODE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -339,7 +340,7 @@ class Overlay:
 
         await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_AD_HIGHLIGHTS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -353,7 +354,7 @@ class Overlay:
 
         await self._command_sender.send_raw(
             method=OverlayCommand.SET_PAUSED_IN_DEBUGGER_MESSAGE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -370,7 +371,7 @@ class Overlay:
 
         await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_DEBUG_BORDERS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -387,7 +388,7 @@ class Overlay:
 
         await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_FPS_COUNTER,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -406,7 +407,7 @@ class Overlay:
 
         await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_GRID_OVERLAYS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -422,7 +423,7 @@ class Overlay:
 
         await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_FLEX_OVERLAYS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -438,7 +439,7 @@ class Overlay:
 
         await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_SCROLL_SNAP_OVERLAYS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -454,7 +455,7 @@ class Overlay:
 
         await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_CONTAINER_QUERY_OVERLAYS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -470,7 +471,7 @@ class Overlay:
 
         await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_INSPECTED_ELEMENT_ANCHOR,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -487,7 +488,7 @@ class Overlay:
 
         await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_PAINT_RECTS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -504,7 +505,7 @@ class Overlay:
 
         await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_LAYOUT_SHIFT_REGIONS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -521,7 +522,7 @@ class Overlay:
 
         await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_SCROLL_BOTTLENECK_RECTS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -539,7 +540,7 @@ class Overlay:
 
         await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_HIT_TEST_BORDERS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -557,7 +558,7 @@ class Overlay:
 
         await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_WEB_VITALS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -574,7 +575,7 @@ class Overlay:
 
         await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_VIEWPORT_SIZE_ON_RESIZE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -591,7 +592,7 @@ class Overlay:
 
         await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_HINGE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -608,7 +609,7 @@ class Overlay:
 
         await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_DISPLAY_CUTOUT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -627,7 +628,7 @@ class Overlay:
 
         await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_ISOLATED_ELEMENTS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -646,6 +647,6 @@ class Overlay:
 
         await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_WINDOW_CONTROLS_OVERLAY,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )

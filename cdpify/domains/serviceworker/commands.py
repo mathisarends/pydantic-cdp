@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPModel
 
 from .types import (
     RegistrationID,
@@ -30,52 +28,54 @@ class ServiceWorkerCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class DeliverPushMessageParams(CDPModel):
-    origin: str
-    registration_id: RegistrationID
-    data: str
+class DeliverPushMessageParams:
+    origin: str = field(metadata={"cdp_name": "origin"})
+    registration_id: RegistrationID = field(metadata={"cdp_name": "registrationId"})
+    data: str = field(metadata={"cdp_name": "data"})
 
 
 @dataclass(kw_only=True, slots=True)
-class DispatchSyncEventParams(CDPModel):
-    origin: str
-    registration_id: RegistrationID
-    tag: str
-    last_chance: bool
+class DispatchSyncEventParams:
+    origin: str = field(metadata={"cdp_name": "origin"})
+    registration_id: RegistrationID = field(metadata={"cdp_name": "registrationId"})
+    tag: str = field(metadata={"cdp_name": "tag"})
+    last_chance: bool = field(metadata={"cdp_name": "lastChance"})
 
 
 @dataclass(kw_only=True, slots=True)
-class DispatchPeriodicSyncEventParams(CDPModel):
-    origin: str
-    registration_id: RegistrationID
-    tag: str
+class DispatchPeriodicSyncEventParams:
+    origin: str = field(metadata={"cdp_name": "origin"})
+    registration_id: RegistrationID = field(metadata={"cdp_name": "registrationId"})
+    tag: str = field(metadata={"cdp_name": "tag"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetForceUpdateOnPageLoadParams(CDPModel):
-    force_update_on_page_load: bool
+class SetForceUpdateOnPageLoadParams:
+    force_update_on_page_load: bool = field(
+        metadata={"cdp_name": "forceUpdateOnPageLoad"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SkipWaitingParams(CDPModel):
-    scope_url: str
+class SkipWaitingParams:
+    scope_url: str = field(metadata={"cdp_name": "scopeURL"})
 
 
 @dataclass(kw_only=True, slots=True)
-class StartWorkerParams(CDPModel):
-    scope_url: str
+class StartWorkerParams:
+    scope_url: str = field(metadata={"cdp_name": "scopeURL"})
 
 
 @dataclass(kw_only=True, slots=True)
-class StopWorkerParams(CDPModel):
-    version_id: str
+class StopWorkerParams:
+    version_id: str = field(metadata={"cdp_name": "versionId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class UnregisterParams(CDPModel):
-    scope_url: str
+class UnregisterParams:
+    scope_url: str = field(metadata={"cdp_name": "scopeURL"})
 
 
 @dataclass(kw_only=True, slots=True)
-class UpdateRegistrationParams(CDPModel):
-    scope_url: str
+class UpdateRegistrationParams:
+    scope_url: str = field(metadata={"cdp_name": "scopeURL"})

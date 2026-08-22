@@ -4,11 +4,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 
 from cdpify.domains import target
-from cdpify.shared.models import CDPModel
 
 from .types import (
     DisplayMode,
@@ -27,22 +26,22 @@ class PWACommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class GetOsAppStateParams(CDPModel):
+class GetOsAppStateParams:
     """
     Returns the following OS state for the given manifest id.
     """
 
-    manifest_id: str
+    manifest_id: str = field(metadata={"cdp_name": "manifestId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetOsAppStateResult(CDPModel):
-    badge_count: int
-    file_handlers: list[FileHandler]
+class GetOsAppStateResult:
+    badge_count: int = field(metadata={"cdp_name": "badgeCount"})
+    file_handlers: list[FileHandler] = field(metadata={"cdp_name": "fileHandlers"})
 
 
 @dataclass(kw_only=True, slots=True)
-class InstallParams(CDPModel):
+class InstallParams:
     """
     Installs the given manifest identity, optionally using the given
     installUrlOrBundleUrl IWA-specific install description: manifestId corresponds to
@@ -59,38 +58,40 @@ class InstallParams(CDPModel):
     dev mode, the installation will fail, regardless of the state of the allowlist.
     """
 
-    manifest_id: str
-    install_url_or_bundle_url: str | None = None
+    manifest_id: str = field(metadata={"cdp_name": "manifestId"})
+    install_url_or_bundle_url: str | None = field(
+        default=None, metadata={"cdp_name": "installUrlOrBundleUrl"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class UninstallParams(CDPModel):
+class UninstallParams:
     """
     Uninstalls the given manifest_id and closes any opened app windows.
     """
 
-    manifest_id: str
+    manifest_id: str = field(metadata={"cdp_name": "manifestId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class LaunchParams(CDPModel):
+class LaunchParams:
     """
     Launches the installed web app, or an url in the same web app instead of the
     default start url if it is provided. Returns a page Target.TargetID which can be
     used to attach to via Target.attachToTarget or similar APIs.
     """
 
-    manifest_id: str
-    url: str | None = None
+    manifest_id: str = field(metadata={"cdp_name": "manifestId"})
+    url: str | None = field(default=None, metadata={"cdp_name": "url"})
 
 
 @dataclass(kw_only=True, slots=True)
-class LaunchResult(CDPModel):
-    target_id: target.TargetID
+class LaunchResult:
+    target_id: target.TargetID = field(metadata={"cdp_name": "targetId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class LaunchFilesInAppParams(CDPModel):
+class LaunchFilesInAppParams:
     """
     Opens one or more local files from an installed web app identified by its
     manifestId. The web app needs to have file handlers registered to process the files.
@@ -104,28 +105,28 @@ class LaunchFilesInAppParams(CDPModel):
     the existences of the input files.
     """
 
-    manifest_id: str
-    files: list[str]
+    manifest_id: str = field(metadata={"cdp_name": "manifestId"})
+    files: list[str] = field(metadata={"cdp_name": "files"})
 
 
 @dataclass(kw_only=True, slots=True)
-class LaunchFilesInAppResult(CDPModel):
-    target_ids: list[target.TargetID]
+class LaunchFilesInAppResult:
+    target_ids: list[target.TargetID] = field(metadata={"cdp_name": "targetIds"})
 
 
 @dataclass(kw_only=True, slots=True)
-class OpenCurrentPageInAppParams(CDPModel):
+class OpenCurrentPageInAppParams:
     """
     Opens the current page in its web app identified by the manifest id, needs to be
     called on a page target. This function returns immediately without waiting for the
     app to finish loading.
     """
 
-    manifest_id: str
+    manifest_id: str = field(metadata={"cdp_name": "manifestId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ChangeAppUserSettingsParams(CDPModel):
+class ChangeAppUserSettingsParams:
     """
     Changes user settings of the web app identified by its manifestId. If the app was
     not installed, this command returns an error. Unset parameters will be ignored;
@@ -135,6 +136,10 @@ class ChangeAppUserSettingsParams(CDPModel):
     each parameter.
     """
 
-    manifest_id: str
-    link_capturing: bool | None = None
-    display_mode: DisplayMode | None = None
+    manifest_id: str = field(metadata={"cdp_name": "manifestId"})
+    link_capturing: bool | None = field(
+        default=None, metadata={"cdp_name": "linkCapturing"}
+    )
+    display_mode: DisplayMode | None = field(
+        default=None, metadata={"cdp_name": "displayMode"}
+    )

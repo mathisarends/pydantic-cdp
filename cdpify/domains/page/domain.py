@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal
 
+from cdpify.codec import decode_cdp, encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
 
@@ -112,10 +113,10 @@ class Page:
 
         result = await self._command_sender.send_raw(
             method=PageCommand.ADD_SCRIPT_TO_EVALUATE_ON_LOAD,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return AddScriptToEvaluateOnLoadResult.from_cdp(result)
+        return decode_cdp(AddScriptToEvaluateOnLoadResult, result)
 
     async def add_script_to_evaluate_on_new_document(
         self,
@@ -139,10 +140,10 @@ class Page:
 
         result = await self._command_sender.send_raw(
             method=PageCommand.ADD_SCRIPT_TO_EVALUATE_ON_NEW_DOCUMENT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return AddScriptToEvaluateOnNewDocumentResult.from_cdp(result)
+        return decode_cdp(AddScriptToEvaluateOnNewDocumentResult, result)
 
     async def bring_to_front(
         self,
@@ -182,10 +183,10 @@ class Page:
 
         result = await self._command_sender.send_raw(
             method=PageCommand.CAPTURE_SCREENSHOT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return CaptureScreenshotResult.from_cdp(result)
+        return decode_cdp(CaptureScreenshotResult, result)
 
     async def capture_snapshot(
         self,
@@ -201,10 +202,10 @@ class Page:
 
         result = await self._command_sender.send_raw(
             method=PageCommand.CAPTURE_SNAPSHOT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return CaptureSnapshotResult.from_cdp(result)
+        return decode_cdp(CaptureSnapshotResult, result)
 
     @deprecated()
     async def clear_device_metrics_override(
@@ -269,10 +270,10 @@ class Page:
 
         result = await self._command_sender.send_raw(
             method=PageCommand.CREATE_ISOLATED_WORLD,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return CreateIsolatedWorldResult.from_cdp(result)
+        return decode_cdp(CreateIsolatedWorldResult, result)
 
     @deprecated()
     async def delete_cookie(
@@ -289,7 +290,7 @@ class Page:
 
         await self._command_sender.send_raw(
             method=PageCommand.DELETE_COOKIE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -321,7 +322,7 @@ class Page:
 
         await self._command_sender.send_raw(
             method=PageCommand.ENABLE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -341,10 +342,10 @@ class Page:
 
         result = await self._command_sender.send_raw(
             method=PageCommand.GET_APP_MANIFEST,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetAppManifestResult.from_cdp(result)
+        return decode_cdp(GetAppManifestResult, result)
 
     async def get_installability_errors(
         self,
@@ -355,7 +356,7 @@ class Page:
             params=None,
             session_id=session_id,
         )
-        return GetInstallabilityErrorsResult.from_cdp(result)
+        return decode_cdp(GetInstallabilityErrorsResult, result)
 
     @deprecated()
     async def get_manifest_icons(
@@ -371,7 +372,7 @@ class Page:
             params=None,
             session_id=session_id,
         )
-        return GetManifestIconsResult.from_cdp(result)
+        return decode_cdp(GetManifestIconsResult, result)
 
     async def get_app_id(
         self,
@@ -386,7 +387,7 @@ class Page:
             params=None,
             session_id=session_id,
         )
-        return GetAppIdResult.from_cdp(result)
+        return decode_cdp(GetAppIdResult, result)
 
     async def get_ad_script_ancestry(
         self,
@@ -398,10 +399,10 @@ class Page:
 
         result = await self._command_sender.send_raw(
             method=PageCommand.GET_AD_SCRIPT_ANCESTRY,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetAdScriptAncestryResult.from_cdp(result)
+        return decode_cdp(GetAdScriptAncestryResult, result)
 
     async def get_frame_tree(
         self,
@@ -415,7 +416,7 @@ class Page:
             params=None,
             session_id=session_id,
         )
-        return GetFrameTreeResult.from_cdp(result)
+        return decode_cdp(GetFrameTreeResult, result)
 
     async def get_layout_metrics(
         self,
@@ -430,7 +431,7 @@ class Page:
             params=None,
             session_id=session_id,
         )
-        return GetLayoutMetricsResult.from_cdp(result)
+        return decode_cdp(GetLayoutMetricsResult, result)
 
     async def get_navigation_history(
         self,
@@ -444,7 +445,7 @@ class Page:
             params=None,
             session_id=session_id,
         )
-        return GetNavigationHistoryResult.from_cdp(result)
+        return decode_cdp(GetNavigationHistoryResult, result)
 
     async def reset_navigation_history(
         self,
@@ -473,10 +474,10 @@ class Page:
 
         result = await self._command_sender.send_raw(
             method=PageCommand.GET_RESOURCE_CONTENT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetResourceContentResult.from_cdp(result)
+        return decode_cdp(GetResourceContentResult, result)
 
     async def get_resource_tree(
         self,
@@ -490,7 +491,7 @@ class Page:
             params=None,
             session_id=session_id,
         )
-        return GetResourceTreeResult.from_cdp(result)
+        return decode_cdp(GetResourceTreeResult, result)
 
     async def handle_java_script_dialog(
         self,
@@ -507,7 +508,7 @@ class Page:
 
         await self._command_sender.send_raw(
             method=PageCommand.HANDLE_JAVA_SCRIPT_DIALOG,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -534,10 +535,10 @@ class Page:
 
         result = await self._command_sender.send_raw(
             method=PageCommand.NAVIGATE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return NavigateResult.from_cdp(result)
+        return decode_cdp(NavigateResult, result)
 
     async def navigate_to_history_entry(
         self,
@@ -552,7 +553,7 @@ class Page:
 
         await self._command_sender.send_raw(
             method=PageCommand.NAVIGATE_TO_HISTORY_ENTRY,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -603,10 +604,10 @@ class Page:
 
         result = await self._command_sender.send_raw(
             method=PageCommand.PRINT_TO_PDF,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return PrintToPDFResult.from_cdp(result)
+        return decode_cdp(PrintToPDFResult, result)
 
     async def reload(
         self,
@@ -627,7 +628,7 @@ class Page:
 
         await self._command_sender.send_raw(
             method=PageCommand.RELOAD,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -645,7 +646,7 @@ class Page:
 
         await self._command_sender.send_raw(
             method=PageCommand.REMOVE_SCRIPT_TO_EVALUATE_ON_LOAD,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -662,7 +663,7 @@ class Page:
 
         await self._command_sender.send_raw(
             method=PageCommand.REMOVE_SCRIPT_TO_EVALUATE_ON_NEW_DOCUMENT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -679,7 +680,7 @@ class Page:
 
         await self._command_sender.send_raw(
             method=PageCommand.SCREENCAST_FRAME_ACK,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -706,10 +707,10 @@ class Page:
 
         result = await self._command_sender.send_raw(
             method=PageCommand.SEARCH_IN_RESOURCE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return SearchInResourceResult.from_cdp(result)
+        return decode_cdp(SearchInResourceResult, result)
 
     async def set_ad_blocking_enabled(
         self,
@@ -724,7 +725,7 @@ class Page:
 
         await self._command_sender.send_raw(
             method=PageCommand.SET_AD_BLOCKING_ENABLED,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -741,7 +742,7 @@ class Page:
 
         await self._command_sender.send_raw(
             method=PageCommand.SET_BYPASS_CSP,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -758,10 +759,10 @@ class Page:
 
         result = await self._command_sender.send_raw(
             method=PageCommand.GET_PERMISSIONS_POLICY_STATE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetPermissionsPolicyStateResult.from_cdp(result)
+        return decode_cdp(GetPermissionsPolicyStateResult, result)
 
     async def get_origin_trials(
         self,
@@ -776,10 +777,10 @@ class Page:
 
         result = await self._command_sender.send_raw(
             method=PageCommand.GET_ORIGIN_TRIALS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetOriginTrialsResult.from_cdp(result)
+        return decode_cdp(GetOriginTrialsResult, result)
 
     @deprecated()
     async def set_device_metrics_override(
@@ -821,7 +822,7 @@ class Page:
 
         await self._command_sender.send_raw(
             method=PageCommand.SET_DEVICE_METRICS_OVERRIDE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -841,7 +842,7 @@ class Page:
 
         await self._command_sender.send_raw(
             method=PageCommand.SET_DEVICE_ORIENTATION_OVERRIDE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -861,7 +862,7 @@ class Page:
 
         await self._command_sender.send_raw(
             method=PageCommand.SET_FONT_FAMILIES,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -878,7 +879,7 @@ class Page:
 
         await self._command_sender.send_raw(
             method=PageCommand.SET_FONT_SIZES,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -896,7 +897,7 @@ class Page:
 
         await self._command_sender.send_raw(
             method=PageCommand.SET_DOCUMENT_CONTENT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -917,7 +918,7 @@ class Page:
 
         await self._command_sender.send_raw(
             method=PageCommand.SET_DOWNLOAD_BEHAVIOR,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -940,7 +941,7 @@ class Page:
 
         await self._command_sender.send_raw(
             method=PageCommand.SET_GEOLOCATION_OVERRIDE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -957,7 +958,7 @@ class Page:
 
         await self._command_sender.send_raw(
             method=PageCommand.SET_LIFECYCLE_EVENTS_ENABLED,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -978,7 +979,7 @@ class Page:
 
         await self._command_sender.send_raw(
             method=PageCommand.SET_TOUCH_EMULATION_ENABLED,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -1009,7 +1010,7 @@ class Page:
 
         await self._command_sender.send_raw(
             method=PageCommand.START_SCREENCAST,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -1034,10 +1035,10 @@ class Page:
 
         result = await self._command_sender.send_raw(
             method=PageCommand.START_SCREEN_RECORDING,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return StartScreenRecordingResult.from_cdp(result)
+        return decode_cdp(StartScreenRecordingResult, result)
 
     async def stop_screen_recording(
         self,
@@ -1051,7 +1052,7 @@ class Page:
             params=None,
             session_id=session_id,
         )
-        return StopScreenRecordingResult.from_cdp(result)
+        return decode_cdp(StopScreenRecordingResult, result)
 
     async def stop_loading(
         self,
@@ -1106,7 +1107,7 @@ class Page:
 
         await self._command_sender.send_raw(
             method=PageCommand.SET_WEB_LIFECYCLE_STATE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -1141,7 +1142,7 @@ class Page:
 
         await self._command_sender.send_raw(
             method=PageCommand.PRODUCE_COMPILATION_CACHE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -1160,7 +1161,7 @@ class Page:
 
         await self._command_sender.send_raw(
             method=PageCommand.ADD_COMPILATION_CACHE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -1197,7 +1198,7 @@ class Page:
 
         await self._command_sender.send_raw(
             method=PageCommand.SET_SPC_TRANSACTION_MODE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -1215,7 +1216,7 @@ class Page:
 
         await self._command_sender.send_raw(
             method=PageCommand.SET_RPH_REGISTRATION_MODE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -1233,7 +1234,7 @@ class Page:
 
         await self._command_sender.send_raw(
             method=PageCommand.GENERATE_TEST_REPORT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -1267,7 +1268,7 @@ class Page:
 
         await self._command_sender.send_raw(
             method=PageCommand.SET_INTERCEPT_FILE_CHOOSER_DIALOG,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -1288,7 +1289,7 @@ class Page:
 
         await self._command_sender.send_raw(
             method=PageCommand.SET_PRERENDERING_ALLOWED,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -1308,7 +1309,7 @@ class Page:
 
         result = await self._command_sender.send_raw(
             method=PageCommand.GET_ANNOTATED_PAGE_CONTENT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetAnnotatedPageContentResult.from_cdp(result)
+        return decode_cdp(GetAnnotatedPageContentResult, result)

@@ -4,12 +4,11 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Literal
 
 from cdpify.domains import page
-from cdpify.shared.models import CDPEvent
 
 from .types import (
     AssociatedCookie,
@@ -106,386 +105,606 @@ class NetworkEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class DataReceivedEvent(CDPEvent):
+class DataReceivedEvent:
     """
     Fired when data chunk was received over the network.
     """
 
-    request_id: RequestId
-    timestamp: MonotonicTime
-    data_length: int
-    encoded_data_length: int
-    data: str | None = None
+    request_id: RequestId = field(metadata={"cdp_name": "requestId"})
+    timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
+    data_length: int = field(metadata={"cdp_name": "dataLength"})
+    encoded_data_length: int = field(metadata={"cdp_name": "encodedDataLength"})
+    data: str | None = field(default=None, metadata={"cdp_name": "data"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class EventSourceMessageReceivedEvent(CDPEvent):
+class EventSourceMessageReceivedEvent:
     """
     Fired when EventSource message is received.
     """
 
-    request_id: RequestId
-    timestamp: MonotonicTime
-    event_name: str
-    event_id: str
-    data: str
+    request_id: RequestId = field(metadata={"cdp_name": "requestId"})
+    timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
+    event_name: str = field(metadata={"cdp_name": "eventName"})
+    event_id: str = field(metadata={"cdp_name": "eventId"})
+    data: str = field(metadata={"cdp_name": "data"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class LoadingFailedEvent(CDPEvent):
+class LoadingFailedEvent:
     """
     Fired when HTTP request has failed to load.
     """
 
-    request_id: RequestId
-    timestamp: MonotonicTime
-    type: ResourceType
-    error_text: str
-    canceled: bool | None = None
-    blocked_reason: BlockedReason | None = None
-    cors_error_status: CorsErrorStatus | None = None
+    request_id: RequestId = field(metadata={"cdp_name": "requestId"})
+    timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
+    type: ResourceType = field(metadata={"cdp_name": "type"})
+    error_text: str = field(metadata={"cdp_name": "errorText"})
+    canceled: bool | None = field(default=None, metadata={"cdp_name": "canceled"})
+    blocked_reason: BlockedReason | None = field(
+        default=None, metadata={"cdp_name": "blockedReason"}
+    )
+    cors_error_status: CorsErrorStatus | None = field(
+        default=None, metadata={"cdp_name": "corsErrorStatus"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class LoadingFinishedEvent(CDPEvent):
+class LoadingFinishedEvent:
     """
     Fired when HTTP request has finished loading.
     """
 
-    request_id: RequestId
-    timestamp: MonotonicTime
-    encoded_data_length: float
+    request_id: RequestId = field(metadata={"cdp_name": "requestId"})
+    timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
+    encoded_data_length: float = field(metadata={"cdp_name": "encodedDataLength"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class RequestServedFromCacheEvent(CDPEvent):
+class RequestServedFromCacheEvent:
     """
     Fired if request ended up loading from cache.
     """
 
-    request_id: RequestId
+    request_id: RequestId = field(metadata={"cdp_name": "requestId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class RequestWillBeSentEvent(CDPEvent):
+class RequestWillBeSentEvent:
     """
     Fired when page is about to send HTTP request.
     """
 
-    request_id: RequestId
-    loader_id: LoaderId
-    document_url: str | None = None
-    request: Request
-    timestamp: MonotonicTime
-    wall_time: TimeSinceEpoch
-    initiator: Initiator
-    redirect_has_extra_info: bool
-    redirect_response: Response | None = None
-    type: ResourceType | None = None
-    frame_id: page.FrameId | None = None
-    has_user_gesture: bool | None = None
-    render_blocking_behavior: RenderBlockingBehavior | None = None
+    request_id: RequestId = field(metadata={"cdp_name": "requestId"})
+    loader_id: LoaderId = field(metadata={"cdp_name": "loaderId"})
+    document_url: str | None = field(default=None, metadata={"cdp_name": "documentURL"})
+    request: Request = field(metadata={"cdp_name": "request"})
+    timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
+    wall_time: TimeSinceEpoch = field(metadata={"cdp_name": "wallTime"})
+    initiator: Initiator = field(metadata={"cdp_name": "initiator"})
+    redirect_has_extra_info: bool = field(metadata={"cdp_name": "redirectHasExtraInfo"})
+    redirect_response: Response | None = field(
+        default=None, metadata={"cdp_name": "redirectResponse"}
+    )
+    type: ResourceType | None = field(default=None, metadata={"cdp_name": "type"})
+    frame_id: page.FrameId | None = field(
+        default=None, metadata={"cdp_name": "frameId"}
+    )
+    has_user_gesture: bool | None = field(
+        default=None, metadata={"cdp_name": "hasUserGesture"}
+    )
+    render_blocking_behavior: RenderBlockingBehavior | None = field(
+        default=None, metadata={"cdp_name": "renderBlockingBehavior"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ResourceChangedPriorityEvent(CDPEvent):
+class ResourceChangedPriorityEvent:
     """
     Fired when resource loading priority is changed
     """
 
-    request_id: RequestId
-    new_priority: ResourcePriority
-    timestamp: MonotonicTime
+    request_id: RequestId = field(metadata={"cdp_name": "requestId"})
+    new_priority: ResourcePriority = field(metadata={"cdp_name": "newPriority"})
+    timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SignedExchangeReceivedEvent(CDPEvent):
+class SignedExchangeReceivedEvent:
     """
     Fired when a signed exchange was received over the network
     """
 
-    request_id: RequestId
-    info: SignedExchangeInfo
+    request_id: RequestId = field(metadata={"cdp_name": "requestId"})
+    info: SignedExchangeInfo = field(metadata={"cdp_name": "info"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ResponseReceivedEvent(CDPEvent):
+class ResponseReceivedEvent:
     """
     Fired when HTTP response is available.
     """
 
-    request_id: RequestId
-    loader_id: LoaderId
-    timestamp: MonotonicTime
-    type: ResourceType
-    response: Response
-    has_extra_info: bool
-    frame_id: page.FrameId | None = None
+    request_id: RequestId = field(metadata={"cdp_name": "requestId"})
+    loader_id: LoaderId = field(metadata={"cdp_name": "loaderId"})
+    timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
+    type: ResourceType = field(metadata={"cdp_name": "type"})
+    response: Response = field(metadata={"cdp_name": "response"})
+    has_extra_info: bool = field(metadata={"cdp_name": "hasExtraInfo"})
+    frame_id: page.FrameId | None = field(
+        default=None, metadata={"cdp_name": "frameId"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class WebSocketClosedEvent(CDPEvent):
+class WebSocketClosedEvent:
     """
     Fired when WebSocket is closed.
     """
 
-    request_id: RequestId
-    timestamp: MonotonicTime
+    request_id: RequestId = field(metadata={"cdp_name": "requestId"})
+    timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class WebSocketCreatedEvent(CDPEvent):
+class WebSocketCreatedEvent:
     """
     Fired upon WebSocket creation.
     """
 
-    request_id: RequestId
-    url: str
-    initiator: Initiator | None = None
+    request_id: RequestId = field(metadata={"cdp_name": "requestId"})
+    url: str = field(metadata={"cdp_name": "url"})
+    initiator: Initiator | None = field(
+        default=None, metadata={"cdp_name": "initiator"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class WebSocketFrameErrorEvent(CDPEvent):
+class WebSocketFrameErrorEvent:
     """
     Fired when WebSocket message error occurs.
     """
 
-    request_id: RequestId
-    timestamp: MonotonicTime
-    error_message: str
+    request_id: RequestId = field(metadata={"cdp_name": "requestId"})
+    timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
+    error_message: str = field(metadata={"cdp_name": "errorMessage"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class WebSocketFrameReceivedEvent(CDPEvent):
+class WebSocketFrameReceivedEvent:
     """
     Fired when WebSocket message is received.
     """
 
-    request_id: RequestId
-    timestamp: MonotonicTime
-    response: WebSocketFrame
+    request_id: RequestId = field(metadata={"cdp_name": "requestId"})
+    timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
+    response: WebSocketFrame = field(metadata={"cdp_name": "response"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class WebSocketFrameSentEvent(CDPEvent):
+class WebSocketFrameSentEvent:
     """
     Fired when WebSocket message is sent.
     """
 
-    request_id: RequestId
-    timestamp: MonotonicTime
-    response: WebSocketFrame
+    request_id: RequestId = field(metadata={"cdp_name": "requestId"})
+    timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
+    response: WebSocketFrame = field(metadata={"cdp_name": "response"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class WebSocketHandshakeResponseReceivedEvent(CDPEvent):
+class WebSocketHandshakeResponseReceivedEvent:
     """
     Fired when WebSocket handshake response becomes available.
     """
 
-    request_id: RequestId
-    timestamp: MonotonicTime
-    response: WebSocketResponse
+    request_id: RequestId = field(metadata={"cdp_name": "requestId"})
+    timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
+    response: WebSocketResponse = field(metadata={"cdp_name": "response"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class WebSocketWillSendHandshakeRequestEvent(CDPEvent):
+class WebSocketWillSendHandshakeRequestEvent:
     """
     Fired when WebSocket is about to initiate handshake.
     """
 
-    request_id: RequestId
-    timestamp: MonotonicTime
-    wall_time: TimeSinceEpoch
-    request: WebSocketRequest
+    request_id: RequestId = field(metadata={"cdp_name": "requestId"})
+    timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
+    wall_time: TimeSinceEpoch = field(metadata={"cdp_name": "wallTime"})
+    request: WebSocketRequest = field(metadata={"cdp_name": "request"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class WebTransportCreatedEvent(CDPEvent):
+class WebTransportCreatedEvent:
     """
     Fired upon WebTransport creation.
     """
 
-    transport_id: RequestId
-    url: str
-    timestamp: MonotonicTime
-    initiator: Initiator | None = None
+    transport_id: RequestId = field(metadata={"cdp_name": "transportId"})
+    url: str = field(metadata={"cdp_name": "url"})
+    timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
+    initiator: Initiator | None = field(
+        default=None, metadata={"cdp_name": "initiator"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class WebTransportConnectionEstablishedEvent(CDPEvent):
+class WebTransportConnectionEstablishedEvent:
     """
     Fired when WebTransport handshake is finished.
     """
 
-    transport_id: RequestId
-    timestamp: MonotonicTime
+    transport_id: RequestId = field(metadata={"cdp_name": "transportId"})
+    timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class WebTransportClosedEvent(CDPEvent):
+class WebTransportClosedEvent:
     """
     Fired when WebTransport is disposed.
     """
 
-    transport_id: RequestId
-    timestamp: MonotonicTime
+    transport_id: RequestId = field(metadata={"cdp_name": "transportId"})
+    timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DirectTCPSocketCreatedEvent(CDPEvent):
+class DirectTCPSocketCreatedEvent:
     """
     Fired upon direct_socket.TCPSocket creation.
     """
 
-    identifier: RequestId
-    remote_addr: str
-    remote_port: int
-    options: DirectTCPSocketOptions
-    timestamp: MonotonicTime
-    initiator: Initiator | None = None
+    identifier: RequestId = field(metadata={"cdp_name": "identifier"})
+    remote_addr: str = field(metadata={"cdp_name": "remoteAddr"})
+    remote_port: int = field(metadata={"cdp_name": "remotePort"})
+    options: DirectTCPSocketOptions = field(metadata={"cdp_name": "options"})
+    timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
+    initiator: Initiator | None = field(
+        default=None, metadata={"cdp_name": "initiator"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DirectTCPSocketOpenedEvent(CDPEvent):
+class DirectTCPSocketOpenedEvent:
     """
     Fired when direct_socket.TCPSocket connection is opened.
     """
 
-    identifier: RequestId
-    remote_addr: str
-    remote_port: int
-    timestamp: MonotonicTime
-    local_addr: str | None = None
-    local_port: int | None = None
+    identifier: RequestId = field(metadata={"cdp_name": "identifier"})
+    remote_addr: str = field(metadata={"cdp_name": "remoteAddr"})
+    remote_port: int = field(metadata={"cdp_name": "remotePort"})
+    timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
+    local_addr: str | None = field(default=None, metadata={"cdp_name": "localAddr"})
+    local_port: int | None = field(default=None, metadata={"cdp_name": "localPort"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DirectTCPSocketAbortedEvent(CDPEvent):
+class DirectTCPSocketAbortedEvent:
     """
     Fired when direct_socket.TCPSocket is aborted.
     """
 
-    identifier: RequestId
-    error_message: ErrorReason
-    timestamp: MonotonicTime
+    identifier: RequestId = field(metadata={"cdp_name": "identifier"})
+    error_message: ErrorReason = field(metadata={"cdp_name": "errorMessage"})
+    timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DirectTCPSocketClosedEvent(CDPEvent):
+class DirectTCPSocketClosedEvent:
     """
     Fired when direct_socket.TCPSocket is closed.
     """
 
-    identifier: RequestId
-    timestamp: MonotonicTime
+    identifier: RequestId = field(metadata={"cdp_name": "identifier"})
+    timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DirectTCPSocketChunkSentEvent(CDPEvent):
+class DirectTCPSocketChunkSentEvent:
     """
     Fired when data is sent to tcp direct socket stream.
     """
 
-    identifier: RequestId
-    data: str
-    timestamp: MonotonicTime
+    identifier: RequestId = field(metadata={"cdp_name": "identifier"})
+    data: str = field(metadata={"cdp_name": "data"})
+    timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DirectTCPSocketChunkReceivedEvent(CDPEvent):
+class DirectTCPSocketChunkReceivedEvent:
     """
     Fired when data is received from tcp direct socket stream.
     """
 
-    identifier: RequestId
-    data: str
-    timestamp: MonotonicTime
+    identifier: RequestId = field(metadata={"cdp_name": "identifier"})
+    data: str = field(metadata={"cdp_name": "data"})
+    timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DirectUDPSocketJoinedMulticastGroupEvent(CDPEvent):
-    identifier: RequestId
-    ip_address: str
+class DirectUDPSocketJoinedMulticastGroupEvent:
+    identifier: RequestId = field(metadata={"cdp_name": "identifier"})
+    ip_address: str = field(metadata={"cdp_name": "IPAddress"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DirectUDPSocketLeftMulticastGroupEvent(CDPEvent):
-    identifier: RequestId
-    ip_address: str
+class DirectUDPSocketLeftMulticastGroupEvent:
+    identifier: RequestId = field(metadata={"cdp_name": "identifier"})
+    ip_address: str = field(metadata={"cdp_name": "IPAddress"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DirectUDPSocketCreatedEvent(CDPEvent):
+class DirectUDPSocketCreatedEvent:
     """
     Fired upon direct_socket.UDPSocket creation.
     """
 
-    identifier: RequestId
-    options: DirectUDPSocketOptions
-    timestamp: MonotonicTime
-    initiator: Initiator | None = None
+    identifier: RequestId = field(metadata={"cdp_name": "identifier"})
+    options: DirectUDPSocketOptions = field(metadata={"cdp_name": "options"})
+    timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
+    initiator: Initiator | None = field(
+        default=None, metadata={"cdp_name": "initiator"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DirectUDPSocketOpenedEvent(CDPEvent):
+class DirectUDPSocketOpenedEvent:
     """
     Fired when direct_socket.UDPSocket connection is opened.
     """
 
-    identifier: RequestId
-    local_addr: str
-    local_port: int
-    timestamp: MonotonicTime
-    remote_addr: str | None = None
-    remote_port: int | None = None
+    identifier: RequestId = field(metadata={"cdp_name": "identifier"})
+    local_addr: str = field(metadata={"cdp_name": "localAddr"})
+    local_port: int = field(metadata={"cdp_name": "localPort"})
+    timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
+    remote_addr: str | None = field(default=None, metadata={"cdp_name": "remoteAddr"})
+    remote_port: int | None = field(default=None, metadata={"cdp_name": "remotePort"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DirectUDPSocketAbortedEvent(CDPEvent):
+class DirectUDPSocketAbortedEvent:
     """
     Fired when direct_socket.UDPSocket is aborted.
     """
 
-    identifier: RequestId
-    error_message: ErrorReason
-    timestamp: MonotonicTime
+    identifier: RequestId = field(metadata={"cdp_name": "identifier"})
+    error_message: ErrorReason = field(metadata={"cdp_name": "errorMessage"})
+    timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DirectUDPSocketClosedEvent(CDPEvent):
+class DirectUDPSocketClosedEvent:
     """
     Fired when direct_socket.UDPSocket is closed.
     """
 
-    identifier: RequestId
-    timestamp: MonotonicTime
+    identifier: RequestId = field(metadata={"cdp_name": "identifier"})
+    timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DirectUDPSocketChunkSentEvent(CDPEvent):
+class DirectUDPSocketChunkSentEvent:
     """
     Fired when message is sent to udp direct socket stream.
     """
 
-    identifier: RequestId
-    message: DirectUDPMessage
-    timestamp: MonotonicTime
+    identifier: RequestId = field(metadata={"cdp_name": "identifier"})
+    message: DirectUDPMessage = field(metadata={"cdp_name": "message"})
+    timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DirectUDPSocketChunkReceivedEvent(CDPEvent):
+class DirectUDPSocketChunkReceivedEvent:
     """
     Fired when message is received from udp direct socket stream.
     """
 
-    identifier: RequestId
-    message: DirectUDPMessage
-    timestamp: MonotonicTime
+    identifier: RequestId = field(metadata={"cdp_name": "identifier"})
+    message: DirectUDPMessage = field(metadata={"cdp_name": "message"})
+    timestamp: MonotonicTime = field(metadata={"cdp_name": "timestamp"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class RequestWillBeSentExtraInfoEvent(CDPEvent):
+class RequestWillBeSentExtraInfoEvent:
     """
     Fired when additional information about a requestWillBeSent event is available from
     the network stack. Not every requestWillBeSent event will have an additional
@@ -494,18 +713,34 @@ class RequestWillBeSentExtraInfoEvent(CDPEvent):
     request.
     """
 
-    request_id: RequestId
-    associated_cookies: list[AssociatedCookie]
-    headers: Headers
-    connect_timing: ConnectTiming
-    device_bound_session_usages: list[DeviceBoundSessionWithUsage] | None = None
-    client_security_state: ClientSecurityState | None = None
-    site_has_cookie_in_other_partition: bool | None = None
-    applied_network_conditions_id: str | None = None
+    request_id: RequestId = field(metadata={"cdp_name": "requestId"})
+    associated_cookies: list[AssociatedCookie] = field(
+        metadata={"cdp_name": "associatedCookies"}
+    )
+    headers: Headers = field(metadata={"cdp_name": "headers"})
+    connect_timing: ConnectTiming = field(metadata={"cdp_name": "connectTiming"})
+    device_bound_session_usages: list[DeviceBoundSessionWithUsage] | None = field(
+        default=None, metadata={"cdp_name": "deviceBoundSessionUsages"}
+    )
+    client_security_state: ClientSecurityState | None = field(
+        default=None, metadata={"cdp_name": "clientSecurityState"}
+    )
+    site_has_cookie_in_other_partition: bool | None = field(
+        default=None, metadata={"cdp_name": "siteHasCookieInOtherPartition"}
+    )
+    applied_network_conditions_id: str | None = field(
+        default=None, metadata={"cdp_name": "appliedNetworkConditionsId"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ResponseReceivedExtraInfoEvent(CDPEvent):
+class ResponseReceivedExtraInfoEvent:
     """
     Fired when additional information about a responseReceived event is available from
     the network stack. Not every responseReceived event will have an additional
@@ -513,31 +748,53 @@ class ResponseReceivedExtraInfoEvent(CDPEvent):
     or after responseReceived.
     """
 
-    request_id: RequestId
-    blocked_cookies: list[BlockedSetCookieWithReason]
-    headers: Headers
-    resource_ip_address_space: IPAddressSpace
-    status_code: int
-    headers_text: str | None = None
-    cookie_partition_key: CookiePartitionKey | None = None
-    cookie_partition_key_opaque: bool | None = None
-    exempted_cookies: list[ExemptedSetCookieWithReason] | None = None
+    request_id: RequestId = field(metadata={"cdp_name": "requestId"})
+    blocked_cookies: list[BlockedSetCookieWithReason] = field(
+        metadata={"cdp_name": "blockedCookies"}
+    )
+    headers: Headers = field(metadata={"cdp_name": "headers"})
+    resource_ip_address_space: IPAddressSpace = field(
+        metadata={"cdp_name": "resourceIPAddressSpace"}
+    )
+    status_code: int = field(metadata={"cdp_name": "statusCode"})
+    headers_text: str | None = field(default=None, metadata={"cdp_name": "headersText"})
+    cookie_partition_key: CookiePartitionKey | None = field(
+        default=None, metadata={"cdp_name": "cookiePartitionKey"}
+    )
+    cookie_partition_key_opaque: bool | None = field(
+        default=None, metadata={"cdp_name": "cookiePartitionKeyOpaque"}
+    )
+    exempted_cookies: list[ExemptedSetCookieWithReason] | None = field(
+        default=None, metadata={"cdp_name": "exemptedCookies"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ResponseReceivedEarlyHintsEvent(CDPEvent):
+class ResponseReceivedEarlyHintsEvent:
     """
     Fired when 103 Early Hints headers is received in addition to the common response.
     Not every responseReceived event will have an responseReceivedEarlyHints fired. Only
     one responseReceivedEarlyHints may be fired for eached responseReceived event.
     """
 
-    request_id: RequestId
-    headers: Headers
+    request_id: RequestId = field(metadata={"cdp_name": "requestId"})
+    headers: Headers = field(metadata={"cdp_name": "headers"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class TrustTokenOperationDoneEvent(CDPEvent):
+class TrustTokenOperationDoneEvent:
     """
     Fired exactly once for each Trust Token operation. Depending on the type of the
     operation and whether the operation succeeded or failed, the event is fired before
@@ -558,64 +815,121 @@ class TrustTokenOperationDoneEvent(CDPEvent):
         "UnknownError",
         "FulfilledLocally",
         "SiteIssuerLimit",
-    ]
-    type: TrustTokenOperationType
-    request_id: RequestId
-    top_level_origin: str | None = None
-    issuer_origin: str | None = None
-    issued_token_count: int | None = None
+    ] = field(  # noqa: E501
+        metadata={"cdp_name": "status"},
+    )
+    type: TrustTokenOperationType = field(metadata={"cdp_name": "type"})
+    request_id: RequestId = field(metadata={"cdp_name": "requestId"})
+    top_level_origin: str | None = field(
+        default=None, metadata={"cdp_name": "topLevelOrigin"}
+    )
+    issuer_origin: str | None = field(
+        default=None, metadata={"cdp_name": "issuerOrigin"}
+    )
+    issued_token_count: int | None = field(
+        default=None, metadata={"cdp_name": "issuedTokenCount"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class PolicyUpdatedEvent(CDPEvent):
+class PolicyUpdatedEvent:
     """
     Fired once security policy has been updated.
     """
 
-    pass
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ReportingApiReportAddedEvent(CDPEvent):
+class ReportingApiReportAddedEvent:
     """
     Is sent whenever a new report is added. And after 'enableReportingApi' for all
     existing reports.
     """
 
-    report: ReportingApiReport
+    report: ReportingApiReport = field(metadata={"cdp_name": "report"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ReportingApiReportUpdatedEvent(CDPEvent):
-    report: ReportingApiReport
+class ReportingApiReportUpdatedEvent:
+    report: ReportingApiReport = field(metadata={"cdp_name": "report"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ReportingApiEndpointsChangedForOriginEvent(CDPEvent):
-    origin: str
-    endpoints: list[ReportingApiEndpoint]
+class ReportingApiEndpointsChangedForOriginEvent:
+    origin: str = field(metadata={"cdp_name": "origin"})
+    endpoints: list[ReportingApiEndpoint] = field(metadata={"cdp_name": "endpoints"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DeviceBoundSessionsAddedEvent(CDPEvent):
+class DeviceBoundSessionsAddedEvent:
     """
     Triggered when the initial set of device bound sessions is added.
     """
 
-    sessions: list[DeviceBoundSession]
+    sessions: list[DeviceBoundSession] = field(metadata={"cdp_name": "sessions"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DeviceBoundSessionEventOccurredEvent(CDPEvent):
+class DeviceBoundSessionEventOccurredEvent:
     """
     Triggered when a device bound session event occurs.
     """
 
-    event_id: DeviceBoundSessionEventId
-    site: str
-    succeeded: bool
-    session_id: str | None = None
-    creation_event_details: CreationEventDetails | None = None
-    refresh_event_details: RefreshEventDetails | None = None
-    termination_event_details: TerminationEventDetails | None = None
-    challenge_event_details: ChallengeEventDetails | None = None
+    event_id: DeviceBoundSessionEventId = field(metadata={"cdp_name": "eventId"})
+    site: str = field(metadata={"cdp_name": "site"})
+    succeeded: bool = field(metadata={"cdp_name": "succeeded"})
+    session_id: str | None = field(default=None, metadata={"cdp_name": "sessionId"})
+    creation_event_details: CreationEventDetails | None = field(
+        default=None, metadata={"cdp_name": "creationEventDetails"}
+    )
+    refresh_event_details: RefreshEventDetails | None = field(
+        default=None, metadata={"cdp_name": "refreshEventDetails"}
+    )
+    termination_event_details: TerminationEventDetails | None = field(
+        default=None, metadata={"cdp_name": "terminationEventDetails"}
+    )
+    challenge_event_details: ChallengeEventDetails | None = field(
+        default=None, metadata={"cdp_name": "challengeEventDetails"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

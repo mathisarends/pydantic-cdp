@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPModel
 
 from .types import (
     CertificateErrorAction,
@@ -23,30 +21,30 @@ class SecurityCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class SetIgnoreCertificateErrorsParams(CDPModel):
+class SetIgnoreCertificateErrorsParams:
     """
     Enable/disable whether all certificate errors should be ignored.
     """
 
-    ignore: bool
+    ignore: bool = field(metadata={"cdp_name": "ignore"})
 
 
 @dataclass(kw_only=True, slots=True)
-class HandleCertificateErrorParams(CDPModel):
+class HandleCertificateErrorParams:
     """
     Handles a certificate error that fired a certificateError event.
     """
 
-    event_id: int
-    action: CertificateErrorAction
+    event_id: int = field(metadata={"cdp_name": "eventId"})
+    action: CertificateErrorAction = field(metadata={"cdp_name": "action"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetOverrideCertificateErrorsParams(CDPModel):
+class SetOverrideCertificateErrorsParams:
     """
     Enable/disable overriding certificate errors. If enabled, all certificate error
     events need to be handled by the DevTools client and should be answered with
     `handleCertificateError` commands.
     """
 
-    override: bool
+    override: bool = field(metadata={"cdp_name": "override"})

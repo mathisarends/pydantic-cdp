@@ -7,10 +7,8 @@
 from typing import {{ typing_names | join(", ") }}
 {% endif %}
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPEvent
 {% if local_type_names %}
 
 from .types import (
@@ -26,15 +24,19 @@ class {{ domain_name }}Event(StrEnum):
 {% for model in models %}
 
 @dataclass(kw_only=True, slots=True)
-class {{ model.name }}({{ model.base }}):
+class {{ model.name }}:
 {% if model.docstring %}
 {{ model.docstring }}
 {% endif %}
 {% if model.fields %}
     {{ model.fields | map(attribute="declaration") | join("\n    ") }}
-{% else %}
-    pass
 {% endif %}
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 {% endfor %}
 {% else %}
 

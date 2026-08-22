@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Literal
-
-from cdpify.shared.models import CDPModel
 
 AuthenticatorId = str
 
@@ -24,38 +22,72 @@ type AuthenticatorTransport = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class VirtualAuthenticatorOptions(CDPModel):
-    protocol: AuthenticatorProtocol
-    ctap2_version: Ctap2Version | None = None
-    transport: AuthenticatorTransport
-    has_resident_key: bool | None = None
-    has_user_verification: bool | None = None
-    has_large_blob: bool | None = None
-    has_cred_blob: bool | None = None
-    has_min_pin_length: bool | None = None
-    has_prf: bool | None = None
-    has_hmac_secret: bool | None = None
-    has_hmac_secret_mc: bool | None = None
-    has_cmtg_key: bool | None = None
-    automatic_presence_simulation: bool | None = None
-    is_user_verified: bool | None = None
-    default_backup_eligibility: bool | None = None
-    default_backup_state: bool | None = None
+class VirtualAuthenticatorOptions:
+    protocol: AuthenticatorProtocol = field(metadata={"cdp_name": "protocol"})
+    ctap2_version: Ctap2Version | None = field(
+        default=None, metadata={"cdp_name": "ctap2Version"}
+    )
+    transport: AuthenticatorTransport = field(metadata={"cdp_name": "transport"})
+    has_resident_key: bool | None = field(
+        default=None, metadata={"cdp_name": "hasResidentKey"}
+    )
+    has_user_verification: bool | None = field(
+        default=None, metadata={"cdp_name": "hasUserVerification"}
+    )
+    has_large_blob: bool | None = field(
+        default=None, metadata={"cdp_name": "hasLargeBlob"}
+    )
+    has_cred_blob: bool | None = field(
+        default=None, metadata={"cdp_name": "hasCredBlob"}
+    )
+    has_min_pin_length: bool | None = field(
+        default=None, metadata={"cdp_name": "hasMinPinLength"}
+    )
+    has_prf: bool | None = field(default=None, metadata={"cdp_name": "hasPrf"})
+    has_hmac_secret: bool | None = field(
+        default=None, metadata={"cdp_name": "hasHmacSecret"}
+    )
+    has_hmac_secret_mc: bool | None = field(
+        default=None, metadata={"cdp_name": "hasHmacSecretMc"}
+    )
+    has_cmtg_key: bool | None = field(default=None, metadata={"cdp_name": "hasCmtgKey"})
+    automatic_presence_simulation: bool | None = field(
+        default=None, metadata={"cdp_name": "automaticPresenceSimulation"}
+    )
+    is_user_verified: bool | None = field(
+        default=None, metadata={"cdp_name": "isUserVerified"}
+    )
+    default_backup_eligibility: bool | None = field(
+        default=None, metadata={"cdp_name": "defaultBackupEligibility"}
+    )
+    default_backup_state: bool | None = field(
+        default=None, metadata={"cdp_name": "defaultBackupState"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class Credential(CDPModel):
-    credential_id: str
-    is_resident_credential: bool
-    rp_id: str | None = None
-    private_key: str
-    user_handle: str | None = None
-    sign_count: int
-    large_blob: str | None = None
-    backup_eligibility: bool | None = None
-    backup_state: bool | None = None
-    user_name: str | None = None
-    user_display_name: str | None = None
-    cmtg_keys: list[str] | None = None
-    active_cmtg_key_index: int | None = None
-    generate_cmtg_key_on_next_operation: bool | None = None
+class Credential:
+    credential_id: str = field(metadata={"cdp_name": "credentialId"})
+    is_resident_credential: bool = field(metadata={"cdp_name": "isResidentCredential"})
+    rp_id: str | None = field(default=None, metadata={"cdp_name": "rpId"})
+    private_key: str = field(metadata={"cdp_name": "privateKey"})
+    user_handle: str | None = field(default=None, metadata={"cdp_name": "userHandle"})
+    sign_count: int = field(metadata={"cdp_name": "signCount"})
+    large_blob: str | None = field(default=None, metadata={"cdp_name": "largeBlob"})
+    backup_eligibility: bool | None = field(
+        default=None, metadata={"cdp_name": "backupEligibility"}
+    )
+    backup_state: bool | None = field(
+        default=None, metadata={"cdp_name": "backupState"}
+    )
+    user_name: str | None = field(default=None, metadata={"cdp_name": "userName"})
+    user_display_name: str | None = field(
+        default=None, metadata={"cdp_name": "userDisplayName"}
+    )
+    cmtg_keys: list[str] | None = field(default=None, metadata={"cdp_name": "cmtgKeys"})
+    active_cmtg_key_index: int | None = field(
+        default=None, metadata={"cdp_name": "activeCmtgKeyIndex"}
+    )
+    generate_cmtg_key_on_next_operation: bool | None = field(
+        default=None, metadata={"cdp_name": "generateCmtgKeyOnNextOperation"}
+    )

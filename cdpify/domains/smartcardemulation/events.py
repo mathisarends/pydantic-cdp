@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPEvent
 
 from .types import (
     Disposition,
@@ -36,7 +34,7 @@ class SmartCardEmulationEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class EstablishContextRequestedEvent(CDPEvent):
+class EstablishContextRequestedEvent:
     """
     Fired when |SCardEstablishContext| is called. This maps to: PC/SC Lite:
     https://pcsclite.apdu.fr/api/group__API.html#gaa1b8970169fd4883a6dc4a8f43f19b67
@@ -44,11 +42,17 @@ class EstablishContextRequestedEvent(CDPEvent):
     https://learn.microsoft.com/en-us/windows/win32/api/winscard/nf-winscard-scardestablishcontext
     """
 
-    request_id: str
+    request_id: str = field(metadata={"cdp_name": "requestId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ReleaseContextRequestedEvent(CDPEvent):
+class ReleaseContextRequestedEvent:
     """
     Fired when |SCardReleaseContext| is called. This maps to: PC/SC Lite:
     https://pcsclite.apdu.fr/api/group__API.html#ga6aabcba7744c5c9419fdd6404f73a934
@@ -56,12 +60,18 @@ class ReleaseContextRequestedEvent(CDPEvent):
     https://learn.microsoft.com/en-us/windows/win32/api/winscard/nf-winscard-scardreleasecontext
     """
 
-    request_id: str
-    context_id: int
+    request_id: str = field(metadata={"cdp_name": "requestId"})
+    context_id: int = field(metadata={"cdp_name": "contextId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ListReadersRequestedEvent(CDPEvent):
+class ListReadersRequestedEvent:
     """
     Fired when |SCardListReaders| is called. This maps to: PC/SC Lite:
     https://pcsclite.apdu.fr/api/group__API.html#ga93b07815789b3cf2629d439ecf20f0d9
@@ -69,12 +79,18 @@ class ListReadersRequestedEvent(CDPEvent):
     https://learn.microsoft.com/en-us/windows/win32/api/winscard/nf-winscard-scardlistreadersa
     """
 
-    request_id: str
-    context_id: int
+    request_id: str = field(metadata={"cdp_name": "requestId"})
+    context_id: int = field(metadata={"cdp_name": "contextId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetStatusChangeRequestedEvent(CDPEvent):
+class GetStatusChangeRequestedEvent:
     """
     Fired when |SCardGetStatusChange| is called. Timeout is specified in milliseconds.
     This maps to: PC/SC Lite:
@@ -83,14 +99,20 @@ class GetStatusChangeRequestedEvent(CDPEvent):
     https://learn.microsoft.com/en-us/windows/win32/api/winscard/nf-winscard-scardgetstatuschangea
     """
 
-    request_id: str
-    context_id: int
-    reader_states: list[ReaderStateIn]
-    timeout: int | None = None
+    request_id: str = field(metadata={"cdp_name": "requestId"})
+    context_id: int = field(metadata={"cdp_name": "contextId"})
+    reader_states: list[ReaderStateIn] = field(metadata={"cdp_name": "readerStates"})
+    timeout: int | None = field(default=None, metadata={"cdp_name": "timeout"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class CancelRequestedEvent(CDPEvent):
+class CancelRequestedEvent:
     """
     Fired when |SCardCancel| is called. This maps to: PC/SC Lite:
     https://pcsclite.apdu.fr/api/group__API.html#gaacbbc0c6d6c0cbbeb4f4debf6fbeeee6
@@ -98,12 +120,18 @@ class CancelRequestedEvent(CDPEvent):
     https://learn.microsoft.com/en-us/windows/win32/api/winscard/nf-winscard-scardcancel
     """
 
-    request_id: str
-    context_id: int
+    request_id: str = field(metadata={"cdp_name": "requestId"})
+    context_id: int = field(metadata={"cdp_name": "contextId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ConnectRequestedEvent(CDPEvent):
+class ConnectRequestedEvent:
     """
     Fired when |SCardConnect| is called. This maps to: PC/SC Lite:
     https://pcsclite.apdu.fr/api/group__API.html#ga4e515829752e0a8dbc4d630696a8d6a5
@@ -111,15 +139,23 @@ class ConnectRequestedEvent(CDPEvent):
     https://learn.microsoft.com/en-us/windows/win32/api/winscard/nf-winscard-scardconnecta
     """
 
-    request_id: str
-    context_id: int
-    reader: str
-    share_mode: ShareMode
-    preferred_protocols: ProtocolSet
+    request_id: str = field(metadata={"cdp_name": "requestId"})
+    context_id: int = field(metadata={"cdp_name": "contextId"})
+    reader: str = field(metadata={"cdp_name": "reader"})
+    share_mode: ShareMode = field(metadata={"cdp_name": "shareMode"})
+    preferred_protocols: ProtocolSet = field(
+        metadata={"cdp_name": "preferredProtocols"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DisconnectRequestedEvent(CDPEvent):
+class DisconnectRequestedEvent:
     """
     Fired when |SCardDisconnect| is called. This maps to: PC/SC Lite:
     https://pcsclite.apdu.fr/api/group__API.html#ga4be198045c73ec0deb79e66c0ca1738a
@@ -127,13 +163,19 @@ class DisconnectRequestedEvent(CDPEvent):
     https://learn.microsoft.com/en-us/windows/win32/api/winscard/nf-winscard-scarddisconnect
     """
 
-    request_id: str
-    handle: int
-    disposition: Disposition
+    request_id: str = field(metadata={"cdp_name": "requestId"})
+    handle: int = field(metadata={"cdp_name": "handle"})
+    disposition: Disposition = field(metadata={"cdp_name": "disposition"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class TransmitRequestedEvent(CDPEvent):
+class TransmitRequestedEvent:
     """
     Fired when |SCardTransmit| is called. This maps to: PC/SC Lite:
     https://pcsclite.apdu.fr/api/group__API.html#ga9a2d77242a271310269065e64633ab99
@@ -141,14 +183,20 @@ class TransmitRequestedEvent(CDPEvent):
     https://learn.microsoft.com/en-us/windows/win32/api/winscard/nf-winscard-scardtransmit
     """
 
-    request_id: str
-    handle: int
-    data: str
-    protocol: Protocol | None = None
+    request_id: str = field(metadata={"cdp_name": "requestId"})
+    handle: int = field(metadata={"cdp_name": "handle"})
+    data: str = field(metadata={"cdp_name": "data"})
+    protocol: Protocol | None = field(default=None, metadata={"cdp_name": "protocol"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ControlRequestedEvent(CDPEvent):
+class ControlRequestedEvent:
     """
     Fired when |SCardControl| is called. This maps to: PC/SC Lite:
     https://pcsclite.apdu.fr/api/group__API.html#gac3454d4657110fd7f753b2d3d8f4e32f
@@ -156,14 +204,20 @@ class ControlRequestedEvent(CDPEvent):
     https://learn.microsoft.com/en-us/windows/win32/api/winscard/nf-winscard-scardcontrol
     """
 
-    request_id: str
-    handle: int
-    control_code: int
-    data: str
+    request_id: str = field(metadata={"cdp_name": "requestId"})
+    handle: int = field(metadata={"cdp_name": "handle"})
+    control_code: int = field(metadata={"cdp_name": "controlCode"})
+    data: str = field(metadata={"cdp_name": "data"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetAttribRequestedEvent(CDPEvent):
+class GetAttribRequestedEvent:
     """
     Fired when |SCardGetAttrib| is called. This maps to: PC/SC Lite:
     https://pcsclite.apdu.fr/api/group__API.html#gaacfec51917255b7a25b94c5104961602
@@ -171,13 +225,19 @@ class GetAttribRequestedEvent(CDPEvent):
     https://learn.microsoft.com/en-us/windows/win32/api/winscard/nf-winscard-scardgetattrib
     """
 
-    request_id: str
-    handle: int
-    attrib_id: int
+    request_id: str = field(metadata={"cdp_name": "requestId"})
+    handle: int = field(metadata={"cdp_name": "handle"})
+    attrib_id: int = field(metadata={"cdp_name": "attribId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetAttribRequestedEvent(CDPEvent):
+class SetAttribRequestedEvent:
     """
     Fired when |SCardSetAttrib| is called. This maps to: PC/SC Lite:
     https://pcsclite.apdu.fr/api/group__API.html#ga060f0038a4ddfd5dd2b8fadf3c3a2e4f
@@ -185,14 +245,20 @@ class SetAttribRequestedEvent(CDPEvent):
     https://learn.microsoft.com/en-us/windows/win32/api/winscard/nf-winscard-scardsetattrib
     """
 
-    request_id: str
-    handle: int
-    attrib_id: int
-    data: str
+    request_id: str = field(metadata={"cdp_name": "requestId"})
+    handle: int = field(metadata={"cdp_name": "handle"})
+    attrib_id: int = field(metadata={"cdp_name": "attribId"})
+    data: str = field(metadata={"cdp_name": "data"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class StatusRequestedEvent(CDPEvent):
+class StatusRequestedEvent:
     """
     Fired when |SCardStatus| is called. This maps to: PC/SC Lite:
     https://pcsclite.apdu.fr/api/group__API.html#gae49c3c894ad7ac12a5b896bde70d0382
@@ -200,12 +266,18 @@ class StatusRequestedEvent(CDPEvent):
     https://learn.microsoft.com/en-us/windows/win32/api/winscard/nf-winscard-scardstatusa
     """
 
-    request_id: str
-    handle: int
+    request_id: str = field(metadata={"cdp_name": "requestId"})
+    handle: int = field(metadata={"cdp_name": "handle"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class BeginTransactionRequestedEvent(CDPEvent):
+class BeginTransactionRequestedEvent:
     """
     Fired when |SCardBeginTransaction| is called. This maps to: PC/SC Lite:
     https://pcsclite.apdu.fr/api/group__API.html#gaddb835dce01a0da1d6ca02d33ee7d861
@@ -213,12 +285,18 @@ class BeginTransactionRequestedEvent(CDPEvent):
     https://learn.microsoft.com/en-us/windows/win32/api/winscard/nf-winscard-scardbegintransaction
     """
 
-    request_id: str
-    handle: int
+    request_id: str = field(metadata={"cdp_name": "requestId"})
+    handle: int = field(metadata={"cdp_name": "handle"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class EndTransactionRequestedEvent(CDPEvent):
+class EndTransactionRequestedEvent:
     """
     Fired when |SCardEndTransaction| is called. This maps to: PC/SC Lite:
     https://pcsclite.apdu.fr/api/group__API.html#gae8742473b404363e5c587f570d7e2f3b
@@ -226,6 +304,12 @@ class EndTransactionRequestedEvent(CDPEvent):
     https://learn.microsoft.com/en-us/windows/win32/api/winscard/nf-winscard-scardendtransaction
     """
 
-    request_id: str
-    handle: int
-    disposition: Disposition
+    request_id: str = field(metadata={"cdp_name": "requestId"})
+    handle: int = field(metadata={"cdp_name": "handle"})
+    disposition: Disposition = field(metadata={"cdp_name": "disposition"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

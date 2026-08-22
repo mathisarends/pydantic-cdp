@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPModel
 
 from .types import (
     AccountUrlType,
@@ -26,30 +24,34 @@ class FedCmCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class EnableParams(CDPModel):
-    disable_rejection_delay: bool | None = None
+class EnableParams:
+    disable_rejection_delay: bool | None = field(
+        default=None, metadata={"cdp_name": "disableRejectionDelay"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SelectAccountParams(CDPModel):
-    dialog_id: str
-    account_index: int
+class SelectAccountParams:
+    dialog_id: str = field(metadata={"cdp_name": "dialogId"})
+    account_index: int = field(metadata={"cdp_name": "accountIndex"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ClickDialogButtonParams(CDPModel):
-    dialog_id: str
-    dialog_button: DialogButton
+class ClickDialogButtonParams:
+    dialog_id: str = field(metadata={"cdp_name": "dialogId"})
+    dialog_button: DialogButton = field(metadata={"cdp_name": "dialogButton"})
 
 
 @dataclass(kw_only=True, slots=True)
-class OpenUrlParams(CDPModel):
-    dialog_id: str
-    account_index: int
-    account_url_type: AccountUrlType
+class OpenUrlParams:
+    dialog_id: str = field(metadata={"cdp_name": "dialogId"})
+    account_index: int = field(metadata={"cdp_name": "accountIndex"})
+    account_url_type: AccountUrlType = field(metadata={"cdp_name": "accountUrlType"})
 
 
 @dataclass(kw_only=True, slots=True)
-class DismissDialogParams(CDPModel):
-    dialog_id: str
-    trigger_cooldown: bool | None = None
+class DismissDialogParams:
+    dialog_id: str = field(metadata={"cdp_name": "dialogId"})
+    trigger_cooldown: bool | None = field(
+        default=None, metadata={"cdp_name": "triggerCooldown"}
+    )

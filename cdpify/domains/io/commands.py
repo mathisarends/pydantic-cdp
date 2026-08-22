@@ -4,11 +4,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 
 from cdpify.domains import runtime
-from cdpify.shared.models import CDPModel
 
 from .types import (
     StreamHandle,
@@ -22,41 +21,43 @@ class IOCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class CloseParams(CDPModel):
+class CloseParams:
     """
     Close the stream, discard any temporary backing storage.
     """
 
-    handle: StreamHandle
+    handle: StreamHandle = field(metadata={"cdp_name": "handle"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ReadParams(CDPModel):
+class ReadParams:
     """
     Read a chunk of the stream
     """
 
-    handle: StreamHandle
-    offset: int | None = None
-    size: int | None = None
+    handle: StreamHandle = field(metadata={"cdp_name": "handle"})
+    offset: int | None = field(default=None, metadata={"cdp_name": "offset"})
+    size: int | None = field(default=None, metadata={"cdp_name": "size"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ReadResult(CDPModel):
-    base64_encoded: bool | None = None
-    data: str
-    eof: bool
+class ReadResult:
+    base64_encoded: bool | None = field(
+        default=None, metadata={"cdp_name": "base64Encoded"}
+    )
+    data: str = field(metadata={"cdp_name": "data"})
+    eof: bool = field(metadata={"cdp_name": "eof"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ResolveBlobParams(CDPModel):
+class ResolveBlobParams:
     """
     Return UUID of Blob object specified by a remote object id.
     """
 
-    object_id: runtime.RemoteObjectId
+    object_id: runtime.RemoteObjectId = field(metadata={"cdp_name": "objectId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ResolveBlobResult(CDPModel):
-    uuid: str
+class ResolveBlobResult:
+    uuid: str = field(metadata={"cdp_name": "uuid"})

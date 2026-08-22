@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPModel
 
 from .types import (
     Profile,
@@ -28,44 +26,46 @@ class ProfilerCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class GetBestEffortCoverageResult(CDPModel):
-    result: list[ScriptCoverage]
+class GetBestEffortCoverageResult:
+    result: list[ScriptCoverage] = field(metadata={"cdp_name": "result"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetSamplingIntervalParams(CDPModel):
+class SetSamplingIntervalParams:
     """
     Changes CPU profiler sampling interval. Must be called before CPU profiles
     recording started.
     """
 
-    interval: int
+    interval: int = field(metadata={"cdp_name": "interval"})
 
 
 @dataclass(kw_only=True, slots=True)
-class StartPreciseCoverageParams(CDPModel):
+class StartPreciseCoverageParams:
     """
     Enable precise code coverage. Coverage data for JavaScript executed before enabling
     precise code coverage may be incomplete. Enabling prevents running optimized code
     and resets execution counters.
     """
 
-    call_count: bool | None = None
-    detailed: bool | None = None
-    allow_triggered_updates: bool | None = None
+    call_count: bool | None = field(default=None, metadata={"cdp_name": "callCount"})
+    detailed: bool | None = field(default=None, metadata={"cdp_name": "detailed"})
+    allow_triggered_updates: bool | None = field(
+        default=None, metadata={"cdp_name": "allowTriggeredUpdates"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class StartPreciseCoverageResult(CDPModel):
-    timestamp: float
+class StartPreciseCoverageResult:
+    timestamp: float = field(metadata={"cdp_name": "timestamp"})
 
 
 @dataclass(kw_only=True, slots=True)
-class StopResult(CDPModel):
-    profile: Profile
+class StopResult:
+    profile: Profile = field(metadata={"cdp_name": "profile"})
 
 
 @dataclass(kw_only=True, slots=True)
-class TakePreciseCoverageResult(CDPModel):
-    result: list[ScriptCoverage]
-    timestamp: float
+class TakePreciseCoverageResult:
+    result: list[ScriptCoverage] = field(metadata={"cdp_name": "result"})
+    timestamp: float = field(metadata={"cdp_name": "timestamp"})

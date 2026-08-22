@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPEvent
 
 
 class InspectorEvent(StrEnum):
@@ -18,38 +16,59 @@ class InspectorEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class DetachedEvent(CDPEvent):
+class DetachedEvent:
     """
     Fired when remote debugging connection is about to be terminated. Contains detach
     reason.
     """
 
-    reason: str
+    reason: str = field(metadata={"cdp_name": "reason"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class TargetCrashedEvent(CDPEvent):
+class TargetCrashedEvent:
     """
     Fired when debugging target has crashed
     """
 
-    pass
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class TargetReloadedAfterCrashEvent(CDPEvent):
+class TargetReloadedAfterCrashEvent:
     """
     Fired when debugging target has reloaded after crash
     """
 
-    pass
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class WorkerScriptLoadedEvent(CDPEvent):
+class WorkerScriptLoadedEvent:
     """
     Fired on worker targets when main worker script and any imported scripts have been
     evaluated.
     """
 
-    pass
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

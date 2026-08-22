@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Literal
-
-from cdpify.shared.models import CDPModel
 
 BrowserContextID = str
 
@@ -20,16 +18,18 @@ type WindowState = Literal["normal", "minimized", "maximized", "fullscreen"]
 
 
 @dataclass(kw_only=True, slots=True)
-class Bounds(CDPModel):
+class Bounds:
     """
     Browser window bounds information
     """
 
-    left: int | None = None
-    top: int | None = None
-    width: int | None = None
-    height: int | None = None
-    window_state: WindowState | None = None
+    left: int | None = field(default=None, metadata={"cdp_name": "left"})
+    top: int | None = field(default=None, metadata={"cdp_name": "top"})
+    width: int | None = field(default=None, metadata={"cdp_name": "width"})
+    height: int | None = field(default=None, metadata={"cdp_name": "height"})
+    window_state: WindowState | None = field(
+        default=None, metadata={"cdp_name": "windowState"}
+    )
 
 
 type PermissionType = Literal[
@@ -78,18 +78,26 @@ type PermissionSetting = Literal["granted", "denied", "prompt"]
 
 
 @dataclass(kw_only=True, slots=True)
-class PermissionDescriptor(CDPModel):
+class PermissionDescriptor:
     """
     Definition of PermissionDescriptor defined in the Permissions API:
     https://w3c.github.io/permissions/#dom-permissiondescriptor.
     """
 
-    name: str
-    sysex: bool | None = None
-    user_visible_only: bool | None = None
-    allow_without_sanitization: bool | None = None
-    allow_without_gesture: bool | None = None
-    pan_tilt_zoom: bool | None = None
+    name: str = field(metadata={"cdp_name": "name"})
+    sysex: bool | None = field(default=None, metadata={"cdp_name": "sysex"})
+    user_visible_only: bool | None = field(
+        default=None, metadata={"cdp_name": "userVisibleOnly"}
+    )
+    allow_without_sanitization: bool | None = field(
+        default=None, metadata={"cdp_name": "allowWithoutSanitization"}
+    )
+    allow_without_gesture: bool | None = field(
+        default=None, metadata={"cdp_name": "allowWithoutGesture"}
+    )
+    pan_tilt_zoom: bool | None = field(
+        default=None, metadata={"cdp_name": "panTiltZoom"}
+    )
 
 
 """
@@ -99,23 +107,23 @@ type BrowserCommandId = Literal["openTabSearch", "closeTabSearch", "openGlic"]
 
 
 @dataclass(kw_only=True, slots=True)
-class Bucket(CDPModel):
+class Bucket:
     """
     Chrome histogram bucket.
     """
 
-    low: int
-    high: int
-    count: int
+    low: int = field(metadata={"cdp_name": "low"})
+    high: int = field(metadata={"cdp_name": "high"})
+    count: int = field(metadata={"cdp_name": "count"})
 
 
 @dataclass(kw_only=True, slots=True)
-class Histogram(CDPModel):
+class Histogram:
     """
     Chrome histogram.
     """
 
-    name: str
-    sum: int
-    count: int
-    buckets: list[Bucket]
+    name: str = field(metadata={"cdp_name": "name"})
+    sum: int = field(metadata={"cdp_name": "sum"})
+    count: int = field(metadata={"cdp_name": "count"})
+    buckets: list[Bucket] = field(metadata={"cdp_name": "buckets"})

@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+from cdpify.codec import decode_cdp, encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
 
@@ -71,10 +72,10 @@ class DOMSnapshot:
 
         result = await self._command_sender.send_raw(
             method=DOMSnapshotCommand.GET_SNAPSHOT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetSnapshotResult.from_cdp(result)
+        return decode_cdp(GetSnapshotResult, result)
 
     async def capture_snapshot(
         self,
@@ -102,7 +103,7 @@ class DOMSnapshot:
 
         result = await self._command_sender.send_raw(
             method=DOMSnapshotCommand.CAPTURE_SNAPSHOT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return CaptureSnapshotResult.from_cdp(result)
+        return decode_cdp(CaptureSnapshotResult, result)

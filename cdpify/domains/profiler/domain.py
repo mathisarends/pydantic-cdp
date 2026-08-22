@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+from cdpify.codec import decode_cdp, encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -54,7 +55,7 @@ class Profiler:
             params=None,
             session_id=session_id,
         )
-        return GetBestEffortCoverageResult.from_cdp(result)
+        return decode_cdp(GetBestEffortCoverageResult, result)
 
     async def set_sampling_interval(
         self,
@@ -70,7 +71,7 @@ class Profiler:
 
         await self._command_sender.send_raw(
             method=ProfilerCommand.SET_SAMPLING_INTERVAL,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -105,10 +106,10 @@ class Profiler:
 
         result = await self._command_sender.send_raw(
             method=ProfilerCommand.START_PRECISE_COVERAGE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return StartPreciseCoverageResult.from_cdp(result)
+        return decode_cdp(StartPreciseCoverageResult, result)
 
     async def stop(
         self,
@@ -119,7 +120,7 @@ class Profiler:
             params=None,
             session_id=session_id,
         )
-        return StopResult.from_cdp(result)
+        return decode_cdp(StopResult, result)
 
     async def stop_precise_coverage(
         self,
@@ -148,4 +149,4 @@ class Profiler:
             params=None,
             session_id=session_id,
         )
-        return TakePreciseCoverageResult.from_cdp(result)
+        return decode_cdp(TakePreciseCoverageResult, result)

@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPModel
 
 from .types import (
     ComputedStyle,
@@ -25,7 +23,7 @@ class DOMSnapshotCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class GetSnapshotParams(CDPModel):
+class GetSnapshotParams:
     """
     Returns a document snapshot, including the full DOM tree of the root node
     (including iframes, template contents, and imported documents) in a flattened array,
@@ -33,21 +31,33 @@ class GetSnapshotParams(CDPModel):
     DOM in the returned DOM tree is flattened.
     """
 
-    computed_style_whitelist: list[str]
-    include_event_listeners: bool | None = None
-    include_paint_order: bool | None = None
-    include_user_agent_shadow_tree: bool | None = None
+    computed_style_whitelist: list[str] = field(
+        metadata={"cdp_name": "computedStyleWhitelist"}
+    )
+    include_event_listeners: bool | None = field(
+        default=None, metadata={"cdp_name": "includeEventListeners"}
+    )
+    include_paint_order: bool | None = field(
+        default=None, metadata={"cdp_name": "includePaintOrder"}
+    )
+    include_user_agent_shadow_tree: bool | None = field(
+        default=None, metadata={"cdp_name": "includeUserAgentShadowTree"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetSnapshotResult(CDPModel):
-    dom_nodes: list[DOMNode]
-    layout_tree_nodes: list[LayoutTreeNode]
-    computed_styles: list[ComputedStyle]
+class GetSnapshotResult:
+    dom_nodes: list[DOMNode] = field(metadata={"cdp_name": "domNodes"})
+    layout_tree_nodes: list[LayoutTreeNode] = field(
+        metadata={"cdp_name": "layoutTreeNodes"}
+    )
+    computed_styles: list[ComputedStyle] = field(
+        metadata={"cdp_name": "computedStyles"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class CaptureSnapshotParams(CDPModel):
+class CaptureSnapshotParams:
     """
     Returns a document snapshot, including the full DOM tree of the root node
     (including iframes, template contents, and imported documents) in a flattened array,
@@ -55,14 +65,22 @@ class CaptureSnapshotParams(CDPModel):
     DOM in the returned DOM tree is flattened.
     """
 
-    computed_styles: list[str]
-    include_paint_order: bool | None = None
-    include_dom_rects: bool | None = None
-    include_blended_background_colors: bool | None = None
-    include_text_color_opacities: bool | None = None
+    computed_styles: list[str] = field(metadata={"cdp_name": "computedStyles"})
+    include_paint_order: bool | None = field(
+        default=None, metadata={"cdp_name": "includePaintOrder"}
+    )
+    include_dom_rects: bool | None = field(
+        default=None, metadata={"cdp_name": "includeDOMRects"}
+    )
+    include_blended_background_colors: bool | None = field(
+        default=None, metadata={"cdp_name": "includeBlendedBackgroundColors"}
+    )
+    include_text_color_opacities: bool | None = field(
+        default=None, metadata={"cdp_name": "includeTextColorOpacities"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class CaptureSnapshotResult(CDPModel):
-    documents: list[DocumentSnapshot]
-    strings: list[str]
+class CaptureSnapshotResult:
+    documents: list[DocumentSnapshot] = field(metadata={"cdp_name": "documents"})
+    strings: list[str] = field(metadata={"cdp_name": "strings"})

@@ -4,11 +4,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 
 from cdpify.domains import dom
-from cdpify.shared.models import CDPEvent
 
 from .types import (
     Layer,
@@ -22,11 +21,23 @@ class LayerTreeEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class LayerPaintedEvent(CDPEvent):
-    layer_id: LayerId
-    clip: dom.Rect
+class LayerPaintedEvent:
+    layer_id: LayerId = field(metadata={"cdp_name": "layerId"})
+    clip: dom.Rect = field(metadata={"cdp_name": "clip"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class LayerTreeDidChangeEvent(CDPEvent):
-    layers: list[Layer] | None = None
+class LayerTreeDidChangeEvent:
+    layers: list[Layer] | None = field(default=None, metadata={"cdp_name": "layers"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

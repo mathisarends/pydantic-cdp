@@ -4,11 +4,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 
 from cdpify.domains import io, network
-from cdpify.shared.models import CDPModel
 
 from .types import (
     AuthChallengeResponse,
@@ -31,81 +30,105 @@ class FetchCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class EnableParams(CDPModel):
+class EnableParams:
     """
     Enables issuing of requestPaused events. A request will be paused until client
     calls one of failRequest, fulfillRequest or continueRequest/continueWithAuth.
     """
 
-    patterns: list[RequestPattern] | None = None
-    handle_auth_requests: bool | None = None
+    patterns: list[RequestPattern] | None = field(
+        default=None, metadata={"cdp_name": "patterns"}
+    )
+    handle_auth_requests: bool | None = field(
+        default=None, metadata={"cdp_name": "handleAuthRequests"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class FailRequestParams(CDPModel):
+class FailRequestParams:
     """
     Causes the request to fail with specified reason.
     """
 
-    request_id: RequestId
-    error_reason: network.ErrorReason
+    request_id: RequestId = field(metadata={"cdp_name": "requestId"})
+    error_reason: network.ErrorReason = field(metadata={"cdp_name": "errorReason"})
 
 
 @dataclass(kw_only=True, slots=True)
-class FulfillRequestParams(CDPModel):
+class FulfillRequestParams:
     """
     Provides response to the request.
     """
 
-    request_id: RequestId
-    response_code: int
-    response_headers: list[HeaderEntry] | None = None
-    binary_response_headers: str | None = None
-    body: str | None = None
-    response_phrase: str | None = None
+    request_id: RequestId = field(metadata={"cdp_name": "requestId"})
+    response_code: int = field(metadata={"cdp_name": "responseCode"})
+    response_headers: list[HeaderEntry] | None = field(
+        default=None, metadata={"cdp_name": "responseHeaders"}
+    )
+    binary_response_headers: str | None = field(
+        default=None, metadata={"cdp_name": "binaryResponseHeaders"}
+    )
+    body: str | None = field(default=None, metadata={"cdp_name": "body"})
+    response_phrase: str | None = field(
+        default=None, metadata={"cdp_name": "responsePhrase"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ContinueRequestParams(CDPModel):
+class ContinueRequestParams:
     """
     Continues the request, optionally modifying some of its parameters.
     """
 
-    request_id: RequestId
-    url: str | None = None
-    method: str | None = None
-    post_data: str | None = None
-    headers: list[HeaderEntry] | None = None
-    intercept_response: bool | None = None
+    request_id: RequestId = field(metadata={"cdp_name": "requestId"})
+    url: str | None = field(default=None, metadata={"cdp_name": "url"})
+    method: str | None = field(default=None, metadata={"cdp_name": "method"})
+    post_data: str | None = field(default=None, metadata={"cdp_name": "postData"})
+    headers: list[HeaderEntry] | None = field(
+        default=None, metadata={"cdp_name": "headers"}
+    )
+    intercept_response: bool | None = field(
+        default=None, metadata={"cdp_name": "interceptResponse"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ContinueWithAuthParams(CDPModel):
+class ContinueWithAuthParams:
     """
     Continues a request supplying authChallengeResponse following authRequired event.
     """
 
-    request_id: RequestId
-    auth_challenge_response: AuthChallengeResponse
+    request_id: RequestId = field(metadata={"cdp_name": "requestId"})
+    auth_challenge_response: AuthChallengeResponse = field(
+        metadata={"cdp_name": "authChallengeResponse"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ContinueResponseParams(CDPModel):
+class ContinueResponseParams:
     """
     Continues loading of the paused response, optionally modifying the response
     headers. If either responseCode or headers are modified, all of them must be
     present.
     """
 
-    request_id: RequestId
-    response_code: int | None = None
-    response_phrase: str | None = None
-    response_headers: list[HeaderEntry] | None = None
-    binary_response_headers: str | None = None
+    request_id: RequestId = field(metadata={"cdp_name": "requestId"})
+    response_code: int | None = field(
+        default=None, metadata={"cdp_name": "responseCode"}
+    )
+    response_phrase: str | None = field(
+        default=None, metadata={"cdp_name": "responsePhrase"}
+    )
+    response_headers: list[HeaderEntry] | None = field(
+        default=None, metadata={"cdp_name": "responseHeaders"}
+    )
+    binary_response_headers: str | None = field(
+        default=None, metadata={"cdp_name": "binaryResponseHeaders"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetResponseBodyParams(CDPModel):
+class GetResponseBodyParams:
     """
     Causes the body of the response to be received from the server and returned as a
     single string. May only be issued for a request that is paused in the Response stage
@@ -117,17 +140,17 @@ class GetResponseBodyParams(CDPModel):
     comments to `requestPaused` for details.
     """
 
-    request_id: RequestId
+    request_id: RequestId = field(metadata={"cdp_name": "requestId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetResponseBodyResult(CDPModel):
-    body: str
-    base64_encoded: bool
+class GetResponseBodyResult:
+    body: str = field(metadata={"cdp_name": "body"})
+    base64_encoded: bool = field(metadata={"cdp_name": "base64Encoded"})
 
 
 @dataclass(kw_only=True, slots=True)
-class TakeResponseBodyAsStreamParams(CDPModel):
+class TakeResponseBodyAsStreamParams:
     """
     Returns a handle to the stream representing the response body. The request must be
     paused in the HeadersReceived stage. Note that after this command the request can't
@@ -138,9 +161,9 @@ class TakeResponseBodyAsStreamParams(CDPModel):
     results in an undefined behavior.
     """
 
-    request_id: RequestId
+    request_id: RequestId = field(metadata={"cdp_name": "requestId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class TakeResponseBodyAsStreamResult(CDPModel):
-    stream: io.StreamHandle
+class TakeResponseBodyAsStreamResult:
+    stream: io.StreamHandle = field(metadata={"cdp_name": "stream"})

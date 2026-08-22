@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal
 
+from cdpify.codec import decode_cdp, encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
 
@@ -119,10 +120,10 @@ class DOM:
 
         result = await self._command_sender.send_raw(
             method=DOMCommand.COLLECT_CLASS_NAMES_FROM_SUBTREE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return CollectClassNamesFromSubtreeResult.from_cdp(result)
+        return decode_cdp(CollectClassNamesFromSubtreeResult, result)
 
     async def copy_to(
         self,
@@ -144,10 +145,10 @@ class DOM:
 
         result = await self._command_sender.send_raw(
             method=DOMCommand.COPY_TO,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return CopyToResult.from_cdp(result)
+        return decode_cdp(CopyToResult, result)
 
     async def describe_node(
         self,
@@ -173,10 +174,10 @@ class DOM:
 
         result = await self._command_sender.send_raw(
             method=DOMCommand.DESCRIBE_NODE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return DescribeNodeResult.from_cdp(result)
+        return decode_cdp(DescribeNodeResult, result)
 
     async def scroll_into_view_if_needed(
         self,
@@ -201,7 +202,7 @@ class DOM:
 
         await self._command_sender.send_raw(
             method=DOMCommand.SCROLL_INTO_VIEW_IF_NEEDED,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -232,7 +233,7 @@ class DOM:
 
         await self._command_sender.send_raw(
             method=DOMCommand.DISCARD_SEARCH_RESULTS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -249,7 +250,7 @@ class DOM:
 
         await self._command_sender.send_raw(
             method=DOMCommand.ENABLE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -270,7 +271,7 @@ class DOM:
 
         await self._command_sender.send_raw(
             method=DOMCommand.FOCUS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -287,10 +288,10 @@ class DOM:
 
         result = await self._command_sender.send_raw(
             method=DOMCommand.GET_ATTRIBUTES,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetAttributesResult.from_cdp(result)
+        return decode_cdp(GetAttributesResult, result)
 
     async def get_box_model(
         self,
@@ -309,10 +310,10 @@ class DOM:
 
         result = await self._command_sender.send_raw(
             method=DOMCommand.GET_BOX_MODEL,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetBoxModelResult.from_cdp(result)
+        return decode_cdp(GetBoxModelResult, result)
 
     async def get_content_quads(
         self,
@@ -332,10 +333,10 @@ class DOM:
 
         result = await self._command_sender.send_raw(
             method=DOMCommand.GET_CONTENT_QUADS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetContentQuadsResult.from_cdp(result)
+        return decode_cdp(GetContentQuadsResult, result)
 
     async def get_document(
         self,
@@ -352,10 +353,10 @@ class DOM:
 
         result = await self._command_sender.send_raw(
             method=DOMCommand.GET_DOCUMENT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetDocumentResult.from_cdp(result)
+        return decode_cdp(GetDocumentResult, result)
 
     @deprecated()
     async def get_flattened_document(
@@ -374,10 +375,10 @@ class DOM:
 
         result = await self._command_sender.send_raw(
             method=DOMCommand.GET_FLATTENED_DOCUMENT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetFlattenedDocumentResult.from_cdp(result)
+        return decode_cdp(GetFlattenedDocumentResult, result)
 
     async def get_nodes_for_subtree_by_style(
         self,
@@ -396,10 +397,10 @@ class DOM:
 
         result = await self._command_sender.send_raw(
             method=DOMCommand.GET_NODES_FOR_SUBTREE_BY_STYLE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetNodesForSubtreeByStyleResult.from_cdp(result)
+        return decode_cdp(GetNodesForSubtreeByStyleResult, result)
 
     async def get_node_for_location(
         self,
@@ -423,10 +424,10 @@ class DOM:
 
         result = await self._command_sender.send_raw(
             method=DOMCommand.GET_NODE_FOR_LOCATION,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetNodeForLocationResult.from_cdp(result)
+        return decode_cdp(GetNodeForLocationResult, result)
 
     async def get_outer_html(
         self,
@@ -449,10 +450,10 @@ class DOM:
 
         result = await self._command_sender.send_raw(
             method=DOMCommand.GET_OUTER_HTML,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetOuterHTMLResult.from_cdp(result)
+        return decode_cdp(GetOuterHTMLResult, result)
 
     async def get_relayout_boundary(
         self,
@@ -467,10 +468,10 @@ class DOM:
 
         result = await self._command_sender.send_raw(
             method=DOMCommand.GET_RELAYOUT_BOUNDARY,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetRelayoutBoundaryResult.from_cdp(result)
+        return decode_cdp(GetRelayoutBoundaryResult, result)
 
     async def get_search_results(
         self,
@@ -490,10 +491,10 @@ class DOM:
 
         result = await self._command_sender.send_raw(
             method=DOMCommand.GET_SEARCH_RESULTS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetSearchResultsResult.from_cdp(result)
+        return decode_cdp(GetSearchResultsResult, result)
 
     async def hide_highlight(
         self,
@@ -566,10 +567,10 @@ class DOM:
 
         result = await self._command_sender.send_raw(
             method=DOMCommand.MOVE_TO,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return MoveToResult.from_cdp(result)
+        return decode_cdp(MoveToResult, result)
 
     async def perform_search(
         self,
@@ -588,10 +589,10 @@ class DOM:
 
         result = await self._command_sender.send_raw(
             method=DOMCommand.PERFORM_SEARCH,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return PerformSearchResult.from_cdp(result)
+        return decode_cdp(PerformSearchResult, result)
 
     async def push_node_by_path_to_frontend(
         self,
@@ -607,10 +608,10 @@ class DOM:
 
         result = await self._command_sender.send_raw(
             method=DOMCommand.PUSH_NODE_BY_PATH_TO_FRONTEND,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return PushNodeByPathToFrontendResult.from_cdp(result)
+        return decode_cdp(PushNodeByPathToFrontendResult, result)
 
     async def push_nodes_by_backend_ids_to_frontend(
         self,
@@ -628,10 +629,10 @@ class DOM:
 
         result = await self._command_sender.send_raw(
             method=DOMCommand.PUSH_NODES_BY_BACKEND_IDS_TO_FRONTEND,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return PushNodesByBackendIdsToFrontendResult.from_cdp(result)
+        return decode_cdp(PushNodesByBackendIdsToFrontendResult, result)
 
     async def query_selector(
         self,
@@ -647,10 +648,10 @@ class DOM:
 
         result = await self._command_sender.send_raw(
             method=DOMCommand.QUERY_SELECTOR,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return QuerySelectorResult.from_cdp(result)
+        return decode_cdp(QuerySelectorResult, result)
 
     async def query_selector_all(
         self,
@@ -666,10 +667,10 @@ class DOM:
 
         result = await self._command_sender.send_raw(
             method=DOMCommand.QUERY_SELECTOR_ALL,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return QuerySelectorAllResult.from_cdp(result)
+        return decode_cdp(QuerySelectorAllResult, result)
 
     async def get_top_layer_elements(
         self,
@@ -685,7 +686,7 @@ class DOM:
             params=None,
             session_id=session_id,
         )
-        return GetTopLayerElementsResult.from_cdp(result)
+        return decode_cdp(GetTopLayerElementsResult, result)
 
     async def get_element_by_relation(
         self,
@@ -701,10 +702,10 @@ class DOM:
 
         result = await self._command_sender.send_raw(
             method=DOMCommand.GET_ELEMENT_BY_RELATION,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetElementByRelationResult.from_cdp(result)
+        return decode_cdp(GetElementByRelationResult, result)
 
     async def redo(
         self,
@@ -733,7 +734,7 @@ class DOM:
 
         await self._command_sender.send_raw(
             method=DOMCommand.REMOVE_ATTRIBUTE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -750,7 +751,7 @@ class DOM:
 
         await self._command_sender.send_raw(
             method=DOMCommand.REMOVE_NODE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -771,7 +772,7 @@ class DOM:
 
         await self._command_sender.send_raw(
             method=DOMCommand.REQUEST_CHILD_NODES,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -790,10 +791,10 @@ class DOM:
 
         result = await self._command_sender.send_raw(
             method=DOMCommand.REQUEST_NODE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return RequestNodeResult.from_cdp(result)
+        return decode_cdp(RequestNodeResult, result)
 
     async def resolve_node(
         self,
@@ -816,10 +817,10 @@ class DOM:
 
         result = await self._command_sender.send_raw(
             method=DOMCommand.RESOLVE_NODE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return ResolveNodeResult.from_cdp(result)
+        return decode_cdp(ResolveNodeResult, result)
 
     async def set_attribute_value(
         self,
@@ -836,7 +837,7 @@ class DOM:
 
         await self._command_sender.send_raw(
             method=DOMCommand.SET_ATTRIBUTE_VALUE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -856,7 +857,7 @@ class DOM:
 
         await self._command_sender.send_raw(
             method=DOMCommand.SET_ATTRIBUTES_AS_TEXT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -881,7 +882,7 @@ class DOM:
 
         await self._command_sender.send_raw(
             method=DOMCommand.SET_FILE_INPUT_FILES,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -899,7 +900,7 @@ class DOM:
 
         await self._command_sender.send_raw(
             method=DOMCommand.SET_NODE_STACK_TRACES_ENABLED,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -917,10 +918,10 @@ class DOM:
 
         result = await self._command_sender.send_raw(
             method=DOMCommand.GET_NODE_STACK_TRACES,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetNodeStackTracesResult.from_cdp(result)
+        return decode_cdp(GetNodeStackTracesResult, result)
 
     async def get_file_info(
         self,
@@ -935,10 +936,10 @@ class DOM:
 
         result = await self._command_sender.send_raw(
             method=DOMCommand.GET_FILE_INFO,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetFileInfoResult.from_cdp(result)
+        return decode_cdp(GetFileInfoResult, result)
 
     async def get_detached_dom_nodes(
         self,
@@ -952,7 +953,7 @@ class DOM:
             params=None,
             session_id=session_id,
         )
-        return GetDetachedDomNodesResult.from_cdp(result)
+        return decode_cdp(GetDetachedDomNodesResult, result)
 
     async def set_inspected_node(
         self,
@@ -968,7 +969,7 @@ class DOM:
 
         await self._command_sender.send_raw(
             method=DOMCommand.SET_INSPECTED_NODE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -986,10 +987,10 @@ class DOM:
 
         result = await self._command_sender.send_raw(
             method=DOMCommand.SET_NODE_NAME,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return SetNodeNameResult.from_cdp(result)
+        return decode_cdp(SetNodeNameResult, result)
 
     async def set_node_value(
         self,
@@ -1005,7 +1006,7 @@ class DOM:
 
         await self._command_sender.send_raw(
             method=DOMCommand.SET_NODE_VALUE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -1023,7 +1024,7 @@ class DOM:
 
         await self._command_sender.send_raw(
             method=DOMCommand.SET_OUTER_HTML,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -1053,10 +1054,10 @@ class DOM:
 
         result = await self._command_sender.send_raw(
             method=DOMCommand.GET_FRAME_OWNER,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetFrameOwnerResult.from_cdp(result)
+        return decode_cdp(GetFrameOwnerResult, result)
 
     async def get_container_for_node(
         self,
@@ -1087,10 +1088,10 @@ class DOM:
 
         result = await self._command_sender.send_raw(
             method=DOMCommand.GET_CONTAINER_FOR_NODE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetContainerForNodeResult.from_cdp(result)
+        return decode_cdp(GetContainerForNodeResult, result)
 
     async def get_querying_descendants_for_container(
         self,
@@ -1106,10 +1107,10 @@ class DOM:
 
         result = await self._command_sender.send_raw(
             method=DOMCommand.GET_QUERYING_DESCENDANTS_FOR_CONTAINER,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetQueryingDescendantsForContainerResult.from_cdp(result)
+        return decode_cdp(GetQueryingDescendantsForContainerResult, result)
 
     async def get_anchor_element(
         self,
@@ -1128,10 +1129,10 @@ class DOM:
 
         result = await self._command_sender.send_raw(
             method=DOMCommand.GET_ANCHOR_ELEMENT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetAnchorElementResult.from_cdp(result)
+        return decode_cdp(GetAnchorElementResult, result)
 
     async def force_show_popover(
         self,
@@ -1151,10 +1152,10 @@ class DOM:
 
         result = await self._command_sender.send_raw(
             method=DOMCommand.FORCE_SHOW_POPOVER,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return ForceShowPopoverResult.from_cdp(result)
+        return decode_cdp(ForceShowPopoverResult, result)
 
     async def force_show_interest(
         self,
@@ -1171,6 +1172,6 @@ class DOM:
 
         await self._command_sender.send_raw(
             method=DOMCommand.FORCE_SHOW_INTEREST,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )

@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from cdpify.codec import decode_cdp, encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -85,10 +86,10 @@ class Accessibility:
 
         result = await self._command_sender.send_raw(
             method=AccessibilityCommand.GET_PARTIAL_AX_TREE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetPartialAXTreeResult.from_cdp(result)
+        return decode_cdp(GetPartialAXTreeResult, result)
 
     async def get_full_ax_tree(
         self,
@@ -104,10 +105,10 @@ class Accessibility:
 
         result = await self._command_sender.send_raw(
             method=AccessibilityCommand.GET_FULL_AX_TREE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetFullAXTreeResult.from_cdp(result)
+        return decode_cdp(GetFullAXTreeResult, result)
 
     async def get_root_ax_node(
         self,
@@ -122,10 +123,10 @@ class Accessibility:
 
         result = await self._command_sender.send_raw(
             method=AccessibilityCommand.GET_ROOT_AX_NODE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetRootAXNodeResult.from_cdp(result)
+        return decode_cdp(GetRootAXNodeResult, result)
 
     async def get_ax_node_and_ancestors(
         self,
@@ -145,10 +146,10 @@ class Accessibility:
 
         result = await self._command_sender.send_raw(
             method=AccessibilityCommand.GET_AX_NODE_AND_ANCESTORS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetAXNodeAndAncestorsResult.from_cdp(result)
+        return decode_cdp(GetAXNodeAndAncestorsResult, result)
 
     async def get_child_ax_nodes(
         self,
@@ -165,10 +166,10 @@ class Accessibility:
 
         result = await self._command_sender.send_raw(
             method=AccessibilityCommand.GET_CHILD_AX_NODES,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetChildAXNodesResult.from_cdp(result)
+        return decode_cdp(GetChildAXNodesResult, result)
 
     async def query_ax_tree(
         self,
@@ -198,7 +199,7 @@ class Accessibility:
 
         result = await self._command_sender.send_raw(
             method=AccessibilityCommand.QUERY_AX_TREE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return QueryAXTreeResult.from_cdp(result)
+        return decode_cdp(QueryAXTreeResult, result)

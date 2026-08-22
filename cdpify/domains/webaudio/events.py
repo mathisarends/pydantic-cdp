@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPEvent
 
 from .types import (
     AudioListener,
@@ -35,137 +33,227 @@ class WebAudioEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class ContextCreatedEvent(CDPEvent):
+class ContextCreatedEvent:
     """
     Notifies that a new BaseAudioContext has been created.
     """
 
-    context: BaseAudioContext
+    context: BaseAudioContext = field(metadata={"cdp_name": "context"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ContextWillBeDestroyedEvent(CDPEvent):
+class ContextWillBeDestroyedEvent:
     """
     Notifies that an existing BaseAudioContext will be destroyed.
     """
 
-    context_id: GraphObjectId
+    context_id: GraphObjectId = field(metadata={"cdp_name": "contextId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ContextChangedEvent(CDPEvent):
+class ContextChangedEvent:
     """
     Notifies that existing BaseAudioContext has changed some properties (id stays the
     same)..
     """
 
-    context: BaseAudioContext
+    context: BaseAudioContext = field(metadata={"cdp_name": "context"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class AudioListenerCreatedEvent(CDPEvent):
+class AudioListenerCreatedEvent:
     """
     Notifies that the construction of an AudioListener has finished.
     """
 
-    listener: AudioListener
+    listener: AudioListener = field(metadata={"cdp_name": "listener"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class AudioListenerWillBeDestroyedEvent(CDPEvent):
+class AudioListenerWillBeDestroyedEvent:
     """
     Notifies that a new AudioListener has been created.
     """
 
-    context_id: GraphObjectId
-    listener_id: GraphObjectId
+    context_id: GraphObjectId = field(metadata={"cdp_name": "contextId"})
+    listener_id: GraphObjectId = field(metadata={"cdp_name": "listenerId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class AudioNodeCreatedEvent(CDPEvent):
+class AudioNodeCreatedEvent:
     """
     Notifies that a new AudioNode has been created.
     """
 
-    node: AudioNode
+    node: AudioNode = field(metadata={"cdp_name": "node"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class AudioNodeWillBeDestroyedEvent(CDPEvent):
+class AudioNodeWillBeDestroyedEvent:
     """
     Notifies that an existing AudioNode has been destroyed.
     """
 
-    context_id: GraphObjectId
-    node_id: GraphObjectId
+    context_id: GraphObjectId = field(metadata={"cdp_name": "contextId"})
+    node_id: GraphObjectId = field(metadata={"cdp_name": "nodeId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class AudioParamCreatedEvent(CDPEvent):
+class AudioParamCreatedEvent:
     """
     Notifies that a new AudioParam has been created.
     """
 
-    param: AudioParam
+    param: AudioParam = field(metadata={"cdp_name": "param"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class AudioParamWillBeDestroyedEvent(CDPEvent):
+class AudioParamWillBeDestroyedEvent:
     """
     Notifies that an existing AudioParam has been destroyed.
     """
 
-    context_id: GraphObjectId
-    node_id: GraphObjectId
-    param_id: GraphObjectId
+    context_id: GraphObjectId = field(metadata={"cdp_name": "contextId"})
+    node_id: GraphObjectId = field(metadata={"cdp_name": "nodeId"})
+    param_id: GraphObjectId = field(metadata={"cdp_name": "paramId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class NodesConnectedEvent(CDPEvent):
+class NodesConnectedEvent:
     """
     Notifies that two AudioNodes are connected.
     """
 
-    context_id: GraphObjectId
-    source_id: GraphObjectId
-    destination_id: GraphObjectId
-    source_output_index: float | None = None
-    destination_input_index: float | None = None
+    context_id: GraphObjectId = field(metadata={"cdp_name": "contextId"})
+    source_id: GraphObjectId = field(metadata={"cdp_name": "sourceId"})
+    destination_id: GraphObjectId = field(metadata={"cdp_name": "destinationId"})
+    source_output_index: float | None = field(
+        default=None, metadata={"cdp_name": "sourceOutputIndex"}
+    )
+    destination_input_index: float | None = field(
+        default=None, metadata={"cdp_name": "destinationInputIndex"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class NodesDisconnectedEvent(CDPEvent):
+class NodesDisconnectedEvent:
     """
     Notifies that AudioNodes are disconnected. The destination can be null, and it
     means all the outgoing connections from the source are disconnected.
     """
 
-    context_id: GraphObjectId
-    source_id: GraphObjectId
-    destination_id: GraphObjectId
-    source_output_index: float | None = None
-    destination_input_index: float | None = None
+    context_id: GraphObjectId = field(metadata={"cdp_name": "contextId"})
+    source_id: GraphObjectId = field(metadata={"cdp_name": "sourceId"})
+    destination_id: GraphObjectId = field(metadata={"cdp_name": "destinationId"})
+    source_output_index: float | None = field(
+        default=None, metadata={"cdp_name": "sourceOutputIndex"}
+    )
+    destination_input_index: float | None = field(
+        default=None, metadata={"cdp_name": "destinationInputIndex"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class NodeParamConnectedEvent(CDPEvent):
+class NodeParamConnectedEvent:
     """
     Notifies that an AudioNode is connected to an AudioParam.
     """
 
-    context_id: GraphObjectId
-    source_id: GraphObjectId
-    destination_id: GraphObjectId
-    source_output_index: float | None = None
+    context_id: GraphObjectId = field(metadata={"cdp_name": "contextId"})
+    source_id: GraphObjectId = field(metadata={"cdp_name": "sourceId"})
+    destination_id: GraphObjectId = field(metadata={"cdp_name": "destinationId"})
+    source_output_index: float | None = field(
+        default=None, metadata={"cdp_name": "sourceOutputIndex"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class NodeParamDisconnectedEvent(CDPEvent):
+class NodeParamDisconnectedEvent:
     """
     Notifies that an AudioNode is disconnected to an AudioParam.
     """
 
-    context_id: GraphObjectId
-    source_id: GraphObjectId
-    destination_id: GraphObjectId
-    source_output_index: float | None = None
+    context_id: GraphObjectId = field(metadata={"cdp_name": "contextId"})
+    source_id: GraphObjectId = field(metadata={"cdp_name": "sourceId"})
+    destination_id: GraphObjectId = field(metadata={"cdp_name": "destinationId"})
+    source_output_index: float | None = field(
+        default=None, metadata={"cdp_name": "sourceOutputIndex"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

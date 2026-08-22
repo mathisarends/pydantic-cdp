@@ -4,12 +4,11 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Any, Literal
 
 from cdpify.domains import debugger, runtime
-from cdpify.shared.models import CDPEvent
 
 from .types import (
     BreakpointId,
@@ -28,24 +27,30 @@ class DebuggerEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class BreakpointResolvedEvent(CDPEvent):
+class BreakpointResolvedEvent:
     """
     Fired when breakpoint is resolved to an actual script and location. Deprecated in
     favor of `resolvedBreakpoints` in the `scriptParsed` event.
     """
 
-    breakpoint_id: BreakpointId
-    location: Location
+    breakpoint_id: BreakpointId = field(metadata={"cdp_name": "breakpointId"})
+    location: Location = field(metadata={"cdp_name": "location"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class PausedEvent(CDPEvent):
+class PausedEvent:
     """
     Fired when the virtual machine stopped on breakpoint or exception or any other stop
     criteria.
     """
 
-    call_frames: list[CallFrame]
+    call_frames: list[CallFrame] = field(metadata={"cdp_name": "callFrames"})
     reason: Literal[
         "ambiguous",
         "assert",
@@ -60,74 +65,139 @@ class PausedEvent(CDPEvent):
         "promiseRejection",
         "XHR",
         "step",
-    ]
-    data: dict[str, Any] | None = None
-    hit_breakpoints: list[str] | None = None
-    async_stack_trace: runtime.StackTrace | None = None
-    async_stack_trace_id: runtime.StackTraceId | None = None
-    async_call_stack_trace_id: runtime.StackTraceId | None = None
+    ] = field(  # noqa: E501
+        metadata={"cdp_name": "reason"},
+    )
+    data: dict[str, Any] | None = field(default=None, metadata={"cdp_name": "data"})
+    hit_breakpoints: list[str] | None = field(
+        default=None, metadata={"cdp_name": "hitBreakpoints"}
+    )
+    async_stack_trace: runtime.StackTrace | None = field(
+        default=None, metadata={"cdp_name": "asyncStackTrace"}
+    )
+    async_stack_trace_id: runtime.StackTraceId | None = field(
+        default=None, metadata={"cdp_name": "asyncStackTraceId"}
+    )
+    async_call_stack_trace_id: runtime.StackTraceId | None = field(
+        default=None, metadata={"cdp_name": "asyncCallStackTraceId"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ResumedEvent(CDPEvent):
+class ResumedEvent:
     """
     Fired when the virtual machine resumed execution.
     """
 
-    pass
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ScriptFailedToParseEvent(CDPEvent):
+class ScriptFailedToParseEvent:
     """
     Fired when virtual machine fails to parse the script.
     """
 
-    script_id: runtime.ScriptId
-    url: str
-    start_line: int
-    start_column: int
-    end_line: int
-    end_column: int
-    execution_context_id: runtime.ExecutionContextId
-    hash: str
-    build_id: str
-    execution_context_aux_data: dict[str, Any] | None = None
-    source_map_url: str | None = None
-    has_source_url: bool | None = None
-    is_module: bool | None = None
-    length: int | None = None
-    stack_trace: runtime.StackTrace | None = None
-    code_offset: int | None = None
-    script_language: debugger.ScriptLanguage | None = None
-    embedder_name: str | None = None
+    script_id: runtime.ScriptId = field(metadata={"cdp_name": "scriptId"})
+    url: str = field(metadata={"cdp_name": "url"})
+    start_line: int = field(metadata={"cdp_name": "startLine"})
+    start_column: int = field(metadata={"cdp_name": "startColumn"})
+    end_line: int = field(metadata={"cdp_name": "endLine"})
+    end_column: int = field(metadata={"cdp_name": "endColumn"})
+    execution_context_id: runtime.ExecutionContextId = field(
+        metadata={"cdp_name": "executionContextId"}
+    )
+    hash: str = field(metadata={"cdp_name": "hash"})
+    build_id: str = field(metadata={"cdp_name": "buildId"})
+    execution_context_aux_data: dict[str, Any] | None = field(
+        default=None, metadata={"cdp_name": "executionContextAuxData"}
+    )
+    source_map_url: str | None = field(
+        default=None, metadata={"cdp_name": "sourceMapURL"}
+    )
+    has_source_url: bool | None = field(
+        default=None, metadata={"cdp_name": "hasSourceURL"}
+    )
+    is_module: bool | None = field(default=None, metadata={"cdp_name": "isModule"})
+    length: int | None = field(default=None, metadata={"cdp_name": "length"})
+    stack_trace: runtime.StackTrace | None = field(
+        default=None, metadata={"cdp_name": "stackTrace"}
+    )
+    code_offset: int | None = field(default=None, metadata={"cdp_name": "codeOffset"})
+    script_language: debugger.ScriptLanguage | None = field(
+        default=None, metadata={"cdp_name": "scriptLanguage"}
+    )
+    embedder_name: str | None = field(
+        default=None, metadata={"cdp_name": "embedderName"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ScriptParsedEvent(CDPEvent):
+class ScriptParsedEvent:
     """
     Fired when virtual machine parses script. This event is also fired for all known
     and uncollected scripts upon enabling debugger.
     """
 
-    script_id: runtime.ScriptId
-    url: str
-    start_line: int
-    start_column: int
-    end_line: int
-    end_column: int
-    execution_context_id: runtime.ExecutionContextId
-    hash: str
-    build_id: str
-    execution_context_aux_data: dict[str, Any] | None = None
-    is_live_edit: bool | None = None
-    source_map_url: str | None = None
-    has_source_url: bool | None = None
-    is_module: bool | None = None
-    length: int | None = None
-    stack_trace: runtime.StackTrace | None = None
-    code_offset: int | None = None
-    script_language: debugger.ScriptLanguage | None = None
-    debug_symbols: list[debugger.DebugSymbols] | None = None
-    embedder_name: str | None = None
-    resolved_breakpoints: list[ResolvedBreakpoint] | None = None
+    script_id: runtime.ScriptId = field(metadata={"cdp_name": "scriptId"})
+    url: str = field(metadata={"cdp_name": "url"})
+    start_line: int = field(metadata={"cdp_name": "startLine"})
+    start_column: int = field(metadata={"cdp_name": "startColumn"})
+    end_line: int = field(metadata={"cdp_name": "endLine"})
+    end_column: int = field(metadata={"cdp_name": "endColumn"})
+    execution_context_id: runtime.ExecutionContextId = field(
+        metadata={"cdp_name": "executionContextId"}
+    )
+    hash: str = field(metadata={"cdp_name": "hash"})
+    build_id: str = field(metadata={"cdp_name": "buildId"})
+    execution_context_aux_data: dict[str, Any] | None = field(
+        default=None, metadata={"cdp_name": "executionContextAuxData"}
+    )
+    is_live_edit: bool | None = field(default=None, metadata={"cdp_name": "isLiveEdit"})
+    source_map_url: str | None = field(
+        default=None, metadata={"cdp_name": "sourceMapURL"}
+    )
+    has_source_url: bool | None = field(
+        default=None, metadata={"cdp_name": "hasSourceURL"}
+    )
+    is_module: bool | None = field(default=None, metadata={"cdp_name": "isModule"})
+    length: int | None = field(default=None, metadata={"cdp_name": "length"})
+    stack_trace: runtime.StackTrace | None = field(
+        default=None, metadata={"cdp_name": "stackTrace"}
+    )
+    code_offset: int | None = field(default=None, metadata={"cdp_name": "codeOffset"})
+    script_language: debugger.ScriptLanguage | None = field(
+        default=None, metadata={"cdp_name": "scriptLanguage"}
+    )
+    debug_symbols: list[debugger.DebugSymbols] | None = field(
+        default=None, metadata={"cdp_name": "debugSymbols"}
+    )
+    embedder_name: str | None = field(
+        default=None, metadata={"cdp_name": "embedderName"}
+    )
+    resolved_breakpoints: list[ResolvedBreakpoint] | None = field(
+        default=None, metadata={"cdp_name": "resolvedBreakpoints"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

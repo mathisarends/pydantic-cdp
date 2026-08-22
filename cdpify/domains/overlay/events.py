@@ -4,11 +4,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 
 from cdpify.domains import dom, page
-from cdpify.shared.models import CDPEvent
 
 
 class OverlayEvent(StrEnum):
@@ -21,56 +20,91 @@ class OverlayEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class InspectNodeRequestedEvent(CDPEvent):
+class InspectNodeRequestedEvent:
     """
     Fired when the node should be inspected. This happens after call to
     `setInspectMode` or when user manually inspects an element.
     """
 
-    backend_node_id: dom.BackendNodeId
+    backend_node_id: dom.BackendNodeId = field(metadata={"cdp_name": "backendNodeId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class NodeHighlightRequestedEvent(CDPEvent):
+class NodeHighlightRequestedEvent:
     """
     Fired when the node should be highlighted. This happens after call to
     `setInspectMode`.
     """
 
-    node_id: dom.NodeId
+    node_id: dom.NodeId = field(metadata={"cdp_name": "nodeId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ScreenshotRequestedEvent(CDPEvent):
+class ScreenshotRequestedEvent:
     """
     Fired when user asks to capture screenshot of some area on the page.
     """
 
-    viewport: page.Viewport
+    viewport: page.Viewport = field(metadata={"cdp_name": "viewport"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class InspectPanelShowRequestedEvent(CDPEvent):
+class InspectPanelShowRequestedEvent:
     """
     Fired when user asks to show the Inspect panel.
     """
 
-    backend_node_id: dom.BackendNodeId
+    backend_node_id: dom.BackendNodeId = field(metadata={"cdp_name": "backendNodeId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class InspectedElementWindowRestoredEvent(CDPEvent):
+class InspectedElementWindowRestoredEvent:
     """
     Fired when user asks to restore the Inspected Element floating window.
     """
 
-    backend_node_id: dom.BackendNodeId
+    backend_node_id: dom.BackendNodeId = field(metadata={"cdp_name": "backendNodeId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class InspectModeCanceledEvent(CDPEvent):
+class InspectModeCanceledEvent:
     """
     Fired when user cancels the inspect mode.
     """
 
-    pass
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

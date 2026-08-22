@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+from cdpify.codec import decode_cdp, encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -65,10 +66,10 @@ class WebMCP:
 
         result = await self._command_sender.send_raw(
             method=WebMCPCommand.INVOKE_TOOL,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return InvokeToolResult.from_cdp(result)
+        return decode_cdp(InvokeToolResult, result)
 
     async def cancel_invocation(
         self,
@@ -83,6 +84,6 @@ class WebMCP:
 
         await self._command_sender.send_raw(
             method=WebMCPCommand.CANCEL_INVOCATION,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )

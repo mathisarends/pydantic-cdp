@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+from cdpify.codec import decode_cdp, encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -33,7 +34,7 @@ class DOMStorage:
 
         await self._command_sender.send_raw(
             method=DOMStorageCommand.CLEAR,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -74,10 +75,10 @@ class DOMStorage:
 
         result = await self._command_sender.send_raw(
             method=DOMStorageCommand.GET_DOM_STORAGE_ITEMS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetDOMStorageItemsResult.from_cdp(result)
+        return decode_cdp(GetDOMStorageItemsResult, result)
 
     async def remove_dom_storage_item(
         self,
@@ -90,7 +91,7 @@ class DOMStorage:
 
         await self._command_sender.send_raw(
             method=DOMStorageCommand.REMOVE_DOM_STORAGE_ITEM,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -106,6 +107,6 @@ class DOMStorage:
 
         await self._command_sender.send_raw(
             method=DOMStorageCommand.SET_DOM_STORAGE_ITEM,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )

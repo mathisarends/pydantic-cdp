@@ -4,12 +4,11 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Any
 
 from cdpify.domains import page, runtime
-from cdpify.shared.models import CDPEvent
 
 from .types import (
     InvocationStatus,
@@ -26,43 +25,69 @@ class WebMCPEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class ToolsAddedEvent(CDPEvent):
+class ToolsAddedEvent:
     """
     Event fired when new tools are added.
     """
 
-    tools: list[Tool]
+    tools: list[Tool] = field(metadata={"cdp_name": "tools"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ToolsRemovedEvent(CDPEvent):
+class ToolsRemovedEvent:
     """
     Event fired when tools are removed.
     """
 
-    tools: list[RemovedTool]
+    tools: list[RemovedTool] = field(metadata={"cdp_name": "tools"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ToolInvokedEvent(CDPEvent):
+class ToolInvokedEvent:
     """
     Event fired when a tool invocation starts.
     """
 
-    tool_name: str
-    frame_id: page.FrameId
-    invocation_id: str
-    input: str
+    tool_name: str = field(metadata={"cdp_name": "toolName"})
+    frame_id: page.FrameId = field(metadata={"cdp_name": "frameId"})
+    invocation_id: str = field(metadata={"cdp_name": "invocationId"})
+    input: str = field(metadata={"cdp_name": "input"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ToolRespondedEvent(CDPEvent):
+class ToolRespondedEvent:
     """
     Event fired when a tool invocation completes or fails.
     """
 
-    invocation_id: str
-    status: InvocationStatus
-    output: Any | None = None
-    error_text: str | None = None
-    exception: runtime.RemoteObject | None = None
+    invocation_id: str = field(metadata={"cdp_name": "invocationId"})
+    status: InvocationStatus = field(metadata={"cdp_name": "status"})
+    output: Any | None = field(default=None, metadata={"cdp_name": "output"})
+    error_text: str | None = field(default=None, metadata={"cdp_name": "errorText"})
+    exception: runtime.RemoteObject | None = field(
+        default=None, metadata={"cdp_name": "exception"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

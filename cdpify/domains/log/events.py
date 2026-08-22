@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPEvent
 
 from .types import (
     LogEntry,
@@ -19,9 +17,15 @@ class LogEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class EntryAddedEvent(CDPEvent):
+class EntryAddedEvent:
     """
     Issued when new message was logged.
     """
 
-    entry: LogEntry
+    entry: LogEntry = field(metadata={"cdp_name": "entry"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

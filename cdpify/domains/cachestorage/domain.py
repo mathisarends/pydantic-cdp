@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from cdpify.codec import decode_cdp, encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -45,7 +46,7 @@ class CacheStorage:
 
         await self._command_sender.send_raw(
             method=CacheStorageCommand.DELETE_CACHE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -63,7 +64,7 @@ class CacheStorage:
 
         await self._command_sender.send_raw(
             method=CacheStorageCommand.DELETE_ENTRY,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -86,10 +87,10 @@ class CacheStorage:
 
         result = await self._command_sender.send_raw(
             method=CacheStorageCommand.REQUEST_CACHE_NAMES,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return RequestCacheNamesResult.from_cdp(result)
+        return decode_cdp(RequestCacheNamesResult, result)
 
     async def request_cached_response(
         self,
@@ -108,10 +109,10 @@ class CacheStorage:
 
         result = await self._command_sender.send_raw(
             method=CacheStorageCommand.REQUEST_CACHED_RESPONSE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return RequestCachedResponseResult.from_cdp(result)
+        return decode_cdp(RequestCachedResponseResult, result)
 
     async def request_entries(
         self,
@@ -134,7 +135,7 @@ class CacheStorage:
 
         result = await self._command_sender.send_raw(
             method=CacheStorageCommand.REQUEST_ENTRIES,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return RequestEntriesResult.from_cdp(result)
+        return decode_cdp(RequestEntriesResult, result)

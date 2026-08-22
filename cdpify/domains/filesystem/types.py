@@ -4,29 +4,30 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from cdpify.domains import network, storage
-from cdpify.shared.models import CDPModel
 
 
 @dataclass(kw_only=True, slots=True)
-class File(CDPModel):
-    name: str
-    last_modified: network.TimeSinceEpoch
-    size: float
-    type: str
+class File:
+    name: str = field(metadata={"cdp_name": "name"})
+    last_modified: network.TimeSinceEpoch = field(metadata={"cdp_name": "lastModified"})
+    size: float = field(metadata={"cdp_name": "size"})
+    type: str = field(metadata={"cdp_name": "type"})
 
 
 @dataclass(kw_only=True, slots=True)
-class Directory(CDPModel):
-    name: str
-    nested_directories: list[str]
-    nested_files: list[File]
+class Directory:
+    name: str = field(metadata={"cdp_name": "name"})
+    nested_directories: list[str] = field(metadata={"cdp_name": "nestedDirectories"})
+    nested_files: list[File] = field(metadata={"cdp_name": "nestedFiles"})
 
 
 @dataclass(kw_only=True, slots=True)
-class BucketFileSystemLocator(CDPModel):
-    storage_key: storage.SerializedStorageKey
-    bucket_name: str | None = None
-    path_components: list[str]
+class BucketFileSystemLocator:
+    storage_key: storage.SerializedStorageKey = field(
+        metadata={"cdp_name": "storageKey"}
+    )
+    bucket_name: str | None = field(default=None, metadata={"cdp_name": "bucketName"})
+    path_components: list[str] = field(metadata={"cdp_name": "pathComponents"})

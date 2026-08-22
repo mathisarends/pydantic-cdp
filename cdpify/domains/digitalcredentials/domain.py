@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+from cdpify.codec import encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -43,6 +44,6 @@ class DigitalCredentials:
 
         await self._command_sender.send_raw(
             method=DigitalCredentialsCommand.SET_VIRTUAL_WALLET_BEHAVIOR,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )

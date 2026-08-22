@@ -4,11 +4,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 
 from cdpify.domains import storage
-from cdpify.shared.models import CDPModel
 
 from .types import (
     DatabaseWithObjectStores,
@@ -30,114 +29,146 @@ class IndexedDBCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class ClearObjectStoreParams(CDPModel):
+class ClearObjectStoreParams:
     """
     Clears all entries from an object store.
     """
 
-    security_origin: str | None = None
-    storage_key: str | None = None
-    storage_bucket: storage.StorageBucket | None = None
-    database_name: str
-    object_store_name: str
+    security_origin: str | None = field(
+        default=None, metadata={"cdp_name": "securityOrigin"}
+    )
+    storage_key: str | None = field(default=None, metadata={"cdp_name": "storageKey"})
+    storage_bucket: storage.StorageBucket | None = field(
+        default=None, metadata={"cdp_name": "storageBucket"}
+    )
+    database_name: str = field(metadata={"cdp_name": "databaseName"})
+    object_store_name: str = field(metadata={"cdp_name": "objectStoreName"})
 
 
 @dataclass(kw_only=True, slots=True)
-class DeleteDatabaseParams(CDPModel):
+class DeleteDatabaseParams:
     """
     Deletes a database.
     """
 
-    security_origin: str | None = None
-    storage_key: str | None = None
-    storage_bucket: storage.StorageBucket | None = None
-    database_name: str
+    security_origin: str | None = field(
+        default=None, metadata={"cdp_name": "securityOrigin"}
+    )
+    storage_key: str | None = field(default=None, metadata={"cdp_name": "storageKey"})
+    storage_bucket: storage.StorageBucket | None = field(
+        default=None, metadata={"cdp_name": "storageBucket"}
+    )
+    database_name: str = field(metadata={"cdp_name": "databaseName"})
 
 
 @dataclass(kw_only=True, slots=True)
-class DeleteObjectStoreEntriesParams(CDPModel):
+class DeleteObjectStoreEntriesParams:
     """
     Delete a range of entries from an object store
     """
 
-    security_origin: str | None = None
-    storage_key: str | None = None
-    storage_bucket: storage.StorageBucket | None = None
-    database_name: str
-    object_store_name: str
-    key_range: KeyRange
+    security_origin: str | None = field(
+        default=None, metadata={"cdp_name": "securityOrigin"}
+    )
+    storage_key: str | None = field(default=None, metadata={"cdp_name": "storageKey"})
+    storage_bucket: storage.StorageBucket | None = field(
+        default=None, metadata={"cdp_name": "storageBucket"}
+    )
+    database_name: str = field(metadata={"cdp_name": "databaseName"})
+    object_store_name: str = field(metadata={"cdp_name": "objectStoreName"})
+    key_range: KeyRange = field(metadata={"cdp_name": "keyRange"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RequestDataParams(CDPModel):
+class RequestDataParams:
     """
     Requests data from object store or index.
     """
 
-    security_origin: str | None = None
-    storage_key: str | None = None
-    storage_bucket: storage.StorageBucket | None = None
-    database_name: str
-    object_store_name: str
-    index_name: str | None = None
-    skip_count: int
-    page_size: int
-    key_range: KeyRange | None = None
+    security_origin: str | None = field(
+        default=None, metadata={"cdp_name": "securityOrigin"}
+    )
+    storage_key: str | None = field(default=None, metadata={"cdp_name": "storageKey"})
+    storage_bucket: storage.StorageBucket | None = field(
+        default=None, metadata={"cdp_name": "storageBucket"}
+    )
+    database_name: str = field(metadata={"cdp_name": "databaseName"})
+    object_store_name: str = field(metadata={"cdp_name": "objectStoreName"})
+    index_name: str | None = field(default=None, metadata={"cdp_name": "indexName"})
+    skip_count: int = field(metadata={"cdp_name": "skipCount"})
+    page_size: int = field(metadata={"cdp_name": "pageSize"})
+    key_range: KeyRange | None = field(default=None, metadata={"cdp_name": "keyRange"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RequestDataResult(CDPModel):
-    object_store_data_entries: list[DataEntry]
-    has_more: bool
+class RequestDataResult:
+    object_store_data_entries: list[DataEntry] = field(
+        metadata={"cdp_name": "objectStoreDataEntries"}
+    )
+    has_more: bool = field(metadata={"cdp_name": "hasMore"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetMetadataParams(CDPModel):
+class GetMetadataParams:
     """
     Gets metadata of an object store.
     """
 
-    security_origin: str | None = None
-    storage_key: str | None = None
-    storage_bucket: storage.StorageBucket | None = None
-    database_name: str
-    object_store_name: str
+    security_origin: str | None = field(
+        default=None, metadata={"cdp_name": "securityOrigin"}
+    )
+    storage_key: str | None = field(default=None, metadata={"cdp_name": "storageKey"})
+    storage_bucket: storage.StorageBucket | None = field(
+        default=None, metadata={"cdp_name": "storageBucket"}
+    )
+    database_name: str = field(metadata={"cdp_name": "databaseName"})
+    object_store_name: str = field(metadata={"cdp_name": "objectStoreName"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetMetadataResult(CDPModel):
-    entries_count: float
-    key_generator_value: float
+class GetMetadataResult:
+    entries_count: float = field(metadata={"cdp_name": "entriesCount"})
+    key_generator_value: float = field(metadata={"cdp_name": "keyGeneratorValue"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RequestDatabaseParams(CDPModel):
+class RequestDatabaseParams:
     """
     Requests database with given name in given frame.
     """
 
-    security_origin: str | None = None
-    storage_key: str | None = None
-    storage_bucket: storage.StorageBucket | None = None
-    database_name: str
+    security_origin: str | None = field(
+        default=None, metadata={"cdp_name": "securityOrigin"}
+    )
+    storage_key: str | None = field(default=None, metadata={"cdp_name": "storageKey"})
+    storage_bucket: storage.StorageBucket | None = field(
+        default=None, metadata={"cdp_name": "storageBucket"}
+    )
+    database_name: str = field(metadata={"cdp_name": "databaseName"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RequestDatabaseResult(CDPModel):
-    database_with_object_stores: DatabaseWithObjectStores
+class RequestDatabaseResult:
+    database_with_object_stores: DatabaseWithObjectStores = field(
+        metadata={"cdp_name": "databaseWithObjectStores"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class RequestDatabaseNamesParams(CDPModel):
+class RequestDatabaseNamesParams:
     """
     Requests database names for given security origin.
     """
 
-    security_origin: str | None = None
-    storage_key: str | None = None
-    storage_bucket: storage.StorageBucket | None = None
+    security_origin: str | None = field(
+        default=None, metadata={"cdp_name": "securityOrigin"}
+    )
+    storage_key: str | None = field(default=None, metadata={"cdp_name": "storageKey"})
+    storage_bucket: storage.StorageBucket | None = field(
+        default=None, metadata={"cdp_name": "storageBucket"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class RequestDatabaseNamesResult(CDPModel):
-    database_names: list[str]
+class RequestDatabaseNamesResult:
+    database_names: list[str] = field(metadata={"cdp_name": "databaseNames"})

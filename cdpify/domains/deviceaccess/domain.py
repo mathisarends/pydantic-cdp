@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+from cdpify.codec import encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -61,7 +62,7 @@ class DeviceAccess:
 
         await self._command_sender.send_raw(
             method=DeviceAccessCommand.SELECT_PROMPT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -78,6 +79,6 @@ class DeviceAccess:
 
         await self._command_sender.send_raw(
             method=DeviceAccessCommand.CANCEL_PROMPT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )

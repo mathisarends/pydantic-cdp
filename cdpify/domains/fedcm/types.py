@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Literal
-
-from cdpify.shared.models import CDPModel
 
 """
 Whether this is a sign-up or sign-in action for this account, i.e. whether this account
@@ -32,18 +30,22 @@ type AccountUrlType = Literal["TermsOfService", "PrivacyPolicy"]
 
 
 @dataclass(kw_only=True, slots=True)
-class Account(CDPModel):
+class Account:
     """
     Corresponds to IdentityRequestAccount
     """
 
-    account_id: str
-    email: str
-    name: str
-    given_name: str
-    picture_url: str
-    idp_config_url: str
-    idp_login_url: str
-    login_state: LoginState
-    terms_of_service_url: str | None = None
-    privacy_policy_url: str | None = None
+    account_id: str = field(metadata={"cdp_name": "accountId"})
+    email: str = field(metadata={"cdp_name": "email"})
+    name: str = field(metadata={"cdp_name": "name"})
+    given_name: str = field(metadata={"cdp_name": "givenName"})
+    picture_url: str = field(metadata={"cdp_name": "pictureUrl"})
+    idp_config_url: str = field(metadata={"cdp_name": "idpConfigUrl"})
+    idp_login_url: str = field(metadata={"cdp_name": "idpLoginUrl"})
+    login_state: LoginState = field(metadata={"cdp_name": "loginState"})
+    terms_of_service_url: str | None = field(
+        default=None, metadata={"cdp_name": "termsOfServiceUrl"}
+    )
+    privacy_policy_url: str | None = field(
+        default=None, metadata={"cdp_name": "privacyPolicyUrl"}
+    )

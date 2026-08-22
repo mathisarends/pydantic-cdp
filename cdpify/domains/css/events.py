@@ -4,11 +4,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 
 from cdpify.domains import dom
-from cdpify.shared.models import CDPEvent
 
 from .types import (
     CSSStyleSheetHeader,
@@ -26,53 +25,88 @@ class CSSEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class FontsUpdatedEvent(CDPEvent):
+class FontsUpdatedEvent:
     """
     Fires whenever a web font is updated. A non-empty font parameter indicates a
     successfully loaded web font.
     """
 
-    font: FontFace | None = None
+    font: FontFace | None = field(default=None, metadata={"cdp_name": "font"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class MediaQueryResultChangedEvent(CDPEvent):
+class MediaQueryResultChangedEvent:
     """
     Fires whenever a MediaQuery result changes (for example, after a browser window has
     been resized.) The current implementation considers only viewport-dependent media
     features.
     """
 
-    pass
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class StyleSheetAddedEvent(CDPEvent):
+class StyleSheetAddedEvent:
     """
     Fired whenever an active document stylesheet is added.
     """
 
-    header: CSSStyleSheetHeader
+    header: CSSStyleSheetHeader = field(metadata={"cdp_name": "header"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class StyleSheetChangedEvent(CDPEvent):
+class StyleSheetChangedEvent:
     """
     Fired whenever a stylesheet is changed as a result of the client operation.
     """
 
-    style_sheet_id: dom.StyleSheetId
+    style_sheet_id: dom.StyleSheetId = field(metadata={"cdp_name": "styleSheetId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class StyleSheetRemovedEvent(CDPEvent):
+class StyleSheetRemovedEvent:
     """
     Fired whenever an active document stylesheet is removed.
     """
 
-    style_sheet_id: dom.StyleSheetId
+    style_sheet_id: dom.StyleSheetId = field(metadata={"cdp_name": "styleSheetId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ComputedStyleUpdatedEvent(CDPEvent):
-    node_id: dom.NodeId
+class ComputedStyleUpdatedEvent:
+    node_id: dom.NodeId = field(metadata={"cdp_name": "nodeId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

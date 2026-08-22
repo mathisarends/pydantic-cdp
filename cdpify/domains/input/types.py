@@ -4,25 +4,27 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Literal
-
-from cdpify.shared.models import CDPModel
 
 
 @dataclass(kw_only=True, slots=True)
-class TouchPoint(CDPModel):
-    x: float
-    y: float
-    radius_x: float | None = None
-    radius_y: float | None = None
-    rotation_angle: float | None = None
-    force: float | None = None
-    tangential_pressure: float | None = None
-    tilt_x: float | None = None
-    tilt_y: float | None = None
-    twist: int | None = None
-    id: float | None = None
+class TouchPoint:
+    x: float = field(metadata={"cdp_name": "x"})
+    y: float = field(metadata={"cdp_name": "y"})
+    radius_x: float | None = field(default=None, metadata={"cdp_name": "radiusX"})
+    radius_y: float | None = field(default=None, metadata={"cdp_name": "radiusY"})
+    rotation_angle: float | None = field(
+        default=None, metadata={"cdp_name": "rotationAngle"}
+    )
+    force: float | None = field(default=None, metadata={"cdp_name": "force"})
+    tangential_pressure: float | None = field(
+        default=None, metadata={"cdp_name": "tangentialPressure"}
+    )
+    tilt_x: float | None = field(default=None, metadata={"cdp_name": "tiltX"})
+    tilt_y: float | None = field(default=None, metadata={"cdp_name": "tiltY"})
+    twist: int | None = field(default=None, metadata={"cdp_name": "twist"})
+    id: float | None = field(default=None, metadata={"cdp_name": "id"})
 
 
 type GestureSourceType = Literal["default", "touch", "mouse"]
@@ -36,15 +38,15 @@ TimeSinceEpoch = float
 
 
 @dataclass(kw_only=True, slots=True)
-class DragDataItem(CDPModel):
-    mime_type: str
-    data: str
-    title: str | None = None
-    base_url: str | None = None
+class DragDataItem:
+    mime_type: str = field(metadata={"cdp_name": "mimeType"})
+    data: str = field(metadata={"cdp_name": "data"})
+    title: str | None = field(default=None, metadata={"cdp_name": "title"})
+    base_url: str | None = field(default=None, metadata={"cdp_name": "baseURL"})
 
 
 @dataclass(kw_only=True, slots=True)
-class DragData(CDPModel):
-    items: list[DragDataItem]
-    files: list[str] | None = None
-    drag_operations_mask: int
+class DragData:
+    items: list[DragDataItem] = field(metadata={"cdp_name": "items"})
+    files: list[str] | None = field(default=None, metadata={"cdp_name": "files"})
+    drag_operations_mask: int = field(metadata={"cdp_name": "dragOperationsMask"})

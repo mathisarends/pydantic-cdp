@@ -4,11 +4,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Literal
 
 from cdpify.domains import network
-from cdpify.shared.models import CDPModel
 
 """
 Unique request identifier. Note that this does not identify individual HTTP requests
@@ -25,40 +24,48 @@ type RequestStage = Literal["Request", "Response"]
 
 
 @dataclass(kw_only=True, slots=True)
-class RequestPattern(CDPModel):
-    url_pattern: str | None = None
-    resource_type: network.ResourceType | None = None
-    request_stage: RequestStage | None = None
+class RequestPattern:
+    url_pattern: str | None = field(default=None, metadata={"cdp_name": "urlPattern"})
+    resource_type: network.ResourceType | None = field(
+        default=None, metadata={"cdp_name": "resourceType"}
+    )
+    request_stage: RequestStage | None = field(
+        default=None, metadata={"cdp_name": "requestStage"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class HeaderEntry(CDPModel):
+class HeaderEntry:
     """
     Response HTTP header entry
     """
 
-    name: str
-    value: str
+    name: str = field(metadata={"cdp_name": "name"})
+    value: str = field(metadata={"cdp_name": "value"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AuthChallenge(CDPModel):
+class AuthChallenge:
     """
     Authorization challenge for HTTP status code 401 or 407.
     """
 
-    source: Literal["Server", "Proxy"] | None = None
-    origin: str
-    scheme: str
-    realm: str
+    source: Literal["Server", "Proxy"] | None = field(
+        default=None, metadata={"cdp_name": "source"}
+    )
+    origin: str = field(metadata={"cdp_name": "origin"})
+    scheme: str = field(metadata={"cdp_name": "scheme"})
+    realm: str = field(metadata={"cdp_name": "realm"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AuthChallengeResponse(CDPModel):
+class AuthChallengeResponse:
     """
     Response to an AuthChallenge.
     """
 
-    response: Literal["Default", "CancelAuth", "ProvideCredentials"]
-    username: str | None = None
-    password: str | None = None
+    response: Literal["Default", "CancelAuth", "ProvideCredentials"] = field(
+        metadata={"cdp_name": "response"}
+    )
+    username: str | None = field(default=None, metadata={"cdp_name": "username"})
+    password: str | None = field(default=None, metadata={"cdp_name": "password"})

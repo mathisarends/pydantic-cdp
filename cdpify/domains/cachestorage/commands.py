@@ -4,11 +4,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 
 from cdpify.domains import storage
-from cdpify.shared.models import CDPModel
 
 from .types import (
     Cache,
@@ -28,69 +27,75 @@ class CacheStorageCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class DeleteCacheParams(CDPModel):
+class DeleteCacheParams:
     """
     Deletes a cache.
     """
 
-    cache_id: CacheId
+    cache_id: CacheId = field(metadata={"cdp_name": "cacheId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class DeleteEntryParams(CDPModel):
+class DeleteEntryParams:
     """
     Deletes a cache entry.
     """
 
-    cache_id: CacheId
-    request: str
+    cache_id: CacheId = field(metadata={"cdp_name": "cacheId"})
+    request: str = field(metadata={"cdp_name": "request"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RequestCacheNamesParams(CDPModel):
+class RequestCacheNamesParams:
     """
     Requests cache names.
     """
 
-    security_origin: str | None = None
-    storage_key: str | None = None
-    storage_bucket: storage.StorageBucket | None = None
+    security_origin: str | None = field(
+        default=None, metadata={"cdp_name": "securityOrigin"}
+    )
+    storage_key: str | None = field(default=None, metadata={"cdp_name": "storageKey"})
+    storage_bucket: storage.StorageBucket | None = field(
+        default=None, metadata={"cdp_name": "storageBucket"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class RequestCacheNamesResult(CDPModel):
-    caches: list[Cache]
+class RequestCacheNamesResult:
+    caches: list[Cache] = field(metadata={"cdp_name": "caches"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RequestCachedResponseParams(CDPModel):
+class RequestCachedResponseParams:
     """
     Fetches cache entry.
     """
 
-    cache_id: CacheId
-    request_url: str
-    request_headers: list[Header]
+    cache_id: CacheId = field(metadata={"cdp_name": "cacheId"})
+    request_url: str = field(metadata={"cdp_name": "requestURL"})
+    request_headers: list[Header] = field(metadata={"cdp_name": "requestHeaders"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RequestCachedResponseResult(CDPModel):
-    response: CachedResponse
+class RequestCachedResponseResult:
+    response: CachedResponse = field(metadata={"cdp_name": "response"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RequestEntriesParams(CDPModel):
+class RequestEntriesParams:
     """
     Requests data from cache.
     """
 
-    cache_id: CacheId
-    skip_count: int | None = None
-    page_size: int | None = None
-    path_filter: str | None = None
+    cache_id: CacheId = field(metadata={"cdp_name": "cacheId"})
+    skip_count: int | None = field(default=None, metadata={"cdp_name": "skipCount"})
+    page_size: int | None = field(default=None, metadata={"cdp_name": "pageSize"})
+    path_filter: str | None = field(default=None, metadata={"cdp_name": "pathFilter"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RequestEntriesResult(CDPModel):
-    cache_data_entries: list[DataEntry]
-    return_count: float
+class RequestEntriesResult:
+    cache_data_entries: list[DataEntry] = field(
+        metadata={"cdp_name": "cacheDataEntries"}
+    )
+    return_count: float = field(metadata={"cdp_name": "returnCount"})

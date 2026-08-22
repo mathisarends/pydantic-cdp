@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPEvent
 
 from .types import (
     DragData,
@@ -19,10 +17,16 @@ class InputEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class DragInterceptedEvent(CDPEvent):
+class DragInterceptedEvent:
     """
     Emitted only when `Input.setInterceptDrags` is enabled. Use this data with
     `Input.dispatchDragEvent` to restore normal drag and drop behavior.
     """
 
-    data: DragData
+    data: DragData = field(metadata={"cdp_name": "data"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

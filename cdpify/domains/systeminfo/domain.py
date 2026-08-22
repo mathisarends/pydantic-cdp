@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+from cdpify.codec import decode_cdp, encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -31,7 +32,7 @@ class SystemInfo:
             params=None,
             session_id=session_id,
         )
-        return GetInfoResult.from_cdp(result)
+        return decode_cdp(GetInfoResult, result)
 
     async def get_feature_state(
         self,
@@ -46,10 +47,10 @@ class SystemInfo:
 
         result = await self._command_sender.send_raw(
             method=SystemInfoCommand.GET_FEATURE_STATE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetFeatureStateResult.from_cdp(result)
+        return decode_cdp(GetFeatureStateResult, result)
 
     async def get_process_info(
         self,
@@ -63,4 +64,4 @@ class SystemInfo:
             params=None,
             session_id=session_id,
         )
-        return GetProcessInfoResult.from_cdp(result)
+        return decode_cdp(GetProcessInfoResult, result)

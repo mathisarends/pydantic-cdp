@@ -4,12 +4,11 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Any
 
 from cdpify.domains import dom, page, runtime
-from cdpify.shared.models import CDPModel
 
 from .types import (
     ColorFormat,
@@ -65,92 +64,110 @@ class OverlayCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class GetHighlightObjectForTestParams(CDPModel):
+class GetHighlightObjectForTestParams:
     """
     For testing.
     """
 
-    node_id: dom.NodeId
-    include_distance: bool | None = None
-    include_style: bool | None = None
-    color_format: ColorFormat | None = None
-    show_accessibility_info: bool | None = None
+    node_id: dom.NodeId = field(metadata={"cdp_name": "nodeId"})
+    include_distance: bool | None = field(
+        default=None, metadata={"cdp_name": "includeDistance"}
+    )
+    include_style: bool | None = field(
+        default=None, metadata={"cdp_name": "includeStyle"}
+    )
+    color_format: ColorFormat | None = field(
+        default=None, metadata={"cdp_name": "colorFormat"}
+    )
+    show_accessibility_info: bool | None = field(
+        default=None, metadata={"cdp_name": "showAccessibilityInfo"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetHighlightObjectForTestResult(CDPModel):
-    highlight: dict[str, Any]
+class GetHighlightObjectForTestResult:
+    highlight: dict[str, Any] = field(metadata={"cdp_name": "highlight"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetGridHighlightObjectsForTestParams(CDPModel):
+class GetGridHighlightObjectsForTestParams:
     """
     For Persistent Grid testing.
     """
 
-    node_ids: list[dom.NodeId]
+    node_ids: list[dom.NodeId] = field(metadata={"cdp_name": "nodeIds"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetGridHighlightObjectsForTestResult(CDPModel):
-    highlights: dict[str, Any]
+class GetGridHighlightObjectsForTestResult:
+    highlights: dict[str, Any] = field(metadata={"cdp_name": "highlights"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetSourceOrderHighlightObjectForTestParams(CDPModel):
+class GetSourceOrderHighlightObjectForTestParams:
     """
     For Source Order Viewer testing.
     """
 
-    node_id: dom.NodeId
+    node_id: dom.NodeId = field(metadata={"cdp_name": "nodeId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetSourceOrderHighlightObjectForTestResult(CDPModel):
-    highlight: dict[str, Any]
+class GetSourceOrderHighlightObjectForTestResult:
+    highlight: dict[str, Any] = field(metadata={"cdp_name": "highlight"})
 
 
 @dataclass(kw_only=True, slots=True)
-class HighlightFrameParams(CDPModel):
+class HighlightFrameParams:
     """
     Highlights owner element of the frame with given id. Deprecated: Doesn't work
     reliably and cannot be fixed due to process separation (the owner node might be in a
     different process). Determine the owner node in the client and use highlightNode.
     """
 
-    frame_id: page.FrameId
-    content_color: dom.RGBA | None = None
-    content_outline_color: dom.RGBA | None = None
+    frame_id: page.FrameId = field(metadata={"cdp_name": "frameId"})
+    content_color: dom.RGBA | None = field(
+        default=None, metadata={"cdp_name": "contentColor"}
+    )
+    content_outline_color: dom.RGBA | None = field(
+        default=None, metadata={"cdp_name": "contentOutlineColor"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class HighlightNodeParams(CDPModel):
+class HighlightNodeParams:
     """
     Highlights DOM node with given id or with the given JavaScript object wrapper.
     Either nodeId or objectId must be specified.
     """
 
-    highlight_config: HighlightConfig
-    node_id: dom.NodeId | None = None
-    backend_node_id: dom.BackendNodeId | None = None
-    object_id: runtime.RemoteObjectId | None = None
-    selector: str | None = None
+    highlight_config: HighlightConfig = field(metadata={"cdp_name": "highlightConfig"})
+    node_id: dom.NodeId | None = field(default=None, metadata={"cdp_name": "nodeId"})
+    backend_node_id: dom.BackendNodeId | None = field(
+        default=None, metadata={"cdp_name": "backendNodeId"}
+    )
+    object_id: runtime.RemoteObjectId | None = field(
+        default=None, metadata={"cdp_name": "objectId"}
+    )
+    selector: str | None = field(default=None, metadata={"cdp_name": "selector"})
 
 
 @dataclass(kw_only=True, slots=True)
-class HighlightQuadParams(CDPModel):
+class HighlightQuadParams:
     """
     Highlights given quad. Coordinates are absolute with respect to the main frame
     viewport.
     """
 
-    quad: dom.Quad
-    color: dom.RGBA | None = None
-    outline_color: dom.RGBA | None = None
+    quad: dom.Quad = field(metadata={"cdp_name": "quad"})
+    color: dom.RGBA | None = field(default=None, metadata={"cdp_name": "color"})
+    outline_color: dom.RGBA | None = field(
+        default=None, metadata={"cdp_name": "outlineColor"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class HighlightRectParams(CDPModel):
+class HighlightRectParams:
     """
     Highlights given rectangle. Coordinates are absolute with respect to the main frame
     viewport. Issue: the method does not handle device pixel ratio (DPR) correctly. The
@@ -158,185 +175,213 @@ class HighlightRectParams(CDPModel):
     crbug.com/437807128).
     """
 
-    x: int
-    y: int
-    width: int
-    height: int
-    color: dom.RGBA | None = None
-    outline_color: dom.RGBA | None = None
+    x: int = field(metadata={"cdp_name": "x"})
+    y: int = field(metadata={"cdp_name": "y"})
+    width: int = field(metadata={"cdp_name": "width"})
+    height: int = field(metadata={"cdp_name": "height"})
+    color: dom.RGBA | None = field(default=None, metadata={"cdp_name": "color"})
+    outline_color: dom.RGBA | None = field(
+        default=None, metadata={"cdp_name": "outlineColor"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class HighlightSourceOrderParams(CDPModel):
+class HighlightSourceOrderParams:
     """
     Highlights the source order of the children of the DOM node with given id or with
     the given JavaScript object wrapper. Either nodeId or objectId must be specified.
     """
 
-    source_order_config: SourceOrderConfig
-    node_id: dom.NodeId | None = None
-    backend_node_id: dom.BackendNodeId | None = None
-    object_id: runtime.RemoteObjectId | None = None
+    source_order_config: SourceOrderConfig = field(
+        metadata={"cdp_name": "sourceOrderConfig"}
+    )
+    node_id: dom.NodeId | None = field(default=None, metadata={"cdp_name": "nodeId"})
+    backend_node_id: dom.BackendNodeId | None = field(
+        default=None, metadata={"cdp_name": "backendNodeId"}
+    )
+    object_id: runtime.RemoteObjectId | None = field(
+        default=None, metadata={"cdp_name": "objectId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetInspectModeParams(CDPModel):
+class SetInspectModeParams:
     """
     Enters the 'inspect' mode. In this mode, elements that user is hovering over are
     highlighted. Backend then generates 'inspectNodeRequested' event upon element
     selection.
     """
 
-    mode: InspectMode
-    highlight_config: HighlightConfig | None = None
+    mode: InspectMode = field(metadata={"cdp_name": "mode"})
+    highlight_config: HighlightConfig | None = field(
+        default=None, metadata={"cdp_name": "highlightConfig"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetShowAdHighlightsParams(CDPModel):
+class SetShowAdHighlightsParams:
     """
     Highlights owner element of all frames detected to be ads.
     """
 
-    show: bool
+    show: bool = field(metadata={"cdp_name": "show"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetPausedInDebuggerMessageParams(CDPModel):
-    message: str | None = None
+class SetPausedInDebuggerMessageParams:
+    message: str | None = field(default=None, metadata={"cdp_name": "message"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetShowDebugBordersParams(CDPModel):
+class SetShowDebugBordersParams:
     """
     Requests that backend shows debug borders on layers
     """
 
-    show: bool
+    show: bool = field(metadata={"cdp_name": "show"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetShowFPSCounterParams(CDPModel):
+class SetShowFPSCounterParams:
     """
     Requests that backend shows the FPS counter
     """
 
-    show: bool
+    show: bool = field(metadata={"cdp_name": "show"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetShowGridOverlaysParams(CDPModel):
+class SetShowGridOverlaysParams:
     """
     Highlight multiple elements with the CSS Grid overlay.
     """
 
-    grid_node_highlight_configs: list[GridNodeHighlightConfig]
+    grid_node_highlight_configs: list[GridNodeHighlightConfig] = field(
+        metadata={"cdp_name": "gridNodeHighlightConfigs"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetShowFlexOverlaysParams(CDPModel):
-    flex_node_highlight_configs: list[FlexNodeHighlightConfig]
+class SetShowFlexOverlaysParams:
+    flex_node_highlight_configs: list[FlexNodeHighlightConfig] = field(
+        metadata={"cdp_name": "flexNodeHighlightConfigs"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetShowScrollSnapOverlaysParams(CDPModel):
-    scroll_snap_highlight_configs: list[ScrollSnapHighlightConfig]
+class SetShowScrollSnapOverlaysParams:
+    scroll_snap_highlight_configs: list[ScrollSnapHighlightConfig] = field(
+        metadata={"cdp_name": "scrollSnapHighlightConfigs"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetShowContainerQueryOverlaysParams(CDPModel):
-    container_query_highlight_configs: list[ContainerQueryHighlightConfig]
+class SetShowContainerQueryOverlaysParams:
+    container_query_highlight_configs: list[ContainerQueryHighlightConfig] = field(
+        metadata={"cdp_name": "containerQueryHighlightConfigs"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetShowInspectedElementAnchorParams(CDPModel):
-    inspected_element_anchor_config: InspectedElementAnchorConfig
+class SetShowInspectedElementAnchorParams:
+    inspected_element_anchor_config: InspectedElementAnchorConfig = field(
+        metadata={"cdp_name": "inspectedElementAnchorConfig"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetShowPaintRectsParams(CDPModel):
+class SetShowPaintRectsParams:
     """
     Requests that backend shows paint rectangles
     """
 
-    result: bool
+    result: bool = field(metadata={"cdp_name": "result"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetShowLayoutShiftRegionsParams(CDPModel):
+class SetShowLayoutShiftRegionsParams:
     """
     Requests that backend shows layout shift regions
     """
 
-    result: bool
+    result: bool = field(metadata={"cdp_name": "result"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetShowScrollBottleneckRectsParams(CDPModel):
+class SetShowScrollBottleneckRectsParams:
     """
     Requests that backend shows scroll bottleneck rects
     """
 
-    show: bool
+    show: bool = field(metadata={"cdp_name": "show"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetShowHitTestBordersParams(CDPModel):
+class SetShowHitTestBordersParams:
     """
     Deprecated, no longer has any effect.
     """
 
-    show: bool
+    show: bool = field(metadata={"cdp_name": "show"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetShowWebVitalsParams(CDPModel):
+class SetShowWebVitalsParams:
     """
     Deprecated, no longer has any effect.
     """
 
-    show: bool
+    show: bool = field(metadata={"cdp_name": "show"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetShowViewportSizeOnResizeParams(CDPModel):
+class SetShowViewportSizeOnResizeParams:
     """
     Paints viewport size upon main frame resize.
     """
 
-    show: bool
+    show: bool = field(metadata={"cdp_name": "show"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetShowHingeParams(CDPModel):
+class SetShowHingeParams:
     """
     Add a dual screen device hinge
     """
 
-    hinge_config: HingeConfig | None = None
+    hinge_config: HingeConfig | None = field(
+        default=None, metadata={"cdp_name": "hingeConfig"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetShowDisplayCutoutParams(CDPModel):
+class SetShowDisplayCutoutParams:
     """
     Add a display cutout overlay.
     """
 
-    display_cutout_config: DisplayCutoutConfig | None = None
+    display_cutout_config: DisplayCutoutConfig | None = field(
+        default=None, metadata={"cdp_name": "displayCutoutConfig"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetShowIsolatedElementsParams(CDPModel):
+class SetShowIsolatedElementsParams:
     """
     Show elements in isolation mode with overlays.
     """
 
-    isolated_element_highlight_configs: list[IsolatedElementHighlightConfig]
+    isolated_element_highlight_configs: list[IsolatedElementHighlightConfig] = field(
+        metadata={"cdp_name": "isolatedElementHighlightConfigs"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetShowWindowControlsOverlayParams(CDPModel):
+class SetShowWindowControlsOverlayParams:
     """
     Show Window Controls Overlay for PWA
     """
 
-    window_controls_overlay_config: WindowControlsOverlayConfig | None = None
+    window_controls_overlay_config: WindowControlsOverlayConfig | None = field(
+        default=None, metadata={"cdp_name": "windowControlsOverlayConfig"}
+    )

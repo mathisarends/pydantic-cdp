@@ -4,12 +4,11 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Any
 
 from cdpify.domains import dom
-from cdpify.shared.models import CDPModel
 
 from .types import (
     LayerId,
@@ -32,96 +31,102 @@ class LayerTreeCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class CompositingReasonsParams(CDPModel):
+class CompositingReasonsParams:
     """
     Provides the reasons why the given layer was composited.
     """
 
-    layer_id: LayerId
+    layer_id: LayerId = field(metadata={"cdp_name": "layerId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class CompositingReasonsResult(CDPModel):
-    compositing_reasons: list[str]
-    compositing_reason_ids: list[str]
+class CompositingReasonsResult:
+    compositing_reasons: list[str] = field(metadata={"cdp_name": "compositingReasons"})
+    compositing_reason_ids: list[str] = field(
+        metadata={"cdp_name": "compositingReasonIds"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class LoadSnapshotParams(CDPModel):
+class LoadSnapshotParams:
     """
     Returns the snapshot identifier.
     """
 
-    tiles: list[PictureTile]
+    tiles: list[PictureTile] = field(metadata={"cdp_name": "tiles"})
 
 
 @dataclass(kw_only=True, slots=True)
-class LoadSnapshotResult(CDPModel):
-    snapshot_id: SnapshotId
+class LoadSnapshotResult:
+    snapshot_id: SnapshotId = field(metadata={"cdp_name": "snapshotId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class MakeSnapshotParams(CDPModel):
+class MakeSnapshotParams:
     """
     Returns the layer snapshot identifier.
     """
 
-    layer_id: LayerId
+    layer_id: LayerId = field(metadata={"cdp_name": "layerId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class MakeSnapshotResult(CDPModel):
-    snapshot_id: SnapshotId
+class MakeSnapshotResult:
+    snapshot_id: SnapshotId = field(metadata={"cdp_name": "snapshotId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ProfileSnapshotParams(CDPModel):
-    snapshot_id: SnapshotId
-    min_repeat_count: int | None = None
-    min_duration: float | None = None
-    clip_rect: dom.Rect | None = None
+class ProfileSnapshotParams:
+    snapshot_id: SnapshotId = field(metadata={"cdp_name": "snapshotId"})
+    min_repeat_count: int | None = field(
+        default=None, metadata={"cdp_name": "minRepeatCount"}
+    )
+    min_duration: float | None = field(
+        default=None, metadata={"cdp_name": "minDuration"}
+    )
+    clip_rect: dom.Rect | None = field(default=None, metadata={"cdp_name": "clipRect"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ProfileSnapshotResult(CDPModel):
-    timings: list[PaintProfile]
+class ProfileSnapshotResult:
+    timings: list[PaintProfile] = field(metadata={"cdp_name": "timings"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ReleaseSnapshotParams(CDPModel):
+class ReleaseSnapshotParams:
     """
     Releases layer snapshot captured by the back-end.
     """
 
-    snapshot_id: SnapshotId
+    snapshot_id: SnapshotId = field(metadata={"cdp_name": "snapshotId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ReplaySnapshotParams(CDPModel):
+class ReplaySnapshotParams:
     """
     Replays the layer snapshot and returns the resulting bitmap.
     """
 
-    snapshot_id: SnapshotId
-    from_step: int | None = None
-    to_step: int | None = None
-    scale: float | None = None
+    snapshot_id: SnapshotId = field(metadata={"cdp_name": "snapshotId"})
+    from_step: int | None = field(default=None, metadata={"cdp_name": "fromStep"})
+    to_step: int | None = field(default=None, metadata={"cdp_name": "toStep"})
+    scale: float | None = field(default=None, metadata={"cdp_name": "scale"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ReplaySnapshotResult(CDPModel):
-    data_url: str
+class ReplaySnapshotResult:
+    data_url: str = field(metadata={"cdp_name": "dataURL"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SnapshotCommandLogParams(CDPModel):
+class SnapshotCommandLogParams:
     """
     Replays the layer snapshot and returns canvas log.
     """
 
-    snapshot_id: SnapshotId
+    snapshot_id: SnapshotId = field(metadata={"cdp_name": "snapshotId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SnapshotCommandLogResult(CDPModel):
-    command_log: list[dict[str, Any]]
+class SnapshotCommandLogResult:
+    command_log: list[dict[str, Any]] = field(metadata={"cdp_name": "commandLog"})

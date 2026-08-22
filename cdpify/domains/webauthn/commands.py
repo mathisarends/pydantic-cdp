@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPModel
 
 from .types import (
     AuthenticatorId,
@@ -33,143 +31,153 @@ class WebAuthnCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class EnableParams(CDPModel):
+class EnableParams:
     """
     Enable the WebAuthn domain and start intercepting credential storage and retrieval
     with a virtual authenticator.
     """
 
-    enable_ui: bool | None = None
+    enable_ui: bool | None = field(default=None, metadata={"cdp_name": "enableUI"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AddVirtualAuthenticatorParams(CDPModel):
+class AddVirtualAuthenticatorParams:
     """
     Creates and adds a virtual authenticator.
     """
 
-    options: VirtualAuthenticatorOptions
+    options: VirtualAuthenticatorOptions = field(metadata={"cdp_name": "options"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AddVirtualAuthenticatorResult(CDPModel):
-    authenticator_id: AuthenticatorId
+class AddVirtualAuthenticatorResult:
+    authenticator_id: AuthenticatorId = field(metadata={"cdp_name": "authenticatorId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetResponseOverrideBitsParams(CDPModel):
+class SetResponseOverrideBitsParams:
     """
     Resets parameters isBogusSignature, isBadUV, isBadUP to false if they are not
     present.
     """
 
-    authenticator_id: AuthenticatorId
-    is_bogus_signature: bool | None = None
-    is_bad_uv: bool | None = None
-    is_bad_up: bool | None = None
+    authenticator_id: AuthenticatorId = field(metadata={"cdp_name": "authenticatorId"})
+    is_bogus_signature: bool | None = field(
+        default=None, metadata={"cdp_name": "isBogusSignature"}
+    )
+    is_bad_uv: bool | None = field(default=None, metadata={"cdp_name": "isBadUV"})
+    is_bad_up: bool | None = field(default=None, metadata={"cdp_name": "isBadUP"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RemoveVirtualAuthenticatorParams(CDPModel):
+class RemoveVirtualAuthenticatorParams:
     """
     Removes the given authenticator.
     """
 
-    authenticator_id: AuthenticatorId
+    authenticator_id: AuthenticatorId = field(metadata={"cdp_name": "authenticatorId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AddCredentialParams(CDPModel):
+class AddCredentialParams:
     """
     Adds the credential to the specified authenticator.
     """
 
-    authenticator_id: AuthenticatorId
-    credential: Credential
+    authenticator_id: AuthenticatorId = field(metadata={"cdp_name": "authenticatorId"})
+    credential: Credential = field(metadata={"cdp_name": "credential"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetCredentialParams(CDPModel):
+class GetCredentialParams:
     """
     Returns a single credential stored in the given virtual authenticator that matches
     the credential ID.
     """
 
-    authenticator_id: AuthenticatorId
-    credential_id: str
+    authenticator_id: AuthenticatorId = field(metadata={"cdp_name": "authenticatorId"})
+    credential_id: str = field(metadata={"cdp_name": "credentialId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetCredentialResult(CDPModel):
-    credential: Credential
+class GetCredentialResult:
+    credential: Credential = field(metadata={"cdp_name": "credential"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetCredentialsParams(CDPModel):
+class GetCredentialsParams:
     """
     Returns all the credentials stored in the given virtual authenticator.
     """
 
-    authenticator_id: AuthenticatorId
+    authenticator_id: AuthenticatorId = field(metadata={"cdp_name": "authenticatorId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetCredentialsResult(CDPModel):
-    credentials: list[Credential]
+class GetCredentialsResult:
+    credentials: list[Credential] = field(metadata={"cdp_name": "credentials"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RemoveCredentialParams(CDPModel):
+class RemoveCredentialParams:
     """
     Removes a credential from the authenticator.
     """
 
-    authenticator_id: AuthenticatorId
-    credential_id: str
+    authenticator_id: AuthenticatorId = field(metadata={"cdp_name": "authenticatorId"})
+    credential_id: str = field(metadata={"cdp_name": "credentialId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ClearCredentialsParams(CDPModel):
+class ClearCredentialsParams:
     """
     Clears all the credentials from the specified device.
     """
 
-    authenticator_id: AuthenticatorId
+    authenticator_id: AuthenticatorId = field(metadata={"cdp_name": "authenticatorId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetUserVerifiedParams(CDPModel):
+class SetUserVerifiedParams:
     """
     Sets whether User Verification succeeds or fails for an authenticator. The default
     is true.
     """
 
-    authenticator_id: AuthenticatorId
-    is_user_verified: bool
+    authenticator_id: AuthenticatorId = field(metadata={"cdp_name": "authenticatorId"})
+    is_user_verified: bool = field(metadata={"cdp_name": "isUserVerified"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetAutomaticPresenceSimulationParams(CDPModel):
+class SetAutomaticPresenceSimulationParams:
     """
     Sets whether tests of user presence will succeed immediately (if true) or fail to
     resolve (if false) for an authenticator. The default is true.
     """
 
-    authenticator_id: AuthenticatorId
-    enabled: bool
+    authenticator_id: AuthenticatorId = field(metadata={"cdp_name": "authenticatorId"})
+    enabled: bool = field(metadata={"cdp_name": "enabled"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetCredentialPropertiesParams(CDPModel):
+class SetCredentialPropertiesParams:
     """
     Allows setting credential properties.
     https://w3c.github.io/webauthn/#sctn-automation-set-credential-properties
     """
 
-    authenticator_id: AuthenticatorId
-    credential_id: str
-    backup_eligibility: bool | None = None
-    backup_state: bool | None = None
-    active_cmtg_key_index: int | None = None
-    generate_cmtg_key_on_next_operation: bool | None = None
-    sign_count: int | None = None
+    authenticator_id: AuthenticatorId = field(metadata={"cdp_name": "authenticatorId"})
+    credential_id: str = field(metadata={"cdp_name": "credentialId"})
+    backup_eligibility: bool | None = field(
+        default=None, metadata={"cdp_name": "backupEligibility"}
+    )
+    backup_state: bool | None = field(
+        default=None, metadata={"cdp_name": "backupState"}
+    )
+    active_cmtg_key_index: int | None = field(
+        default=None, metadata={"cdp_name": "activeCmtgKeyIndex"}
+    )
+    generate_cmtg_key_on_next_operation: bool | None = field(
+        default=None, metadata={"cdp_name": "generateCmtgKeyOnNextOperation"}
+    )
+    sign_count: int | None = field(default=None, metadata={"cdp_name": "signCount"})

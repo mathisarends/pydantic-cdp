@@ -4,12 +4,11 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Literal
 
 from cdpify.domains import dom, page, runtime
-from cdpify.shared.models import CDPModel
 
 from .types import (
     BackendNodeId,
@@ -83,580 +82,636 @@ class DOMCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class CollectClassNamesFromSubtreeParams(CDPModel):
+class CollectClassNamesFromSubtreeParams:
     """
     Collects class names for the node with given id and all of it's child nodes.
     """
 
-    node_id: NodeId
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class CollectClassNamesFromSubtreeResult(CDPModel):
-    class_names: list[str]
+class CollectClassNamesFromSubtreeResult:
+    class_names: list[str] = field(metadata={"cdp_name": "classNames"})
 
 
 @dataclass(kw_only=True, slots=True)
-class CopyToParams(CDPModel):
+class CopyToParams:
     """
     Creates a deep copy of the specified node and places it into the target container
     before the given anchor.
     """
 
-    node_id: NodeId
-    target_node_id: NodeId
-    insert_before_node_id: NodeId | None = None
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
+    target_node_id: NodeId = field(metadata={"cdp_name": "targetNodeId"})
+    insert_before_node_id: NodeId | None = field(
+        default=None, metadata={"cdp_name": "insertBeforeNodeId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class CopyToResult(CDPModel):
-    node_id: NodeId
+class CopyToResult:
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class DescribeNodeParams(CDPModel):
+class DescribeNodeParams:
     """
     Describes node given its id, does not require domain to be enabled. Does not start
     tracking any objects, can be used for automation.
     """
 
-    node_id: NodeId | None = None
-    backend_node_id: BackendNodeId | None = None
-    object_id: runtime.RemoteObjectId | None = None
-    depth: int | None = None
-    pierce: bool | None = None
+    node_id: NodeId | None = field(default=None, metadata={"cdp_name": "nodeId"})
+    backend_node_id: BackendNodeId | None = field(
+        default=None, metadata={"cdp_name": "backendNodeId"}
+    )
+    object_id: runtime.RemoteObjectId | None = field(
+        default=None, metadata={"cdp_name": "objectId"}
+    )
+    depth: int | None = field(default=None, metadata={"cdp_name": "depth"})
+    pierce: bool | None = field(default=None, metadata={"cdp_name": "pierce"})
 
 
 @dataclass(kw_only=True, slots=True)
-class DescribeNodeResult(CDPModel):
-    node: Node
+class DescribeNodeResult:
+    node: Node = field(metadata={"cdp_name": "node"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ScrollIntoViewIfNeededParams(CDPModel):
+class ScrollIntoViewIfNeededParams:
     """
     Scrolls the specified rect of the given node into view if not already visible.
     Note: exactly one between nodeId, backendNodeId and objectId should be passed to
     identify the node.
     """
 
-    node_id: NodeId | None = None
-    backend_node_id: BackendNodeId | None = None
-    object_id: runtime.RemoteObjectId | None = None
-    rect: Rect | None = None
+    node_id: NodeId | None = field(default=None, metadata={"cdp_name": "nodeId"})
+    backend_node_id: BackendNodeId | None = field(
+        default=None, metadata={"cdp_name": "backendNodeId"}
+    )
+    object_id: runtime.RemoteObjectId | None = field(
+        default=None, metadata={"cdp_name": "objectId"}
+    )
+    rect: Rect | None = field(default=None, metadata={"cdp_name": "rect"})
 
 
 @dataclass(kw_only=True, slots=True)
-class DiscardSearchResultsParams(CDPModel):
+class DiscardSearchResultsParams:
     """
     Discards search results from the session with the given id. `getSearchResults`
     should no longer be called for that search.
     """
 
-    search_id: str
+    search_id: str = field(metadata={"cdp_name": "searchId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class EnableParams(CDPModel):
+class EnableParams:
     """
     Enables DOM agent for the given page.
     """
 
-    include_whitespace: Literal["none", "all"] | None = None
+    include_whitespace: Literal["none", "all"] | None = field(
+        default=None, metadata={"cdp_name": "includeWhitespace"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class FocusParams(CDPModel):
+class FocusParams:
     """
     Focuses the given element.
     """
 
-    node_id: NodeId | None = None
-    backend_node_id: BackendNodeId | None = None
-    object_id: runtime.RemoteObjectId | None = None
+    node_id: NodeId | None = field(default=None, metadata={"cdp_name": "nodeId"})
+    backend_node_id: BackendNodeId | None = field(
+        default=None, metadata={"cdp_name": "backendNodeId"}
+    )
+    object_id: runtime.RemoteObjectId | None = field(
+        default=None, metadata={"cdp_name": "objectId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetAttributesParams(CDPModel):
+class GetAttributesParams:
     """
     Returns attributes for the specified node.
     """
 
-    node_id: NodeId
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetAttributesResult(CDPModel):
-    attributes: list[str]
+class GetAttributesResult:
+    attributes: list[str] = field(metadata={"cdp_name": "attributes"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetBoxModelParams(CDPModel):
+class GetBoxModelParams:
     """
     Returns boxes for the given node.
     """
 
-    node_id: NodeId | None = None
-    backend_node_id: BackendNodeId | None = None
-    object_id: runtime.RemoteObjectId | None = None
+    node_id: NodeId | None = field(default=None, metadata={"cdp_name": "nodeId"})
+    backend_node_id: BackendNodeId | None = field(
+        default=None, metadata={"cdp_name": "backendNodeId"}
+    )
+    object_id: runtime.RemoteObjectId | None = field(
+        default=None, metadata={"cdp_name": "objectId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetBoxModelResult(CDPModel):
-    model: BoxModel
+class GetBoxModelResult:
+    model: BoxModel = field(metadata={"cdp_name": "model"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetContentQuadsParams(CDPModel):
+class GetContentQuadsParams:
     """
     Returns quads that describe node position on the page. This method might return
     multiple quads for inline nodes.
     """
 
-    node_id: NodeId | None = None
-    backend_node_id: BackendNodeId | None = None
-    object_id: runtime.RemoteObjectId | None = None
+    node_id: NodeId | None = field(default=None, metadata={"cdp_name": "nodeId"})
+    backend_node_id: BackendNodeId | None = field(
+        default=None, metadata={"cdp_name": "backendNodeId"}
+    )
+    object_id: runtime.RemoteObjectId | None = field(
+        default=None, metadata={"cdp_name": "objectId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetContentQuadsResult(CDPModel):
-    quads: list[Quad]
+class GetContentQuadsResult:
+    quads: list[Quad] = field(metadata={"cdp_name": "quads"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetDocumentParams(CDPModel):
+class GetDocumentParams:
     """
     Returns the root DOM node (and optionally the subtree) to the caller. Implicitly
     enables the DOM domain events for the current target.
     """
 
-    depth: int | None = None
-    pierce: bool | None = None
+    depth: int | None = field(default=None, metadata={"cdp_name": "depth"})
+    pierce: bool | None = field(default=None, metadata={"cdp_name": "pierce"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetDocumentResult(CDPModel):
-    root: Node
+class GetDocumentResult:
+    root: Node = field(metadata={"cdp_name": "root"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetFlattenedDocumentParams(CDPModel):
+class GetFlattenedDocumentParams:
     """
     Returns the root DOM node (and optionally the subtree) to the caller. Deprecated,
     as it is not designed to work well with the rest of the DOM agent. Use
     DOMSnapshot.captureSnapshot instead.
     """
 
-    depth: int | None = None
-    pierce: bool | None = None
+    depth: int | None = field(default=None, metadata={"cdp_name": "depth"})
+    pierce: bool | None = field(default=None, metadata={"cdp_name": "pierce"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetFlattenedDocumentResult(CDPModel):
-    nodes: list[Node]
+class GetFlattenedDocumentResult:
+    nodes: list[Node] = field(metadata={"cdp_name": "nodes"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetNodesForSubtreeByStyleParams(CDPModel):
+class GetNodesForSubtreeByStyleParams:
     """
     Finds nodes with a given computed style in a subtree.
     """
 
-    node_id: NodeId
-    computed_styles: list[CSSComputedStyleProperty]
-    pierce: bool | None = None
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
+    computed_styles: list[CSSComputedStyleProperty] = field(
+        metadata={"cdp_name": "computedStyles"}
+    )
+    pierce: bool | None = field(default=None, metadata={"cdp_name": "pierce"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetNodesForSubtreeByStyleResult(CDPModel):
-    node_ids: list[NodeId]
+class GetNodesForSubtreeByStyleResult:
+    node_ids: list[NodeId] = field(metadata={"cdp_name": "nodeIds"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetNodeForLocationParams(CDPModel):
+class GetNodeForLocationParams:
     """
     Returns node id at given location. Depending on whether DOM domain is enabled,
     nodeId is either returned or not.
     """
 
-    x: int
-    y: int
-    include_user_agent_shadow_dom: bool | None = None
-    ignore_pointer_events_none: bool | None = None
+    x: int = field(metadata={"cdp_name": "x"})
+    y: int = field(metadata={"cdp_name": "y"})
+    include_user_agent_shadow_dom: bool | None = field(
+        default=None, metadata={"cdp_name": "includeUserAgentShadowDOM"}
+    )
+    ignore_pointer_events_none: bool | None = field(
+        default=None, metadata={"cdp_name": "ignorePointerEventsNone"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetNodeForLocationResult(CDPModel):
-    backend_node_id: BackendNodeId
-    frame_id: page.FrameId
-    node_id: NodeId | None = None
+class GetNodeForLocationResult:
+    backend_node_id: BackendNodeId = field(metadata={"cdp_name": "backendNodeId"})
+    frame_id: page.FrameId = field(metadata={"cdp_name": "frameId"})
+    node_id: NodeId | None = field(default=None, metadata={"cdp_name": "nodeId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetOuterHTMLParams(CDPModel):
+class GetOuterHTMLParams:
     """
     Returns node's HTML markup.
     """
 
-    node_id: NodeId | None = None
-    backend_node_id: BackendNodeId | None = None
-    object_id: runtime.RemoteObjectId | None = None
-    include_shadow_dom: bool | None = None
+    node_id: NodeId | None = field(default=None, metadata={"cdp_name": "nodeId"})
+    backend_node_id: BackendNodeId | None = field(
+        default=None, metadata={"cdp_name": "backendNodeId"}
+    )
+    object_id: runtime.RemoteObjectId | None = field(
+        default=None, metadata={"cdp_name": "objectId"}
+    )
+    include_shadow_dom: bool | None = field(
+        default=None, metadata={"cdp_name": "includeShadowDOM"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetOuterHTMLResult(CDPModel):
-    outer_html: str
+class GetOuterHTMLResult:
+    outer_html: str = field(metadata={"cdp_name": "outerHTML"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetRelayoutBoundaryParams(CDPModel):
+class GetRelayoutBoundaryParams:
     """
     Returns the id of the nearest ancestor that is a relayout boundary.
     """
 
-    node_id: NodeId
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetRelayoutBoundaryResult(CDPModel):
-    node_id: NodeId
+class GetRelayoutBoundaryResult:
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetSearchResultsParams(CDPModel):
+class GetSearchResultsParams:
     """
     Returns search results from given `fromIndex` to given `toIndex` from the search
     with the given identifier.
     """
 
-    search_id: str
-    from_index: int
-    to_index: int
+    search_id: str = field(metadata={"cdp_name": "searchId"})
+    from_index: int = field(metadata={"cdp_name": "fromIndex"})
+    to_index: int = field(metadata={"cdp_name": "toIndex"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetSearchResultsResult(CDPModel):
-    node_ids: list[NodeId]
+class GetSearchResultsResult:
+    node_ids: list[NodeId] = field(metadata={"cdp_name": "nodeIds"})
 
 
 @dataclass(kw_only=True, slots=True)
-class MoveToParams(CDPModel):
+class MoveToParams:
     """
     Moves node into the new container, places it before the given anchor.
     """
 
-    node_id: NodeId
-    target_node_id: NodeId
-    insert_before_node_id: NodeId | None = None
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
+    target_node_id: NodeId = field(metadata={"cdp_name": "targetNodeId"})
+    insert_before_node_id: NodeId | None = field(
+        default=None, metadata={"cdp_name": "insertBeforeNodeId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class MoveToResult(CDPModel):
-    node_id: NodeId
+class MoveToResult:
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class PerformSearchParams(CDPModel):
+class PerformSearchParams:
     """
     Searches for a given string in the DOM tree. Use `getSearchResults` to access
     search results or `cancelSearch` to end this search session.
     """
 
-    query: str
-    include_user_agent_shadow_dom: bool | None = None
+    query: str = field(metadata={"cdp_name": "query"})
+    include_user_agent_shadow_dom: bool | None = field(
+        default=None, metadata={"cdp_name": "includeUserAgentShadowDOM"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class PerformSearchResult(CDPModel):
-    search_id: str
-    result_count: int
+class PerformSearchResult:
+    search_id: str = field(metadata={"cdp_name": "searchId"})
+    result_count: int = field(metadata={"cdp_name": "resultCount"})
 
 
 @dataclass(kw_only=True, slots=True)
-class PushNodeByPathToFrontendParams(CDPModel):
+class PushNodeByPathToFrontendParams:
     """
     Requests that the node is sent to the caller given its path. // FIXME, use XPath
     """
 
-    path: str
+    path: str = field(metadata={"cdp_name": "path"})
 
 
 @dataclass(kw_only=True, slots=True)
-class PushNodeByPathToFrontendResult(CDPModel):
-    node_id: NodeId
+class PushNodeByPathToFrontendResult:
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class PushNodesByBackendIdsToFrontendParams(CDPModel):
+class PushNodesByBackendIdsToFrontendParams:
     """
     Requests that a batch of nodes is sent to the caller given their backend node ids.
     """
 
-    backend_node_ids: list[BackendNodeId]
+    backend_node_ids: list[BackendNodeId] = field(
+        metadata={"cdp_name": "backendNodeIds"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class PushNodesByBackendIdsToFrontendResult(CDPModel):
-    node_ids: list[NodeId]
+class PushNodesByBackendIdsToFrontendResult:
+    node_ids: list[NodeId] = field(metadata={"cdp_name": "nodeIds"})
 
 
 @dataclass(kw_only=True, slots=True)
-class QuerySelectorParams(CDPModel):
+class QuerySelectorParams:
     """
     Executes `querySelector` on a given node.
     """
 
-    node_id: NodeId
-    selector: str
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
+    selector: str = field(metadata={"cdp_name": "selector"})
 
 
 @dataclass(kw_only=True, slots=True)
-class QuerySelectorResult(CDPModel):
-    node_id: NodeId
+class QuerySelectorResult:
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class QuerySelectorAllParams(CDPModel):
+class QuerySelectorAllParams:
     """
     Executes `querySelectorAll` on a given node.
     """
 
-    node_id: NodeId
-    selector: str
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
+    selector: str = field(metadata={"cdp_name": "selector"})
 
 
 @dataclass(kw_only=True, slots=True)
-class QuerySelectorAllResult(CDPModel):
-    node_ids: list[NodeId]
+class QuerySelectorAllResult:
+    node_ids: list[NodeId] = field(metadata={"cdp_name": "nodeIds"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetTopLayerElementsResult(CDPModel):
-    node_ids: list[NodeId]
+class GetTopLayerElementsResult:
+    node_ids: list[NodeId] = field(metadata={"cdp_name": "nodeIds"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetElementByRelationParams(CDPModel):
+class GetElementByRelationParams:
     """
     Returns the NodeId of the matched element according to certain relations.
     """
 
-    node_id: NodeId
-    relation: Literal["PopoverTarget", "InterestTarget", "CommandFor"]
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
+    relation: Literal["PopoverTarget", "InterestTarget", "CommandFor"] = field(
+        metadata={"cdp_name": "relation"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetElementByRelationResult(CDPModel):
-    node_id: NodeId
+class GetElementByRelationResult:
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RemoveAttributeParams(CDPModel):
+class RemoveAttributeParams:
     """
     Removes attribute with given name from an element with given id.
     """
 
-    node_id: NodeId
-    name: str
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
+    name: str = field(metadata={"cdp_name": "name"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RemoveNodeParams(CDPModel):
+class RemoveNodeParams:
     """
     Removes node with given id.
     """
 
-    node_id: NodeId
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RequestChildNodesParams(CDPModel):
+class RequestChildNodesParams:
     """
     Requests that children of the node with given id are returned to the caller in form
     of `setChildNodes` events where not only immediate children are retrieved, but all
     children down to the specified depth.
     """
 
-    node_id: NodeId
-    depth: int | None = None
-    pierce: bool | None = None
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
+    depth: int | None = field(default=None, metadata={"cdp_name": "depth"})
+    pierce: bool | None = field(default=None, metadata={"cdp_name": "pierce"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RequestNodeParams(CDPModel):
+class RequestNodeParams:
     """
     Requests that the node is sent to the caller given the JavaScript node object
     reference. All nodes that form the path from the node to the root are also sent to
     the client as a series of `setChildNodes` notifications.
     """
 
-    object_id: runtime.RemoteObjectId
+    object_id: runtime.RemoteObjectId = field(metadata={"cdp_name": "objectId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RequestNodeResult(CDPModel):
-    node_id: NodeId
+class RequestNodeResult:
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ResolveNodeParams(CDPModel):
+class ResolveNodeParams:
     """
     Resolves the JavaScript node object for a given NodeId or BackendNodeId.
     """
 
-    node_id: NodeId | None = None
-    backend_node_id: dom.BackendNodeId | None = None
-    object_group: str | None = None
-    execution_context_id: runtime.ExecutionContextId | None = None
+    node_id: NodeId | None = field(default=None, metadata={"cdp_name": "nodeId"})
+    backend_node_id: dom.BackendNodeId | None = field(
+        default=None, metadata={"cdp_name": "backendNodeId"}
+    )
+    object_group: str | None = field(default=None, metadata={"cdp_name": "objectGroup"})
+    execution_context_id: runtime.ExecutionContextId | None = field(
+        default=None, metadata={"cdp_name": "executionContextId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ResolveNodeResult(CDPModel):
-    object: runtime.RemoteObject
+class ResolveNodeResult:
+    object: runtime.RemoteObject = field(metadata={"cdp_name": "object"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetAttributeValueParams(CDPModel):
+class SetAttributeValueParams:
     """
     Sets attribute for an element with given id.
     """
 
-    node_id: NodeId
-    name: str
-    value: str
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
+    name: str = field(metadata={"cdp_name": "name"})
+    value: str = field(metadata={"cdp_name": "value"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetAttributesAsTextParams(CDPModel):
+class SetAttributesAsTextParams:
     """
     Sets attributes on element with given id. This method is useful when user edits
     some existing attribute value and types in several attribute name/value pairs.
     """
 
-    node_id: NodeId
-    text: str
-    name: str | None = None
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
+    text: str = field(metadata={"cdp_name": "text"})
+    name: str | None = field(default=None, metadata={"cdp_name": "name"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetFileInputFilesParams(CDPModel):
+class SetFileInputFilesParams:
     """
     Sets files for the given file input element.
     """
 
-    files: list[str]
-    node_id: NodeId | None = None
-    backend_node_id: BackendNodeId | None = None
-    object_id: runtime.RemoteObjectId | None = None
+    files: list[str] = field(metadata={"cdp_name": "files"})
+    node_id: NodeId | None = field(default=None, metadata={"cdp_name": "nodeId"})
+    backend_node_id: BackendNodeId | None = field(
+        default=None, metadata={"cdp_name": "backendNodeId"}
+    )
+    object_id: runtime.RemoteObjectId | None = field(
+        default=None, metadata={"cdp_name": "objectId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetNodeStackTracesEnabledParams(CDPModel):
+class SetNodeStackTracesEnabledParams:
     """
     Sets if stack traces should be captured for Nodes. See `Node.getNodeStackTraces`.
     Default is disabled.
     """
 
-    enable: bool
+    enable: bool = field(metadata={"cdp_name": "enable"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetNodeStackTracesParams(CDPModel):
+class GetNodeStackTracesParams:
     """
     Gets stack traces associated with a Node. As of now, only provides stack trace for
     Node creation.
     """
 
-    node_id: NodeId
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetNodeStackTracesResult(CDPModel):
-    creation: runtime.StackTrace | None = None
+class GetNodeStackTracesResult:
+    creation: runtime.StackTrace | None = field(
+        default=None, metadata={"cdp_name": "creation"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetFileInfoParams(CDPModel):
+class GetFileInfoParams:
     """
     Returns file information for the given File wrapper.
     """
 
-    object_id: runtime.RemoteObjectId
+    object_id: runtime.RemoteObjectId = field(metadata={"cdp_name": "objectId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetFileInfoResult(CDPModel):
-    path: str
+class GetFileInfoResult:
+    path: str = field(metadata={"cdp_name": "path"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetDetachedDomNodesResult(CDPModel):
-    detached_nodes: list[DetachedElementInfo]
+class GetDetachedDomNodesResult:
+    detached_nodes: list[DetachedElementInfo] = field(
+        metadata={"cdp_name": "detachedNodes"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetInspectedNodeParams(CDPModel):
+class SetInspectedNodeParams:
     """
     Enables console to refer to the node with given id via $x (see Command Line API for
     more details $x functions).
     """
 
-    node_id: NodeId
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetNodeNameParams(CDPModel):
+class SetNodeNameParams:
     """
     Sets node name for a node with given id.
     """
 
-    node_id: NodeId
-    name: str
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
+    name: str = field(metadata={"cdp_name": "name"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetNodeNameResult(CDPModel):
-    node_id: NodeId
+class SetNodeNameResult:
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetNodeValueParams(CDPModel):
+class SetNodeValueParams:
     """
     Sets node value for a node with given id.
     """
 
-    node_id: NodeId
-    value: str
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
+    value: str = field(metadata={"cdp_name": "value"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetOuterHTMLParams(CDPModel):
+class SetOuterHTMLParams:
     """
     Sets node HTML markup, returns new node id.
     """
 
-    node_id: NodeId
-    outer_html: str
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
+    outer_html: str = field(metadata={"cdp_name": "outerHTML"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetFrameOwnerParams(CDPModel):
+class GetFrameOwnerParams:
     """
     Returns iframe node that owns iframe with the given domain.
     """
 
-    frame_id: page.FrameId
+    frame_id: page.FrameId = field(metadata={"cdp_name": "frameId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetFrameOwnerResult(CDPModel):
-    backend_node_id: BackendNodeId
-    node_id: NodeId | None = None
+class GetFrameOwnerResult:
+    backend_node_id: BackendNodeId = field(metadata={"cdp_name": "backendNodeId"})
+    node_id: NodeId | None = field(default=None, metadata={"cdp_name": "nodeId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetContainerForNodeParams(CDPModel):
+class GetContainerForNodeParams:
     """
     Returns the query container of the given node based on container query conditions:
     containerName, physical and logical axes, and whether it queries scroll-state or
@@ -665,73 +720,87 @@ class GetContainerForNodeParams(CDPModel):
     a matching container-name.
     """
 
-    node_id: NodeId
-    container_name: str | None = None
-    physical_axes: PhysicalAxes | None = None
-    logical_axes: LogicalAxes | None = None
-    queries_scroll_state: bool | None = None
-    queries_anchored: bool | None = None
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
+    container_name: str | None = field(
+        default=None, metadata={"cdp_name": "containerName"}
+    )
+    physical_axes: PhysicalAxes | None = field(
+        default=None, metadata={"cdp_name": "physicalAxes"}
+    )
+    logical_axes: LogicalAxes | None = field(
+        default=None, metadata={"cdp_name": "logicalAxes"}
+    )
+    queries_scroll_state: bool | None = field(
+        default=None, metadata={"cdp_name": "queriesScrollState"}
+    )
+    queries_anchored: bool | None = field(
+        default=None, metadata={"cdp_name": "queriesAnchored"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetContainerForNodeResult(CDPModel):
-    node_id: NodeId | None = None
+class GetContainerForNodeResult:
+    node_id: NodeId | None = field(default=None, metadata={"cdp_name": "nodeId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetQueryingDescendantsForContainerParams(CDPModel):
+class GetQueryingDescendantsForContainerParams:
     """
     Returns the descendants of a container query container that have container queries
     against this container.
     """
 
-    node_id: NodeId
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetQueryingDescendantsForContainerResult(CDPModel):
-    node_ids: list[NodeId]
+class GetQueryingDescendantsForContainerResult:
+    node_ids: list[NodeId] = field(metadata={"cdp_name": "nodeIds"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetAnchorElementParams(CDPModel):
+class GetAnchorElementParams:
     """
     Returns the target anchor element of the given anchor query according to
     https://www.w3.org/TR/css-anchor-position-1/#target.
     """
 
-    node_id: NodeId
-    anchor_specifier: str | None = None
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
+    anchor_specifier: str | None = field(
+        default=None, metadata={"cdp_name": "anchorSpecifier"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetAnchorElementResult(CDPModel):
-    node_id: NodeId
+class GetAnchorElementResult:
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ForceShowPopoverParams(CDPModel):
+class ForceShowPopoverParams:
     """
     When enabling, this API force-opens the popover identified by nodeId and keeps it
     open until disabled.
     """
 
-    node_id: NodeId
-    enable: bool
-    invoker_node_id: BackendNodeId | None = None
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
+    enable: bool = field(metadata={"cdp_name": "enable"})
+    invoker_node_id: BackendNodeId | None = field(
+        default=None, metadata={"cdp_name": "invokerNodeId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ForceShowPopoverResult(CDPModel):
-    node_ids: list[NodeId]
+class ForceShowPopoverResult:
+    node_ids: list[NodeId] = field(metadata={"cdp_name": "nodeIds"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ForceShowInterestParams(CDPModel):
+class ForceShowInterestParams:
     """
     When enabling, this API forces an element to gain interest in its target, keeping
     interest active until disabled.
     """
 
-    node_id: NodeId
-    enable: bool
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
+    enable: bool = field(metadata={"cdp_name": "enable"})

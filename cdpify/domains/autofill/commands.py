@@ -4,11 +4,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 
 from cdpify.domains import dom, page
-from cdpify.shared.models import CDPModel
 
 from .types import (
     Address,
@@ -24,22 +23,24 @@ class AutofillCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class TriggerParams(CDPModel):
+class TriggerParams:
     """
     Trigger autofill on a form identified by the fieldId. If the field and related form
     cannot be autofilled, returns an error.
     """
 
-    field_id: dom.BackendNodeId
-    frame_id: page.FrameId | None = None
-    card: CreditCard | None = None
-    address: Address | None = None
+    field_id: dom.BackendNodeId = field(metadata={"cdp_name": "fieldId"})
+    frame_id: page.FrameId | None = field(
+        default=None, metadata={"cdp_name": "frameId"}
+    )
+    card: CreditCard | None = field(default=None, metadata={"cdp_name": "card"})
+    address: Address | None = field(default=None, metadata={"cdp_name": "address"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetAddressesParams(CDPModel):
+class SetAddressesParams:
     """
     Set addresses so that developers can verify their forms implementation.
     """
 
-    addresses: list[Address]
+    addresses: list[Address] = field(metadata={"cdp_name": "addresses"})

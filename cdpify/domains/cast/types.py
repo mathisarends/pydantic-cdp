@@ -4,13 +4,11 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-
-from cdpify.shared.models import CDPModel
+from dataclasses import dataclass, field
 
 
 @dataclass(kw_only=True, slots=True)
-class Sink(CDPModel):
-    name: str
-    id: str
-    session: str | None = None
+class Sink:
+    name: str = field(metadata={"cdp_name": "name"})
+    id: str = field(metadata={"cdp_name": "id"})
+    session: str | None = field(default=None, metadata={"cdp_name": "session"})

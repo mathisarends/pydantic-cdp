@@ -7,6 +7,7 @@ from typing import Any, Self
 import websockets
 from websockets.asyncio.client import ClientConnection, connect
 
+from cdpify.codec import decode_cdp
 from cdpify.domains import Browser, CDPDomains, Target
 from cdpify.events import EventDispatcher, RawCDPEvent
 from cdpify.exceptions import (
@@ -14,7 +15,6 @@ from cdpify.exceptions import (
     CDPConnectionException,
     CDPTimeoutException,
 )
-from cdpify.shared.models import CDPEvent
 
 logger = logging.getLogger(__name__)
 
@@ -166,13 +166,14 @@ class Client(CDPDomains):
             finally:
                 self._ws = None
 
-    async def listen[T: CDPEvent](
+    async def listen[T](
         self, event_name: str, event_type: type[T], timeout: float | None = None
     ) -> AsyncIterator[T]:
         queue: asyncio.Queue[T] = asyncio.Queue()
 
         async def handler(event: RawCDPEvent) -> None:
-            typed_event = event_type.from_cdp(
+            typed_event = decode_cdp(
+                event_type,
                 event.params,
                 cdp_session_id=event.session_id,
             )
@@ -266,7 +267,7 @@ class ActiveSessionCDPClient(CDPDomains):
     def switch_to(self, session_id: str | None) -> None:
         self._session_id = session_id
 
-    async def listen[T: CDPEvent](
+    async def listen[T](
         self,
         event_name: str,
         event_type: type[T],

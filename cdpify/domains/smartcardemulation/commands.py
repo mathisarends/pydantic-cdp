@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPModel
 
 from .types import (
     ConnectionState,
@@ -33,7 +31,7 @@ class SmartCardEmulationCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class ReportEstablishContextResultParams(CDPModel):
+class ReportEstablishContextResultParams:
     """
     Reports the successful result of a |SCardEstablishContext| call. This maps to:
     PC/SC Lite:
@@ -42,12 +40,12 @@ class ReportEstablishContextResultParams(CDPModel):
     https://learn.microsoft.com/en-us/windows/win32/api/winscard/nf-winscard-scardestablishcontext
     """
 
-    request_id: str
-    context_id: int
+    request_id: str = field(metadata={"cdp_name": "requestId"})
+    context_id: int = field(metadata={"cdp_name": "contextId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ReportReleaseContextResultParams(CDPModel):
+class ReportReleaseContextResultParams:
     """
     Reports the successful result of a |SCardReleaseContext| call. This maps to: PC/SC
     Lite:
@@ -56,11 +54,11 @@ class ReportReleaseContextResultParams(CDPModel):
     https://learn.microsoft.com/en-us/windows/win32/api/winscard/nf-winscard-scardreleasecontext
     """
 
-    request_id: str
+    request_id: str = field(metadata={"cdp_name": "requestId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ReportListReadersResultParams(CDPModel):
+class ReportListReadersResultParams:
     """
     Reports the successful result of a |SCardListReaders| call. This maps to: PC/SC
     Lite:
@@ -69,12 +67,12 @@ class ReportListReadersResultParams(CDPModel):
     https://learn.microsoft.com/en-us/windows/win32/api/winscard/nf-winscard-scardlistreadersa
     """
 
-    request_id: str
-    readers: list[str]
+    request_id: str = field(metadata={"cdp_name": "requestId"})
+    readers: list[str] = field(metadata={"cdp_name": "readers"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ReportGetStatusChangeResultParams(CDPModel):
+class ReportGetStatusChangeResultParams:
     """
     Reports the successful result of a |SCardGetStatusChange| call. This maps to: PC/SC
     Lite:
@@ -83,12 +81,12 @@ class ReportGetStatusChangeResultParams(CDPModel):
     https://learn.microsoft.com/en-us/windows/win32/api/winscard/nf-winscard-scardgetstatuschangea
     """
 
-    request_id: str
-    reader_states: list[ReaderStateOut]
+    request_id: str = field(metadata={"cdp_name": "requestId"})
+    reader_states: list[ReaderStateOut] = field(metadata={"cdp_name": "readerStates"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ReportBeginTransactionResultParams(CDPModel):
+class ReportBeginTransactionResultParams:
     """
     Reports the result of a |SCardBeginTransaction| call. On success, this creates a
     new transaction object. This maps to: PC/SC Lite:
@@ -97,12 +95,12 @@ class ReportBeginTransactionResultParams(CDPModel):
     https://learn.microsoft.com/en-us/windows/win32/api/winscard/nf-winscard-scardbegintransaction
     """
 
-    request_id: str
-    handle: int
+    request_id: str = field(metadata={"cdp_name": "requestId"})
+    handle: int = field(metadata={"cdp_name": "handle"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ReportPlainResultParams(CDPModel):
+class ReportPlainResultParams:
     """
     Reports the successful result of a call that returns only a result code. Used for:
     |SCardCancel|, |SCardDisconnect|, |SCardSetAttrib|, |SCardEndTransaction|. This maps
@@ -124,11 +122,11 @@ class ReportPlainResultParams(CDPModel):
     https://learn.microsoft.com/en-us/windows/win32/api/winscard/nf-winscard-scardendtransaction
     """
 
-    request_id: str
+    request_id: str = field(metadata={"cdp_name": "requestId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ReportConnectResultParams(CDPModel):
+class ReportConnectResultParams:
     """
     Reports the successful result of a |SCardConnect| call. This maps to: PC/SC Lite:
     https://pcsclite.apdu.fr/api/group__API.html#ga4e515829752e0a8dbc4d630696a8d6a5
@@ -136,13 +134,15 @@ class ReportConnectResultParams(CDPModel):
     https://learn.microsoft.com/en-us/windows/win32/api/winscard/nf-winscard-scardconnecta
     """
 
-    request_id: str
-    handle: int
-    active_protocol: Protocol | None = None
+    request_id: str = field(metadata={"cdp_name": "requestId"})
+    handle: int = field(metadata={"cdp_name": "handle"})
+    active_protocol: Protocol | None = field(
+        default=None, metadata={"cdp_name": "activeProtocol"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ReportDataResultParams(CDPModel):
+class ReportDataResultParams:
     """
     Reports the successful result of a call that sends back data on success. Used for
     |SCardTransmit|, |SCardControl|, and |SCardGetAttrib|. This maps to: 1.
@@ -160,12 +160,12 @@ class ReportDataResultParams(CDPModel):
     https://learn.microsoft.com/en-us/windows/win32/api/winscard/nf-winscard-scardgetattrib
     """
 
-    request_id: str
-    data: str
+    request_id: str = field(metadata={"cdp_name": "requestId"})
+    data: str = field(metadata={"cdp_name": "data"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ReportStatusResultParams(CDPModel):
+class ReportStatusResultParams:
     """
     Reports the successful result of a |SCardStatus| call. This maps to: PC/SC Lite:
     https://pcsclite.apdu.fr/api/group__API.html#gae49c3c894ad7ac12a5b896bde70d0382
@@ -173,18 +173,18 @@ class ReportStatusResultParams(CDPModel):
     https://learn.microsoft.com/en-us/windows/win32/api/winscard/nf-winscard-scardstatusa
     """
 
-    request_id: str
-    reader_name: str
-    state: ConnectionState
-    atr: str
-    protocol: Protocol | None = None
+    request_id: str = field(metadata={"cdp_name": "requestId"})
+    reader_name: str = field(metadata={"cdp_name": "readerName"})
+    state: ConnectionState = field(metadata={"cdp_name": "state"})
+    atr: str = field(metadata={"cdp_name": "atr"})
+    protocol: Protocol | None = field(default=None, metadata={"cdp_name": "protocol"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ReportErrorParams(CDPModel):
+class ReportErrorParams:
     """
     Reports an error result for the given request.
     """
 
-    request_id: str
-    result_code: ResultCode
+    request_id: str = field(metadata={"cdp_name": "requestId"})
+    result_code: ResultCode = field(metadata={"cdp_name": "resultCode"})

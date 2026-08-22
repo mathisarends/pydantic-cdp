@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPModel
 
 from .types import (
     ViolationSetting,
@@ -23,9 +21,9 @@ class LogCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class StartViolationsReportParams(CDPModel):
+class StartViolationsReportParams:
     """
     start violation reporting.
     """
 
-    config: list[ViolationSetting]
+    config: list[ViolationSetting] = field(metadata={"cdp_name": "config"})

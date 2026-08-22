@@ -19,7 +19,7 @@ def generate(domain: Domain) -> str:
 
     models = tuple(_build_models(domain.commands, ctx))
     # Cross-domain imports must remain runtime imports so that
-    # `get_type_hints()` (used by CDPModel.from_cdp) can resolve forward
+    # `get_type_hints()` (used by decode_cdp) can resolve forward
     # references like `dom.Rect`. `from __future__ import annotations`
     # defers annotation evaluation, avoiding the circular-import problem
     # until first deserialization.
@@ -62,7 +62,6 @@ def _build_models(commands: list[Command], ctx: GenerationContext) -> list[Model
 def _build_params_model(command: Command, ctx: GenerationContext) -> ModelView:
     return ModelView(
         name=f"{to_pascal_case(command.name)}Params",
-        base="CDPModel",
         docstring=(
             format_docstring(command.description, indent=4)
             if command.description
@@ -75,7 +74,6 @@ def _build_params_model(command: Command, ctx: GenerationContext) -> ModelView:
 def _build_result_model(command: Command, ctx: GenerationContext) -> ModelView:
     return ModelView(
         name=f"{to_pascal_case(command.name)}Result",
-        base="CDPModel",
         fields=tuple(_build_field_view(param, ctx) for param in command.returns),
     )
 
@@ -84,4 +82,9 @@ def _build_field_view(param: Parameter, ctx: GenerationContext) -> FieldView:
     field_name = to_snake_case(param.name)
     py_type = resolve_type(param)
     ctx.track_type_string(py_type)
-    return FieldView(field_name, py_type, optional=param.optional)
+    return FieldView(
+        field_name,
+        py_type,
+        optional=param.optional,
+        cdp_name=param.name,
+    )

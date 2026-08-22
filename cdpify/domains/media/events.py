@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPEvent
 
 from .types import (
     Player,
@@ -28,53 +26,83 @@ class MediaEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class PlayerPropertiesChangedEvent(CDPEvent):
+class PlayerPropertiesChangedEvent:
     """
     This can be called multiple times, and can be used to set / override / remove
     player properties. A null propValue indicates removal.
     """
 
-    player_id: PlayerId
-    properties: list[PlayerProperty]
+    player_id: PlayerId = field(metadata={"cdp_name": "playerId"})
+    properties: list[PlayerProperty] = field(metadata={"cdp_name": "properties"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class PlayerEventsAddedEvent(CDPEvent):
+class PlayerEventsAddedEvent:
     """
     Send events as a list, allowing them to be batched on the browser for less
     congestion. If batched, events must ALWAYS be in chronological order.
     """
 
-    player_id: PlayerId
-    events: list[PlayerEvent]
+    player_id: PlayerId = field(metadata={"cdp_name": "playerId"})
+    events: list[PlayerEvent] = field(metadata={"cdp_name": "events"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class PlayerMessagesLoggedEvent(CDPEvent):
+class PlayerMessagesLoggedEvent:
     """
     Send a list of any messages that need to be delivered.
     """
 
-    player_id: PlayerId
-    messages: list[PlayerMessage]
+    player_id: PlayerId = field(metadata={"cdp_name": "playerId"})
+    messages: list[PlayerMessage] = field(metadata={"cdp_name": "messages"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class PlayerErrorsRaisedEvent(CDPEvent):
+class PlayerErrorsRaisedEvent:
     """
     Send a list of any errors that need to be delivered.
     """
 
-    player_id: PlayerId
-    errors: list[PlayerError]
+    player_id: PlayerId = field(metadata={"cdp_name": "playerId"})
+    errors: list[PlayerError] = field(metadata={"cdp_name": "errors"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class PlayerCreatedEvent(CDPEvent):
+class PlayerCreatedEvent:
     """
     Called whenever a player is created, or when a new agent joins and receives a list
     of active players. If an agent is restored, it will receive one event for each
     active player.
     """
 
-    player: Player
+    player: Player = field(metadata={"cdp_name": "player"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

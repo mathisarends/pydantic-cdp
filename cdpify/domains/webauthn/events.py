@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPEvent
 
 from .types import (
     AuthenticatorId,
@@ -23,42 +21,66 @@ class WebAuthnEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class CredentialAddedEvent(CDPEvent):
+class CredentialAddedEvent:
     """
     Triggered when a credential is added to an authenticator.
     """
 
-    authenticator_id: AuthenticatorId
-    credential: Credential
+    authenticator_id: AuthenticatorId = field(metadata={"cdp_name": "authenticatorId"})
+    credential: Credential = field(metadata={"cdp_name": "credential"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class CredentialDeletedEvent(CDPEvent):
+class CredentialDeletedEvent:
     """
     Triggered when a credential is deleted, e.g. through
     PublicKeyCredential.signalUnknownCredential().
     """
 
-    authenticator_id: AuthenticatorId
-    credential_id: str
+    authenticator_id: AuthenticatorId = field(metadata={"cdp_name": "authenticatorId"})
+    credential_id: str = field(metadata={"cdp_name": "credentialId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class CredentialUpdatedEvent(CDPEvent):
+class CredentialUpdatedEvent:
     """
     Triggered when a credential is updated, e.g. through
     PublicKeyCredential.signalCurrentUserDetails().
     """
 
-    authenticator_id: AuthenticatorId
-    credential: Credential
+    authenticator_id: AuthenticatorId = field(metadata={"cdp_name": "authenticatorId"})
+    credential: Credential = field(metadata={"cdp_name": "credential"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class CredentialAssertedEvent(CDPEvent):
+class CredentialAssertedEvent:
     """
     Triggered when a credential is used in a webauthn assertion.
     """
 
-    authenticator_id: AuthenticatorId
-    credential: Credential
+    authenticator_id: AuthenticatorId = field(metadata={"cdp_name": "authenticatorId"})
+    credential: Credential = field(metadata={"cdp_name": "credential"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

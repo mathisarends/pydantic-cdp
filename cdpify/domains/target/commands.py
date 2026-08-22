@@ -4,11 +4,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 
 from cdpify.domains import browser
-from cdpify.shared.models import CDPModel
 
 from .types import (
     RemoteLocation,
@@ -43,50 +42,50 @@ class TargetCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class ActivateTargetParams(CDPModel):
+class ActivateTargetParams:
     """
     Activates (focuses) the target.
     """
 
-    target_id: TargetID
+    target_id: TargetID = field(metadata={"cdp_name": "targetId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AttachToTargetParams(CDPModel):
+class AttachToTargetParams:
     """
     Attaches to the target with given id.
     """
 
-    target_id: TargetID
-    flatten: bool | None = None
+    target_id: TargetID = field(metadata={"cdp_name": "targetId"})
+    flatten: bool | None = field(default=None, metadata={"cdp_name": "flatten"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AttachToTargetResult(CDPModel):
-    session_id: SessionID
+class AttachToTargetResult:
+    session_id: SessionID = field(metadata={"cdp_name": "sessionId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AttachToBrowserTargetResult(CDPModel):
-    session_id: SessionID
+class AttachToBrowserTargetResult:
+    session_id: SessionID = field(metadata={"cdp_name": "sessionId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class CloseTargetParams(CDPModel):
+class CloseTargetParams:
     """
     Closes the target. If the target is a page that gets closed too.
     """
 
-    target_id: TargetID
+    target_id: TargetID = field(metadata={"cdp_name": "targetId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class CloseTargetResult(CDPModel):
-    success: bool
+class CloseTargetResult:
+    success: bool = field(metadata={"cdp_name": "success"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ExposeDevToolsProtocolParams(CDPModel):
+class ExposeDevToolsProtocolParams:
     """
     Inject object to the target's main frame that provides a communication channel with
     browser target. Injected object will be available as `window[bindingName]`. The
@@ -96,123 +95,149 @@ class ExposeDevToolsProtocolParams(CDPModel):
     and command responses.
     """
 
-    target_id: TargetID
-    binding_name: str | None = None
-    inherit_permissions: bool | None = None
+    target_id: TargetID = field(metadata={"cdp_name": "targetId"})
+    binding_name: str | None = field(default=None, metadata={"cdp_name": "bindingName"})
+    inherit_permissions: bool | None = field(
+        default=None, metadata={"cdp_name": "inheritPermissions"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class CreateBrowserContextParams(CDPModel):
+class CreateBrowserContextParams:
     """
     Creates a new empty BrowserContext. Similar to an incognito profile but you can
     have more than one.
     """
 
-    dispose_on_detach: bool | None = None
-    proxy_server: str | None = None
-    proxy_bypass_list: str | None = None
-    origins_with_universal_network_access: list[str] | None = None
+    dispose_on_detach: bool | None = field(
+        default=None, metadata={"cdp_name": "disposeOnDetach"}
+    )
+    proxy_server: str | None = field(default=None, metadata={"cdp_name": "proxyServer"})
+    proxy_bypass_list: str | None = field(
+        default=None, metadata={"cdp_name": "proxyBypassList"}
+    )
+    origins_with_universal_network_access: list[str] | None = field(
+        default=None, metadata={"cdp_name": "originsWithUniversalNetworkAccess"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class CreateBrowserContextResult(CDPModel):
-    browser_context_id: browser.BrowserContextID
+class CreateBrowserContextResult:
+    browser_context_id: browser.BrowserContextID = field(
+        metadata={"cdp_name": "browserContextId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetBrowserContextsResult(CDPModel):
-    browser_context_ids: list[browser.BrowserContextID]
-    default_browser_context_id: browser.BrowserContextID | None = None
+class GetBrowserContextsResult:
+    browser_context_ids: list[browser.BrowserContextID] = field(
+        metadata={"cdp_name": "browserContextIds"}
+    )
+    default_browser_context_id: browser.BrowserContextID | None = field(
+        default=None, metadata={"cdp_name": "defaultBrowserContextId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class CreateTargetParams(CDPModel):
+class CreateTargetParams:
     """
     Creates a new page.
     """
 
-    url: str
-    left: int | None = None
-    top: int | None = None
-    width: int | None = None
-    height: int | None = None
-    window_state: WindowState | None = None
-    browser_context_id: browser.BrowserContextID | None = None
-    enable_begin_frame_control: bool | None = None
-    new_window: bool | None = None
-    background: bool | None = None
-    for_tab: bool | None = None
-    hidden: bool | None = None
-    focus: bool | None = None
+    url: str = field(metadata={"cdp_name": "url"})
+    left: int | None = field(default=None, metadata={"cdp_name": "left"})
+    top: int | None = field(default=None, metadata={"cdp_name": "top"})
+    width: int | None = field(default=None, metadata={"cdp_name": "width"})
+    height: int | None = field(default=None, metadata={"cdp_name": "height"})
+    window_state: WindowState | None = field(
+        default=None, metadata={"cdp_name": "windowState"}
+    )
+    browser_context_id: browser.BrowserContextID | None = field(
+        default=None, metadata={"cdp_name": "browserContextId"}
+    )
+    enable_begin_frame_control: bool | None = field(
+        default=None, metadata={"cdp_name": "enableBeginFrameControl"}
+    )
+    new_window: bool | None = field(default=None, metadata={"cdp_name": "newWindow"})
+    background: bool | None = field(default=None, metadata={"cdp_name": "background"})
+    for_tab: bool | None = field(default=None, metadata={"cdp_name": "forTab"})
+    hidden: bool | None = field(default=None, metadata={"cdp_name": "hidden"})
+    focus: bool | None = field(default=None, metadata={"cdp_name": "focus"})
 
 
 @dataclass(kw_only=True, slots=True)
-class CreateTargetResult(CDPModel):
-    target_id: TargetID
+class CreateTargetResult:
+    target_id: TargetID = field(metadata={"cdp_name": "targetId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class DetachFromTargetParams(CDPModel):
+class DetachFromTargetParams:
     """
     Detaches session with given id.
     """
 
-    session_id: SessionID | None = None
-    target_id: TargetID | None = None
+    session_id: SessionID | None = field(
+        default=None, metadata={"cdp_name": "sessionId"}
+    )
+    target_id: TargetID | None = field(default=None, metadata={"cdp_name": "targetId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class DisposeBrowserContextParams(CDPModel):
+class DisposeBrowserContextParams:
     """
     Deletes a BrowserContext. All the belonging pages will be closed without calling
     their beforeunload hooks.
     """
 
-    browser_context_id: browser.BrowserContextID
+    browser_context_id: browser.BrowserContextID = field(
+        metadata={"cdp_name": "browserContextId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetTargetInfoParams(CDPModel):
+class GetTargetInfoParams:
     """
     Returns information about a target.
     """
 
-    target_id: TargetID | None = None
+    target_id: TargetID | None = field(default=None, metadata={"cdp_name": "targetId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetTargetInfoResult(CDPModel):
-    target_info: TargetInfo
+class GetTargetInfoResult:
+    target_info: TargetInfo = field(metadata={"cdp_name": "targetInfo"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetTargetsParams(CDPModel):
+class GetTargetsParams:
     """
     Retrieves a list of available targets.
     """
 
-    filter: TargetFilter | None = None
+    filter: TargetFilter | None = field(default=None, metadata={"cdp_name": "filter"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetTargetsResult(CDPModel):
-    target_infos: list[TargetInfo]
+class GetTargetsResult:
+    target_infos: list[TargetInfo] = field(metadata={"cdp_name": "targetInfos"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SendMessageToTargetParams(CDPModel):
+class SendMessageToTargetParams:
     """
     Sends protocol message over session with given id. Consider using flat mode
     instead; see commands attachToTarget, setAutoAttach, and crbug.com/991325.
     """
 
-    message: str
-    session_id: SessionID | None = None
-    target_id: TargetID | None = None
+    message: str = field(metadata={"cdp_name": "message"})
+    session_id: SessionID | None = field(
+        default=None, metadata={"cdp_name": "sessionId"}
+    )
+    target_id: TargetID | None = field(default=None, metadata={"cdp_name": "targetId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetAutoAttachParams(CDPModel):
+class SetAutoAttachParams:
     """
     Controls whether to automatically attach to new targets which are considered to be
     directly related to this one (for example, iframes or workers). When turned on,
@@ -223,14 +248,16 @@ class SetAutoAttachParams(CDPModel):
     to all available targets.
     """
 
-    auto_attach: bool
-    wait_for_debugger_on_start: bool
-    flatten: bool | None = None
-    filter: TargetFilter | None = None
+    auto_attach: bool = field(metadata={"cdp_name": "autoAttach"})
+    wait_for_debugger_on_start: bool = field(
+        metadata={"cdp_name": "waitForDebuggerOnStart"}
+    )
+    flatten: bool | None = field(default=None, metadata={"cdp_name": "flatten"})
+    filter: TargetFilter | None = field(default=None, metadata={"cdp_name": "filter"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AutoAttachRelatedParams(CDPModel):
+class AutoAttachRelatedParams:
     """
     Adds the specified target to the list of targets that will be monitored for any
     related target creation (such as child frames, child workers and new versions of
@@ -239,56 +266,58 @@ class AutoAttachRelatedParams(CDPModel):
     also cancelled by subsequent `setAutoAttach`. Only available at the Browser target.
     """
 
-    target_id: TargetID
-    wait_for_debugger_on_start: bool
-    filter: TargetFilter | None = None
+    target_id: TargetID = field(metadata={"cdp_name": "targetId"})
+    wait_for_debugger_on_start: bool = field(
+        metadata={"cdp_name": "waitForDebuggerOnStart"}
+    )
+    filter: TargetFilter | None = field(default=None, metadata={"cdp_name": "filter"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetDiscoverTargetsParams(CDPModel):
+class SetDiscoverTargetsParams:
     """
     Controls whether to discover available targets and notify via
     `targetCreated/targetInfoChanged/targetDestroyed` events.
     """
 
-    discover: bool
-    filter: TargetFilter | None = None
+    discover: bool = field(metadata={"cdp_name": "discover"})
+    filter: TargetFilter | None = field(default=None, metadata={"cdp_name": "filter"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetRemoteLocationsParams(CDPModel):
+class SetRemoteLocationsParams:
     """
     Enables target discovery for the specified locations, when `setDiscoverTargets` was
     set to `true`.
     """
 
-    locations: list[RemoteLocation]
+    locations: list[RemoteLocation] = field(metadata={"cdp_name": "locations"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetDevToolsTargetParams(CDPModel):
+class GetDevToolsTargetParams:
     """
     Gets the targetId of the DevTools page target opened for the given target (if any).
     """
 
-    target_id: TargetID
+    target_id: TargetID = field(metadata={"cdp_name": "targetId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetDevToolsTargetResult(CDPModel):
-    target_id: TargetID | None = None
+class GetDevToolsTargetResult:
+    target_id: TargetID | None = field(default=None, metadata={"cdp_name": "targetId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class OpenDevToolsParams(CDPModel):
+class OpenDevToolsParams:
     """
     Opens a DevTools window for the target.
     """
 
-    target_id: TargetID
-    panel_id: str | None = None
+    target_id: TargetID = field(metadata={"cdp_name": "targetId"})
+    panel_id: str | None = field(default=None, metadata={"cdp_name": "panelId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class OpenDevToolsResult(CDPModel):
-    target_id: TargetID
+class OpenDevToolsResult:
+    target_id: TargetID = field(metadata={"cdp_name": "targetId"})

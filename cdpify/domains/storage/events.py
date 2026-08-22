@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPEvent
 
 from .types import (
     StorageBucketInfo,
@@ -24,57 +22,93 @@ class StorageEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class CacheStorageContentUpdatedEvent(CDPEvent):
+class CacheStorageContentUpdatedEvent:
     """
     A cache's contents have been modified.
     """
 
-    origin: str
-    storage_key: str
-    bucket_id: str
-    cache_name: str
+    origin: str = field(metadata={"cdp_name": "origin"})
+    storage_key: str = field(metadata={"cdp_name": "storageKey"})
+    bucket_id: str = field(metadata={"cdp_name": "bucketId"})
+    cache_name: str = field(metadata={"cdp_name": "cacheName"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class CacheStorageListUpdatedEvent(CDPEvent):
+class CacheStorageListUpdatedEvent:
     """
     A cache has been added/deleted.
     """
 
-    origin: str
-    storage_key: str
-    bucket_id: str
+    origin: str = field(metadata={"cdp_name": "origin"})
+    storage_key: str = field(metadata={"cdp_name": "storageKey"})
+    bucket_id: str = field(metadata={"cdp_name": "bucketId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class IndexedDBContentUpdatedEvent(CDPEvent):
+class IndexedDBContentUpdatedEvent:
     """
     The origin's IndexedDB object store has been modified.
     """
 
-    origin: str
-    storage_key: str
-    bucket_id: str
-    database_name: str
-    object_store_name: str
+    origin: str = field(metadata={"cdp_name": "origin"})
+    storage_key: str = field(metadata={"cdp_name": "storageKey"})
+    bucket_id: str = field(metadata={"cdp_name": "bucketId"})
+    database_name: str = field(metadata={"cdp_name": "databaseName"})
+    object_store_name: str = field(metadata={"cdp_name": "objectStoreName"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class IndexedDBListUpdatedEvent(CDPEvent):
+class IndexedDBListUpdatedEvent:
     """
     The origin's IndexedDB database list has been modified.
     """
 
-    origin: str
-    storage_key: str
-    bucket_id: str
+    origin: str = field(metadata={"cdp_name": "origin"})
+    storage_key: str = field(metadata={"cdp_name": "storageKey"})
+    bucket_id: str = field(metadata={"cdp_name": "bucketId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class StorageBucketCreatedOrUpdatedEvent(CDPEvent):
-    bucket_info: StorageBucketInfo
+class StorageBucketCreatedOrUpdatedEvent:
+    bucket_info: StorageBucketInfo = field(metadata={"cdp_name": "bucketInfo"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class StorageBucketDeletedEvent(CDPEvent):
-    bucket_id: str
+class StorageBucketDeletedEvent:
+    bucket_id: str = field(metadata={"cdp_name": "bucketId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

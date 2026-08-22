@@ -4,44 +4,43 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Literal
 
 from cdpify.domains import dom, page
-from cdpify.shared.models import CDPModel
 
 
 @dataclass(kw_only=True, slots=True)
-class CreditCard(CDPModel):
-    number: str
-    name: str
-    expiry_month: str
-    expiry_year: str
-    cvc: str
+class CreditCard:
+    number: str = field(metadata={"cdp_name": "number"})
+    name: str = field(metadata={"cdp_name": "name"})
+    expiry_month: str = field(metadata={"cdp_name": "expiryMonth"})
+    expiry_year: str = field(metadata={"cdp_name": "expiryYear"})
+    cvc: str = field(metadata={"cdp_name": "cvc"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AddressField(CDPModel):
-    name: str
-    value: str
+class AddressField:
+    name: str = field(metadata={"cdp_name": "name"})
+    value: str = field(metadata={"cdp_name": "value"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AddressFields(CDPModel):
+class AddressFields:
     """
     A list of address fields.
     """
 
-    fields: list[AddressField]
+    fields: list[AddressField] = field(metadata={"cdp_name": "fields"})
 
 
 @dataclass(kw_only=True, slots=True)
-class Address(CDPModel):
-    fields: list[AddressField]
+class Address:
+    fields: list[AddressField] = field(metadata={"cdp_name": "fields"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AddressUI(CDPModel):
+class AddressUI:
     """
     Defines how an address can be displayed like in chrome://settings/addresses.
     Address UI is a two dimensional array, each inner array is an "address information
@@ -51,7 +50,7 @@ class AddressUI(CDPModel):
     should allow the receiver to render: Jon Doe Munich 81456
     """
 
-    address_fields: list[AddressFields]
+    address_fields: list[AddressFields] = field(metadata={"cdp_name": "addressFields"})
 
 
 """
@@ -62,12 +61,12 @@ type FillingStrategy = Literal["autocompleteAttribute", "autofillInferred"]
 
 
 @dataclass(kw_only=True, slots=True)
-class FilledField(CDPModel):
-    html_type: str
-    id: str
-    name: str
-    value: str
-    autofill_type: str
-    filling_strategy: FillingStrategy
-    frame_id: page.FrameId
-    field_id: dom.BackendNodeId
+class FilledField:
+    html_type: str = field(metadata={"cdp_name": "htmlType"})
+    id: str = field(metadata={"cdp_name": "id"})
+    name: str = field(metadata={"cdp_name": "name"})
+    value: str = field(metadata={"cdp_name": "value"})
+    autofill_type: str = field(metadata={"cdp_name": "autofillType"})
+    filling_strategy: FillingStrategy = field(metadata={"cdp_name": "fillingStrategy"})
+    frame_id: page.FrameId = field(metadata={"cdp_name": "frameId"})
+    field_id: dom.BackendNodeId = field(metadata={"cdp_name": "fieldId"})

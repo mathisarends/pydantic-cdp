@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal
 
+from cdpify.codec import decode_cdp, encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
 
@@ -99,7 +100,7 @@ class Emulation:
             params=None,
             session_id=session_id,
         )
-        return CanEmulateResult.from_cdp(result)
+        return decode_cdp(CanEmulateResult, result)
 
     async def clear_device_metrics_override(
         self,
@@ -153,7 +154,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_FOCUS_EMULATION_ENABLED,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -170,7 +171,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_AUTO_DARK_MODE_OVERRIDE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -187,7 +188,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_CPU_THROTTLING_RATE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -205,7 +206,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_DEFAULT_BACKGROUND_COLOR_OVERRIDE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -224,7 +225,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_SAFE_AREA_INSETS_OVERRIDE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -246,7 +247,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_VIRTUAL_KEYBOARD_GEOMETRY_OVERRIDE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -297,7 +298,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_DEVICE_METRICS_OVERRIDE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -315,7 +316,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_DEVICE_POSTURE_OVERRIDE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -348,7 +349,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_DISPLAY_FEATURES_OVERRIDE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -377,7 +378,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_SCROLLBARS_HIDDEN,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -391,7 +392,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_DOCUMENT_COOKIE_DISABLED,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -408,7 +409,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_EMIT_TOUCH_EVENTS_FOR_MOUSE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -426,7 +427,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_EMULATED_MEDIA,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -451,7 +452,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_EMULATED_VISION_DEFICIENCY,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -468,7 +469,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_EMULATED_OS_TEXT_SCALE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -500,7 +501,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_GEOLOCATION_OVERRIDE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -514,10 +515,10 @@ class Emulation:
 
         result = await self._command_sender.send_raw(
             method=EmulationCommand.GET_OVERRIDDEN_SENSOR_INFORMATION,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetOverriddenSensorInformationResult.from_cdp(result)
+        return decode_cdp(GetOverriddenSensorInformationResult, result)
 
     async def set_sensor_override_enabled(
         self,
@@ -540,7 +541,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_SENSOR_OVERRIDE_ENABLED,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -559,7 +560,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_SENSOR_OVERRIDE_READINGS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -583,7 +584,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_PRESSURE_SOURCE_OVERRIDE_ENABLED,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -603,7 +604,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_PRESSURE_STATE_OVERRIDE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -623,7 +624,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_IDLE_OVERRIDE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -654,7 +655,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_NAVIGATOR_OVERRIDES,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -671,7 +672,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_PAGE_SCALE_FACTOR,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -688,7 +689,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_SCRIPT_EXECUTION_DISABLED,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -708,7 +709,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_TOUCH_EMULATION_ENABLED,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -735,10 +736,10 @@ class Emulation:
 
         result = await self._command_sender.send_raw(
             method=EmulationCommand.SET_VIRTUAL_TIME_POLICY,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return SetVirtualTimePolicyResult.from_cdp(result)
+        return decode_cdp(SetVirtualTimePolicyResult, result)
 
     async def set_locale_override(
         self,
@@ -753,7 +754,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_LOCALE_OVERRIDE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -770,7 +771,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_TIMEZONE_OVERRIDE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -791,7 +792,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_VISIBLE_SIZE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -805,7 +806,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_DISABLED_IMAGE_TYPES,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -822,7 +823,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_DATA_SAVER_OVERRIDE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -838,7 +839,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_HARDWARE_CONCURRENCY_OVERRIDE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -856,7 +857,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_CPU_PERFORMANCE_OVERRIDE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -882,7 +883,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_USER_AGENT_OVERRIDE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -899,7 +900,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_AUTOMATION_OVERRIDE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -918,7 +919,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_SMALL_VIEWPORT_HEIGHT_DIFFERENCE_OVERRIDE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -936,7 +937,7 @@ class Emulation:
             params=None,
             session_id=session_id,
         )
-        return GetScreenInfosResult.from_cdp(result)
+        return decode_cdp(GetScreenInfosResult, result)
 
     async def add_screen(
         self,
@@ -971,10 +972,10 @@ class Emulation:
 
         result = await self._command_sender.send_raw(
             method=EmulationCommand.ADD_SCREEN,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return AddScreenResult.from_cdp(result)
+        return decode_cdp(AddScreenResult, result)
 
     async def update_screen(
         self,
@@ -1011,10 +1012,10 @@ class Emulation:
 
         result = await self._command_sender.send_raw(
             method=EmulationCommand.UPDATE_SCREEN,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return UpdateScreenResult.from_cdp(result)
+        return decode_cdp(UpdateScreenResult, result)
 
     async def remove_screen(
         self,
@@ -1029,7 +1030,7 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.REMOVE_SCREEN,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -1048,6 +1049,6 @@ class Emulation:
 
         await self._command_sender.send_raw(
             method=EmulationCommand.SET_PRIMARY_SCREEN,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )

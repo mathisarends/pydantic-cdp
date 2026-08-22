@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from cdpify.codec import decode_cdp, encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -44,7 +45,7 @@ class Extensions:
 
         await self._command_sender.send_raw(
             method=ExtensionsCommand.TRIGGER_ACTION,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -63,10 +64,10 @@ class Extensions:
 
         result = await self._command_sender.send_raw(
             method=ExtensionsCommand.LOAD_UNPACKED,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return LoadUnpackedResult.from_cdp(result)
+        return decode_cdp(LoadUnpackedResult, result)
 
     async def get_extensions(
         self,
@@ -80,7 +81,7 @@ class Extensions:
             params=None,
             session_id=session_id,
         )
-        return GetExtensionsResult.from_cdp(result)
+        return decode_cdp(GetExtensionsResult, result)
 
     async def uninstall(
         self,
@@ -95,7 +96,7 @@ class Extensions:
 
         await self._command_sender.send_raw(
             method=ExtensionsCommand.UNINSTALL,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -115,10 +116,10 @@ class Extensions:
 
         result = await self._command_sender.send_raw(
             method=ExtensionsCommand.GET_STORAGE_ITEMS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetStorageItemsResult.from_cdp(result)
+        return decode_cdp(GetStorageItemsResult, result)
 
     async def remove_storage_items(
         self,
@@ -135,7 +136,7 @@ class Extensions:
 
         await self._command_sender.send_raw(
             method=ExtensionsCommand.REMOVE_STORAGE_ITEMS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -153,7 +154,7 @@ class Extensions:
 
         await self._command_sender.send_raw(
             method=ExtensionsCommand.CLEAR_STORAGE_ITEMS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -173,6 +174,6 @@ class Extensions:
 
         await self._command_sender.send_raw(
             method=ExtensionsCommand.SET_STORAGE_ITEMS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )

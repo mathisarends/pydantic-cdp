@@ -4,12 +4,11 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Literal
 
 from cdpify.domains import dom, network, runtime
-from cdpify.shared.models import CDPEvent
 
 from .types import (
     BackForwardCacheNotRestoredExplanation,
@@ -56,88 +55,147 @@ class PageEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class DomContentEventFiredEvent(CDPEvent):
-    timestamp: network.MonotonicTime
+class DomContentEventFiredEvent:
+    timestamp: network.MonotonicTime = field(metadata={"cdp_name": "timestamp"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class FileChooserOpenedEvent(CDPEvent):
+class FileChooserOpenedEvent:
     """
     Emitted only when `page.interceptFileChooser` is enabled.
     """
 
-    frame_id: FrameId
-    mode: Literal["selectSingle", "selectMultiple"]
-    backend_node_id: dom.BackendNodeId | None = None
+    frame_id: FrameId = field(metadata={"cdp_name": "frameId"})
+    mode: Literal["selectSingle", "selectMultiple"] = field(
+        metadata={"cdp_name": "mode"}
+    )
+    backend_node_id: dom.BackendNodeId | None = field(
+        default=None, metadata={"cdp_name": "backendNodeId"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class FrameAttachedEvent(CDPEvent):
+class FrameAttachedEvent:
     """
     Fired when frame has been attached to its parent.
     """
 
-    frame_id: FrameId
-    parent_frame_id: FrameId
-    stack: runtime.StackTrace | None = None
+    frame_id: FrameId = field(metadata={"cdp_name": "frameId"})
+    parent_frame_id: FrameId = field(metadata={"cdp_name": "parentFrameId"})
+    stack: runtime.StackTrace | None = field(
+        default=None, metadata={"cdp_name": "stack"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class FrameClearedScheduledNavigationEvent(CDPEvent):
+class FrameClearedScheduledNavigationEvent:
     """
     Fired when frame no longer has a scheduled navigation.
     """
 
-    frame_id: FrameId
+    frame_id: FrameId = field(metadata={"cdp_name": "frameId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class FrameDetachedEvent(CDPEvent):
+class FrameDetachedEvent:
     """
     Fired when frame has been detached from its parent.
     """
 
-    frame_id: FrameId
-    reason: Literal["remove", "swap"]
+    frame_id: FrameId = field(metadata={"cdp_name": "frameId"})
+    reason: Literal["remove", "swap"] = field(metadata={"cdp_name": "reason"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class FrameSubtreeWillBeDetachedEvent(CDPEvent):
+class FrameSubtreeWillBeDetachedEvent:
     """
     Fired before frame subtree is detached. Emitted before any frame of the subtree is
     actually detached.
     """
 
-    frame_id: FrameId
+    frame_id: FrameId = field(metadata={"cdp_name": "frameId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class FrameNavigatedEvent(CDPEvent):
+class FrameNavigatedEvent:
     """
     Fired once navigation of the frame has completed. Frame is now associated with the
     new loader.
     """
 
-    frame: Frame
-    type: NavigationType
+    frame: Frame = field(metadata={"cdp_name": "frame"})
+    type: NavigationType = field(metadata={"cdp_name": "type"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DocumentOpenedEvent(CDPEvent):
+class DocumentOpenedEvent:
     """
     Fired when opening document to write to.
     """
 
-    frame: Frame
+    frame: Frame = field(metadata={"cdp_name": "frame"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class FrameResizedEvent(CDPEvent):
-    pass
+class FrameResizedEvent:
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class FrameStartedNavigatingEvent(CDPEvent):
+class FrameStartedNavigatingEvent:
     """
     Fired when a navigation starts. This event is fired for both renderer-initiated and
     browser-initiated navigations. For renderer-initiated navigations, the event is
@@ -147,9 +205,9 @@ class FrameStartedNavigatingEvent(CDPEvent):
     case of a frameset).
     """
 
-    frame_id: FrameId
-    url: str
-    loader_id: network.LoaderId
+    frame_id: FrameId = field(metadata={"cdp_name": "frameId"})
+    url: str = field(metadata={"cdp_name": "url"})
+    loader_id: network.LoaderId = field(metadata={"cdp_name": "loaderId"})
     navigation_type: Literal[
         "reload",
         "reloadBypassingCache",
@@ -159,138 +217,216 @@ class FrameStartedNavigatingEvent(CDPEvent):
         "historyDifferentDocument",
         "sameDocument",
         "differentDocument",
-    ]
+    ] = field(  # noqa: E501
+        metadata={"cdp_name": "navigationType"},
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class FrameRequestedNavigationEvent(CDPEvent):
+class FrameRequestedNavigationEvent:
     """
     Fired when a renderer-initiated navigation is requested. Navigation may still be
     cancelled after the event is issued.
     """
 
-    frame_id: FrameId
-    reason: ClientNavigationReason
-    url: str
-    disposition: ClientNavigationDisposition
+    frame_id: FrameId = field(metadata={"cdp_name": "frameId"})
+    reason: ClientNavigationReason = field(metadata={"cdp_name": "reason"})
+    url: str = field(metadata={"cdp_name": "url"})
+    disposition: ClientNavigationDisposition = field(
+        metadata={"cdp_name": "disposition"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class FrameScheduledNavigationEvent(CDPEvent):
+class FrameScheduledNavigationEvent:
     """
     Fired when frame schedules a potential navigation.
     """
 
-    frame_id: FrameId
-    delay: float
-    reason: ClientNavigationReason
-    url: str
+    frame_id: FrameId = field(metadata={"cdp_name": "frameId"})
+    delay: float = field(metadata={"cdp_name": "delay"})
+    reason: ClientNavigationReason = field(metadata={"cdp_name": "reason"})
+    url: str = field(metadata={"cdp_name": "url"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class FrameStartedLoadingEvent(CDPEvent):
+class FrameStartedLoadingEvent:
     """
     Fired when frame has started loading.
     """
 
-    frame_id: FrameId
+    frame_id: FrameId = field(metadata={"cdp_name": "frameId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class FrameStoppedLoadingEvent(CDPEvent):
+class FrameStoppedLoadingEvent:
     """
     Fired when frame has stopped loading.
     """
 
-    frame_id: FrameId
+    frame_id: FrameId = field(metadata={"cdp_name": "frameId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DownloadWillBeginEvent(CDPEvent):
+class DownloadWillBeginEvent:
     """
     Fired when page is about to start a download. Deprecated. Use
     Browser.downloadWillBegin instead.
     """
 
-    frame_id: FrameId
-    guid: str
-    url: str
-    suggested_filename: str
+    frame_id: FrameId = field(metadata={"cdp_name": "frameId"})
+    guid: str = field(metadata={"cdp_name": "guid"})
+    url: str = field(metadata={"cdp_name": "url"})
+    suggested_filename: str = field(metadata={"cdp_name": "suggestedFilename"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DownloadProgressEvent(CDPEvent):
+class DownloadProgressEvent:
     """
     Fired when download makes progress. Last call has |done| == true. Deprecated. Use
     Browser.downloadProgress instead.
     """
 
-    guid: str
-    total_bytes: float
-    received_bytes: float
-    state: Literal["inProgress", "completed", "canceled"]
+    guid: str = field(metadata={"cdp_name": "guid"})
+    total_bytes: float = field(metadata={"cdp_name": "totalBytes"})
+    received_bytes: float = field(metadata={"cdp_name": "receivedBytes"})
+    state: Literal["inProgress", "completed", "canceled"] = field(
+        metadata={"cdp_name": "state"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class InterstitialHiddenEvent(CDPEvent):
+class InterstitialHiddenEvent:
     """
     Fired when interstitial page was hidden
     """
 
-    pass
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class InterstitialShownEvent(CDPEvent):
+class InterstitialShownEvent:
     """
     Fired when interstitial page was shown
     """
 
-    pass
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class JavascriptDialogClosedEvent(CDPEvent):
+class JavascriptDialogClosedEvent:
     """
     Fired when a JavaScript initiated dialog (alert, confirm, prompt, or
     onbeforeunload) has been closed.
     """
 
-    frame_id: FrameId
-    result: bool
-    user_input: str
+    frame_id: FrameId = field(metadata={"cdp_name": "frameId"})
+    result: bool = field(metadata={"cdp_name": "result"})
+    user_input: str = field(metadata={"cdp_name": "userInput"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class JavascriptDialogOpeningEvent(CDPEvent):
+class JavascriptDialogOpeningEvent:
     """
     Fired when a JavaScript initiated dialog (alert, confirm, prompt, or
     onbeforeunload) is about to open.
     """
 
-    url: str
-    frame_id: FrameId
-    message: str
-    type: DialogType
-    has_browser_handler: bool
-    default_prompt: str | None = None
+    url: str = field(metadata={"cdp_name": "url"})
+    frame_id: FrameId = field(metadata={"cdp_name": "frameId"})
+    message: str = field(metadata={"cdp_name": "message"})
+    type: DialogType = field(metadata={"cdp_name": "type"})
+    has_browser_handler: bool = field(metadata={"cdp_name": "hasBrowserHandler"})
+    default_prompt: str | None = field(
+        default=None, metadata={"cdp_name": "defaultPrompt"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class LifecycleEventEvent(CDPEvent):
+class LifecycleEventEvent:
     """
     Fired for lifecycle events (navigation, load, paint, etc) in the current target
     (including local frames).
     """
 
-    frame_id: FrameId
-    loader_id: network.LoaderId
-    name: str
-    timestamp: network.MonotonicTime
+    frame_id: FrameId = field(metadata={"cdp_name": "frameId"})
+    loader_id: network.LoaderId = field(metadata={"cdp_name": "loaderId"})
+    name: str = field(metadata={"cdp_name": "name"})
+    timestamp: network.MonotonicTime = field(metadata={"cdp_name": "timestamp"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class BackForwardCacheNotUsedEvent(CDPEvent):
+class BackForwardCacheNotUsedEvent:
     """
     Fired for failed bfcache history navigations if BackForwardCache feature is
     enabled. Do not assume any ordering with the Page.frameNavigated event. This event
@@ -298,69 +434,118 @@ class BackForwardCacheNotUsedEvent(CDPEvent):
     (non-same-document navigations), when bfcache navigation fails.
     """
 
-    loader_id: network.LoaderId
-    frame_id: FrameId
-    not_restored_explanations: list[BackForwardCacheNotRestoredExplanation]
+    loader_id: network.LoaderId = field(metadata={"cdp_name": "loaderId"})
+    frame_id: FrameId = field(metadata={"cdp_name": "frameId"})
+    not_restored_explanations: list[BackForwardCacheNotRestoredExplanation] = field(
+        metadata={"cdp_name": "notRestoredExplanations"}
+    )
     not_restored_explanations_tree: (
         BackForwardCacheNotRestoredExplanationTree | None
-    ) = None
+    ) = field(  # noqa: E501
+        default=None,
+        metadata={"cdp_name": "notRestoredExplanationsTree"},
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class LoadEventFiredEvent(CDPEvent):
-    timestamp: network.MonotonicTime
+class LoadEventFiredEvent:
+    timestamp: network.MonotonicTime = field(metadata={"cdp_name": "timestamp"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class NavigatedWithinDocumentEvent(CDPEvent):
+class NavigatedWithinDocumentEvent:
     """
     Fired when same-document navigation happens, e.g. due to history API usage or
     anchor navigation.
     """
 
-    frame_id: FrameId
-    url: str
-    navigation_type: Literal["fragment", "historyApi", "other"]
+    frame_id: FrameId = field(metadata={"cdp_name": "frameId"})
+    url: str = field(metadata={"cdp_name": "url"})
+    navigation_type: Literal["fragment", "historyApi", "other"] = field(
+        metadata={"cdp_name": "navigationType"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ScreencastFrameEvent(CDPEvent):
+class ScreencastFrameEvent:
     """
     Compressed image data requested by the `startScreencast`.
     """
 
-    data: str
-    metadata: ScreencastFrameMetadata
-    session_id: int
+    data: str = field(metadata={"cdp_name": "data"})
+    metadata: ScreencastFrameMetadata = field(metadata={"cdp_name": "metadata"})
+    session_id: int = field(metadata={"cdp_name": "sessionId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ScreencastVisibilityChangedEvent(CDPEvent):
+class ScreencastVisibilityChangedEvent:
     """
     Fired when the page with currently enabled screencast was shown or hidden `.
     """
 
-    visible: bool
+    visible: bool = field(metadata={"cdp_name": "visible"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class WindowOpenEvent(CDPEvent):
+class WindowOpenEvent:
     """
     Fired when a new window is going to be opened, via window.open(), link click, form
     submission, etc.
     """
 
-    url: str
-    window_name: str
-    window_features: list[str]
-    user_gesture: bool
+    url: str = field(metadata={"cdp_name": "url"})
+    window_name: str = field(metadata={"cdp_name": "windowName"})
+    window_features: list[str] = field(metadata={"cdp_name": "windowFeatures"})
+    user_gesture: bool = field(metadata={"cdp_name": "userGesture"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class CompilationCacheProducedEvent(CDPEvent):
+class CompilationCacheProducedEvent:
     """
     Issued for every compilation cache generated.
     """
 
-    url: str
-    data: str
+    url: str = field(metadata={"cdp_name": "url"})
+    data: str = field(metadata={"cdp_name": "data"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

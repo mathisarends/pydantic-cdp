@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+from cdpify.codec import encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -41,7 +42,7 @@ class ServiceWorker:
 
         await self._command_sender.send_raw(
             method=ServiceWorkerCommand.DELIVER_PUSH_MESSAGE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -73,7 +74,7 @@ class ServiceWorker:
 
         await self._command_sender.send_raw(
             method=ServiceWorkerCommand.DISPATCH_SYNC_EVENT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -91,7 +92,7 @@ class ServiceWorker:
 
         await self._command_sender.send_raw(
             method=ServiceWorkerCommand.DISPATCH_PERIODIC_SYNC_EVENT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -117,7 +118,7 @@ class ServiceWorker:
 
         await self._command_sender.send_raw(
             method=ServiceWorkerCommand.SET_FORCE_UPDATE_ON_PAGE_LOAD,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -131,7 +132,7 @@ class ServiceWorker:
 
         await self._command_sender.send_raw(
             method=ServiceWorkerCommand.SKIP_WAITING,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -145,7 +146,7 @@ class ServiceWorker:
 
         await self._command_sender.send_raw(
             method=ServiceWorkerCommand.START_WORKER,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -169,7 +170,7 @@ class ServiceWorker:
 
         await self._command_sender.send_raw(
             method=ServiceWorkerCommand.STOP_WORKER,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -183,7 +184,7 @@ class ServiceWorker:
 
         await self._command_sender.send_raw(
             method=ServiceWorkerCommand.UNREGISTER,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -197,6 +198,6 @@ class ServiceWorker:
 
         await self._command_sender.send_raw(
             method=ServiceWorkerCommand.UPDATE_REGISTRATION,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )

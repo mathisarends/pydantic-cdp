@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from cdpify.codec import decode_cdp, encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
 
@@ -92,7 +93,7 @@ class Network:
             params=None,
             session_id=session_id,
         )
-        return CanClearBrowserCacheResult.from_cdp(result)
+        return decode_cdp(CanClearBrowserCacheResult, result)
 
     @deprecated()
     async def can_clear_browser_cookies(
@@ -107,7 +108,7 @@ class Network:
             params=None,
             session_id=session_id,
         )
-        return CanClearBrowserCookiesResult.from_cdp(result)
+        return decode_cdp(CanClearBrowserCookiesResult, result)
 
     @deprecated()
     async def can_emulate_network_conditions(
@@ -122,7 +123,7 @@ class Network:
             params=None,
             session_id=session_id,
         )
-        return CanEmulateNetworkConditionsResult.from_cdp(result)
+        return decode_cdp(CanEmulateNetworkConditionsResult, result)
 
     async def clear_browser_cache(
         self,
@@ -170,7 +171,7 @@ class Network:
 
         await self._command_sender.send_raw(
             method=NetworkCommand.DELETE_COOKIES,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -220,7 +221,7 @@ class Network:
 
         await self._command_sender.send_raw(
             method=NetworkCommand.EMULATE_NETWORK_CONDITIONS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -246,10 +247,10 @@ class Network:
 
         result = await self._command_sender.send_raw(
             method=NetworkCommand.EMULATE_NETWORK_CONDITIONS_BY_RULE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return EmulateNetworkConditionsByRuleResult.from_cdp(result)
+        return decode_cdp(EmulateNetworkConditionsByRuleResult, result)
 
     async def override_network_state(
         self,
@@ -274,7 +275,7 @@ class Network:
 
         await self._command_sender.send_raw(
             method=NetworkCommand.OVERRIDE_NETWORK_STATE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -301,7 +302,7 @@ class Network:
 
         await self._command_sender.send_raw(
             method=NetworkCommand.ENABLE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -324,7 +325,7 @@ class Network:
 
         await self._command_sender.send_raw(
             method=NetworkCommand.CONFIGURE_DURABLE_MESSAGES,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -343,7 +344,7 @@ class Network:
             params=None,
             session_id=session_id,
         )
-        return GetAllCookiesResult.from_cdp(result)
+        return decode_cdp(GetAllCookiesResult, result)
 
     async def get_certificate(
         self,
@@ -358,10 +359,10 @@ class Network:
 
         result = await self._command_sender.send_raw(
             method=NetworkCommand.GET_CERTIFICATE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetCertificateResult.from_cdp(result)
+        return decode_cdp(GetCertificateResult, result)
 
     async def get_cookies(
         self,
@@ -377,10 +378,10 @@ class Network:
 
         result = await self._command_sender.send_raw(
             method=NetworkCommand.GET_COOKIES,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetCookiesResult.from_cdp(result)
+        return decode_cdp(GetCookiesResult, result)
 
     async def get_response_body(
         self,
@@ -395,10 +396,10 @@ class Network:
 
         result = await self._command_sender.send_raw(
             method=NetworkCommand.GET_RESPONSE_BODY,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetResponseBodyResult.from_cdp(result)
+        return decode_cdp(GetResponseBodyResult, result)
 
     async def get_request_post_data(
         self,
@@ -414,10 +415,10 @@ class Network:
 
         result = await self._command_sender.send_raw(
             method=NetworkCommand.GET_REQUEST_POST_DATA,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetRequestPostDataResult.from_cdp(result)
+        return decode_cdp(GetRequestPostDataResult, result)
 
     async def replay_xhr(
         self,
@@ -434,7 +435,7 @@ class Network:
 
         await self._command_sender.send_raw(
             method=NetworkCommand.REPLAY_XHR,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -459,10 +460,10 @@ class Network:
 
         result = await self._command_sender.send_raw(
             method=NetworkCommand.SEARCH_IN_RESPONSE_BODY,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return SearchInResponseBodyResult.from_cdp(result)
+        return decode_cdp(SearchInResponseBodyResult, result)
 
     async def set_blocked_ur_ls(
         self,
@@ -478,7 +479,7 @@ class Network:
 
         await self._command_sender.send_raw(
             method=NetworkCommand.SET_BLOCKED_UR_LS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -495,7 +496,7 @@ class Network:
 
         await self._command_sender.send_raw(
             method=NetworkCommand.SET_BYPASS_SERVICE_WORKER,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -512,7 +513,7 @@ class Network:
 
         await self._command_sender.send_raw(
             method=NetworkCommand.SET_CACHE_DISABLED,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -556,10 +557,10 @@ class Network:
 
         result = await self._command_sender.send_raw(
             method=NetworkCommand.SET_COOKIE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return SetCookieResult.from_cdp(result)
+        return decode_cdp(SetCookieResult, result)
 
     async def set_cookies(
         self,
@@ -574,7 +575,7 @@ class Network:
 
         await self._command_sender.send_raw(
             method=NetworkCommand.SET_COOKIES,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -592,7 +593,7 @@ class Network:
 
         await self._command_sender.send_raw(
             method=NetworkCommand.SET_EXTRA_HTTP_HEADERS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -609,7 +610,7 @@ class Network:
 
         await self._command_sender.send_raw(
             method=NetworkCommand.SET_ATTACH_DEBUG_STACK,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -634,7 +635,7 @@ class Network:
 
         await self._command_sender.send_raw(
             method=NetworkCommand.SET_USER_AGENT_OVERRIDE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -652,10 +653,10 @@ class Network:
 
         result = await self._command_sender.send_raw(
             method=NetworkCommand.STREAM_RESOURCE_CONTENT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return StreamResourceContentResult.from_cdp(result)
+        return decode_cdp(StreamResourceContentResult, result)
 
     async def get_security_isolation_status(
         self,
@@ -670,10 +671,10 @@ class Network:
 
         result = await self._command_sender.send_raw(
             method=NetworkCommand.GET_SECURITY_ISOLATION_STATUS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetSecurityIsolationStatusResult.from_cdp(result)
+        return decode_cdp(GetSecurityIsolationStatusResult, result)
 
     async def enable_reporting_api(
         self,
@@ -690,7 +691,7 @@ class Network:
 
         await self._command_sender.send_raw(
             method=NetworkCommand.ENABLE_REPORTING_API,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -707,7 +708,7 @@ class Network:
 
         await self._command_sender.send_raw(
             method=NetworkCommand.ENABLE_DEVICE_BOUND_SESSIONS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -724,7 +725,7 @@ class Network:
 
         await self._command_sender.send_raw(
             method=NetworkCommand.DELETE_DEVICE_BOUND_SESSION,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -741,10 +742,10 @@ class Network:
 
         result = await self._command_sender.send_raw(
             method=NetworkCommand.FETCH_SCHEMEFUL_SITE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return FetchSchemefulSiteResult.from_cdp(result)
+        return decode_cdp(FetchSchemefulSiteResult, result)
 
     async def load_network_resource(
         self,
@@ -761,10 +762,10 @@ class Network:
 
         result = await self._command_sender.send_raw(
             method=NetworkCommand.LOAD_NETWORK_RESOURCE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return LoadNetworkResourceResult.from_cdp(result)
+        return decode_cdp(LoadNetworkResourceResult, result)
 
     async def set_cookie_controls(
         self,
@@ -782,6 +783,6 @@ class Network:
 
         await self._command_sender.send_raw(
             method=NetworkCommand.SET_COOKIE_CONTROLS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )

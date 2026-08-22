@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPModel
 
 from .types import (
     CrashReportContextEntry,
@@ -19,5 +17,5 @@ class CrashReportContextCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class GetEntriesResult(CDPModel):
-    entries: list[CrashReportContextEntry]
+class GetEntriesResult:
+    entries: list[CrashReportContextEntry] = field(metadata={"cdp_name": "entries"})

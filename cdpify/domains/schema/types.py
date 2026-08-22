@@ -4,16 +4,14 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-
-from cdpify.shared.models import CDPModel
+from dataclasses import dataclass, field
 
 
 @dataclass(kw_only=True, slots=True)
-class Domain(CDPModel):
+class Domain:
     """
     Description of the protocol domain.
     """
 
-    name: str
-    version: str
+    name: str = field(metadata={"cdp_name": "name"})
+    version: str = field(metadata={"cdp_name": "version"})

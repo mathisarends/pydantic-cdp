@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from typing import Literal
 
+from cdpify.codec import encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -55,7 +56,7 @@ class Input:
 
         await self._command_sender.send_raw(
             method=InputCommand.DISPATCH_DRAG_EVENT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -102,7 +103,7 @@ class Input:
 
         await self._command_sender.send_raw(
             method=InputCommand.DISPATCH_KEY_EVENT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -120,7 +121,7 @@ class Input:
 
         await self._command_sender.send_raw(
             method=InputCommand.INSERT_TEXT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -149,7 +150,7 @@ class Input:
 
         await self._command_sender.send_raw(
             method=InputCommand.IME_SET_COMPOSITION,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -198,7 +199,7 @@ class Input:
 
         await self._command_sender.send_raw(
             method=InputCommand.DISPATCH_MOUSE_EVENT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -223,7 +224,7 @@ class Input:
 
         await self._command_sender.send_raw(
             method=InputCommand.DISPATCH_TOUCH_EVENT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -271,7 +272,7 @@ class Input:
 
         await self._command_sender.send_raw(
             method=InputCommand.EMULATE_TOUCH_FROM_MOUSE_EVENT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -288,7 +289,7 @@ class Input:
 
         await self._command_sender.send_raw(
             method=InputCommand.SET_IGNORE_INPUT_EVENTS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -307,7 +308,7 @@ class Input:
 
         await self._command_sender.send_raw(
             method=InputCommand.SET_INTERCEPT_DRAGS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -335,7 +336,7 @@ class Input:
 
         await self._command_sender.send_raw(
             method=InputCommand.SYNTHESIZE_PINCH_GESTURE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -377,7 +378,7 @@ class Input:
 
         await self._command_sender.send_raw(
             method=InputCommand.SYNTHESIZE_SCROLL_GESTURE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -405,6 +406,6 @@ class Input:
 
         await self._command_sender.send_raw(
             method=InputCommand.SYNTHESIZE_TAP_GESTURE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )

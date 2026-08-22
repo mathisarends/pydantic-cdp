@@ -6,9 +6,9 @@ def test_renders_header_and_imports(simple_domain: Domain) -> None:
     output = commands.generate(simple_domain)
 
     assert "auto-generated" in output
-    assert "from dataclasses import dataclass" in output
+    assert "from dataclasses import dataclass, field" in output
     assert "from enum import StrEnum" in output
-    assert "from cdpify.shared.models import CDPModel" in output
+    assert "cdpify.shared.models" not in output
 
 
 def test_renders_command_enum(simple_domain: Domain) -> None:
@@ -24,16 +24,16 @@ def test_renders_params_model(simple_domain: Domain) -> None:
     output = commands.generate(simple_domain)
 
     assert "@dataclass(kw_only=True, slots=True)" in output
-    assert "class GetNodeParams(CDPModel):" in output
-    assert "node_id: NodeId" in output
+    assert "class GetNodeParams:" in output
+    assert 'node_id: NodeId = field(metadata={"cdp_name": "nodeId"})' in output
     assert "Fetches a node by id." in output
 
 
 def test_renders_result_model(simple_domain: Domain) -> None:
     output = commands.generate(simple_domain)
     assert "@dataclass(kw_only=True, slots=True)" in output
-    assert "class GetNodeResult(CDPModel):" in output
-    assert "box: Box" in output
+    assert "class GetNodeResult:" in output
+    assert 'box: Box = field(metadata={"cdp_name": "box"})' in output
 
 
 def test_command_without_params_omits_params_class(simple_domain: Domain) -> None:
@@ -89,4 +89,7 @@ def test_optional_param_renders_with_none_default() -> None:
     )
 
     output = commands.generate(domain)
-    assert "extra: str | None = None" in output
+    assert (
+        'extra: str | None = field(default=None, metadata={"cdp_name": "extra"})'
+        in output
+    )

@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal
 
+from cdpify.codec import decode_cdp, encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
 
@@ -76,7 +77,7 @@ class Browser:
 
         await self._command_sender.send_raw(
             method=BrowserCommand.SET_PERMISSION,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -101,7 +102,7 @@ class Browser:
 
         await self._command_sender.send_raw(
             method=BrowserCommand.GRANT_PERMISSIONS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -118,7 +119,7 @@ class Browser:
 
         await self._command_sender.send_raw(
             method=BrowserCommand.RESET_PERMISSIONS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -143,7 +144,7 @@ class Browser:
 
         await self._command_sender.send_raw(
             method=BrowserCommand.SET_DOWNLOAD_BEHAVIOR,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -161,7 +162,7 @@ class Browser:
 
         await self._command_sender.send_raw(
             method=BrowserCommand.CANCEL_DOWNLOAD,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -216,7 +217,7 @@ class Browser:
             params=None,
             session_id=session_id,
         )
-        return GetVersionResult.from_cdp(result)
+        return decode_cdp(GetVersionResult, result)
 
     async def get_browser_command_line(
         self,
@@ -231,7 +232,7 @@ class Browser:
             params=None,
             session_id=session_id,
         )
-        return GetBrowserCommandLineResult.from_cdp(result)
+        return decode_cdp(GetBrowserCommandLineResult, result)
 
     async def get_histograms(
         self,
@@ -247,10 +248,10 @@ class Browser:
 
         result = await self._command_sender.send_raw(
             method=BrowserCommand.GET_HISTOGRAMS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetHistogramsResult.from_cdp(result)
+        return decode_cdp(GetHistogramsResult, result)
 
     async def get_histogram(
         self,
@@ -266,10 +267,10 @@ class Browser:
 
         result = await self._command_sender.send_raw(
             method=BrowserCommand.GET_HISTOGRAM,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetHistogramResult.from_cdp(result)
+        return decode_cdp(GetHistogramResult, result)
 
     async def get_window_bounds(
         self,
@@ -284,10 +285,10 @@ class Browser:
 
         result = await self._command_sender.send_raw(
             method=BrowserCommand.GET_WINDOW_BOUNDS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetWindowBoundsResult.from_cdp(result)
+        return decode_cdp(GetWindowBoundsResult, result)
 
     async def get_window_for_target(
         self,
@@ -302,10 +303,10 @@ class Browser:
 
         result = await self._command_sender.send_raw(
             method=BrowserCommand.GET_WINDOW_FOR_TARGET,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetWindowForTargetResult.from_cdp(result)
+        return decode_cdp(GetWindowForTargetResult, result)
 
     async def set_window_bounds(
         self,
@@ -321,7 +322,7 @@ class Browser:
 
         await self._command_sender.send_raw(
             method=BrowserCommand.SET_WINDOW_BOUNDS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -340,7 +341,7 @@ class Browser:
 
         await self._command_sender.send_raw(
             method=BrowserCommand.SET_CONTENTS_SIZE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -358,7 +359,7 @@ class Browser:
 
         await self._command_sender.send_raw(
             method=BrowserCommand.SET_DOCK_TILE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -375,7 +376,7 @@ class Browser:
 
         await self._command_sender.send_raw(
             method=BrowserCommand.EXECUTE_BROWSER_COMMAND,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -393,7 +394,7 @@ class Browser:
 
         await self._command_sender.send_raw(
             method=BrowserCommand.ADD_PRIVACY_SANDBOX_ENROLLMENT_OVERRIDE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -410,7 +411,7 @@ class Browser:
             params=None,
             session_id=session_id,
         )
-        return GetGlobalPrivacyControlResult.from_cdp(result)
+        return decode_cdp(GetGlobalPrivacyControlResult, result)
 
     async def set_global_privacy_control(
         self,
@@ -426,7 +427,7 @@ class Browser:
 
         result = await self._command_sender.send_raw(
             method=BrowserCommand.SET_GLOBAL_PRIVACY_CONTROL,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return SetGlobalPrivacyControlResult.from_cdp(result)
+        return decode_cdp(SetGlobalPrivacyControlResult, result)

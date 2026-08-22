@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPEvent
 
 from .types import (
     StorageId,
@@ -22,26 +20,50 @@ class DOMStorageEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class DomStorageItemAddedEvent(CDPEvent):
-    storage_id: StorageId
-    key: str
-    new_value: str
+class DomStorageItemAddedEvent:
+    storage_id: StorageId = field(metadata={"cdp_name": "storageId"})
+    key: str = field(metadata={"cdp_name": "key"})
+    new_value: str = field(metadata={"cdp_name": "newValue"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DomStorageItemRemovedEvent(CDPEvent):
-    storage_id: StorageId
-    key: str
+class DomStorageItemRemovedEvent:
+    storage_id: StorageId = field(metadata={"cdp_name": "storageId"})
+    key: str = field(metadata={"cdp_name": "key"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DomStorageItemUpdatedEvent(CDPEvent):
-    storage_id: StorageId
-    key: str
-    old_value: str
-    new_value: str
+class DomStorageItemUpdatedEvent:
+    storage_id: StorageId = field(metadata={"cdp_name": "storageId"})
+    key: str = field(metadata={"cdp_name": "key"})
+    old_value: str = field(metadata={"cdp_name": "oldValue"})
+    new_value: str = field(metadata={"cdp_name": "newValue"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DomStorageItemsClearedEvent(CDPEvent):
-    storage_id: StorageId
+class DomStorageItemsClearedEvent:
+    storage_id: StorageId = field(metadata={"cdp_name": "storageId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

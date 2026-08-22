@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPModel
 
 from .types import (
     ServiceName,
@@ -22,37 +20,37 @@ class BackgroundServiceCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class StartObservingParams(CDPModel):
+class StartObservingParams:
     """
     Enables event updates for the service.
     """
 
-    service: ServiceName
+    service: ServiceName = field(metadata={"cdp_name": "service"})
 
 
 @dataclass(kw_only=True, slots=True)
-class StopObservingParams(CDPModel):
+class StopObservingParams:
     """
     Disables event updates for the service.
     """
 
-    service: ServiceName
+    service: ServiceName = field(metadata={"cdp_name": "service"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetRecordingParams(CDPModel):
+class SetRecordingParams:
     """
     Set the recording state for the service.
     """
 
-    should_record: bool
-    service: ServiceName
+    should_record: bool = field(metadata={"cdp_name": "shouldRecord"})
+    service: ServiceName = field(metadata={"cdp_name": "service"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ClearEventsParams(CDPModel):
+class ClearEventsParams:
     """
     Clears all stored data for the service.
     """
 
-    service: ServiceName
+    service: ServiceName = field(metadata={"cdp_name": "service"})

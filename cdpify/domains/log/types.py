@@ -4,15 +4,14 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Literal
 
 from cdpify.domains import network, runtime
-from cdpify.shared.models import CDPModel
 
 
 @dataclass(kw_only=True, slots=True)
-class LogEntry(CDPModel):
+class LogEntry:
     """
     Log entry.
     """
@@ -31,21 +30,33 @@ class LogEntry(CDPModel):
         "intervention",
         "recommendation",
         "other",
-    ]
-    level: Literal["verbose", "info", "warning", "error"]
-    text: str
-    category: Literal["cors"] | None = None
-    timestamp: runtime.Timestamp
-    url: str | None = None
-    line_number: int | None = None
-    stack_trace: runtime.StackTrace | None = None
-    network_request_id: network.RequestId | None = None
-    worker_id: str | None = None
-    args: list[runtime.RemoteObject] | None = None
+    ] = field(  # noqa: E501
+        metadata={"cdp_name": "source"},
+    )
+    level: Literal["verbose", "info", "warning", "error"] = field(
+        metadata={"cdp_name": "level"}
+    )
+    text: str = field(metadata={"cdp_name": "text"})
+    category: Literal["cors"] | None = field(
+        default=None, metadata={"cdp_name": "category"}
+    )
+    timestamp: runtime.Timestamp = field(metadata={"cdp_name": "timestamp"})
+    url: str | None = field(default=None, metadata={"cdp_name": "url"})
+    line_number: int | None = field(default=None, metadata={"cdp_name": "lineNumber"})
+    stack_trace: runtime.StackTrace | None = field(
+        default=None, metadata={"cdp_name": "stackTrace"}
+    )
+    network_request_id: network.RequestId | None = field(
+        default=None, metadata={"cdp_name": "networkRequestId"}
+    )
+    worker_id: str | None = field(default=None, metadata={"cdp_name": "workerId"})
+    args: list[runtime.RemoteObject] | None = field(
+        default=None, metadata={"cdp_name": "args"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ViolationSetting(CDPModel):
+class ViolationSetting:
     """
     Violation configuration setting.
     """
@@ -58,5 +69,7 @@ class ViolationSetting(CDPModel):
         "discouragedAPIUse",
         "handler",
         "recurringHandler",
-    ]
-    threshold: float
+    ] = field(  # noqa: E501
+        metadata={"cdp_name": "name"},
+    )
+    threshold: float = field(metadata={"cdp_name": "threshold"})

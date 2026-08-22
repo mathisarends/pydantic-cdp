@@ -6,11 +6,28 @@ class FieldView:
     name: str
     annotation: str
     optional: bool = False
+    cdp_name: str | None = None
 
     @property
     def declaration(self) -> str:
-        suffix = " | None = None" if self.optional else ""
-        return f"{self.name}: {self.annotation}{suffix}"
+        annotation = f"{self.annotation} | None" if self.optional else self.annotation
+        if self.cdp_name is None:
+            default = " = None" if self.optional else ""
+            return f"{self.name}: {annotation}{default}"
+
+        arguments = []
+        if self.optional:
+            arguments.append("default=None")
+        arguments.append(f'metadata={{"cdp_name": "{self.cdp_name}"}}')
+        declaration = f"{self.name}: {annotation}"
+        if len(declaration) + len(" = field(") + 4 > 88:
+            indented_arguments = ",\n        ".join(arguments)
+            return (
+                f"{declaration} = field(  # noqa: E501\n"
+                f"        {indented_arguments},\n"
+                "    )"
+            )
+        return f"{declaration} = field({', '.join(arguments)})"
 
 
 @dataclass(frozen=True, slots=True)
@@ -35,7 +52,6 @@ class TypeDefinitionView:
 @dataclass(frozen=True, slots=True)
 class ModelView:
     name: str
-    base: str
     docstring: str | None = None
     fields: tuple[FieldView, ...] = ()
 

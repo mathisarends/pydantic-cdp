@@ -4,11 +4,9 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Literal
-
-from cdpify.shared.models import CDPModel
 
 from .types import (
     Metric,
@@ -23,25 +21,29 @@ class PerformanceCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class EnableParams(CDPModel):
+class EnableParams:
     """
     Enable collecting and reporting metrics.
     """
 
-    time_domain: Literal["timeTicks", "threadTicks"] | None = None
+    time_domain: Literal["timeTicks", "threadTicks"] | None = field(
+        default=None, metadata={"cdp_name": "timeDomain"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetTimeDomainParams(CDPModel):
+class SetTimeDomainParams:
     """
     Sets time domain to use for collecting and reporting duration metrics. Note that
     this must be called before enabling metrics collection. Calling this method while
     metrics collection is enabled returns an error.
     """
 
-    time_domain: Literal["timeTicks", "threadTicks"]
+    time_domain: Literal["timeTicks", "threadTicks"] = field(
+        metadata={"cdp_name": "timeDomain"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetMetricsResult(CDPModel):
-    metrics: list[Metric]
+class GetMetricsResult:
+    metrics: list[Metric] = field(metadata={"cdp_name": "metrics"})

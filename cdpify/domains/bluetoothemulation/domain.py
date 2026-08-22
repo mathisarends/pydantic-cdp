@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+from cdpify.codec import decode_cdp, encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -55,7 +56,7 @@ class BluetoothEmulation:
 
         await self._command_sender.send_raw(
             method=BluetoothEmulationCommand.ENABLE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -72,7 +73,7 @@ class BluetoothEmulation:
 
         await self._command_sender.send_raw(
             method=BluetoothEmulationCommand.SET_SIMULATED_CENTRAL_STATE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -111,7 +112,7 @@ class BluetoothEmulation:
 
         await self._command_sender.send_raw(
             method=BluetoothEmulationCommand.SIMULATE_PRECONNECTED_PERIPHERAL,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -129,7 +130,7 @@ class BluetoothEmulation:
 
         await self._command_sender.send_raw(
             method=BluetoothEmulationCommand.SIMULATE_ADVERTISEMENT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -152,7 +153,7 @@ class BluetoothEmulation:
 
         await self._command_sender.send_raw(
             method=BluetoothEmulationCommand.SIMULATE_GATT_OPERATION_RESPONSE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -178,7 +179,7 @@ class BluetoothEmulation:
 
         await self._command_sender.send_raw(
             method=BluetoothEmulationCommand.SIMULATE_CHARACTERISTIC_OPERATION_RESPONSE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -203,7 +204,7 @@ class BluetoothEmulation:
 
         await self._command_sender.send_raw(
             method=BluetoothEmulationCommand.SIMULATE_DESCRIPTOR_OPERATION_RESPONSE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -221,10 +222,10 @@ class BluetoothEmulation:
 
         result = await self._command_sender.send_raw(
             method=BluetoothEmulationCommand.ADD_SERVICE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return AddServiceResult.from_cdp(result)
+        return decode_cdp(AddServiceResult, result)
 
     async def remove_service(
         self,
@@ -239,7 +240,7 @@ class BluetoothEmulation:
 
         await self._command_sender.send_raw(
             method=BluetoothEmulationCommand.REMOVE_SERVICE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -263,10 +264,10 @@ class BluetoothEmulation:
 
         result = await self._command_sender.send_raw(
             method=BluetoothEmulationCommand.ADD_CHARACTERISTIC,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return AddCharacteristicResult.from_cdp(result)
+        return decode_cdp(AddCharacteristicResult, result)
 
     async def remove_characteristic(
         self,
@@ -282,7 +283,7 @@ class BluetoothEmulation:
 
         await self._command_sender.send_raw(
             method=BluetoothEmulationCommand.REMOVE_CHARACTERISTIC,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -303,10 +304,10 @@ class BluetoothEmulation:
 
         result = await self._command_sender.send_raw(
             method=BluetoothEmulationCommand.ADD_DESCRIPTOR,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return AddDescriptorResult.from_cdp(result)
+        return decode_cdp(AddDescriptorResult, result)
 
     async def remove_descriptor(
         self,
@@ -321,7 +322,7 @@ class BluetoothEmulation:
 
         await self._command_sender.send_raw(
             method=BluetoothEmulationCommand.REMOVE_DESCRIPTOR,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -338,6 +339,6 @@ class BluetoothEmulation:
 
         await self._command_sender.send_raw(
             method=BluetoothEmulationCommand.SIMULATE_GATT_DISCONNECTION,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )

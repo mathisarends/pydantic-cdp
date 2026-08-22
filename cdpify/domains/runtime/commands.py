@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPModel
 
 from .types import (
     CallArgument,
@@ -51,219 +49,307 @@ class RuntimeCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class AwaitPromiseParams(CDPModel):
+class AwaitPromiseParams:
     """
     Add handler to promise with given promise object id.
     """
 
-    promise_object_id: RemoteObjectId
-    return_by_value: bool | None = None
-    generate_preview: bool | None = None
+    promise_object_id: RemoteObjectId = field(metadata={"cdp_name": "promiseObjectId"})
+    return_by_value: bool | None = field(
+        default=None, metadata={"cdp_name": "returnByValue"}
+    )
+    generate_preview: bool | None = field(
+        default=None, metadata={"cdp_name": "generatePreview"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class AwaitPromiseResult(CDPModel):
-    result: RemoteObject
-    exception_details: ExceptionDetails | None = None
+class AwaitPromiseResult:
+    result: RemoteObject = field(metadata={"cdp_name": "result"})
+    exception_details: ExceptionDetails | None = field(
+        default=None, metadata={"cdp_name": "exceptionDetails"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class CallFunctionOnParams(CDPModel):
+class CallFunctionOnParams:
     """
     Calls function with given declaration on the given object. Object group of the
     result is inherited from the target object.
     """
 
-    function_declaration: str
-    object_id: RemoteObjectId | None = None
-    arguments: list[CallArgument] | None = None
-    silent: bool | None = None
-    return_by_value: bool | None = None
-    generate_preview: bool | None = None
-    user_gesture: bool | None = None
-    await_promise: bool | None = None
-    execution_context_id: ExecutionContextId | None = None
-    object_group: str | None = None
-    throw_on_side_effect: bool | None = None
-    unique_context_id: str | None = None
-    serialization_options: SerializationOptions | None = None
+    function_declaration: str = field(metadata={"cdp_name": "functionDeclaration"})
+    object_id: RemoteObjectId | None = field(
+        default=None, metadata={"cdp_name": "objectId"}
+    )
+    arguments: list[CallArgument] | None = field(
+        default=None, metadata={"cdp_name": "arguments"}
+    )
+    silent: bool | None = field(default=None, metadata={"cdp_name": "silent"})
+    return_by_value: bool | None = field(
+        default=None, metadata={"cdp_name": "returnByValue"}
+    )
+    generate_preview: bool | None = field(
+        default=None, metadata={"cdp_name": "generatePreview"}
+    )
+    user_gesture: bool | None = field(
+        default=None, metadata={"cdp_name": "userGesture"}
+    )
+    await_promise: bool | None = field(
+        default=None, metadata={"cdp_name": "awaitPromise"}
+    )
+    execution_context_id: ExecutionContextId | None = field(
+        default=None, metadata={"cdp_name": "executionContextId"}
+    )
+    object_group: str | None = field(default=None, metadata={"cdp_name": "objectGroup"})
+    throw_on_side_effect: bool | None = field(
+        default=None, metadata={"cdp_name": "throwOnSideEffect"}
+    )
+    unique_context_id: str | None = field(
+        default=None, metadata={"cdp_name": "uniqueContextId"}
+    )
+    serialization_options: SerializationOptions | None = field(
+        default=None, metadata={"cdp_name": "serializationOptions"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class CallFunctionOnResult(CDPModel):
-    result: RemoteObject
-    exception_details: ExceptionDetails | None = None
+class CallFunctionOnResult:
+    result: RemoteObject = field(metadata={"cdp_name": "result"})
+    exception_details: ExceptionDetails | None = field(
+        default=None, metadata={"cdp_name": "exceptionDetails"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class CompileScriptParams(CDPModel):
+class CompileScriptParams:
     """
     Compiles expression.
     """
 
-    expression: str
-    source_url: str
-    persist_script: bool
-    execution_context_id: ExecutionContextId | None = None
+    expression: str = field(metadata={"cdp_name": "expression"})
+    source_url: str = field(metadata={"cdp_name": "sourceURL"})
+    persist_script: bool = field(metadata={"cdp_name": "persistScript"})
+    execution_context_id: ExecutionContextId | None = field(
+        default=None, metadata={"cdp_name": "executionContextId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class CompileScriptResult(CDPModel):
-    script_id: ScriptId | None = None
-    exception_details: ExceptionDetails | None = None
+class CompileScriptResult:
+    script_id: ScriptId | None = field(default=None, metadata={"cdp_name": "scriptId"})
+    exception_details: ExceptionDetails | None = field(
+        default=None, metadata={"cdp_name": "exceptionDetails"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class EvaluateParams(CDPModel):
+class EvaluateParams:
     """
     Evaluates expression on global object.
     """
 
-    expression: str
-    object_group: str | None = None
-    include_command_line_api: bool | None = None
-    silent: bool | None = None
-    context_id: ExecutionContextId | None = None
-    return_by_value: bool | None = None
-    generate_preview: bool | None = None
-    user_gesture: bool | None = None
-    await_promise: bool | None = None
-    throw_on_side_effect: bool | None = None
-    timeout: TimeDelta | None = None
-    disable_breaks: bool | None = None
-    repl_mode: bool | None = None
-    allow_unsafe_eval_blocked_by_csp: bool | None = None
-    unique_context_id: str | None = None
-    serialization_options: SerializationOptions | None = None
+    expression: str = field(metadata={"cdp_name": "expression"})
+    object_group: str | None = field(default=None, metadata={"cdp_name": "objectGroup"})
+    include_command_line_api: bool | None = field(
+        default=None, metadata={"cdp_name": "includeCommandLineAPI"}
+    )
+    silent: bool | None = field(default=None, metadata={"cdp_name": "silent"})
+    context_id: ExecutionContextId | None = field(
+        default=None, metadata={"cdp_name": "contextId"}
+    )
+    return_by_value: bool | None = field(
+        default=None, metadata={"cdp_name": "returnByValue"}
+    )
+    generate_preview: bool | None = field(
+        default=None, metadata={"cdp_name": "generatePreview"}
+    )
+    user_gesture: bool | None = field(
+        default=None, metadata={"cdp_name": "userGesture"}
+    )
+    await_promise: bool | None = field(
+        default=None, metadata={"cdp_name": "awaitPromise"}
+    )
+    throw_on_side_effect: bool | None = field(
+        default=None, metadata={"cdp_name": "throwOnSideEffect"}
+    )
+    timeout: TimeDelta | None = field(default=None, metadata={"cdp_name": "timeout"})
+    disable_breaks: bool | None = field(
+        default=None, metadata={"cdp_name": "disableBreaks"}
+    )
+    repl_mode: bool | None = field(default=None, metadata={"cdp_name": "replMode"})
+    allow_unsafe_eval_blocked_by_csp: bool | None = field(
+        default=None, metadata={"cdp_name": "allowUnsafeEvalBlockedByCSP"}
+    )
+    unique_context_id: str | None = field(
+        default=None, metadata={"cdp_name": "uniqueContextId"}
+    )
+    serialization_options: SerializationOptions | None = field(
+        default=None, metadata={"cdp_name": "serializationOptions"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class EvaluateResult(CDPModel):
-    result: RemoteObject
-    exception_details: ExceptionDetails | None = None
+class EvaluateResult:
+    result: RemoteObject = field(metadata={"cdp_name": "result"})
+    exception_details: ExceptionDetails | None = field(
+        default=None, metadata={"cdp_name": "exceptionDetails"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetIsolateIdResult(CDPModel):
-    id: str
+class GetIsolateIdResult:
+    id: str = field(metadata={"cdp_name": "id"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetHeapUsageResult(CDPModel):
-    used_size: float
-    total_size: float
-    embedder_heap_used_size: float
-    backing_storage_size: float
+class GetHeapUsageResult:
+    used_size: float = field(metadata={"cdp_name": "usedSize"})
+    total_size: float = field(metadata={"cdp_name": "totalSize"})
+    embedder_heap_used_size: float = field(
+        metadata={"cdp_name": "embedderHeapUsedSize"}
+    )
+    backing_storage_size: float = field(metadata={"cdp_name": "backingStorageSize"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetPropertiesParams(CDPModel):
+class GetPropertiesParams:
     """
     Returns properties of a given object. Object group of the result is inherited from
     the target object.
     """
 
-    object_id: RemoteObjectId
-    own_properties: bool | None = None
-    accessor_properties_only: bool | None = None
-    generate_preview: bool | None = None
-    non_indexed_properties_only: bool | None = None
+    object_id: RemoteObjectId = field(metadata={"cdp_name": "objectId"})
+    own_properties: bool | None = field(
+        default=None, metadata={"cdp_name": "ownProperties"}
+    )
+    accessor_properties_only: bool | None = field(
+        default=None, metadata={"cdp_name": "accessorPropertiesOnly"}
+    )
+    generate_preview: bool | None = field(
+        default=None, metadata={"cdp_name": "generatePreview"}
+    )
+    non_indexed_properties_only: bool | None = field(
+        default=None, metadata={"cdp_name": "nonIndexedPropertiesOnly"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetPropertiesResult(CDPModel):
-    result: list[PropertyDescriptor]
-    internal_properties: list[InternalPropertyDescriptor] | None = None
-    private_properties: list[PrivatePropertyDescriptor] | None = None
-    exception_details: ExceptionDetails | None = None
+class GetPropertiesResult:
+    result: list[PropertyDescriptor] = field(metadata={"cdp_name": "result"})
+    internal_properties: list[InternalPropertyDescriptor] | None = field(
+        default=None, metadata={"cdp_name": "internalProperties"}
+    )
+    private_properties: list[PrivatePropertyDescriptor] | None = field(
+        default=None, metadata={"cdp_name": "privateProperties"}
+    )
+    exception_details: ExceptionDetails | None = field(
+        default=None, metadata={"cdp_name": "exceptionDetails"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GlobalLexicalScopeNamesParams(CDPModel):
+class GlobalLexicalScopeNamesParams:
     """
     Returns all let, const and class variables from global scope.
     """
 
-    execution_context_id: ExecutionContextId | None = None
+    execution_context_id: ExecutionContextId | None = field(
+        default=None, metadata={"cdp_name": "executionContextId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GlobalLexicalScopeNamesResult(CDPModel):
-    names: list[str]
+class GlobalLexicalScopeNamesResult:
+    names: list[str] = field(metadata={"cdp_name": "names"})
 
 
 @dataclass(kw_only=True, slots=True)
-class QueryObjectsParams(CDPModel):
-    prototype_object_id: RemoteObjectId
-    object_group: str | None = None
+class QueryObjectsParams:
+    prototype_object_id: RemoteObjectId = field(
+        metadata={"cdp_name": "prototypeObjectId"}
+    )
+    object_group: str | None = field(default=None, metadata={"cdp_name": "objectGroup"})
 
 
 @dataclass(kw_only=True, slots=True)
-class QueryObjectsResult(CDPModel):
-    objects: RemoteObject
+class QueryObjectsResult:
+    objects: RemoteObject = field(metadata={"cdp_name": "objects"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ReleaseObjectParams(CDPModel):
+class ReleaseObjectParams:
     """
     Releases remote object with given id.
     """
 
-    object_id: RemoteObjectId
+    object_id: RemoteObjectId = field(metadata={"cdp_name": "objectId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ReleaseObjectGroupParams(CDPModel):
+class ReleaseObjectGroupParams:
     """
     Releases all remote objects that belong to a given group.
     """
 
-    object_group: str
+    object_group: str = field(metadata={"cdp_name": "objectGroup"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RunScriptParams(CDPModel):
+class RunScriptParams:
     """
     Runs script with given id in a given context.
     """
 
-    script_id: ScriptId
-    execution_context_id: ExecutionContextId | None = None
-    object_group: str | None = None
-    silent: bool | None = None
-    include_command_line_api: bool | None = None
-    return_by_value: bool | None = None
-    generate_preview: bool | None = None
-    await_promise: bool | None = None
+    script_id: ScriptId = field(metadata={"cdp_name": "scriptId"})
+    execution_context_id: ExecutionContextId | None = field(
+        default=None, metadata={"cdp_name": "executionContextId"}
+    )
+    object_group: str | None = field(default=None, metadata={"cdp_name": "objectGroup"})
+    silent: bool | None = field(default=None, metadata={"cdp_name": "silent"})
+    include_command_line_api: bool | None = field(
+        default=None, metadata={"cdp_name": "includeCommandLineAPI"}
+    )
+    return_by_value: bool | None = field(
+        default=None, metadata={"cdp_name": "returnByValue"}
+    )
+    generate_preview: bool | None = field(
+        default=None, metadata={"cdp_name": "generatePreview"}
+    )
+    await_promise: bool | None = field(
+        default=None, metadata={"cdp_name": "awaitPromise"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class RunScriptResult(CDPModel):
-    result: RemoteObject
-    exception_details: ExceptionDetails | None = None
+class RunScriptResult:
+    result: RemoteObject = field(metadata={"cdp_name": "result"})
+    exception_details: ExceptionDetails | None = field(
+        default=None, metadata={"cdp_name": "exceptionDetails"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetAsyncCallStackDepthParams(CDPModel):
+class SetAsyncCallStackDepthParams:
     """
     Enables or disables async call stacks tracking.
     """
 
-    max_depth: int
+    max_depth: int = field(metadata={"cdp_name": "maxDepth"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetCustomObjectFormatterEnabledParams(CDPModel):
-    enabled: bool
+class SetCustomObjectFormatterEnabledParams:
+    enabled: bool = field(metadata={"cdp_name": "enabled"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetMaxCallStackSizeToCaptureParams(CDPModel):
-    size: int
+class SetMaxCallStackSizeToCaptureParams:
+    size: int = field(metadata={"cdp_name": "size"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AddBindingParams(CDPModel):
+class AddBindingParams:
     """
     If executionContextId is empty, adds binding with the given name on the global
     objects of all inspected contexts, including those created later, bindings survive
@@ -272,23 +358,27 @@ class AddBindingParams(CDPModel):
     function call produces Runtime.bindingCalled notification.
     """
 
-    name: str
-    execution_context_id: ExecutionContextId | None = None
-    execution_context_name: str | None = None
+    name: str = field(metadata={"cdp_name": "name"})
+    execution_context_id: ExecutionContextId | None = field(
+        default=None, metadata={"cdp_name": "executionContextId"}
+    )
+    execution_context_name: str | None = field(
+        default=None, metadata={"cdp_name": "executionContextName"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class RemoveBindingParams(CDPModel):
+class RemoveBindingParams:
     """
     This method does not remove binding function from global object but unsubscribes
     current runtime agent from Runtime.bindingCalled notifications.
     """
 
-    name: str
+    name: str = field(metadata={"cdp_name": "name"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetExceptionDetailsParams(CDPModel):
+class GetExceptionDetailsParams:
     """
     This method tries to lookup and populate exception details for a JavaScript Error
     object. Note that the stackTrace portion of the resulting exceptionDetails will only
@@ -296,9 +386,11 @@ class GetExceptionDetailsParams(CDPModel):
     thrown.
     """
 
-    error_object_id: RemoteObjectId
+    error_object_id: RemoteObjectId = field(metadata={"cdp_name": "errorObjectId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetExceptionDetailsResult(CDPModel):
-    exception_details: ExceptionDetails | None = None
+class GetExceptionDetailsResult:
+    exception_details: ExceptionDetails | None = field(
+        default=None, metadata={"cdp_name": "exceptionDetails"}
+    )

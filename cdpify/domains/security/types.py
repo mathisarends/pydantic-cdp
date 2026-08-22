@@ -4,11 +4,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Literal
 
 from cdpify.domains import network
-from cdpify.shared.models import CDPModel
 
 """
 An internal certificate ID value.
@@ -30,80 +29,110 @@ type SecurityState = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class CertificateSecurityState(CDPModel):
+class CertificateSecurityState:
     """
     Details about the security state of the page certificate.
     """
 
-    protocol: str
-    key_exchange: str
-    key_exchange_group: str | None = None
-    cipher: str
-    mac: str | None = None
-    certificate: list[str]
-    subject_name: str
-    issuer: str
-    valid_from: network.TimeSinceEpoch
-    valid_to: network.TimeSinceEpoch
-    certificate_network_error: str | None = None
-    certificate_has_weak_signature: bool
-    certificate_has_sha1_signature: bool
-    modern_ssl: bool
-    obsolete_ssl_protocol: bool
-    obsolete_ssl_key_exchange: bool
-    obsolete_ssl_cipher: bool
-    obsolete_ssl_signature: bool
+    protocol: str = field(metadata={"cdp_name": "protocol"})
+    key_exchange: str = field(metadata={"cdp_name": "keyExchange"})
+    key_exchange_group: str | None = field(
+        default=None, metadata={"cdp_name": "keyExchangeGroup"}
+    )
+    cipher: str = field(metadata={"cdp_name": "cipher"})
+    mac: str | None = field(default=None, metadata={"cdp_name": "mac"})
+    certificate: list[str] = field(metadata={"cdp_name": "certificate"})
+    subject_name: str = field(metadata={"cdp_name": "subjectName"})
+    issuer: str = field(metadata={"cdp_name": "issuer"})
+    valid_from: network.TimeSinceEpoch = field(metadata={"cdp_name": "validFrom"})
+    valid_to: network.TimeSinceEpoch = field(metadata={"cdp_name": "validTo"})
+    certificate_network_error: str | None = field(
+        default=None, metadata={"cdp_name": "certificateNetworkError"}
+    )
+    certificate_has_weak_signature: bool = field(
+        metadata={"cdp_name": "certificateHasWeakSignature"}
+    )
+    certificate_has_sha1_signature: bool = field(
+        metadata={"cdp_name": "certificateHasSha1Signature"}
+    )
+    modern_ssl: bool = field(metadata={"cdp_name": "modernSSL"})
+    obsolete_ssl_protocol: bool = field(metadata={"cdp_name": "obsoleteSslProtocol"})
+    obsolete_ssl_key_exchange: bool = field(
+        metadata={"cdp_name": "obsoleteSslKeyExchange"}
+    )
+    obsolete_ssl_cipher: bool = field(metadata={"cdp_name": "obsoleteSslCipher"})
+    obsolete_ssl_signature: bool = field(metadata={"cdp_name": "obsoleteSslSignature"})
 
 
 type SafetyTipStatus = Literal["badReputation", "lookalike"]
 
 
 @dataclass(kw_only=True, slots=True)
-class SafetyTipInfo(CDPModel):
-    safety_tip_status: SafetyTipStatus
-    safe_url: str | None = None
+class SafetyTipInfo:
+    safety_tip_status: SafetyTipStatus = field(metadata={"cdp_name": "safetyTipStatus"})
+    safe_url: str | None = field(default=None, metadata={"cdp_name": "safeUrl"})
 
 
 @dataclass(kw_only=True, slots=True)
-class VisibleSecurityState(CDPModel):
+class VisibleSecurityState:
     """
     Security state information about the page.
     """
 
-    security_state: SecurityState
-    certificate_security_state: CertificateSecurityState | None = None
-    safety_tip_info: SafetyTipInfo | None = None
-    security_state_issue_ids: list[str]
+    security_state: SecurityState = field(metadata={"cdp_name": "securityState"})
+    certificate_security_state: CertificateSecurityState | None = field(
+        default=None, metadata={"cdp_name": "certificateSecurityState"}
+    )
+    safety_tip_info: SafetyTipInfo | None = field(
+        default=None, metadata={"cdp_name": "safetyTipInfo"}
+    )
+    security_state_issue_ids: list[str] = field(
+        metadata={"cdp_name": "securityStateIssueIds"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SecurityStateExplanation(CDPModel):
+class SecurityStateExplanation:
     """
     An explanation of an factor contributing to the security state.
     """
 
-    security_state: SecurityState
-    title: str
-    summary: str
-    description: str
-    mixed_content_type: MixedContentType
-    certificate: list[str]
-    recommendations: list[str] | None = None
+    security_state: SecurityState = field(metadata={"cdp_name": "securityState"})
+    title: str = field(metadata={"cdp_name": "title"})
+    summary: str = field(metadata={"cdp_name": "summary"})
+    description: str = field(metadata={"cdp_name": "description"})
+    mixed_content_type: MixedContentType = field(
+        metadata={"cdp_name": "mixedContentType"}
+    )
+    certificate: list[str] = field(metadata={"cdp_name": "certificate"})
+    recommendations: list[str] | None = field(
+        default=None, metadata={"cdp_name": "recommendations"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class InsecureContentStatus(CDPModel):
+class InsecureContentStatus:
     """
     Information about insecure content on the page.
     """
 
-    ran_mixed_content: bool
-    displayed_mixed_content: bool
-    contained_mixed_form: bool
-    ran_content_with_cert_errors: bool
-    displayed_content_with_cert_errors: bool
-    ran_insecure_content_style: SecurityState
-    displayed_insecure_content_style: SecurityState
+    ran_mixed_content: bool = field(metadata={"cdp_name": "ranMixedContent"})
+    displayed_mixed_content: bool = field(
+        metadata={"cdp_name": "displayedMixedContent"}
+    )
+    contained_mixed_form: bool = field(metadata={"cdp_name": "containedMixedForm"})
+    ran_content_with_cert_errors: bool = field(
+        metadata={"cdp_name": "ranContentWithCertErrors"}
+    )
+    displayed_content_with_cert_errors: bool = field(
+        metadata={"cdp_name": "displayedContentWithCertErrors"}
+    )
+    ran_insecure_content_style: SecurityState = field(
+        metadata={"cdp_name": "ranInsecureContentStyle"}
+    )
+    displayed_insecure_content_style: SecurityState = field(
+        metadata={"cdp_name": "displayedInsecureContentStyle"}
+    )
 
 
 """

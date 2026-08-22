@@ -4,11 +4,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, Literal
 
 from cdpify.domains import io, network, runtime, security
-from cdpify.shared.models import CDPModel
 
 """
 Resource type as it was perceived by the rendering engine.
@@ -117,32 +116,38 @@ type CookieSourceScheme = Literal["Unset", "NonSecure", "Secure"]
 
 
 @dataclass(kw_only=True, slots=True)
-class ResourceTiming(CDPModel):
+class ResourceTiming:
     """
     Timing information for the request.
     """
 
-    request_time: float
-    proxy_start: float
-    proxy_end: float
-    dns_start: float
-    dns_end: float
-    connect_start: float
-    connect_end: float
-    ssl_start: float
-    ssl_end: float
-    worker_start: float
-    worker_ready: float
-    worker_fetch_start: float
-    worker_respond_with_settled: float
-    worker_router_evaluation_start: float | None = None
-    worker_cache_lookup_start: float | None = None
-    send_start: float
-    send_end: float
-    push_start: float
-    push_end: float
-    receive_headers_start: float
-    receive_headers_end: float
+    request_time: float = field(metadata={"cdp_name": "requestTime"})
+    proxy_start: float = field(metadata={"cdp_name": "proxyStart"})
+    proxy_end: float = field(metadata={"cdp_name": "proxyEnd"})
+    dns_start: float = field(metadata={"cdp_name": "dnsStart"})
+    dns_end: float = field(metadata={"cdp_name": "dnsEnd"})
+    connect_start: float = field(metadata={"cdp_name": "connectStart"})
+    connect_end: float = field(metadata={"cdp_name": "connectEnd"})
+    ssl_start: float = field(metadata={"cdp_name": "sslStart"})
+    ssl_end: float = field(metadata={"cdp_name": "sslEnd"})
+    worker_start: float = field(metadata={"cdp_name": "workerStart"})
+    worker_ready: float = field(metadata={"cdp_name": "workerReady"})
+    worker_fetch_start: float = field(metadata={"cdp_name": "workerFetchStart"})
+    worker_respond_with_settled: float = field(
+        metadata={"cdp_name": "workerRespondWithSettled"}
+    )
+    worker_router_evaluation_start: float | None = field(
+        default=None, metadata={"cdp_name": "workerRouterEvaluationStart"}
+    )
+    worker_cache_lookup_start: float | None = field(
+        default=None, metadata={"cdp_name": "workerCacheLookupStart"}
+    )
+    send_start: float = field(metadata={"cdp_name": "sendStart"})
+    send_end: float = field(metadata={"cdp_name": "sendEnd"})
+    push_start: float = field(metadata={"cdp_name": "pushStart"})
+    push_end: float = field(metadata={"cdp_name": "pushEnd"})
+    receive_headers_start: float = field(metadata={"cdp_name": "receiveHeadersStart"})
+    receive_headers_end: float = field(metadata={"cdp_name": "receiveHeadersEnd"})
 
 
 """
@@ -163,29 +168,35 @@ type RenderBlockingBehavior = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class PostDataEntry(CDPModel):
+class PostDataEntry:
     """
     Post data entry for HTTP request
     """
 
-    bytes: str | None = None
+    bytes: str | None = field(default=None, metadata={"cdp_name": "bytes"})
 
 
 @dataclass(kw_only=True, slots=True)
-class Request(CDPModel):
+class Request:
     """
     HTTP request data.
     """
 
-    url: str
-    url_fragment: str | None = None
-    method: str
-    headers: Headers
-    post_data: str | None = None
-    has_post_data: bool | None = None
-    post_data_entries: list[PostDataEntry] | None = None
-    mixed_content_type: security.MixedContentType | None = None
-    initial_priority: ResourcePriority
+    url: str = field(metadata={"cdp_name": "url"})
+    url_fragment: str | None = field(default=None, metadata={"cdp_name": "urlFragment"})
+    method: str = field(metadata={"cdp_name": "method"})
+    headers: Headers = field(metadata={"cdp_name": "headers"})
+    post_data: str | None = field(default=None, metadata={"cdp_name": "postData"})
+    has_post_data: bool | None = field(
+        default=None, metadata={"cdp_name": "hasPostData"}
+    )
+    post_data_entries: list[PostDataEntry] | None = field(
+        default=None, metadata={"cdp_name": "postDataEntries"}
+    )
+    mixed_content_type: security.MixedContentType | None = field(
+        default=None, metadata={"cdp_name": "mixedContentType"}
+    )
+    initial_priority: ResourcePriority = field(metadata={"cdp_name": "initialPriority"})
     referrer_policy: Literal[
         "unsafe-url",
         "no-referrer-when-downgrade",
@@ -195,50 +206,68 @@ class Request(CDPModel):
         "same-origin",
         "strict-origin",
         "strict-origin-when-cross-origin",
-    ]
-    is_link_preload: bool | None = None
-    trust_token_params: TrustTokenParams | None = None
-    is_same_site: bool | None = None
-    is_ad_related: bool | None = None
+    ] = field(  # noqa: E501
+        metadata={"cdp_name": "referrerPolicy"},
+    )
+    is_link_preload: bool | None = field(
+        default=None, metadata={"cdp_name": "isLinkPreload"}
+    )
+    trust_token_params: TrustTokenParams | None = field(
+        default=None, metadata={"cdp_name": "trustTokenParams"}
+    )
+    is_same_site: bool | None = field(default=None, metadata={"cdp_name": "isSameSite"})
+    is_ad_related: bool | None = field(
+        default=None, metadata={"cdp_name": "isAdRelated"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SignedCertificateTimestamp(CDPModel):
+class SignedCertificateTimestamp:
     """
     Details of a signed certificate timestamp (SCT).
     """
 
-    status: str
-    origin: str
-    log_description: str
-    log_id: str
-    timestamp: float
-    hash_algorithm: str
-    signature_algorithm: str
-    signature_data: str
+    status: str = field(metadata={"cdp_name": "status"})
+    origin: str = field(metadata={"cdp_name": "origin"})
+    log_description: str = field(metadata={"cdp_name": "logDescription"})
+    log_id: str = field(metadata={"cdp_name": "logId"})
+    timestamp: float = field(metadata={"cdp_name": "timestamp"})
+    hash_algorithm: str = field(metadata={"cdp_name": "hashAlgorithm"})
+    signature_algorithm: str = field(metadata={"cdp_name": "signatureAlgorithm"})
+    signature_data: str = field(metadata={"cdp_name": "signatureData"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SecurityDetails(CDPModel):
+class SecurityDetails:
     """
     Security details about a request.
     """
 
-    protocol: str
-    key_exchange: str
-    key_exchange_group: str | None = None
-    cipher: str
-    mac: str | None = None
-    certificate_id: security.CertificateId
-    subject_name: str
-    san_list: list[str]
-    issuer: str
-    valid_from: TimeSinceEpoch
-    valid_to: TimeSinceEpoch
-    signed_certificate_timestamp_list: list[SignedCertificateTimestamp]
-    certificate_transparency_compliance: CertificateTransparencyCompliance
-    server_signature_algorithm: int | None = None
-    encrypted_client_hello: bool
+    protocol: str = field(metadata={"cdp_name": "protocol"})
+    key_exchange: str = field(metadata={"cdp_name": "keyExchange"})
+    key_exchange_group: str | None = field(
+        default=None, metadata={"cdp_name": "keyExchangeGroup"}
+    )
+    cipher: str = field(metadata={"cdp_name": "cipher"})
+    mac: str | None = field(default=None, metadata={"cdp_name": "mac"})
+    certificate_id: security.CertificateId = field(
+        metadata={"cdp_name": "certificateId"}
+    )
+    subject_name: str = field(metadata={"cdp_name": "subjectName"})
+    san_list: list[str] = field(metadata={"cdp_name": "sanList"})
+    issuer: str = field(metadata={"cdp_name": "issuer"})
+    valid_from: TimeSinceEpoch = field(metadata={"cdp_name": "validFrom"})
+    valid_to: TimeSinceEpoch = field(metadata={"cdp_name": "validTo"})
+    signed_certificate_timestamp_list: list[SignedCertificateTimestamp] = field(
+        metadata={"cdp_name": "signedCertificateTimestampList"}
+    )
+    certificate_transparency_compliance: CertificateTransparencyCompliance = field(
+        metadata={"cdp_name": "certificateTransparencyCompliance"}
+    )
+    server_signature_algorithm: int | None = field(
+        default=None, metadata={"cdp_name": "serverSignatureAlgorithm"}
+    )
+    encrypted_client_hello: bool = field(metadata={"cdp_name": "encryptedClientHello"})
 
 
 """
@@ -306,9 +335,9 @@ type CorsError = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class CorsErrorStatus(CDPModel):
-    cors_error: CorsError
-    failed_parameter: str
+class CorsErrorStatus:
+    cors_error: CorsError = field(metadata={"cdp_name": "corsError"})
+    failed_parameter: str = field(metadata={"cdp_name": "failedParameter"})
 
 
 """
@@ -320,16 +349,18 @@ type ServiceWorkerResponseSource = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class TrustTokenParams(CDPModel):
+class TrustTokenParams:
     """
     Determines what type of Trust Token operation is executed and depending on the
     type, some additional parameters. The values are specified in
     third_party/blink/renderer/core/fetch/trust_token.idl.
     """
 
-    operation: TrustTokenOperationType
-    refresh_policy: Literal["UseCached", "Refresh"]
-    issuers: list[str] | None = None
+    operation: TrustTokenOperationType = field(metadata={"cdp_name": "operation"})
+    refresh_policy: Literal["UseCached", "Refresh"] = field(
+        metadata={"cdp_name": "refreshPolicy"}
+    )
+    issuers: list[str] | None = field(default=None, metadata={"cdp_name": "issuers"})
 
 
 type TrustTokenOperationType = Literal["Issuance", "Redemption", "Signing"]
@@ -361,143 +392,195 @@ type ServiceWorkerRouterSource = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class ServiceWorkerRouterInfo(CDPModel):
-    rule_id_matched: int | None = None
-    matched_source_type: ServiceWorkerRouterSource | None = None
-    actual_source_type: ServiceWorkerRouterSource | None = None
+class ServiceWorkerRouterInfo:
+    rule_id_matched: int | None = field(
+        default=None, metadata={"cdp_name": "ruleIdMatched"}
+    )
+    matched_source_type: ServiceWorkerRouterSource | None = field(
+        default=None, metadata={"cdp_name": "matchedSourceType"}
+    )
+    actual_source_type: ServiceWorkerRouterSource | None = field(
+        default=None, metadata={"cdp_name": "actualSourceType"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class Response(CDPModel):
+class Response:
     """
     HTTP response data.
     """
 
-    url: str
-    status: int
-    status_text: str
-    headers: Headers
-    headers_text: str | None = None
-    mime_type: str
-    charset: str
-    request_headers: Headers | None = None
-    request_headers_text: str | None = None
-    connection_reused: bool
-    connection_id: float
-    remote_ip_address: str | None = None
-    remote_port: int | None = None
-    from_disk_cache: bool | None = None
-    from_service_worker: bool | None = None
-    from_prefetch_cache: bool | None = None
-    from_early_hints: bool | None = None
-    service_worker_router_info: ServiceWorkerRouterInfo | None = None
-    encoded_data_length: float
-    timing: ResourceTiming | None = None
-    service_worker_response_source: ServiceWorkerResponseSource | None = None
-    response_time: TimeSinceEpoch | None = None
-    cache_storage_cache_name: str | None = None
-    protocol: str | None = None
-    alternate_protocol_usage: AlternateProtocolUsage | None = None
-    security_state: security.SecurityState
-    security_details: SecurityDetails | None = None
+    url: str = field(metadata={"cdp_name": "url"})
+    status: int = field(metadata={"cdp_name": "status"})
+    status_text: str = field(metadata={"cdp_name": "statusText"})
+    headers: Headers = field(metadata={"cdp_name": "headers"})
+    headers_text: str | None = field(default=None, metadata={"cdp_name": "headersText"})
+    mime_type: str = field(metadata={"cdp_name": "mimeType"})
+    charset: str = field(metadata={"cdp_name": "charset"})
+    request_headers: Headers | None = field(
+        default=None, metadata={"cdp_name": "requestHeaders"}
+    )
+    request_headers_text: str | None = field(
+        default=None, metadata={"cdp_name": "requestHeadersText"}
+    )
+    connection_reused: bool = field(metadata={"cdp_name": "connectionReused"})
+    connection_id: float = field(metadata={"cdp_name": "connectionId"})
+    remote_ip_address: str | None = field(
+        default=None, metadata={"cdp_name": "remoteIPAddress"}
+    )
+    remote_port: int | None = field(default=None, metadata={"cdp_name": "remotePort"})
+    from_disk_cache: bool | None = field(
+        default=None, metadata={"cdp_name": "fromDiskCache"}
+    )
+    from_service_worker: bool | None = field(
+        default=None, metadata={"cdp_name": "fromServiceWorker"}
+    )
+    from_prefetch_cache: bool | None = field(
+        default=None, metadata={"cdp_name": "fromPrefetchCache"}
+    )
+    from_early_hints: bool | None = field(
+        default=None, metadata={"cdp_name": "fromEarlyHints"}
+    )
+    service_worker_router_info: ServiceWorkerRouterInfo | None = field(
+        default=None, metadata={"cdp_name": "serviceWorkerRouterInfo"}
+    )
+    encoded_data_length: float = field(metadata={"cdp_name": "encodedDataLength"})
+    timing: ResourceTiming | None = field(default=None, metadata={"cdp_name": "timing"})
+    service_worker_response_source: ServiceWorkerResponseSource | None = field(
+        default=None, metadata={"cdp_name": "serviceWorkerResponseSource"}
+    )
+    response_time: TimeSinceEpoch | None = field(
+        default=None, metadata={"cdp_name": "responseTime"}
+    )
+    cache_storage_cache_name: str | None = field(
+        default=None, metadata={"cdp_name": "cacheStorageCacheName"}
+    )
+    protocol: str | None = field(default=None, metadata={"cdp_name": "protocol"})
+    alternate_protocol_usage: AlternateProtocolUsage | None = field(
+        default=None, metadata={"cdp_name": "alternateProtocolUsage"}
+    )
+    security_state: security.SecurityState = field(
+        metadata={"cdp_name": "securityState"}
+    )
+    security_details: SecurityDetails | None = field(
+        default=None, metadata={"cdp_name": "securityDetails"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class WebSocketRequest(CDPModel):
+class WebSocketRequest:
     """
     WebSocket request data.
     """
 
-    headers: Headers
+    headers: Headers = field(metadata={"cdp_name": "headers"})
 
 
 @dataclass(kw_only=True, slots=True)
-class WebSocketResponse(CDPModel):
+class WebSocketResponse:
     """
     WebSocket response data.
     """
 
-    status: int
-    status_text: str
-    headers: Headers
-    headers_text: str | None = None
-    request_headers: Headers | None = None
-    request_headers_text: str | None = None
+    status: int = field(metadata={"cdp_name": "status"})
+    status_text: str = field(metadata={"cdp_name": "statusText"})
+    headers: Headers = field(metadata={"cdp_name": "headers"})
+    headers_text: str | None = field(default=None, metadata={"cdp_name": "headersText"})
+    request_headers: Headers | None = field(
+        default=None, metadata={"cdp_name": "requestHeaders"}
+    )
+    request_headers_text: str | None = field(
+        default=None, metadata={"cdp_name": "requestHeadersText"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class WebSocketFrame(CDPModel):
+class WebSocketFrame:
     """
     WebSocket message data. This represents an entire WebSocket message, not just a
     fragmented frame as the name suggests.
     """
 
-    opcode: float
-    mask: bool
-    payload_data: str
+    opcode: float = field(metadata={"cdp_name": "opcode"})
+    mask: bool = field(metadata={"cdp_name": "mask"})
+    payload_data: str = field(metadata={"cdp_name": "payloadData"})
 
 
 @dataclass(kw_only=True, slots=True)
-class CachedResource(CDPModel):
+class CachedResource:
     """
     Information about the cached resource.
     """
 
-    url: str
-    type: ResourceType
-    response: Response | None = None
-    body_size: float
+    url: str = field(metadata={"cdp_name": "url"})
+    type: ResourceType = field(metadata={"cdp_name": "type"})
+    response: Response | None = field(default=None, metadata={"cdp_name": "response"})
+    body_size: float = field(metadata={"cdp_name": "bodySize"})
 
 
 @dataclass(kw_only=True, slots=True)
-class Initiator(CDPModel):
+class Initiator:
     """
     Information about the request initiator.
     """
 
     type: Literal[
         "parser", "script", "preload", "SignedExchange", "preflight", "FedCM", "other"
-    ]
-    stack: runtime.StackTrace | None = None
-    url: str | None = None
-    line_number: float | None = None
-    column_number: float | None = None
-    request_id: RequestId | None = None
+    ] = field(  # noqa: E501
+        metadata={"cdp_name": "type"},
+    )
+    stack: runtime.StackTrace | None = field(
+        default=None, metadata={"cdp_name": "stack"}
+    )
+    url: str | None = field(default=None, metadata={"cdp_name": "url"})
+    line_number: float | None = field(default=None, metadata={"cdp_name": "lineNumber"})
+    column_number: float | None = field(
+        default=None, metadata={"cdp_name": "columnNumber"}
+    )
+    request_id: RequestId | None = field(
+        default=None, metadata={"cdp_name": "requestId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class CookiePartitionKey(CDPModel):
+class CookiePartitionKey:
     """
     cookiePartitionKey object The representation of the components of the key that are
     created by the cookiePartitionKey class contained in
     net/cookies/cookie_partition_key.h.
     """
 
-    top_level_site: str
-    has_cross_site_ancestor: bool
+    top_level_site: str = field(metadata={"cdp_name": "topLevelSite"})
+    has_cross_site_ancestor: bool = field(metadata={"cdp_name": "hasCrossSiteAncestor"})
 
 
 @dataclass(kw_only=True, slots=True)
-class Cookie(CDPModel):
+class Cookie:
     """
     Cookie object
     """
 
-    name: str
-    value: str
-    domain: str
-    path: str
-    expires: float
-    size: int
-    http_only: bool
-    secure: bool
-    session: bool
-    same_site: CookieSameSite | None = None
-    priority: CookiePriority
-    source_scheme: CookieSourceScheme
-    source_port: int
-    partition_key: CookiePartitionKey | None = None
-    partition_key_opaque: bool | None = None
+    name: str = field(metadata={"cdp_name": "name"})
+    value: str = field(metadata={"cdp_name": "value"})
+    domain: str = field(metadata={"cdp_name": "domain"})
+    path: str = field(metadata={"cdp_name": "path"})
+    expires: float = field(metadata={"cdp_name": "expires"})
+    size: int = field(metadata={"cdp_name": "size"})
+    http_only: bool = field(metadata={"cdp_name": "httpOnly"})
+    secure: bool = field(metadata={"cdp_name": "secure"})
+    session: bool = field(metadata={"cdp_name": "session"})
+    same_site: CookieSameSite | None = field(
+        default=None, metadata={"cdp_name": "sameSite"}
+    )
+    priority: CookiePriority = field(metadata={"cdp_name": "priority"})
+    source_scheme: CookieSourceScheme = field(metadata={"cdp_name": "sourceScheme"})
+    source_port: int = field(metadata={"cdp_name": "sourcePort"})
+    partition_key: CookiePartitionKey | None = field(
+        default=None, metadata={"cdp_name": "partitionKey"}
+    )
+    partition_key_opaque: bool | None = field(
+        default=None, metadata={"cdp_name": "partitionKeyOpaque"}
+    )
 
 
 """
@@ -566,115 +649,141 @@ type CookieExemptionReason = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class BlockedSetCookieWithReason(CDPModel):
+class BlockedSetCookieWithReason:
     """
     A cookie which was not stored from a response with the corresponding reason.
     """
 
-    blocked_reasons: list[SetCookieBlockedReason]
-    cookie_line: str
-    cookie: Cookie | None = None
+    blocked_reasons: list[SetCookieBlockedReason] = field(
+        metadata={"cdp_name": "blockedReasons"}
+    )
+    cookie_line: str = field(metadata={"cdp_name": "cookieLine"})
+    cookie: Cookie | None = field(default=None, metadata={"cdp_name": "cookie"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ExemptedSetCookieWithReason(CDPModel):
+class ExemptedSetCookieWithReason:
     """
     A cookie should have been blocked by 3PCD but is exempted and stored from a
     response with the corresponding reason. A cookie could only have at most one
     exemption reason.
     """
 
-    exemption_reason: CookieExemptionReason
-    cookie_line: str
-    cookie: Cookie
+    exemption_reason: CookieExemptionReason = field(
+        metadata={"cdp_name": "exemptionReason"}
+    )
+    cookie_line: str = field(metadata={"cdp_name": "cookieLine"})
+    cookie: Cookie = field(metadata={"cdp_name": "cookie"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AssociatedCookie(CDPModel):
+class AssociatedCookie:
     """
     A cookie associated with the request which may or may not be sent with it. Includes
     the cookies itself and reasons for blocking or exemption.
     """
 
-    cookie: Cookie
-    blocked_reasons: list[CookieBlockedReason]
-    exemption_reason: CookieExemptionReason | None = None
+    cookie: Cookie = field(metadata={"cdp_name": "cookie"})
+    blocked_reasons: list[CookieBlockedReason] = field(
+        metadata={"cdp_name": "blockedReasons"}
+    )
+    exemption_reason: CookieExemptionReason | None = field(
+        default=None, metadata={"cdp_name": "exemptionReason"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class CookieParam(CDPModel):
+class CookieParam:
     """
     Cookie parameter object
     """
 
-    name: str
-    value: str
-    url: str | None = None
-    domain: str | None = None
-    path: str | None = None
-    secure: bool | None = None
-    http_only: bool | None = None
-    same_site: CookieSameSite | None = None
-    expires: TimeSinceEpoch | None = None
-    priority: CookiePriority | None = None
-    source_scheme: CookieSourceScheme | None = None
-    source_port: int | None = None
-    partition_key: CookiePartitionKey | None = None
+    name: str = field(metadata={"cdp_name": "name"})
+    value: str = field(metadata={"cdp_name": "value"})
+    url: str | None = field(default=None, metadata={"cdp_name": "url"})
+    domain: str | None = field(default=None, metadata={"cdp_name": "domain"})
+    path: str | None = field(default=None, metadata={"cdp_name": "path"})
+    secure: bool | None = field(default=None, metadata={"cdp_name": "secure"})
+    http_only: bool | None = field(default=None, metadata={"cdp_name": "httpOnly"})
+    same_site: CookieSameSite | None = field(
+        default=None, metadata={"cdp_name": "sameSite"}
+    )
+    expires: TimeSinceEpoch | None = field(
+        default=None, metadata={"cdp_name": "expires"}
+    )
+    priority: CookiePriority | None = field(
+        default=None, metadata={"cdp_name": "priority"}
+    )
+    source_scheme: CookieSourceScheme | None = field(
+        default=None, metadata={"cdp_name": "sourceScheme"}
+    )
+    source_port: int | None = field(default=None, metadata={"cdp_name": "sourcePort"})
+    partition_key: CookiePartitionKey | None = field(
+        default=None, metadata={"cdp_name": "partitionKey"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class AuthChallenge(CDPModel):
+class AuthChallenge:
     """
     Authorization challenge for HTTP status code 401 or 407.
     """
 
-    source: Literal["Server", "Proxy"] | None = None
-    origin: str
-    scheme: str
-    realm: str
+    source: Literal["Server", "Proxy"] | None = field(
+        default=None, metadata={"cdp_name": "source"}
+    )
+    origin: str = field(metadata={"cdp_name": "origin"})
+    scheme: str = field(metadata={"cdp_name": "scheme"})
+    realm: str = field(metadata={"cdp_name": "realm"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AuthChallengeResponse(CDPModel):
+class AuthChallengeResponse:
     """
     Response to an AuthChallenge.
     """
 
-    response: Literal["Default", "CancelAuth", "ProvideCredentials"]
-    username: str | None = None
-    password: str | None = None
+    response: Literal["Default", "CancelAuth", "ProvideCredentials"] = field(
+        metadata={"cdp_name": "response"}
+    )
+    username: str | None = field(default=None, metadata={"cdp_name": "username"})
+    password: str | None = field(default=None, metadata={"cdp_name": "password"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SignedExchangeSignature(CDPModel):
+class SignedExchangeSignature:
     """
     Information about a signed exchange signature.
     https://wicg.github.io/webpackage/draft-yasskin-httpbis-origin-signed-exchanges-impl.html#rfc.section.3.1
     """
 
-    label: str
-    signature: str
-    integrity: str
-    cert_url: str | None = None
-    cert_sha256: str | None = None
-    validity_url: str
-    date: int
-    expires: int
-    certificates: list[str] | None = None
+    label: str = field(metadata={"cdp_name": "label"})
+    signature: str = field(metadata={"cdp_name": "signature"})
+    integrity: str = field(metadata={"cdp_name": "integrity"})
+    cert_url: str | None = field(default=None, metadata={"cdp_name": "certUrl"})
+    cert_sha256: str | None = field(default=None, metadata={"cdp_name": "certSha256"})
+    validity_url: str = field(metadata={"cdp_name": "validityUrl"})
+    date: int = field(metadata={"cdp_name": "date"})
+    expires: int = field(metadata={"cdp_name": "expires"})
+    certificates: list[str] | None = field(
+        default=None, metadata={"cdp_name": "certificates"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SignedExchangeHeader(CDPModel):
+class SignedExchangeHeader:
     """
     Information about a signed exchange header.
     https://wicg.github.io/webpackage/draft-yasskin-httpbis-origin-signed-exchanges-impl.html#cbor-representation
     """
 
-    request_url: str
-    response_code: int
-    response_headers: Headers
-    signatures: list[SignedExchangeSignature]
-    header_integrity: str
+    request_url: str = field(metadata={"cdp_name": "requestUrl"})
+    response_code: int = field(metadata={"cdp_name": "responseCode"})
+    response_headers: Headers = field(metadata={"cdp_name": "responseHeaders"})
+    signatures: list[SignedExchangeSignature] = field(
+        metadata={"cdp_name": "signatures"}
+    )
+    header_integrity: str = field(metadata={"cdp_name": "headerIntegrity"})
 
 
 """
@@ -691,79 +800,115 @@ type SignedExchangeErrorField = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class SignedExchangeError(CDPModel):
+class SignedExchangeError:
     """
     Information about a signed exchange response.
     """
 
-    message: str
-    signature_index: int | None = None
-    error_field: SignedExchangeErrorField | None = None
+    message: str = field(metadata={"cdp_name": "message"})
+    signature_index: int | None = field(
+        default=None, metadata={"cdp_name": "signatureIndex"}
+    )
+    error_field: SignedExchangeErrorField | None = field(
+        default=None, metadata={"cdp_name": "errorField"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SignedExchangeInfo(CDPModel):
+class SignedExchangeInfo:
     """
     Information about a signed exchange response.
     """
 
-    outer_response: Response
-    has_extra_info: bool
-    header: SignedExchangeHeader | None = None
-    security_details: SecurityDetails | None = None
-    errors: list[SignedExchangeError] | None = None
+    outer_response: Response = field(metadata={"cdp_name": "outerResponse"})
+    has_extra_info: bool = field(metadata={"cdp_name": "hasExtraInfo"})
+    header: SignedExchangeHeader | None = field(
+        default=None, metadata={"cdp_name": "header"}
+    )
+    security_details: SecurityDetails | None = field(
+        default=None, metadata={"cdp_name": "securityDetails"}
+    )
+    errors: list[SignedExchangeError] | None = field(
+        default=None, metadata={"cdp_name": "errors"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class NetworkConditions(CDPModel):
-    url_pattern: str
-    latency: float
-    download_throughput: float
-    upload_throughput: float
-    connection_type: ConnectionType | None = None
-    packet_loss: float | None = None
-    packet_queue_length: int | None = None
-    packet_reordering: bool | None = None
-    offline: bool | None = None
+class NetworkConditions:
+    url_pattern: str = field(metadata={"cdp_name": "urlPattern"})
+    latency: float = field(metadata={"cdp_name": "latency"})
+    download_throughput: float = field(metadata={"cdp_name": "downloadThroughput"})
+    upload_throughput: float = field(metadata={"cdp_name": "uploadThroughput"})
+    connection_type: ConnectionType | None = field(
+        default=None, metadata={"cdp_name": "connectionType"}
+    )
+    packet_loss: float | None = field(default=None, metadata={"cdp_name": "packetLoss"})
+    packet_queue_length: int | None = field(
+        default=None, metadata={"cdp_name": "packetQueueLength"}
+    )
+    packet_reordering: bool | None = field(
+        default=None, metadata={"cdp_name": "packetReordering"}
+    )
+    offline: bool | None = field(default=None, metadata={"cdp_name": "offline"})
 
 
 @dataclass(kw_only=True, slots=True)
-class BlockPattern(CDPModel):
-    url_pattern: str
-    block: bool
+class BlockPattern:
+    url_pattern: str = field(metadata={"cdp_name": "urlPattern"})
+    block: bool = field(metadata={"cdp_name": "block"})
 
 
 type DirectSocketDnsQueryType = Literal["ipv4", "ipv6"]
 
 
 @dataclass(kw_only=True, slots=True)
-class DirectTCPSocketOptions(CDPModel):
-    no_delay: bool
-    keep_alive_delay: float | None = None
-    send_buffer_size: float | None = None
-    receive_buffer_size: float | None = None
-    dns_query_type: DirectSocketDnsQueryType | None = None
+class DirectTCPSocketOptions:
+    no_delay: bool = field(metadata={"cdp_name": "noDelay"})
+    keep_alive_delay: float | None = field(
+        default=None, metadata={"cdp_name": "keepAliveDelay"}
+    )
+    send_buffer_size: float | None = field(
+        default=None, metadata={"cdp_name": "sendBufferSize"}
+    )
+    receive_buffer_size: float | None = field(
+        default=None, metadata={"cdp_name": "receiveBufferSize"}
+    )
+    dns_query_type: DirectSocketDnsQueryType | None = field(
+        default=None, metadata={"cdp_name": "dnsQueryType"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DirectUDPSocketOptions(CDPModel):
-    remote_addr: str | None = None
-    remote_port: int | None = None
-    local_addr: str | None = None
-    local_port: int | None = None
-    dns_query_type: DirectSocketDnsQueryType | None = None
-    send_buffer_size: float | None = None
-    receive_buffer_size: float | None = None
-    multicast_loopback: bool | None = None
-    multicast_time_to_live: int | None = None
-    multicast_allow_address_sharing: bool | None = None
+class DirectUDPSocketOptions:
+    remote_addr: str | None = field(default=None, metadata={"cdp_name": "remoteAddr"})
+    remote_port: int | None = field(default=None, metadata={"cdp_name": "remotePort"})
+    local_addr: str | None = field(default=None, metadata={"cdp_name": "localAddr"})
+    local_port: int | None = field(default=None, metadata={"cdp_name": "localPort"})
+    dns_query_type: DirectSocketDnsQueryType | None = field(
+        default=None, metadata={"cdp_name": "dnsQueryType"}
+    )
+    send_buffer_size: float | None = field(
+        default=None, metadata={"cdp_name": "sendBufferSize"}
+    )
+    receive_buffer_size: float | None = field(
+        default=None, metadata={"cdp_name": "receiveBufferSize"}
+    )
+    multicast_loopback: bool | None = field(
+        default=None, metadata={"cdp_name": "multicastLoopback"}
+    )
+    multicast_time_to_live: int | None = field(
+        default=None, metadata={"cdp_name": "multicastTimeToLive"}
+    )
+    multicast_allow_address_sharing: bool | None = field(
+        default=None, metadata={"cdp_name": "multicastAllowAddressSharing"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DirectUDPMessage(CDPModel):
-    data: str
-    remote_addr: str | None = None
-    remote_port: int | None = None
+class DirectUDPMessage:
+    data: str = field(metadata={"cdp_name": "data"})
+    remote_addr: str | None = field(default=None, metadata={"cdp_name": "remoteAddr"})
+    remote_port: int | None = field(default=None, metadata={"cdp_name": "remotePort"})
 
 
 type LocalNetworkAccessRequestPolicy = Literal[
@@ -778,19 +923,25 @@ type IPAddressSpace = Literal["Loopback", "Local", "Public", "Unknown"]
 
 
 @dataclass(kw_only=True, slots=True)
-class ConnectTiming(CDPModel):
-    request_time: float
+class ConnectTiming:
+    request_time: float = field(metadata={"cdp_name": "requestTime"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ClientSecurityState(CDPModel):
-    initiator_is_secure_context: bool
-    initiator_ip_address_space: IPAddressSpace
-    local_network_access_request_policy: LocalNetworkAccessRequestPolicy
+class ClientSecurityState:
+    initiator_is_secure_context: bool = field(
+        metadata={"cdp_name": "initiatorIsSecureContext"}
+    )
+    initiator_ip_address_space: IPAddressSpace = field(
+        metadata={"cdp_name": "initiatorIPAddressSpace"}
+    )
+    local_network_access_request_policy: LocalNetworkAccessRequestPolicy = field(
+        metadata={"cdp_name": "localNetworkAccessRequestPolicy"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class AdScriptIdentifier(CDPModel):
+class AdScriptIdentifier:
     """
     Identifies the script on the stack that caused a resource or element to be labeled
     as an ad. For resources, this indicates the context that triggered the fetch. For
@@ -798,24 +949,28 @@ class AdScriptIdentifier(CDPModel):
     DOM.
     """
 
-    script_id: runtime.ScriptId
-    debugger_id: runtime.UniqueDebuggerId
-    name: str
+    script_id: runtime.ScriptId = field(metadata={"cdp_name": "scriptId"})
+    debugger_id: runtime.UniqueDebuggerId = field(metadata={"cdp_name": "debuggerId"})
+    name: str = field(metadata={"cdp_name": "name"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AdAncestry(CDPModel):
+class AdAncestry:
     """
     Encapsulates the script ancestry and the root script filter list rule that caused
     the resource or element to be labeled as an ad.
     """
 
-    ancestry_chain: list[AdScriptIdentifier]
-    root_script_filterlist_rule: str | None = None
+    ancestry_chain: list[AdScriptIdentifier] = field(
+        metadata={"cdp_name": "ancestryChain"}
+    )
+    root_script_filterlist_rule: str | None = field(
+        default=None, metadata={"cdp_name": "rootScriptFilterlistRule"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class AdProvenance(CDPModel):
+class AdProvenance:
     """
     Represents the provenance of an ad resource or element. Only one of
     `filterlistRule` or `adScriptAncestry` can be set. If `filterlistRule` is provided,
@@ -825,8 +980,12 @@ class AdProvenance(CDPModel):
     tracking information is unavailable.
     """
 
-    filterlist_rule: str | None = None
-    ad_script_ancestry: AdAncestry | None = None
+    filterlist_rule: str | None = field(
+        default=None, metadata={"cdp_name": "filterlistRule"}
+    )
+    ad_script_ancestry: AdAncestry | None = field(
+        default=None, metadata={"cdp_name": "adScriptAncestry"}
+    )
 
 
 type CrossOriginOpenerPolicyValue = Literal[
@@ -841,39 +1000,57 @@ type CrossOriginOpenerPolicyValue = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class CrossOriginOpenerPolicyStatus(CDPModel):
-    value: CrossOriginOpenerPolicyValue
-    report_only_value: CrossOriginOpenerPolicyValue
-    reporting_endpoint: str | None = None
-    report_only_reporting_endpoint: str | None = None
+class CrossOriginOpenerPolicyStatus:
+    value: CrossOriginOpenerPolicyValue = field(metadata={"cdp_name": "value"})
+    report_only_value: CrossOriginOpenerPolicyValue = field(
+        metadata={"cdp_name": "reportOnlyValue"}
+    )
+    reporting_endpoint: str | None = field(
+        default=None, metadata={"cdp_name": "reportingEndpoint"}
+    )
+    report_only_reporting_endpoint: str | None = field(
+        default=None, metadata={"cdp_name": "reportOnlyReportingEndpoint"}
+    )
 
 
 type CrossOriginEmbedderPolicyValue = Literal["None", "Credentialless", "RequireCorp"]
 
 
 @dataclass(kw_only=True, slots=True)
-class CrossOriginEmbedderPolicyStatus(CDPModel):
-    value: CrossOriginEmbedderPolicyValue
-    report_only_value: CrossOriginEmbedderPolicyValue
-    reporting_endpoint: str | None = None
-    report_only_reporting_endpoint: str | None = None
+class CrossOriginEmbedderPolicyStatus:
+    value: CrossOriginEmbedderPolicyValue = field(metadata={"cdp_name": "value"})
+    report_only_value: CrossOriginEmbedderPolicyValue = field(
+        metadata={"cdp_name": "reportOnlyValue"}
+    )
+    reporting_endpoint: str | None = field(
+        default=None, metadata={"cdp_name": "reportingEndpoint"}
+    )
+    report_only_reporting_endpoint: str | None = field(
+        default=None, metadata={"cdp_name": "reportOnlyReportingEndpoint"}
+    )
 
 
 type ContentSecurityPolicySource = Literal["HTTP", "Meta"]
 
 
 @dataclass(kw_only=True, slots=True)
-class ContentSecurityPolicyStatus(CDPModel):
-    effective_directives: str
-    is_enforced: bool
-    source: ContentSecurityPolicySource
+class ContentSecurityPolicyStatus:
+    effective_directives: str = field(metadata={"cdp_name": "effectiveDirectives"})
+    is_enforced: bool = field(metadata={"cdp_name": "isEnforced"})
+    source: ContentSecurityPolicySource = field(metadata={"cdp_name": "source"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SecurityIsolationStatus(CDPModel):
-    coop: CrossOriginOpenerPolicyStatus | None = None
-    coep: CrossOriginEmbedderPolicyStatus | None = None
-    csp: list[ContentSecurityPolicyStatus] | None = None
+class SecurityIsolationStatus:
+    coop: CrossOriginOpenerPolicyStatus | None = field(
+        default=None, metadata={"cdp_name": "coop"}
+    )
+    coep: CrossOriginEmbedderPolicyStatus | None = field(
+        default=None, metadata={"cdp_name": "coep"}
+    )
+    csp: list[ContentSecurityPolicyStatus] | None = field(
+        default=None, metadata={"cdp_name": "csp"}
+    )
 
 
 """
@@ -885,45 +1062,45 @@ ReportId = str
 
 
 @dataclass(kw_only=True, slots=True)
-class ReportingApiReport(CDPModel):
+class ReportingApiReport:
     """
     An object representing a report generated by the Reporting API.
     """
 
-    id: ReportId
-    initiator_url: str
-    destination: str
-    type: str
-    timestamp: network.TimeSinceEpoch
-    depth: int
-    completed_attempts: int
-    body: dict[str, Any]
-    status: ReportStatus
+    id: ReportId = field(metadata={"cdp_name": "id"})
+    initiator_url: str = field(metadata={"cdp_name": "initiatorUrl"})
+    destination: str = field(metadata={"cdp_name": "destination"})
+    type: str = field(metadata={"cdp_name": "type"})
+    timestamp: network.TimeSinceEpoch = field(metadata={"cdp_name": "timestamp"})
+    depth: int = field(metadata={"cdp_name": "depth"})
+    completed_attempts: int = field(metadata={"cdp_name": "completedAttempts"})
+    body: dict[str, Any] = field(metadata={"cdp_name": "body"})
+    status: ReportStatus = field(metadata={"cdp_name": "status"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ReportingApiEndpoint(CDPModel):
-    url: str
-    group_name: str
+class ReportingApiEndpoint:
+    url: str = field(metadata={"cdp_name": "url"})
+    group_name: str = field(metadata={"cdp_name": "groupName"})
 
 
 @dataclass(kw_only=True, slots=True)
-class DeviceBoundSessionKey(CDPModel):
+class DeviceBoundSessionKey:
     """
     Unique identifier for a device bound session.
     """
 
-    site: str
-    id: str
+    site: str = field(metadata={"cdp_name": "site"})
+    id: str = field(metadata={"cdp_name": "id"})
 
 
 @dataclass(kw_only=True, slots=True)
-class DeviceBoundSessionWithUsage(CDPModel):
+class DeviceBoundSessionWithUsage:
     """
     How a device bound session was used during a request.
     """
 
-    session_key: DeviceBoundSessionKey
+    session_key: DeviceBoundSessionKey = field(metadata={"cdp_name": "sessionKey"})
     usage: Literal[
         "NotInScope",
         "InScopeRefreshNotYetNeeded",
@@ -931,58 +1108,72 @@ class DeviceBoundSessionWithUsage(CDPModel):
         "ProactiveRefreshNotPossible",
         "ProactiveRefreshAttempted",
         "Deferred",
-    ]
+    ] = field(  # noqa: E501
+        metadata={"cdp_name": "usage"},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DeviceBoundSessionCookieCraving(CDPModel):
+class DeviceBoundSessionCookieCraving:
     """
     A device bound session's cookie craving.
     """
 
-    name: str
-    domain: str
-    path: str
-    secure: bool
-    http_only: bool
-    same_site: CookieSameSite | None = None
+    name: str = field(metadata={"cdp_name": "name"})
+    domain: str = field(metadata={"cdp_name": "domain"})
+    path: str = field(metadata={"cdp_name": "path"})
+    secure: bool = field(metadata={"cdp_name": "secure"})
+    http_only: bool = field(metadata={"cdp_name": "httpOnly"})
+    same_site: CookieSameSite | None = field(
+        default=None, metadata={"cdp_name": "sameSite"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DeviceBoundSessionUrlRule(CDPModel):
+class DeviceBoundSessionUrlRule:
     """
     A device bound session's inclusion URL rule.
     """
 
-    rule_type: Literal["Exclude", "Include"]
-    host_pattern: str
-    path_prefix: str
+    rule_type: Literal["Exclude", "Include"] = field(metadata={"cdp_name": "ruleType"})
+    host_pattern: str = field(metadata={"cdp_name": "hostPattern"})
+    path_prefix: str = field(metadata={"cdp_name": "pathPrefix"})
 
 
 @dataclass(kw_only=True, slots=True)
-class DeviceBoundSessionInclusionRules(CDPModel):
+class DeviceBoundSessionInclusionRules:
     """
     A device bound session's inclusion rules.
     """
 
-    origin: str
-    include_site: bool
-    url_rules: list[DeviceBoundSessionUrlRule]
+    origin: str = field(metadata={"cdp_name": "origin"})
+    include_site: bool = field(metadata={"cdp_name": "includeSite"})
+    url_rules: list[DeviceBoundSessionUrlRule] = field(
+        metadata={"cdp_name": "urlRules"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DeviceBoundSession(CDPModel):
+class DeviceBoundSession:
     """
     A device bound session.
     """
 
-    key: DeviceBoundSessionKey
-    refresh_url: str
-    inclusion_rules: DeviceBoundSessionInclusionRules
-    cookie_cravings: list[DeviceBoundSessionCookieCraving]
-    expiry_date: network.TimeSinceEpoch
-    cached_challenge: str | None = None
-    allowed_refresh_initiators: list[str]
+    key: DeviceBoundSessionKey = field(metadata={"cdp_name": "key"})
+    refresh_url: str = field(metadata={"cdp_name": "refreshUrl"})
+    inclusion_rules: DeviceBoundSessionInclusionRules = field(
+        metadata={"cdp_name": "inclusionRules"}
+    )
+    cookie_cravings: list[DeviceBoundSessionCookieCraving] = field(
+        metadata={"cdp_name": "cookieCravings"}
+    )
+    expiry_date: network.TimeSinceEpoch = field(metadata={"cdp_name": "expiryDate"})
+    cached_challenge: str | None = field(
+        default=None, metadata={"cdp_name": "cachedChallenge"}
+    )
+    allowed_refresh_initiators: list[str] = field(
+        metadata={"cdp_name": "allowedRefreshInitiators"}
+    )
 
 
 """
@@ -1075,30 +1266,40 @@ type DeviceBoundSessionFetchResult = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class DeviceBoundSessionFailedRequest(CDPModel):
+class DeviceBoundSessionFailedRequest:
     """
     Details about a failed device bound session network request.
     """
 
-    request_url: str
-    net_error: str | None = None
-    response_error: int | None = None
-    response_error_body: str | None = None
+    request_url: str = field(metadata={"cdp_name": "requestUrl"})
+    net_error: str | None = field(default=None, metadata={"cdp_name": "netError"})
+    response_error: int | None = field(
+        default=None, metadata={"cdp_name": "responseError"}
+    )
+    response_error_body: str | None = field(
+        default=None, metadata={"cdp_name": "responseErrorBody"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class CreationEventDetails(CDPModel):
+class CreationEventDetails:
     """
     Session event details specific to creation.
     """
 
-    fetch_result: DeviceBoundSessionFetchResult
-    new_session: DeviceBoundSession | None = None
-    failed_request: DeviceBoundSessionFailedRequest | None = None
+    fetch_result: DeviceBoundSessionFetchResult = field(
+        metadata={"cdp_name": "fetchResult"}
+    )
+    new_session: DeviceBoundSession | None = field(
+        default=None, metadata={"cdp_name": "newSession"}
+    )
+    failed_request: DeviceBoundSessionFailedRequest | None = field(
+        default=None, metadata={"cdp_name": "failedRequest"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class RefreshEventDetails(CDPModel):
+class RefreshEventDetails:
     """
     Session event details specific to refresh.
     """
@@ -1113,15 +1314,25 @@ class RefreshEventDetails(CDPModel):
         "RefreshedAsWaiter",
         "TransientSigningError",
         "InScopeRefreshNotYetNeeded",
-    ]
-    fetch_result: DeviceBoundSessionFetchResult | None = None
-    new_session: DeviceBoundSession | None = None
-    was_fully_proactive_refresh: bool
-    failed_request: DeviceBoundSessionFailedRequest | None = None
+    ] = field(  # noqa: E501
+        metadata={"cdp_name": "refreshResult"},
+    )
+    fetch_result: DeviceBoundSessionFetchResult | None = field(
+        default=None, metadata={"cdp_name": "fetchResult"}
+    )
+    new_session: DeviceBoundSession | None = field(
+        default=None, metadata={"cdp_name": "newSession"}
+    )
+    was_fully_proactive_refresh: bool = field(
+        metadata={"cdp_name": "wasFullyProactiveRefresh"}
+    )
+    failed_request: DeviceBoundSessionFailedRequest | None = field(
+        default=None, metadata={"cdp_name": "failedRequest"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class TerminationEventDetails(CDPModel):
+class TerminationEventDetails:
     """
     Session event details specific to termination.
     """
@@ -1136,41 +1347,53 @@ class TerminationEventDetails(CDPModel):
         "InvalidSessionParams",
         "RefreshFatalError",
         "DevTools",
-    ]
+    ] = field(  # noqa: E501
+        metadata={"cdp_name": "deletionReason"},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ChallengeEventDetails(CDPModel):
+class ChallengeEventDetails:
     """
     Session event details specific to challenges.
     """
 
     challenge_result: Literal[
         "Success", "NoSessionId", "NoSessionMatch", "CantSetBoundCookie"
-    ]
-    challenge: str
+    ] = field(  # noqa: E501
+        metadata={"cdp_name": "challengeResult"},
+    )
+    challenge: str = field(metadata={"cdp_name": "challenge"})
 
 
 @dataclass(kw_only=True, slots=True)
-class LoadNetworkResourcePageResult(CDPModel):
+class LoadNetworkResourcePageResult:
     """
     An object providing the result of a network resource load.
     """
 
-    success: bool
-    net_error: float | None = None
-    net_error_name: str | None = None
-    http_status_code: float | None = None
-    stream: io.StreamHandle | None = None
-    headers: network.Headers | None = None
+    success: bool = field(metadata={"cdp_name": "success"})
+    net_error: float | None = field(default=None, metadata={"cdp_name": "netError"})
+    net_error_name: str | None = field(
+        default=None, metadata={"cdp_name": "netErrorName"}
+    )
+    http_status_code: float | None = field(
+        default=None, metadata={"cdp_name": "httpStatusCode"}
+    )
+    stream: io.StreamHandle | None = field(
+        default=None, metadata={"cdp_name": "stream"}
+    )
+    headers: network.Headers | None = field(
+        default=None, metadata={"cdp_name": "headers"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class LoadNetworkResourceOptions(CDPModel):
+class LoadNetworkResourceOptions:
     """
     An options object that may be extended later to better support CORS, CORB and
     streaming.
     """
 
-    disable_cache: bool
-    include_credentials: bool
+    disable_cache: bool = field(metadata={"cdp_name": "disableCache"})
+    include_credentials: bool = field(metadata={"cdp_name": "includeCredentials"})

@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPEvent
 
 from .types import (
     InspectorIssue,
@@ -19,5 +17,11 @@ class AuditsEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class IssueAddedEvent(CDPEvent):
-    issue: InspectorIssue
+class IssueAddedEvent:
+    issue: InspectorIssue = field(metadata={"cdp_name": "issue"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

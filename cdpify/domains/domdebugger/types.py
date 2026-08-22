@@ -4,11 +4,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Literal
 
 from cdpify.domains import dom, runtime
-from cdpify.shared.models import CDPModel
 
 """
 DOM breakpoint type.
@@ -26,18 +25,24 @@ type CSPViolationType = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class EventListener(CDPModel):
+class EventListener:
     """
     Object event listener.
     """
 
-    type: str
-    use_capture: bool
-    passive: bool
-    once: bool
-    script_id: runtime.ScriptId
-    line_number: int
-    column_number: int
-    handler: runtime.RemoteObject | None = None
-    original_handler: runtime.RemoteObject | None = None
-    backend_node_id: dom.BackendNodeId | None = None
+    type: str = field(metadata={"cdp_name": "type"})
+    use_capture: bool = field(metadata={"cdp_name": "useCapture"})
+    passive: bool = field(metadata={"cdp_name": "passive"})
+    once: bool = field(metadata={"cdp_name": "once"})
+    script_id: runtime.ScriptId = field(metadata={"cdp_name": "scriptId"})
+    line_number: int = field(metadata={"cdp_name": "lineNumber"})
+    column_number: int = field(metadata={"cdp_name": "columnNumber"})
+    handler: runtime.RemoteObject | None = field(
+        default=None, metadata={"cdp_name": "handler"}
+    )
+    original_handler: runtime.RemoteObject | None = field(
+        default=None, metadata={"cdp_name": "originalHandler"}
+    )
+    backend_node_id: dom.BackendNodeId | None = field(
+        default=None, metadata={"cdp_name": "backendNodeId"}
+    )

@@ -4,41 +4,42 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Literal
 
 from cdpify.domains import dom, network, page, runtime
-from cdpify.shared.models import CDPModel
 
 
 @dataclass(kw_only=True, slots=True)
-class AffectedCookie(CDPModel):
+class AffectedCookie:
     """
     Information about a cookie that is affected by an inspector issue.
     """
 
-    name: str
-    path: str
-    domain: str
+    name: str = field(metadata={"cdp_name": "name"})
+    path: str = field(metadata={"cdp_name": "path"})
+    domain: str = field(metadata={"cdp_name": "domain"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AffectedRequest(CDPModel):
+class AffectedRequest:
     """
     Information about a request that is affected by an inspector issue.
     """
 
-    request_id: network.RequestId | None = None
-    url: str
+    request_id: network.RequestId | None = field(
+        default=None, metadata={"cdp_name": "requestId"}
+    )
+    url: str = field(metadata={"cdp_name": "url"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AffectedFrame(CDPModel):
+class AffectedFrame:
     """
     Information about the frame affected by an inspector issue.
     """
 
-    frame_id: page.FrameId
+    frame_id: page.FrameId = field(metadata={"cdp_name": "frameId"})
 
 
 type CookieExclusionReason = Literal[
@@ -79,45 +80,63 @@ type InsightType = Literal["GitHubResource", "GracePeriod", "Heuristics"]
 
 
 @dataclass(kw_only=True, slots=True)
-class CookieIssueInsight(CDPModel):
+class CookieIssueInsight:
     """
     Information about the suggested solution to a cookie issue.
     """
 
-    type: InsightType
-    table_entry_url: str | None = None
+    type: InsightType = field(metadata={"cdp_name": "type"})
+    table_entry_url: str | None = field(
+        default=None, metadata={"cdp_name": "tableEntryUrl"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class CookieIssueDetails(CDPModel):
+class CookieIssueDetails:
     """
     This information is currently necessary, as the front-end has a difficult time
     finding a specific cookie. With this, we can convey specific error information
     without the cookie.
     """
 
-    cookie: AffectedCookie | None = None
-    raw_cookie_line: str | None = None
-    cookie_warning_reasons: list[CookieWarningReason]
-    cookie_exclusion_reasons: list[CookieExclusionReason]
-    operation: CookieOperation
-    site_for_cookies: str | None = None
-    cookie_url: str | None = None
-    request: AffectedRequest | None = None
-    insight: CookieIssueInsight | None = None
+    cookie: AffectedCookie | None = field(default=None, metadata={"cdp_name": "cookie"})
+    raw_cookie_line: str | None = field(
+        default=None, metadata={"cdp_name": "rawCookieLine"}
+    )
+    cookie_warning_reasons: list[CookieWarningReason] = field(
+        metadata={"cdp_name": "cookieWarningReasons"}
+    )
+    cookie_exclusion_reasons: list[CookieExclusionReason] = field(
+        metadata={"cdp_name": "cookieExclusionReasons"}
+    )
+    operation: CookieOperation = field(metadata={"cdp_name": "operation"})
+    site_for_cookies: str | None = field(
+        default=None, metadata={"cdp_name": "siteForCookies"}
+    )
+    cookie_url: str | None = field(default=None, metadata={"cdp_name": "cookieUrl"})
+    request: AffectedRequest | None = field(
+        default=None, metadata={"cdp_name": "request"}
+    )
+    insight: CookieIssueInsight | None = field(
+        default=None, metadata={"cdp_name": "insight"}
+    )
 
 
 type PerformanceIssueType = Literal["DocumentCookie"]
 
 
 @dataclass(kw_only=True, slots=True)
-class PerformanceIssueDetails(CDPModel):
+class PerformanceIssueDetails:
     """
     Details for a performance issue.
     """
 
-    performance_issue_type: PerformanceIssueType
-    source_code_location: SourceCodeLocation | None = None
+    performance_issue_type: PerformanceIssueType = field(
+        metadata={"cdp_name": "performanceIssueType"}
+    )
+    source_code_location: SourceCodeLocation | None = field(
+        default=None, metadata={"cdp_name": "sourceCodeLocation"}
+    )
 
 
 type MixedContentResolutionStatus = Literal[
@@ -157,13 +176,19 @@ type MixedContentResourceType = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class MixedContentIssueDetails(CDPModel):
-    resource_type: MixedContentResourceType | None = None
-    resolution_status: MixedContentResolutionStatus
-    insecure_url: str
-    main_resource_url: str
-    request: AffectedRequest | None = None
-    frame: AffectedFrame | None = None
+class MixedContentIssueDetails:
+    resource_type: MixedContentResourceType | None = field(
+        default=None, metadata={"cdp_name": "resourceType"}
+    )
+    resolution_status: MixedContentResolutionStatus = field(
+        metadata={"cdp_name": "resolutionStatus"}
+    )
+    insecure_url: str = field(metadata={"cdp_name": "insecureURL"})
+    main_resource_url: str = field(metadata={"cdp_name": "mainResourceURL"})
+    request: AffectedRequest | None = field(
+        default=None, metadata={"cdp_name": "request"}
+    )
+    frame: AffectedFrame | None = field(default=None, metadata={"cdp_name": "frame"})
 
 
 """
@@ -183,17 +208,21 @@ type BlockedByResponseReason = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class BlockedByResponseIssueDetails(CDPModel):
+class BlockedByResponseIssueDetails:
     """
     Details for a request that has been blocked with the BLOCKED_BY_RESPONSE code.
     Currently only used for COEP/COOP, but may be extended to include some CSP errors in
     the future.
     """
 
-    request: AffectedRequest
-    parent_frame: AffectedFrame | None = None
-    blocked_frame: AffectedFrame | None = None
-    reason: BlockedByResponseReason
+    request: AffectedRequest = field(metadata={"cdp_name": "request"})
+    parent_frame: AffectedFrame | None = field(
+        default=None, metadata={"cdp_name": "parentFrame"}
+    )
+    blocked_frame: AffectedFrame | None = field(
+        default=None, metadata={"cdp_name": "blockedFrame"}
+    )
+    reason: BlockedByResponseReason = field(metadata={"cdp_name": "reason"})
 
 
 type HeavyAdResolutionStatus = Literal["HeavyAdBlocked", "HeavyAdWarning"]
@@ -202,10 +231,10 @@ type HeavyAdReason = Literal["NetworkTotalLimit", "CpuTotalLimit", "CpuPeakLimit
 
 
 @dataclass(kw_only=True, slots=True)
-class HeavyAdIssueDetails(CDPModel):
-    resolution: HeavyAdResolutionStatus
-    reason: HeavyAdReason
-    frame: AffectedFrame
+class HeavyAdIssueDetails:
+    resolution: HeavyAdResolutionStatus = field(metadata={"cdp_name": "resolution"})
+    reason: HeavyAdReason = field(metadata={"cdp_name": "reason"})
+    frame: AffectedFrame = field(metadata={"cdp_name": "frame"})
 
 
 type ContentSecurityPolicyViolationType = Literal[
@@ -220,53 +249,75 @@ type ContentSecurityPolicyViolationType = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class SourceCodeLocation(CDPModel):
-    script_id: runtime.ScriptId | None = None
-    url: str
-    line_number: int
-    column_number: int
+class SourceCodeLocation:
+    script_id: runtime.ScriptId | None = field(
+        default=None, metadata={"cdp_name": "scriptId"}
+    )
+    url: str = field(metadata={"cdp_name": "url"})
+    line_number: int = field(metadata={"cdp_name": "lineNumber"})
+    column_number: int = field(metadata={"cdp_name": "columnNumber"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ContentSecurityPolicyIssueDetails(CDPModel):
-    blocked_url: str | None = None
-    violated_directive: str
-    is_report_only: bool
-    content_security_policy_violation_type: ContentSecurityPolicyViolationType
-    frame_ancestor: AffectedFrame | None = None
-    source_code_location: SourceCodeLocation | None = None
-    violating_node_id: dom.BackendNodeId | None = None
+class ContentSecurityPolicyIssueDetails:
+    blocked_url: str | None = field(default=None, metadata={"cdp_name": "blockedURL"})
+    violated_directive: str = field(metadata={"cdp_name": "violatedDirective"})
+    is_report_only: bool = field(metadata={"cdp_name": "isReportOnly"})
+    content_security_policy_violation_type: ContentSecurityPolicyViolationType = field(
+        metadata={"cdp_name": "contentSecurityPolicyViolationType"}
+    )
+    frame_ancestor: AffectedFrame | None = field(
+        default=None, metadata={"cdp_name": "frameAncestor"}
+    )
+    source_code_location: SourceCodeLocation | None = field(
+        default=None, metadata={"cdp_name": "sourceCodeLocation"}
+    )
+    violating_node_id: dom.BackendNodeId | None = field(
+        default=None, metadata={"cdp_name": "violatingNodeId"}
+    )
 
 
 type SharedArrayBufferIssueType = Literal["TransferIssue", "CreationIssue"]
 
 
 @dataclass(kw_only=True, slots=True)
-class SharedArrayBufferIssueDetails(CDPModel):
+class SharedArrayBufferIssueDetails:
     """
     Details for a issue arising from an SAB being instantiated in, or transferred to a
     context that is not cross-origin isolated.
     """
 
-    source_code_location: SourceCodeLocation
-    is_warning: bool
-    type: SharedArrayBufferIssueType
+    source_code_location: SourceCodeLocation = field(
+        metadata={"cdp_name": "sourceCodeLocation"}
+    )
+    is_warning: bool = field(metadata={"cdp_name": "isWarning"})
+    type: SharedArrayBufferIssueType = field(metadata={"cdp_name": "type"})
 
 
 @dataclass(kw_only=True, slots=True)
-class CorsIssueDetails(CDPModel):
+class CorsIssueDetails:
     """
     Details for a CORS related issue, e.g. a warning or error related to CORS RFC1918
     enforcement.
     """
 
-    cors_error_status: network.CorsErrorStatus
-    is_warning: bool
-    request: AffectedRequest
-    location: SourceCodeLocation | None = None
-    initiator_origin: str | None = None
-    resource_ip_address_space: network.IPAddressSpace | None = None
-    client_security_state: network.ClientSecurityState | None = None
+    cors_error_status: network.CorsErrorStatus = field(
+        metadata={"cdp_name": "corsErrorStatus"}
+    )
+    is_warning: bool = field(metadata={"cdp_name": "isWarning"})
+    request: AffectedRequest = field(metadata={"cdp_name": "request"})
+    location: SourceCodeLocation | None = field(
+        default=None, metadata={"cdp_name": "location"}
+    )
+    initiator_origin: str | None = field(
+        default=None, metadata={"cdp_name": "initiatorOrigin"}
+    )
+    resource_ip_address_space: network.IPAddressSpace | None = field(
+        default=None, metadata={"cdp_name": "resourceIPAddressSpace"}
+    )
+    client_security_state: network.ClientSecurityState | None = field(
+        default=None, metadata={"cdp_name": "clientSecurityState"}
+    )
 
 
 type SharedDictionaryError = Literal[
@@ -347,49 +398,55 @@ type ConnectionAllowlistError = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class QuirksModeIssueDetails(CDPModel):
+class QuirksModeIssueDetails:
     """
     Details for issues about documents in Quirks Mode or Limited Quirks Mode that
     affects page layouting.
     """
 
-    is_limited_quirks_mode: bool
-    document_node_id: dom.BackendNodeId
-    url: str
-    frame_id: page.FrameId
-    loader_id: network.LoaderId
+    is_limited_quirks_mode: bool = field(metadata={"cdp_name": "isLimitedQuirksMode"})
+    document_node_id: dom.BackendNodeId = field(metadata={"cdp_name": "documentNodeId"})
+    url: str = field(metadata={"cdp_name": "url"})
+    frame_id: page.FrameId = field(metadata={"cdp_name": "frameId"})
+    loader_id: network.LoaderId = field(metadata={"cdp_name": "loaderId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class NavigatorUserAgentIssueDetails(CDPModel):
-    url: str
-    location: SourceCodeLocation | None = None
+class NavigatorUserAgentIssueDetails:
+    url: str = field(metadata={"cdp_name": "url"})
+    location: SourceCodeLocation | None = field(
+        default=None, metadata={"cdp_name": "location"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SharedDictionaryIssueDetails(CDPModel):
-    shared_dictionary_error: SharedDictionaryError
-    request: AffectedRequest
+class SharedDictionaryIssueDetails:
+    shared_dictionary_error: SharedDictionaryError = field(
+        metadata={"cdp_name": "sharedDictionaryError"}
+    )
+    request: AffectedRequest = field(metadata={"cdp_name": "request"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SRIMessageSignatureIssueDetails(CDPModel):
-    error: SRIMessageSignatureError
-    signature_base: str
-    integrity_assertions: list[str]
-    request: AffectedRequest
+class SRIMessageSignatureIssueDetails:
+    error: SRIMessageSignatureError = field(metadata={"cdp_name": "error"})
+    signature_base: str = field(metadata={"cdp_name": "signatureBase"})
+    integrity_assertions: list[str] = field(
+        metadata={"cdp_name": "integrityAssertions"}
+    )
+    request: AffectedRequest = field(metadata={"cdp_name": "request"})
 
 
 @dataclass(kw_only=True, slots=True)
-class UnencodedDigestIssueDetails(CDPModel):
-    error: UnencodedDigestError
-    request: AffectedRequest
+class UnencodedDigestIssueDetails:
+    error: UnencodedDigestError = field(metadata={"cdp_name": "error"})
+    request: AffectedRequest = field(metadata={"cdp_name": "request"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ConnectionAllowlistIssueDetails(CDPModel):
-    error: ConnectionAllowlistError
-    request: AffectedRequest
+class ConnectionAllowlistIssueDetails:
+    error: ConnectionAllowlistError = field(metadata={"cdp_name": "error"})
+    request: AffectedRequest = field(metadata={"cdp_name": "request"})
 
 
 type GenericIssueErrorType = Literal[
@@ -418,32 +475,44 @@ type GenericIssueErrorType = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class GenericIssueDetails(CDPModel):
+class GenericIssueDetails:
     """
     Depending on the concrete errorType, different properties are set.
     """
 
-    error_type: GenericIssueErrorType
-    frame_id: page.FrameId | None = None
-    violating_node_id: dom.BackendNodeId | None = None
-    violating_node_attribute: str | None = None
-    request: AffectedRequest | None = None
+    error_type: GenericIssueErrorType = field(metadata={"cdp_name": "errorType"})
+    frame_id: page.FrameId | None = field(
+        default=None, metadata={"cdp_name": "frameId"}
+    )
+    violating_node_id: dom.BackendNodeId | None = field(
+        default=None, metadata={"cdp_name": "violatingNodeId"}
+    )
+    violating_node_attribute: str | None = field(
+        default=None, metadata={"cdp_name": "violatingNodeAttribute"}
+    )
+    request: AffectedRequest | None = field(
+        default=None, metadata={"cdp_name": "request"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DeprecationIssueDetails(CDPModel):
+class DeprecationIssueDetails:
     """
     This issue tracks information needed to print a deprecation message.
     https://source.chromium.org/chromium/chromium/src/+/main:third_party/blink/renderer/core/frame/third_party/blink/renderer/core/frame/deprecation/README.md
     """
 
-    affected_frame: AffectedFrame | None = None
-    source_code_location: SourceCodeLocation
-    type: str
+    affected_frame: AffectedFrame | None = field(
+        default=None, metadata={"cdp_name": "affectedFrame"}
+    )
+    source_code_location: SourceCodeLocation = field(
+        metadata={"cdp_name": "sourceCodeLocation"}
+    )
+    type: str = field(metadata={"cdp_name": "type"})
 
 
 @dataclass(kw_only=True, slots=True)
-class BounceTrackingIssueDetails(CDPModel):
+class BounceTrackingIssueDetails:
     """
     This issue warns about sites in the redirect chain of a finished navigation that
     may be flagged as trackers and have their state cleared if they don't receive a user
@@ -452,11 +521,11 @@ class BounceTrackingIssueDetails(CDPModel):
     be `example.test`.
     """
 
-    tracking_sites: list[str]
+    tracking_sites: list[str] = field(metadata={"cdp_name": "trackingSites"})
 
 
 @dataclass(kw_only=True, slots=True)
-class CookieDeprecationMetadataIssueDetails(CDPModel):
+class CookieDeprecationMetadataIssueDetails:
     """
     This issue warns about third-party sites that are accessing cookies on the current
     page, and have been permitted due to having a global metadata grant. Note that in
@@ -465,10 +534,10 @@ class CookieDeprecationMetadataIssueDetails(CDPModel):
     `example.test`.
     """
 
-    allowed_sites: list[str]
-    opt_out_percentage: float
-    is_opt_out_top_level: bool
-    operation: CookieOperation
+    allowed_sites: list[str] = field(metadata={"cdp_name": "allowedSites"})
+    opt_out_percentage: float = field(metadata={"cdp_name": "optOutPercentage"})
+    is_opt_out_top_level: bool = field(metadata={"cdp_name": "isOptOutTopLevel"})
+    operation: CookieOperation = field(metadata={"cdp_name": "operation"})
 
 
 type ClientHintIssueReason = Literal[
@@ -477,8 +546,10 @@ type ClientHintIssueReason = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class FederatedAuthRequestIssueDetails(CDPModel):
-    federated_auth_request_issue_reason: FederatedAuthRequestIssueReason
+class FederatedAuthRequestIssueDetails:
+    federated_auth_request_issue_reason: FederatedAuthRequestIssueReason = field(
+        metadata={"cdp_name": "federatedAuthRequestIssueReason"}
+    )
 
 
 """
@@ -538,9 +609,9 @@ type FederatedAuthRequestIssueReason = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class FederatedAuthUserInfoRequestIssueDetails(CDPModel):
-    federated_auth_user_info_request_issue_reason: (
-        FederatedAuthUserInfoRequestIssueReason
+class FederatedAuthUserInfoRequestIssueDetails:
+    federated_auth_user_info_request_issue_reason: FederatedAuthUserInfoRequestIssueReason = field(  # noqa: E501
+        metadata={"cdp_name": "federatedAuthUserInfoRequestIssueReason"},
     )
 
 
@@ -563,8 +634,12 @@ type FederatedAuthUserInfoRequestIssueReason = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class EmailVerificationRequestIssueDetails(CDPModel):
-    email_verification_request_issue_reason: EmailVerificationRequestIssueReason
+class EmailVerificationRequestIssueDetails:
+    email_verification_request_issue_reason: EmailVerificationRequestIssueReason = (
+        field(  # noqa: E501
+            metadata={"cdp_name": "emailVerificationRequestIssueReason"},
+        )
+    )
 
 
 """
@@ -634,21 +709,27 @@ type EmailVerificationRequestIssueReason = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class ClientHintIssueDetails(CDPModel):
+class ClientHintIssueDetails:
     """
     This issue tracks client hints related issues. It's used to deprecate old features,
     encourage the use of new ones, and provide general guidance.
     """
 
-    source_code_location: SourceCodeLocation
-    client_hint_issue_reason: ClientHintIssueReason
+    source_code_location: SourceCodeLocation = field(
+        metadata={"cdp_name": "sourceCodeLocation"}
+    )
+    client_hint_issue_reason: ClientHintIssueReason = field(
+        metadata={"cdp_name": "clientHintIssueReason"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class FailedRequestInfo(CDPModel):
-    url: str
-    failure_message: str
-    request_id: network.RequestId | None = None
+class FailedRequestInfo:
+    url: str = field(metadata={"cdp_name": "url"})
+    failure_message: str = field(metadata={"cdp_name": "failureMessage"})
+    request_id: network.RequestId | None = field(
+        default=None, metadata={"cdp_name": "requestId"}
+    )
 
 
 type PartitioningBlobURLInfo = Literal[
@@ -657,9 +738,11 @@ type PartitioningBlobURLInfo = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class PartitioningBlobURLIssueDetails(CDPModel):
-    url: str
-    partitioning_blob_url_info: PartitioningBlobURLInfo
+class PartitioningBlobURLIssueDetails:
+    url: str = field(metadata={"cdp_name": "url"})
+    partitioning_blob_url_info: PartitioningBlobURLInfo = field(
+        metadata={"cdp_name": "partitioningBlobURLInfo"}
+    )
 
 
 type ElementAccessibilityIssueReason = Literal[
@@ -673,28 +756,38 @@ type ElementAccessibilityIssueReason = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class ElementAccessibilityIssueDetails(CDPModel):
+class ElementAccessibilityIssueDetails:
     """
     This issue warns about errors in the select or summary element content model.
     """
 
-    node_id: dom.BackendNodeId
-    element_accessibility_issue_reason: ElementAccessibilityIssueReason
-    has_disallowed_attributes: bool
+    node_id: dom.BackendNodeId = field(metadata={"cdp_name": "nodeId"})
+    element_accessibility_issue_reason: ElementAccessibilityIssueReason = field(
+        metadata={"cdp_name": "elementAccessibilityIssueReason"}
+    )
+    has_disallowed_attributes: bool = field(
+        metadata={"cdp_name": "hasDisallowedAttributes"}
+    )
 
 
 type StyleSheetLoadingIssueReason = Literal["LateImportRule", "RequestFailed"]
 
 
 @dataclass(kw_only=True, slots=True)
-class StylesheetLoadingIssueDetails(CDPModel):
+class StylesheetLoadingIssueDetails:
     """
     This issue warns when a referenced stylesheet couldn't be loaded.
     """
 
-    source_code_location: SourceCodeLocation
-    style_sheet_loading_issue_reason: StyleSheetLoadingIssueReason
-    failed_request_info: FailedRequestInfo | None = None
+    source_code_location: SourceCodeLocation = field(
+        metadata={"cdp_name": "sourceCodeLocation"}
+    )
+    style_sheet_loading_issue_reason: StyleSheetLoadingIssueReason = field(
+        metadata={"cdp_name": "styleSheetLoadingIssueReason"}
+    )
+    failed_request_info: FailedRequestInfo | None = field(
+        default=None, metadata={"cdp_name": "failedRequestInfo"}
+    )
 
 
 type PropertyRuleIssueReason = Literal[
@@ -703,15 +796,21 @@ type PropertyRuleIssueReason = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class PropertyRuleIssueDetails(CDPModel):
+class PropertyRuleIssueDetails:
     """
     This issue warns about errors in property rules that lead to property registrations
     being ignored.
     """
 
-    source_code_location: SourceCodeLocation
-    property_rule_issue_reason: PropertyRuleIssueReason
-    property_value: str | None = None
+    source_code_location: SourceCodeLocation = field(
+        metadata={"cdp_name": "sourceCodeLocation"}
+    )
+    property_rule_issue_reason: PropertyRuleIssueReason = field(
+        metadata={"cdp_name": "propertyRuleIssueReason"}
+    )
+    property_value: str | None = field(
+        default=None, metadata={"cdp_name": "propertyValue"}
+    )
 
 
 type UserReidentificationIssueType = Literal[
@@ -720,15 +819,19 @@ type UserReidentificationIssueType = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class UserReidentificationIssueDetails(CDPModel):
+class UserReidentificationIssueDetails:
     """
     This issue warns about uses of APIs that may be considered misuse to re-identify
     users.
     """
 
-    type: UserReidentificationIssueType
-    request: AffectedRequest | None = None
-    source_code_location: SourceCodeLocation | None = None
+    type: UserReidentificationIssueType = field(metadata={"cdp_name": "type"})
+    request: AffectedRequest | None = field(
+        default=None, metadata={"cdp_name": "request"}
+    )
+    source_code_location: SourceCodeLocation | None = field(
+        default=None, metadata={"cdp_name": "sourceCodeLocation"}
+    )
 
 
 type PermissionElementIssueType = Literal[
@@ -759,42 +862,54 @@ type PermissionElementIssueType = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class PermissionElementIssueDetails(CDPModel):
+class PermissionElementIssueDetails:
     """
     This issue warns about improper usage of the <permission> element.
     """
 
-    issue_type: PermissionElementIssueType
-    type: str | None = None
-    node_id: dom.BackendNodeId | None = None
-    is_warning: bool | None = None
-    permission_name: str | None = None
-    occluder_node_info: str | None = None
-    occluder_parent_node_info: str | None = None
-    disable_reason: str | None = None
+    issue_type: PermissionElementIssueType = field(metadata={"cdp_name": "issueType"})
+    type: str | None = field(default=None, metadata={"cdp_name": "type"})
+    node_id: dom.BackendNodeId | None = field(
+        default=None, metadata={"cdp_name": "nodeId"}
+    )
+    is_warning: bool | None = field(default=None, metadata={"cdp_name": "isWarning"})
+    permission_name: str | None = field(
+        default=None, metadata={"cdp_name": "permissionName"}
+    )
+    occluder_node_info: str | None = field(
+        default=None, metadata={"cdp_name": "occluderNodeInfo"}
+    )
+    occluder_parent_node_info: str | None = field(
+        default=None, metadata={"cdp_name": "occluderParentNodeInfo"}
+    )
+    disable_reason: str | None = field(
+        default=None, metadata={"cdp_name": "disableReason"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SelectivePermissionsInterventionIssueDetails(CDPModel):
+class SelectivePermissionsInterventionIssueDetails:
     """
     The issue warns about blocked calls to privacy sensitive APIs via the Selective
     Permissions Intervention.
     """
 
-    api_name: str
-    ad_ancestry: network.AdAncestry
-    stack_trace: runtime.StackTrace | None = None
+    api_name: str = field(metadata={"cdp_name": "apiName"})
+    ad_ancestry: network.AdAncestry = field(metadata={"cdp_name": "adAncestry"})
+    stack_trace: runtime.StackTrace | None = field(
+        default=None, metadata={"cdp_name": "stackTrace"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class LazyLoadImageIssueDetails(CDPModel):
+class LazyLoadImageIssueDetails:
     """
     Details for issues about lazy-loaded images without explicit dimensions.
     """
 
-    node_id: dom.BackendNodeId
-    url: str
-    frame_id: page.FrameId
+    node_id: dom.BackendNodeId = field(metadata={"cdp_name": "nodeId"})
+    url: str = field(metadata={"cdp_name": "url"})
+    frame_id: page.FrameId = field(metadata={"cdp_name": "frameId"})
 
 
 """
@@ -836,53 +951,127 @@ type InspectorIssueCode = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class InspectorIssueDetails(CDPModel):
+class InspectorIssueDetails:
     """
     This struct holds a list of optional fields with additional information specific to
     the kind of issue. When adding a new issue code, please also add a new optional
     field to this type.
     """
 
-    cookie_issue_details: CookieIssueDetails | None = None
-    mixed_content_issue_details: MixedContentIssueDetails | None = None
-    blocked_by_response_issue_details: BlockedByResponseIssueDetails | None = None
-    heavy_ad_issue_details: HeavyAdIssueDetails | None = None
-    content_security_policy_issue_details: ContentSecurityPolicyIssueDetails | None = (
-        None
+    cookie_issue_details: CookieIssueDetails | None = field(
+        default=None, metadata={"cdp_name": "cookieIssueDetails"}
     )
-    shared_array_buffer_issue_details: SharedArrayBufferIssueDetails | None = None
-    cors_issue_details: CorsIssueDetails | None = None
-    quirks_mode_issue_details: QuirksModeIssueDetails | None = None
-    partitioning_blob_url_issue_details: PartitioningBlobURLIssueDetails | None = None
-    navigator_user_agent_issue_details: NavigatorUserAgentIssueDetails | None = None
-    generic_issue_details: GenericIssueDetails | None = None
-    deprecation_issue_details: DeprecationIssueDetails | None = None
-    client_hint_issue_details: ClientHintIssueDetails | None = None
-    federated_auth_request_issue_details: FederatedAuthRequestIssueDetails | None = None
-    bounce_tracking_issue_details: BounceTrackingIssueDetails | None = None
+    mixed_content_issue_details: MixedContentIssueDetails | None = field(
+        default=None, metadata={"cdp_name": "mixedContentIssueDetails"}
+    )
+    blocked_by_response_issue_details: BlockedByResponseIssueDetails | None = field(
+        default=None, metadata={"cdp_name": "blockedByResponseIssueDetails"}
+    )
+    heavy_ad_issue_details: HeavyAdIssueDetails | None = field(
+        default=None, metadata={"cdp_name": "heavyAdIssueDetails"}
+    )
+    content_security_policy_issue_details: ContentSecurityPolicyIssueDetails | None = (
+        field(  # noqa: E501
+            default=None,
+            metadata={"cdp_name": "contentSecurityPolicyIssueDetails"},
+        )
+    )
+    shared_array_buffer_issue_details: SharedArrayBufferIssueDetails | None = field(
+        default=None, metadata={"cdp_name": "sharedArrayBufferIssueDetails"}
+    )
+    cors_issue_details: CorsIssueDetails | None = field(
+        default=None, metadata={"cdp_name": "corsIssueDetails"}
+    )
+    quirks_mode_issue_details: QuirksModeIssueDetails | None = field(
+        default=None, metadata={"cdp_name": "quirksModeIssueDetails"}
+    )
+    partitioning_blob_url_issue_details: PartitioningBlobURLIssueDetails | None = field(
+        default=None, metadata={"cdp_name": "partitioningBlobURLIssueDetails"}
+    )
+    navigator_user_agent_issue_details: NavigatorUserAgentIssueDetails | None = field(
+        default=None, metadata={"cdp_name": "navigatorUserAgentIssueDetails"}
+    )
+    generic_issue_details: GenericIssueDetails | None = field(
+        default=None, metadata={"cdp_name": "genericIssueDetails"}
+    )
+    deprecation_issue_details: DeprecationIssueDetails | None = field(
+        default=None, metadata={"cdp_name": "deprecationIssueDetails"}
+    )
+    client_hint_issue_details: ClientHintIssueDetails | None = field(
+        default=None, metadata={"cdp_name": "clientHintIssueDetails"}
+    )
+    federated_auth_request_issue_details: FederatedAuthRequestIssueDetails | None = (
+        field(  # noqa: E501
+            default=None,
+            metadata={"cdp_name": "federatedAuthRequestIssueDetails"},
+        )
+    )
+    bounce_tracking_issue_details: BounceTrackingIssueDetails | None = field(
+        default=None, metadata={"cdp_name": "bounceTrackingIssueDetails"}
+    )
     cookie_deprecation_metadata_issue_details: (
         CookieDeprecationMetadataIssueDetails | None
-    ) = None
-    stylesheet_loading_issue_details: StylesheetLoadingIssueDetails | None = None
-    property_rule_issue_details: PropertyRuleIssueDetails | None = None
+    ) = field(  # noqa: E501
+        default=None,
+        metadata={"cdp_name": "cookieDeprecationMetadataIssueDetails"},
+    )
+    stylesheet_loading_issue_details: StylesheetLoadingIssueDetails | None = field(
+        default=None, metadata={"cdp_name": "stylesheetLoadingIssueDetails"}
+    )
+    property_rule_issue_details: PropertyRuleIssueDetails | None = field(
+        default=None, metadata={"cdp_name": "propertyRuleIssueDetails"}
+    )
     federated_auth_user_info_request_issue_details: (
         FederatedAuthUserInfoRequestIssueDetails | None
-    ) = None
-    shared_dictionary_issue_details: SharedDictionaryIssueDetails | None = None
-    element_accessibility_issue_details: ElementAccessibilityIssueDetails | None = None
-    sri_message_signature_issue_details: SRIMessageSignatureIssueDetails | None = None
-    unencoded_digest_issue_details: UnencodedDigestIssueDetails | None = None
-    connection_allowlist_issue_details: ConnectionAllowlistIssueDetails | None = None
-    user_reidentification_issue_details: UserReidentificationIssueDetails | None = None
-    permission_element_issue_details: PermissionElementIssueDetails | None = None
-    performance_issue_details: PerformanceIssueDetails | None = None
+    ) = field(  # noqa: E501
+        default=None,
+        metadata={"cdp_name": "federatedAuthUserInfoRequestIssueDetails"},
+    )
+    shared_dictionary_issue_details: SharedDictionaryIssueDetails | None = field(
+        default=None, metadata={"cdp_name": "sharedDictionaryIssueDetails"}
+    )
+    element_accessibility_issue_details: ElementAccessibilityIssueDetails | None = (
+        field(  # noqa: E501
+            default=None,
+            metadata={"cdp_name": "elementAccessibilityIssueDetails"},
+        )
+    )
+    sri_message_signature_issue_details: SRIMessageSignatureIssueDetails | None = field(
+        default=None, metadata={"cdp_name": "sriMessageSignatureIssueDetails"}
+    )
+    unencoded_digest_issue_details: UnencodedDigestIssueDetails | None = field(
+        default=None, metadata={"cdp_name": "unencodedDigestIssueDetails"}
+    )
+    connection_allowlist_issue_details: ConnectionAllowlistIssueDetails | None = field(
+        default=None, metadata={"cdp_name": "connectionAllowlistIssueDetails"}
+    )
+    user_reidentification_issue_details: UserReidentificationIssueDetails | None = (
+        field(  # noqa: E501
+            default=None,
+            metadata={"cdp_name": "userReidentificationIssueDetails"},
+        )
+    )
+    permission_element_issue_details: PermissionElementIssueDetails | None = field(
+        default=None, metadata={"cdp_name": "permissionElementIssueDetails"}
+    )
+    performance_issue_details: PerformanceIssueDetails | None = field(
+        default=None, metadata={"cdp_name": "performanceIssueDetails"}
+    )
     selective_permissions_intervention_issue_details: (
         SelectivePermissionsInterventionIssueDetails | None
-    ) = None
+    ) = field(  # noqa: E501
+        default=None,
+        metadata={"cdp_name": "selectivePermissionsInterventionIssueDetails"},
+    )
     email_verification_request_issue_details: (
         EmailVerificationRequestIssueDetails | None
-    ) = None
-    lazy_load_image_issue_details: LazyLoadImageIssueDetails | None = None
+    ) = field(  # noqa: E501
+        default=None,
+        metadata={"cdp_name": "emailVerificationRequestIssueDetails"},
+    )
+    lazy_load_image_issue_details: LazyLoadImageIssueDetails | None = field(
+        default=None, metadata={"cdp_name": "lazyLoadImageIssueDetails"}
+    )
 
 
 """
@@ -893,11 +1082,11 @@ IssueId = str
 
 
 @dataclass(kw_only=True, slots=True)
-class InspectorIssue(CDPModel):
+class InspectorIssue:
     """
     An inspector issue reported from the back-end.
     """
 
-    code: InspectorIssueCode
-    details: InspectorIssueDetails
-    issue_id: IssueId | None = None
+    code: InspectorIssueCode = field(metadata={"cdp_name": "code"})
+    details: InspectorIssueDetails = field(metadata={"cdp_name": "details"})
+    issue_id: IssueId | None = field(default=None, metadata={"cdp_name": "issueId"})

@@ -4,11 +4,9 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Any
-
-from cdpify.shared.models import CDPModel
 
 from .types import (
     ExtensionInfo,
@@ -28,90 +26,92 @@ class ExtensionsCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class TriggerActionParams(CDPModel):
+class TriggerActionParams:
     """
     Runs an extension default action.
     """
 
-    id: str
-    target_id: str
+    id: str = field(metadata={"cdp_name": "id"})
+    target_id: str = field(metadata={"cdp_name": "targetId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class LoadUnpackedParams(CDPModel):
+class LoadUnpackedParams:
     """
     Installs an unpacked extension from the filesystem similar to --load-extension CLI
     flags. Returns extension ID once the extension has been installed.
     """
 
-    path: str
-    enable_in_incognito: bool | None = None
+    path: str = field(metadata={"cdp_name": "path"})
+    enable_in_incognito: bool | None = field(
+        default=None, metadata={"cdp_name": "enableInIncognito"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class LoadUnpackedResult(CDPModel):
-    id: str
+class LoadUnpackedResult:
+    id: str = field(metadata={"cdp_name": "id"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetExtensionsResult(CDPModel):
-    extensions: list[ExtensionInfo]
+class GetExtensionsResult:
+    extensions: list[ExtensionInfo] = field(metadata={"cdp_name": "extensions"})
 
 
 @dataclass(kw_only=True, slots=True)
-class UninstallParams(CDPModel):
+class UninstallParams:
     """
     Uninstalls an unpacked extension (others not supported) from the profile.
     """
 
-    id: str
+    id: str = field(metadata={"cdp_name": "id"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetStorageItemsParams(CDPModel):
+class GetStorageItemsParams:
     """
     Gets data from extension storage in the given `storageArea`. If `keys` is
     specified, these are used to filter the result.
     """
 
-    id: str
-    storage_area: StorageArea
-    keys: list[str] | None = None
+    id: str = field(metadata={"cdp_name": "id"})
+    storage_area: StorageArea = field(metadata={"cdp_name": "storageArea"})
+    keys: list[str] | None = field(default=None, metadata={"cdp_name": "keys"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetStorageItemsResult(CDPModel):
-    data: dict[str, Any]
+class GetStorageItemsResult:
+    data: dict[str, Any] = field(metadata={"cdp_name": "data"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RemoveStorageItemsParams(CDPModel):
+class RemoveStorageItemsParams:
     """
     Removes `keys` from extension storage in the given `storageArea`.
     """
 
-    id: str
-    storage_area: StorageArea
-    keys: list[str]
+    id: str = field(metadata={"cdp_name": "id"})
+    storage_area: StorageArea = field(metadata={"cdp_name": "storageArea"})
+    keys: list[str] = field(metadata={"cdp_name": "keys"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ClearStorageItemsParams(CDPModel):
+class ClearStorageItemsParams:
     """
     Clears extension storage in the given `storageArea`.
     """
 
-    id: str
-    storage_area: StorageArea
+    id: str = field(metadata={"cdp_name": "id"})
+    storage_area: StorageArea = field(metadata={"cdp_name": "storageArea"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetStorageItemsParams(CDPModel):
+class SetStorageItemsParams:
     """
     Sets `values` in extension storage in the given `storageArea`. The provided
     `values` will be merged with existing values in the storage area.
     """
 
-    id: str
-    storage_area: StorageArea
-    values: dict[str, Any]
+    id: str = field(metadata={"cdp_name": "id"})
+    storage_area: StorageArea = field(metadata={"cdp_name": "storageArea"})
+    values: dict[str, Any] = field(metadata={"cdp_name": "values"})

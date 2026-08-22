@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPEvent
 
 from .types import (
     TimelineEvent,
@@ -19,10 +17,16 @@ class PerformanceTimelineEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class TimelineEventAddedEvent(CDPEvent):
+class TimelineEventAddedEvent:
     """
     Sent when a performance timeline event is added. See reportPerformanceTimeline
     method.
     """
 
-    event: TimelineEvent
+    event: TimelineEvent = field(metadata={"cdp_name": "event"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

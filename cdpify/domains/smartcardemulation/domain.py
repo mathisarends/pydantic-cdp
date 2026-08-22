@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+from cdpify.codec import encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -77,7 +78,7 @@ class SmartCardEmulation:
 
         await self._command_sender.send_raw(
             method=SmartCardEmulationCommand.REPORT_ESTABLISH_CONTEXT_RESULT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -98,7 +99,7 @@ class SmartCardEmulation:
 
         await self._command_sender.send_raw(
             method=SmartCardEmulationCommand.REPORT_RELEASE_CONTEXT_RESULT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -120,7 +121,7 @@ class SmartCardEmulation:
 
         await self._command_sender.send_raw(
             method=SmartCardEmulationCommand.REPORT_LIST_READERS_RESULT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -144,7 +145,7 @@ class SmartCardEmulation:
 
         await self._command_sender.send_raw(
             method=SmartCardEmulationCommand.REPORT_GET_STATUS_CHANGE_RESULT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -168,7 +169,7 @@ class SmartCardEmulation:
 
         await self._command_sender.send_raw(
             method=SmartCardEmulationCommand.REPORT_BEGIN_TRANSACTION_RESULT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -202,7 +203,7 @@ class SmartCardEmulation:
 
         await self._command_sender.send_raw(
             method=SmartCardEmulationCommand.REPORT_PLAIN_RESULT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -227,7 +228,7 @@ class SmartCardEmulation:
 
         await self._command_sender.send_raw(
             method=SmartCardEmulationCommand.REPORT_CONNECT_RESULT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -258,7 +259,7 @@ class SmartCardEmulation:
 
         await self._command_sender.send_raw(
             method=SmartCardEmulationCommand.REPORT_DATA_RESULT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -289,7 +290,7 @@ class SmartCardEmulation:
 
         await self._command_sender.send_raw(
             method=SmartCardEmulationCommand.REPORT_STATUS_RESULT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -307,6 +308,6 @@ class SmartCardEmulation:
 
         await self._command_sender.send_raw(
             method=SmartCardEmulationCommand.REPORT_ERROR,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )

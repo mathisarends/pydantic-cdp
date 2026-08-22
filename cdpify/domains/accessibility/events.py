@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPEvent
 
 from .types import (
     AXNode,
@@ -20,20 +18,32 @@ class AccessibilityEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class LoadCompleteEvent(CDPEvent):
+class LoadCompleteEvent:
     """
     The loadComplete event mirrors the load complete event sent by the browser to
     assistive technology when the web page has finished loading.
     """
 
-    root: AXNode
+    root: AXNode = field(metadata={"cdp_name": "root"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class NodesUpdatedEvent(CDPEvent):
+class NodesUpdatedEvent:
     """
     The nodesUpdated event is sent every time a previously requested node has changed
     the in tree.
     """
 
-    nodes: list[AXNode]
+    nodes: list[AXNode] = field(metadata={"cdp_name": "nodes"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+from cdpify.codec import decode_cdp, encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -59,7 +60,7 @@ class WebAudio:
 
         result = await self._command_sender.send_raw(
             method=WebAudioCommand.GET_REALTIME_DATA,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetRealtimeDataResult.from_cdp(result)
+        return decode_cdp(GetRealtimeDataResult, result)

@@ -4,11 +4,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Literal
 
 from cdpify.domains import network
-from cdpify.shared.models import CDPModel
 
 """
 Unique frame identifier.
@@ -26,13 +25,15 @@ type AdFrameExplanation = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class AdFrameStatus(CDPModel):
+class AdFrameStatus:
     """
     Indicates whether a frame has been identified as an ad and why.
     """
 
-    ad_frame_type: AdFrameType
-    explanations: list[AdFrameExplanation] | None = None
+    ad_frame_type: AdFrameType = field(metadata={"cdp_name": "adFrameType"})
+    explanations: list[AdFrameExplanation] | None = field(
+        default=None, metadata={"cdp_name": "explanations"}
+    )
 
 
 """
@@ -178,16 +179,20 @@ type PermissionsPolicyBlockReason = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class PermissionsPolicyBlockLocator(CDPModel):
-    frame_id: FrameId
-    block_reason: PermissionsPolicyBlockReason
+class PermissionsPolicyBlockLocator:
+    frame_id: FrameId = field(metadata={"cdp_name": "frameId"})
+    block_reason: PermissionsPolicyBlockReason = field(
+        metadata={"cdp_name": "blockReason"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class PermissionsPolicyFeatureState(CDPModel):
-    feature: PermissionsPolicyFeature
-    allowed: bool
-    locator: PermissionsPolicyBlockLocator | None = None
+class PermissionsPolicyFeatureState:
+    feature: PermissionsPolicyFeature = field(metadata={"cdp_name": "feature"})
+    allowed: bool = field(metadata={"cdp_name": "allowed"})
+    locator: PermissionsPolicyBlockLocator | None = field(
+        default=None, metadata={"cdp_name": "locator"}
+    )
 
 
 """
@@ -220,95 +225,121 @@ type OriginTrialUsageRestriction = Literal["None", "Subset"]
 
 
 @dataclass(kw_only=True, slots=True)
-class OriginTrialToken(CDPModel):
-    origin: str
-    match_sub_domains: bool
-    trial_name: str
-    expiry_time: network.TimeSinceEpoch
-    is_third_party: bool
-    usage_restriction: OriginTrialUsageRestriction
+class OriginTrialToken:
+    origin: str = field(metadata={"cdp_name": "origin"})
+    match_sub_domains: bool = field(metadata={"cdp_name": "matchSubDomains"})
+    trial_name: str = field(metadata={"cdp_name": "trialName"})
+    expiry_time: network.TimeSinceEpoch = field(metadata={"cdp_name": "expiryTime"})
+    is_third_party: bool = field(metadata={"cdp_name": "isThirdParty"})
+    usage_restriction: OriginTrialUsageRestriction = field(
+        metadata={"cdp_name": "usageRestriction"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class OriginTrialTokenWithStatus(CDPModel):
-    raw_token_text: str
-    parsed_token: OriginTrialToken | None = None
-    status: OriginTrialTokenStatus
+class OriginTrialTokenWithStatus:
+    raw_token_text: str = field(metadata={"cdp_name": "rawTokenText"})
+    parsed_token: OriginTrialToken | None = field(
+        default=None, metadata={"cdp_name": "parsedToken"}
+    )
+    status: OriginTrialTokenStatus = field(metadata={"cdp_name": "status"})
 
 
 @dataclass(kw_only=True, slots=True)
-class OriginTrial(CDPModel):
-    trial_name: str
-    status: OriginTrialStatus
-    tokens_with_status: list[OriginTrialTokenWithStatus]
+class OriginTrial:
+    trial_name: str = field(metadata={"cdp_name": "trialName"})
+    status: OriginTrialStatus = field(metadata={"cdp_name": "status"})
+    tokens_with_status: list[OriginTrialTokenWithStatus] = field(
+        metadata={"cdp_name": "tokensWithStatus"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SecurityOriginDetails(CDPModel):
+class SecurityOriginDetails:
     """
     Additional information about the frame document's security origin.
     """
 
-    is_localhost: bool
+    is_localhost: bool = field(metadata={"cdp_name": "isLocalhost"})
 
 
 @dataclass(kw_only=True, slots=True)
-class Frame(CDPModel):
+class Frame:
     """
     Information about the Frame on the page.
     """
 
-    id: FrameId
-    parent_id: FrameId | None = None
-    loader_id: network.LoaderId
-    name: str | None = None
-    url: str
-    url_fragment: str | None = None
-    domain_and_registry: str
-    security_origin: str
-    security_origin_details: SecurityOriginDetails | None = None
-    mime_type: str
-    unreachable_url: str | None = None
-    ad_frame_status: AdFrameStatus | None = None
-    secure_context_type: SecureContextType
-    cross_origin_isolated_context_type: CrossOriginIsolatedContextType
-    gated_api_features: list[GatedAPIFeatures]
+    id: FrameId = field(metadata={"cdp_name": "id"})
+    parent_id: FrameId | None = field(default=None, metadata={"cdp_name": "parentId"})
+    loader_id: network.LoaderId = field(metadata={"cdp_name": "loaderId"})
+    name: str | None = field(default=None, metadata={"cdp_name": "name"})
+    url: str = field(metadata={"cdp_name": "url"})
+    url_fragment: str | None = field(default=None, metadata={"cdp_name": "urlFragment"})
+    domain_and_registry: str = field(metadata={"cdp_name": "domainAndRegistry"})
+    security_origin: str = field(metadata={"cdp_name": "securityOrigin"})
+    security_origin_details: SecurityOriginDetails | None = field(
+        default=None, metadata={"cdp_name": "securityOriginDetails"}
+    )
+    mime_type: str = field(metadata={"cdp_name": "mimeType"})
+    unreachable_url: str | None = field(
+        default=None, metadata={"cdp_name": "unreachableUrl"}
+    )
+    ad_frame_status: AdFrameStatus | None = field(
+        default=None, metadata={"cdp_name": "adFrameStatus"}
+    )
+    secure_context_type: SecureContextType = field(
+        metadata={"cdp_name": "secureContextType"}
+    )
+    cross_origin_isolated_context_type: CrossOriginIsolatedContextType = field(
+        metadata={"cdp_name": "crossOriginIsolatedContextType"}
+    )
+    gated_api_features: list[GatedAPIFeatures] = field(
+        metadata={"cdp_name": "gatedAPIFeatures"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class FrameResource(CDPModel):
+class FrameResource:
     """
     Information about the Resource on the page.
     """
 
-    url: str
-    type: network.ResourceType
-    mime_type: str
-    last_modified: network.TimeSinceEpoch | None = None
-    content_size: float | None = None
-    failed: bool | None = None
-    canceled: bool | None = None
+    url: str = field(metadata={"cdp_name": "url"})
+    type: network.ResourceType = field(metadata={"cdp_name": "type"})
+    mime_type: str = field(metadata={"cdp_name": "mimeType"})
+    last_modified: network.TimeSinceEpoch | None = field(
+        default=None, metadata={"cdp_name": "lastModified"}
+    )
+    content_size: float | None = field(
+        default=None, metadata={"cdp_name": "contentSize"}
+    )
+    failed: bool | None = field(default=None, metadata={"cdp_name": "failed"})
+    canceled: bool | None = field(default=None, metadata={"cdp_name": "canceled"})
 
 
 @dataclass(kw_only=True, slots=True)
-class FrameResourceTree(CDPModel):
+class FrameResourceTree:
     """
     Information about the Frame hierarchy along with their cached resources.
     """
 
-    frame: Frame
-    child_frames: list[FrameResourceTree] | None = None
-    resources: list[FrameResource]
+    frame: Frame = field(metadata={"cdp_name": "frame"})
+    child_frames: list[FrameResourceTree] | None = field(
+        default=None, metadata={"cdp_name": "childFrames"}
+    )
+    resources: list[FrameResource] = field(metadata={"cdp_name": "resources"})
 
 
 @dataclass(kw_only=True, slots=True)
-class FrameTree(CDPModel):
+class FrameTree:
     """
     Information about the Frame hierarchy.
     """
 
-    frame: Frame
-    child_frames: list[FrameTree] | None = None
+    frame: Frame = field(metadata={"cdp_name": "frame"})
+    child_frames: list[FrameTree] | None = field(
+        default=None, metadata={"cdp_name": "childFrames"}
+    )
 
 
 """
@@ -337,31 +368,33 @@ type TransitionType = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class NavigationEntry(CDPModel):
+class NavigationEntry:
     """
     Navigation history entry.
     """
 
-    id: int
-    url: str
-    user_typed_url: str
-    title: str
-    transition_type: TransitionType
+    id: int = field(metadata={"cdp_name": "id"})
+    url: str = field(metadata={"cdp_name": "url"})
+    user_typed_url: str = field(metadata={"cdp_name": "userTypedURL"})
+    title: str = field(metadata={"cdp_name": "title"})
+    transition_type: TransitionType = field(metadata={"cdp_name": "transitionType"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ScreencastFrameMetadata(CDPModel):
+class ScreencastFrameMetadata:
     """
     Screencast frame metadata.
     """
 
-    offset_top: float
-    page_scale_factor: float
-    device_width: float
-    device_height: float
-    scroll_offset_x: float
-    scroll_offset_y: float
-    timestamp: network.TimeSinceEpoch | None = None
+    offset_top: float = field(metadata={"cdp_name": "offsetTop"})
+    page_scale_factor: float = field(metadata={"cdp_name": "pageScaleFactor"})
+    device_width: float = field(metadata={"cdp_name": "deviceWidth"})
+    device_height: float = field(metadata={"cdp_name": "deviceHeight"})
+    scroll_offset_x: float = field(metadata={"cdp_name": "scrollOffsetX"})
+    scroll_offset_y: float = field(metadata={"cdp_name": "scrollOffsetY"})
+    timestamp: network.TimeSinceEpoch | None = field(
+        default=None, metadata={"cdp_name": "timestamp"}
+    )
 
 
 """
@@ -371,100 +404,100 @@ type DialogType = Literal["alert", "confirm", "prompt", "beforeunload"]
 
 
 @dataclass(kw_only=True, slots=True)
-class AppManifestError(CDPModel):
+class AppManifestError:
     """
     Error while paring app manifest.
     """
 
-    message: str
-    critical: int
-    line: int
-    column: int
+    message: str = field(metadata={"cdp_name": "message"})
+    critical: int = field(metadata={"cdp_name": "critical"})
+    line: int = field(metadata={"cdp_name": "line"})
+    column: int = field(metadata={"cdp_name": "column"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AppManifestParsedProperties(CDPModel):
+class AppManifestParsedProperties:
     """
     Parsed app manifest properties.
     """
 
-    scope: str
+    scope: str = field(metadata={"cdp_name": "scope"})
 
 
 @dataclass(kw_only=True, slots=True)
-class LayoutViewport(CDPModel):
+class LayoutViewport:
     """
     Layout viewport position and dimensions.
     """
 
-    page_x: int
-    page_y: int
-    client_width: int
-    client_height: int
+    page_x: int = field(metadata={"cdp_name": "pageX"})
+    page_y: int = field(metadata={"cdp_name": "pageY"})
+    client_width: int = field(metadata={"cdp_name": "clientWidth"})
+    client_height: int = field(metadata={"cdp_name": "clientHeight"})
 
 
 @dataclass(kw_only=True, slots=True)
-class VisualViewport(CDPModel):
+class VisualViewport:
     """
     Visual viewport position, dimensions, and scale.
     """
 
-    offset_x: float
-    offset_y: float
-    page_x: float
-    page_y: float
-    client_width: float
-    client_height: float
-    scale: float
-    zoom: float | None = None
+    offset_x: float = field(metadata={"cdp_name": "offsetX"})
+    offset_y: float = field(metadata={"cdp_name": "offsetY"})
+    page_x: float = field(metadata={"cdp_name": "pageX"})
+    page_y: float = field(metadata={"cdp_name": "pageY"})
+    client_width: float = field(metadata={"cdp_name": "clientWidth"})
+    client_height: float = field(metadata={"cdp_name": "clientHeight"})
+    scale: float = field(metadata={"cdp_name": "scale"})
+    zoom: float | None = field(default=None, metadata={"cdp_name": "zoom"})
 
 
 @dataclass(kw_only=True, slots=True)
-class Viewport(CDPModel):
+class Viewport:
     """
     Viewport for capturing screenshot.
     """
 
-    x: float
-    y: float
-    width: float
-    height: float
-    scale: float
+    x: float = field(metadata={"cdp_name": "x"})
+    y: float = field(metadata={"cdp_name": "y"})
+    width: float = field(metadata={"cdp_name": "width"})
+    height: float = field(metadata={"cdp_name": "height"})
+    scale: float = field(metadata={"cdp_name": "scale"})
 
 
 @dataclass(kw_only=True, slots=True)
-class FontFamilies(CDPModel):
+class FontFamilies:
     """
     Generic font families collection.
     """
 
-    standard: str | None = None
-    fixed: str | None = None
-    serif: str | None = None
-    sans_serif: str | None = None
-    cursive: str | None = None
-    fantasy: str | None = None
-    math: str | None = None
+    standard: str | None = field(default=None, metadata={"cdp_name": "standard"})
+    fixed: str | None = field(default=None, metadata={"cdp_name": "fixed"})
+    serif: str | None = field(default=None, metadata={"cdp_name": "serif"})
+    sans_serif: str | None = field(default=None, metadata={"cdp_name": "sansSerif"})
+    cursive: str | None = field(default=None, metadata={"cdp_name": "cursive"})
+    fantasy: str | None = field(default=None, metadata={"cdp_name": "fantasy"})
+    math: str | None = field(default=None, metadata={"cdp_name": "math"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ScriptFontFamilies(CDPModel):
+class ScriptFontFamilies:
     """
     Font families collection for a script.
     """
 
-    script: str
-    font_families: FontFamilies
+    script: str = field(metadata={"cdp_name": "script"})
+    font_families: FontFamilies = field(metadata={"cdp_name": "fontFamilies"})
 
 
 @dataclass(kw_only=True, slots=True)
-class FontSizes(CDPModel):
+class FontSizes:
     """
     Default font sizes.
     """
 
-    standard: int | None = None
-    fixed: int | None = None
+    standard: int | None = field(default=None, metadata={"cdp_name": "standard"})
+    fixed: int | None = field(default=None, metadata={"cdp_name": "fixed"})
 
 
 type ClientNavigationReason = Literal[
@@ -486,19 +519,21 @@ type ClientNavigationDisposition = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class InstallabilityErrorArgument(CDPModel):
-    name: str
-    value: str
+class InstallabilityErrorArgument:
+    name: str = field(metadata={"cdp_name": "name"})
+    value: str = field(metadata={"cdp_name": "value"})
 
 
 @dataclass(kw_only=True, slots=True)
-class InstallabilityError(CDPModel):
+class InstallabilityError:
     """
     The installability error
     """
 
-    error_id: str
-    error_arguments: list[InstallabilityErrorArgument]
+    error_id: str = field(metadata={"cdp_name": "errorId"})
+    error_arguments: list[InstallabilityErrorArgument] = field(
+        metadata={"cdp_name": "errorArguments"}
+    )
 
 
 """
@@ -517,112 +552,138 @@ type ReferrerPolicy = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class CompilationCacheParams(CDPModel):
+class CompilationCacheParams:
     """
     Per-script compilation cache parameters for `Page.produceCompilationCache`
     """
 
-    url: str
-    eager: bool | None = None
+    url: str = field(metadata={"cdp_name": "url"})
+    eager: bool | None = field(default=None, metadata={"cdp_name": "eager"})
 
 
 @dataclass(kw_only=True, slots=True)
-class FileFilter(CDPModel):
-    name: str | None = None
-    accepts: list[str] | None = None
+class FileFilter:
+    name: str | None = field(default=None, metadata={"cdp_name": "name"})
+    accepts: list[str] | None = field(default=None, metadata={"cdp_name": "accepts"})
 
 
 @dataclass(kw_only=True, slots=True)
-class FileHandler(CDPModel):
-    action: str
-    name: str
-    accepts: list[FileFilter] | None = None
-    launch_type: str
+class FileHandler:
+    action: str = field(metadata={"cdp_name": "action"})
+    name: str = field(metadata={"cdp_name": "name"})
+    accepts: list[FileFilter] | None = field(
+        default=None, metadata={"cdp_name": "accepts"}
+    )
+    launch_type: str = field(metadata={"cdp_name": "launchType"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ImageResource(CDPModel):
+class ImageResource:
     """
     The image definition used in both icon and screenshot.
     """
 
-    url: str
-    sizes: str | None = None
-    type: str | None = None
+    url: str = field(metadata={"cdp_name": "url"})
+    sizes: str | None = field(default=None, metadata={"cdp_name": "sizes"})
+    type: str | None = field(default=None, metadata={"cdp_name": "type"})
 
 
 @dataclass(kw_only=True, slots=True)
-class LaunchHandler(CDPModel):
-    client_mode: str
+class LaunchHandler:
+    client_mode: str = field(metadata={"cdp_name": "clientMode"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ProtocolHandler(CDPModel):
-    protocol: str
-    url: str
+class ProtocolHandler:
+    protocol: str = field(metadata={"cdp_name": "protocol"})
+    url: str = field(metadata={"cdp_name": "url"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RelatedApplication(CDPModel):
-    id: str | None = None
-    url: str
+class RelatedApplication:
+    id: str | None = field(default=None, metadata={"cdp_name": "id"})
+    url: str = field(metadata={"cdp_name": "url"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ScopeExtension(CDPModel):
-    origin: str
-    has_origin_wildcard: bool
+class ScopeExtension:
+    origin: str = field(metadata={"cdp_name": "origin"})
+    has_origin_wildcard: bool = field(metadata={"cdp_name": "hasOriginWildcard"})
 
 
 @dataclass(kw_only=True, slots=True)
-class Screenshot(CDPModel):
-    image: ImageResource
-    form_factor: str
-    label: str | None = None
+class Screenshot:
+    image: ImageResource = field(metadata={"cdp_name": "image"})
+    form_factor: str = field(metadata={"cdp_name": "formFactor"})
+    label: str | None = field(default=None, metadata={"cdp_name": "label"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ShareTarget(CDPModel):
-    action: str
-    method: str
-    enctype: str
-    title: str | None = None
-    text: str | None = None
-    url: str | None = None
-    files: list[FileFilter] | None = None
+class ShareTarget:
+    action: str = field(metadata={"cdp_name": "action"})
+    method: str = field(metadata={"cdp_name": "method"})
+    enctype: str = field(metadata={"cdp_name": "enctype"})
+    title: str | None = field(default=None, metadata={"cdp_name": "title"})
+    text: str | None = field(default=None, metadata={"cdp_name": "text"})
+    url: str | None = field(default=None, metadata={"cdp_name": "url"})
+    files: list[FileFilter] | None = field(default=None, metadata={"cdp_name": "files"})
 
 
 @dataclass(kw_only=True, slots=True)
-class Shortcut(CDPModel):
-    name: str
-    url: str
+class Shortcut:
+    name: str = field(metadata={"cdp_name": "name"})
+    url: str = field(metadata={"cdp_name": "url"})
 
 
 @dataclass(kw_only=True, slots=True)
-class WebAppManifest(CDPModel):
-    background_color: str | None = None
-    description: str | None = None
-    dir: str | None = None
-    display: str | None = None
-    display_overrides: list[str] | None = None
-    file_handlers: list[FileHandler] | None = None
-    icons: list[ImageResource] | None = None
-    id: str | None = None
-    lang: str | None = None
-    launch_handler: LaunchHandler | None = None
-    name: str | None = None
-    orientation: str | None = None
-    prefer_related_applications: bool | None = None
-    protocol_handlers: list[ProtocolHandler] | None = None
-    related_applications: list[RelatedApplication] | None = None
-    scope: str | None = None
-    scope_extensions: list[ScopeExtension] | None = None
-    screenshots: list[Screenshot] | None = None
-    share_target: ShareTarget | None = None
-    short_name: str | None = None
-    shortcuts: list[Shortcut] | None = None
-    start_url: str | None = None
-    theme_color: str | None = None
+class WebAppManifest:
+    background_color: str | None = field(
+        default=None, metadata={"cdp_name": "backgroundColor"}
+    )
+    description: str | None = field(default=None, metadata={"cdp_name": "description"})
+    dir: str | None = field(default=None, metadata={"cdp_name": "dir"})
+    display: str | None = field(default=None, metadata={"cdp_name": "display"})
+    display_overrides: list[str] | None = field(
+        default=None, metadata={"cdp_name": "displayOverrides"}
+    )
+    file_handlers: list[FileHandler] | None = field(
+        default=None, metadata={"cdp_name": "fileHandlers"}
+    )
+    icons: list[ImageResource] | None = field(
+        default=None, metadata={"cdp_name": "icons"}
+    )
+    id: str | None = field(default=None, metadata={"cdp_name": "id"})
+    lang: str | None = field(default=None, metadata={"cdp_name": "lang"})
+    launch_handler: LaunchHandler | None = field(
+        default=None, metadata={"cdp_name": "launchHandler"}
+    )
+    name: str | None = field(default=None, metadata={"cdp_name": "name"})
+    orientation: str | None = field(default=None, metadata={"cdp_name": "orientation"})
+    prefer_related_applications: bool | None = field(
+        default=None, metadata={"cdp_name": "preferRelatedApplications"}
+    )
+    protocol_handlers: list[ProtocolHandler] | None = field(
+        default=None, metadata={"cdp_name": "protocolHandlers"}
+    )
+    related_applications: list[RelatedApplication] | None = field(
+        default=None, metadata={"cdp_name": "relatedApplications"}
+    )
+    scope: str | None = field(default=None, metadata={"cdp_name": "scope"})
+    scope_extensions: list[ScopeExtension] | None = field(
+        default=None, metadata={"cdp_name": "scopeExtensions"}
+    )
+    screenshots: list[Screenshot] | None = field(
+        default=None, metadata={"cdp_name": "screenshots"}
+    )
+    share_target: ShareTarget | None = field(
+        default=None, metadata={"cdp_name": "shareTarget"}
+    )
+    short_name: str | None = field(default=None, metadata={"cdp_name": "shortName"})
+    shortcuts: list[Shortcut] | None = field(
+        default=None, metadata={"cdp_name": "shortcuts"}
+    )
+    start_url: str | None = field(default=None, metadata={"cdp_name": "startUrl"})
+    theme_color: str | None = field(default=None, metadata={"cdp_name": "themeColor"})
 
 
 """
@@ -794,23 +855,29 @@ type BackForwardCacheNotRestoredReasonType = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class BackForwardCacheBlockingDetails(CDPModel):
-    url: str | None = None
-    function: str | None = None
-    line_number: int
-    column_number: int
+class BackForwardCacheBlockingDetails:
+    url: str | None = field(default=None, metadata={"cdp_name": "url"})
+    function: str | None = field(default=None, metadata={"cdp_name": "function"})
+    line_number: int = field(metadata={"cdp_name": "lineNumber"})
+    column_number: int = field(metadata={"cdp_name": "columnNumber"})
 
 
 @dataclass(kw_only=True, slots=True)
-class BackForwardCacheNotRestoredExplanation(CDPModel):
-    type: BackForwardCacheNotRestoredReasonType
-    reason: BackForwardCacheNotRestoredReason
-    context: str | None = None
-    details: list[BackForwardCacheBlockingDetails] | None = None
+class BackForwardCacheNotRestoredExplanation:
+    type: BackForwardCacheNotRestoredReasonType = field(metadata={"cdp_name": "type"})
+    reason: BackForwardCacheNotRestoredReason = field(metadata={"cdp_name": "reason"})
+    context: str | None = field(default=None, metadata={"cdp_name": "context"})
+    details: list[BackForwardCacheBlockingDetails] | None = field(
+        default=None, metadata={"cdp_name": "details"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class BackForwardCacheNotRestoredExplanationTree(CDPModel):
-    url: str
-    explanations: list[BackForwardCacheNotRestoredExplanation]
-    children: list[BackForwardCacheNotRestoredExplanationTree]
+class BackForwardCacheNotRestoredExplanationTree:
+    url: str = field(metadata={"cdp_name": "url"})
+    explanations: list[BackForwardCacheNotRestoredExplanation] = field(
+        metadata={"cdp_name": "explanations"}
+    )
+    children: list[BackForwardCacheNotRestoredExplanationTree] = field(
+        metadata={"cdp_name": "children"}
+    )

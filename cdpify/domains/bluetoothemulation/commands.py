@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPModel
 
 from .types import (
     CentralState,
@@ -47,62 +45,64 @@ class BluetoothEmulationCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class EnableParams(CDPModel):
+class EnableParams:
     """
     Enable the BluetoothEmulation domain.
     """
 
-    state: CentralState
-    le_supported: bool
+    state: CentralState = field(metadata={"cdp_name": "state"})
+    le_supported: bool = field(metadata={"cdp_name": "leSupported"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetSimulatedCentralStateParams(CDPModel):
+class SetSimulatedCentralStateParams:
     """
     Set the state of the simulated central.
     """
 
-    state: CentralState
+    state: CentralState = field(metadata={"cdp_name": "state"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SimulatePreconnectedPeripheralParams(CDPModel):
+class SimulatePreconnectedPeripheralParams:
     """
     Simulates a peripheral with |address|, |name| and |knownServiceUuids| that has
     already been connected to the system.
     """
 
-    address: str
-    name: str
-    manufacturer_data: list[ManufacturerData]
-    known_service_uuids: list[str]
+    address: str = field(metadata={"cdp_name": "address"})
+    name: str = field(metadata={"cdp_name": "name"})
+    manufacturer_data: list[ManufacturerData] = field(
+        metadata={"cdp_name": "manufacturerData"}
+    )
+    known_service_uuids: list[str] = field(metadata={"cdp_name": "knownServiceUuids"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SimulateAdvertisementParams(CDPModel):
+class SimulateAdvertisementParams:
     """
     Simulates an advertisement packet described in |entry| being received by the
     central.
     """
 
-    entry: ScanEntry
+    entry: ScanEntry = field(metadata={"cdp_name": "entry"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SimulateGATTOperationResponseParams(CDPModel):
+class SimulateGATTOperationResponseParams:
     """
     Simulates the response code from the peripheral with |address| for a GATT operation
     of |type|. The |code| value follows the HCI Error Codes from Bluetooth Core
     Specification Vol 2 Part D 1.3 List Of Error Codes.
     """
 
-    address: str
-    type: GATTOperationType
-    code: int
+    address: str = field(metadata={"cdp_name": "address"})
+    type: GATTOperationType = field(metadata={"cdp_name": "type"})
+    code: int = field(metadata={"cdp_name": "code"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SimulateCharacteristicOperationResponseParams(CDPModel):
+class SimulateCharacteristicOperationResponseParams:
     """
     Simulates the response from the characteristic with |characteristicId| for a
     characteristic operation of |type|. The |code| value follows the Error Codes from
@@ -110,14 +110,14 @@ class SimulateCharacteristicOperationResponseParams(CDPModel):
     expected to exist when simulating a successful read operation response.
     """
 
-    characteristic_id: str
-    type: CharacteristicOperationType
-    code: int
-    data: str | None = None
+    characteristic_id: str = field(metadata={"cdp_name": "characteristicId"})
+    type: CharacteristicOperationType = field(metadata={"cdp_name": "type"})
+    code: int = field(metadata={"cdp_name": "code"})
+    data: str | None = field(default=None, metadata={"cdp_name": "data"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SimulateDescriptorOperationResponseParams(CDPModel):
+class SimulateDescriptorOperationResponseParams:
     """
     Simulates the response from the descriptor with |descriptorId| for a descriptor
     operation of |type|. The |code| value follows the Error Codes from Bluetooth Core
@@ -125,92 +125,92 @@ class SimulateDescriptorOperationResponseParams(CDPModel):
     when simulating a successful read operation response.
     """
 
-    descriptor_id: str
-    type: DescriptorOperationType
-    code: int
-    data: str | None = None
+    descriptor_id: str = field(metadata={"cdp_name": "descriptorId"})
+    type: DescriptorOperationType = field(metadata={"cdp_name": "type"})
+    code: int = field(metadata={"cdp_name": "code"})
+    data: str | None = field(default=None, metadata={"cdp_name": "data"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AddServiceParams(CDPModel):
+class AddServiceParams:
     """
     Adds a service with |serviceUuid| to the peripheral with |address|.
     """
 
-    address: str
-    service_uuid: str
+    address: str = field(metadata={"cdp_name": "address"})
+    service_uuid: str = field(metadata={"cdp_name": "serviceUuid"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AddServiceResult(CDPModel):
-    service_id: str
+class AddServiceResult:
+    service_id: str = field(metadata={"cdp_name": "serviceId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RemoveServiceParams(CDPModel):
+class RemoveServiceParams:
     """
     Removes the service respresented by |serviceId| from the simulated central.
     """
 
-    service_id: str
+    service_id: str = field(metadata={"cdp_name": "serviceId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AddCharacteristicParams(CDPModel):
+class AddCharacteristicParams:
     """
     Adds a characteristic with |characteristicUuid| and |properties| to the service
     represented by |serviceId|.
     """
 
-    service_id: str
-    characteristic_uuid: str
-    properties: CharacteristicProperties
+    service_id: str = field(metadata={"cdp_name": "serviceId"})
+    characteristic_uuid: str = field(metadata={"cdp_name": "characteristicUuid"})
+    properties: CharacteristicProperties = field(metadata={"cdp_name": "properties"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AddCharacteristicResult(CDPModel):
-    characteristic_id: str
+class AddCharacteristicResult:
+    characteristic_id: str = field(metadata={"cdp_name": "characteristicId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RemoveCharacteristicParams(CDPModel):
+class RemoveCharacteristicParams:
     """
     Removes the characteristic respresented by |characteristicId| from the simulated
     central.
     """
 
-    characteristic_id: str
+    characteristic_id: str = field(metadata={"cdp_name": "characteristicId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AddDescriptorParams(CDPModel):
+class AddDescriptorParams:
     """
     Adds a descriptor with |descriptorUuid| to the characteristic respresented by
     |characteristicId|.
     """
 
-    characteristic_id: str
-    descriptor_uuid: str
+    characteristic_id: str = field(metadata={"cdp_name": "characteristicId"})
+    descriptor_uuid: str = field(metadata={"cdp_name": "descriptorUuid"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AddDescriptorResult(CDPModel):
-    descriptor_id: str
+class AddDescriptorResult:
+    descriptor_id: str = field(metadata={"cdp_name": "descriptorId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RemoveDescriptorParams(CDPModel):
+class RemoveDescriptorParams:
     """
     Removes the descriptor with |descriptorId| from the simulated central.
     """
 
-    descriptor_id: str
+    descriptor_id: str = field(metadata={"cdp_name": "descriptorId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SimulateGATTDisconnectionParams(CDPModel):
+class SimulateGATTDisconnectionParams:
     """
     Simulates a GATT disconnection from the peripheral with |address|.
     """
 
-    address: str
+    address: str = field(metadata={"cdp_name": "address"})

@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from cdpify.codec import decode_cdp, encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -48,7 +49,7 @@ class HeapProfiler:
 
         await self._command_sender.send_raw(
             method=HeapProfilerCommand.ADD_INSPECTED_HEAP_OBJECT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -92,10 +93,10 @@ class HeapProfiler:
 
         result = await self._command_sender.send_raw(
             method=HeapProfilerCommand.GET_HEAP_OBJECT_ID,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetHeapObjectIdResult.from_cdp(result)
+        return decode_cdp(GetHeapObjectIdResult, result)
 
     async def get_object_by_heap_object_id(
         self,
@@ -110,10 +111,10 @@ class HeapProfiler:
 
         result = await self._command_sender.send_raw(
             method=HeapProfilerCommand.GET_OBJECT_BY_HEAP_OBJECT_ID,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetObjectByHeapObjectIdResult.from_cdp(result)
+        return decode_cdp(GetObjectByHeapObjectIdResult, result)
 
     async def get_sampling_profile(
         self,
@@ -124,7 +125,7 @@ class HeapProfiler:
             params=None,
             session_id=session_id,
         )
-        return GetSamplingProfileResult.from_cdp(result)
+        return decode_cdp(GetSamplingProfileResult, result)
 
     async def start_sampling(
         self,
@@ -144,7 +145,7 @@ class HeapProfiler:
 
         await self._command_sender.send_raw(
             method=HeapProfilerCommand.START_SAMPLING,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -158,7 +159,7 @@ class HeapProfiler:
 
         await self._command_sender.send_raw(
             method=HeapProfilerCommand.START_TRACKING_HEAP_OBJECTS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -171,7 +172,7 @@ class HeapProfiler:
             params=None,
             session_id=session_id,
         )
-        return StopSamplingResult.from_cdp(result)
+        return decode_cdp(StopSamplingResult, result)
 
     async def stop_tracking_heap_objects(
         self,
@@ -191,7 +192,7 @@ class HeapProfiler:
 
         await self._command_sender.send_raw(
             method=HeapProfilerCommand.STOP_TRACKING_HEAP_OBJECTS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -213,6 +214,6 @@ class HeapProfiler:
 
         await self._command_sender.send_raw(
             method=HeapProfilerCommand.TAKE_HEAP_SNAPSHOT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )

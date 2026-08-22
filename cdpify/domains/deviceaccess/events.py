@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPEvent
 
 from .types import (
     PromptDevice,
@@ -20,11 +18,17 @@ class DeviceAccessEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class DeviceRequestPromptedEvent(CDPEvent):
+class DeviceRequestPromptedEvent:
     """
     A device request opened a user prompt to select a device. Respond with the
     selectPrompt or cancelPrompt command.
     """
 
-    id: RequestId
-    devices: list[PromptDevice]
+    id: RequestId = field(metadata={"cdp_name": "id"})
+    devices: list[PromptDevice] = field(metadata={"cdp_name": "devices"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

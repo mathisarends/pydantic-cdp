@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+from cdpify.codec import decode_cdp, encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -64,10 +65,10 @@ class Animation:
 
         result = await self._command_sender.send_raw(
             method=AnimationCommand.GET_CURRENT_TIME,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetCurrentTimeResult.from_cdp(result)
+        return decode_cdp(GetCurrentTimeResult, result)
 
     async def get_playback_rate(
         self,
@@ -81,7 +82,7 @@ class Animation:
             params=None,
             session_id=session_id,
         )
-        return GetPlaybackRateResult.from_cdp(result)
+        return decode_cdp(GetPlaybackRateResult, result)
 
     async def release_animations(
         self,
@@ -96,7 +97,7 @@ class Animation:
 
         await self._command_sender.send_raw(
             method=AnimationCommand.RELEASE_ANIMATIONS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -113,10 +114,10 @@ class Animation:
 
         result = await self._command_sender.send_raw(
             method=AnimationCommand.RESOLVE_ANIMATION,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return ResolveAnimationResult.from_cdp(result)
+        return decode_cdp(ResolveAnimationResult, result)
 
     async def seek_animations(
         self,
@@ -132,7 +133,7 @@ class Animation:
 
         await self._command_sender.send_raw(
             method=AnimationCommand.SEEK_ANIMATIONS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -150,7 +151,7 @@ class Animation:
 
         await self._command_sender.send_raw(
             method=AnimationCommand.SET_PAUSED,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -167,7 +168,7 @@ class Animation:
 
         await self._command_sender.send_raw(
             method=AnimationCommand.SET_PLAYBACK_RATE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -188,6 +189,6 @@ class Animation:
 
         await self._command_sender.send_raw(
             method=AnimationCommand.SET_TIMING,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )

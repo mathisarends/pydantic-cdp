@@ -4,11 +4,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, Literal
 
 from cdpify.domains import dom, page
-from cdpify.shared.models import CDPModel
 
 """
 Unique accessibility node identifier.
@@ -64,45 +63,59 @@ type AXValueNativeSourceType = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class AXValueSource(CDPModel):
+class AXValueSource:
     """
     A single source for a computed AX property.
     """
 
-    type: AXValueSourceType
-    value: AXValue | None = None
-    attribute: str | None = None
-    attribute_value: AXValue | None = None
-    superseded: bool | None = None
-    native_source: AXValueNativeSourceType | None = None
-    native_source_value: AXValue | None = None
-    invalid: bool | None = None
-    invalid_reason: str | None = None
+    type: AXValueSourceType = field(metadata={"cdp_name": "type"})
+    value: AXValue | None = field(default=None, metadata={"cdp_name": "value"})
+    attribute: str | None = field(default=None, metadata={"cdp_name": "attribute"})
+    attribute_value: AXValue | None = field(
+        default=None, metadata={"cdp_name": "attributeValue"}
+    )
+    superseded: bool | None = field(default=None, metadata={"cdp_name": "superseded"})
+    native_source: AXValueNativeSourceType | None = field(
+        default=None, metadata={"cdp_name": "nativeSource"}
+    )
+    native_source_value: AXValue | None = field(
+        default=None, metadata={"cdp_name": "nativeSourceValue"}
+    )
+    invalid: bool | None = field(default=None, metadata={"cdp_name": "invalid"})
+    invalid_reason: str | None = field(
+        default=None, metadata={"cdp_name": "invalidReason"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class AXRelatedNode(CDPModel):
-    backend_dom_node_id: dom.BackendNodeId | None = None
-    idref: str | None = None
-    text: str | None = None
+class AXRelatedNode:
+    backend_dom_node_id: dom.BackendNodeId | None = field(
+        default=None, metadata={"cdp_name": "backendDOMNodeId"}
+    )
+    idref: str | None = field(default=None, metadata={"cdp_name": "idref"})
+    text: str | None = field(default=None, metadata={"cdp_name": "text"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AXProperty(CDPModel):
-    name: AXPropertyName
-    value: AXValue
+class AXProperty:
+    name: AXPropertyName = field(metadata={"cdp_name": "name"})
+    value: AXValue = field(metadata={"cdp_name": "value"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AXValue(CDPModel):
+class AXValue:
     """
     A single computed AX property.
     """
 
-    type: AXValueType
-    value: Any | None = None
-    related_nodes: list[AXRelatedNode] | None = None
-    sources: list[AXValueSource] | None = None
+    type: AXValueType = field(metadata={"cdp_name": "type"})
+    value: Any | None = field(default=None, metadata={"cdp_name": "value"})
+    related_nodes: list[AXRelatedNode] | None = field(
+        default=None, metadata={"cdp_name": "relatedNodes"}
+    )
+    sources: list[AXValueSource] | None = field(
+        default=None, metadata={"cdp_name": "sources"}
+    )
 
 
 """
@@ -176,21 +189,35 @@ type AXPropertyName = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class AXNode(CDPModel):
+class AXNode:
     """
     A node in the accessibility tree.
     """
 
-    node_id: AXNodeId
-    ignored: bool
-    ignored_reasons: list[AXProperty] | None = None
-    role: AXValue | None = None
-    chrome_role: AXValue | None = None
-    name: AXValue | None = None
-    description: AXValue | None = None
-    value: AXValue | None = None
-    properties: list[AXProperty] | None = None
-    parent_id: AXNodeId | None = None
-    child_ids: list[AXNodeId] | None = None
-    backend_dom_node_id: dom.BackendNodeId | None = None
-    frame_id: page.FrameId | None = None
+    node_id: AXNodeId = field(metadata={"cdp_name": "nodeId"})
+    ignored: bool = field(metadata={"cdp_name": "ignored"})
+    ignored_reasons: list[AXProperty] | None = field(
+        default=None, metadata={"cdp_name": "ignoredReasons"}
+    )
+    role: AXValue | None = field(default=None, metadata={"cdp_name": "role"})
+    chrome_role: AXValue | None = field(
+        default=None, metadata={"cdp_name": "chromeRole"}
+    )
+    name: AXValue | None = field(default=None, metadata={"cdp_name": "name"})
+    description: AXValue | None = field(
+        default=None, metadata={"cdp_name": "description"}
+    )
+    value: AXValue | None = field(default=None, metadata={"cdp_name": "value"})
+    properties: list[AXProperty] | None = field(
+        default=None, metadata={"cdp_name": "properties"}
+    )
+    parent_id: AXNodeId | None = field(default=None, metadata={"cdp_name": "parentId"})
+    child_ids: list[AXNodeId] | None = field(
+        default=None, metadata={"cdp_name": "childIds"}
+    )
+    backend_dom_node_id: dom.BackendNodeId | None = field(
+        default=None, metadata={"cdp_name": "backendDOMNodeId"}
+    )
+    frame_id: page.FrameId | None = field(
+        default=None, metadata={"cdp_name": "frameId"}
+    )

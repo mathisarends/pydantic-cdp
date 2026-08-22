@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPEvent
 
 from .types import (
     Account,
@@ -21,19 +19,31 @@ class FedCmEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class DialogShownEvent(CDPEvent):
-    dialog_id: str
-    dialog_type: DialogType
-    accounts: list[Account]
-    title: str
-    subtitle: str | None = None
+class DialogShownEvent:
+    dialog_id: str = field(metadata={"cdp_name": "dialogId"})
+    dialog_type: DialogType = field(metadata={"cdp_name": "dialogType"})
+    accounts: list[Account] = field(metadata={"cdp_name": "accounts"})
+    title: str = field(metadata={"cdp_name": "title"})
+    subtitle: str | None = field(default=None, metadata={"cdp_name": "subtitle"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DialogClosedEvent(CDPEvent):
+class DialogClosedEvent:
     """
     Triggered when a dialog is closed, either by user action, JS abort, or a command
     below.
     """
 
-    dialog_id: str
+    dialog_id: str = field(metadata={"cdp_name": "dialogId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

@@ -4,11 +4,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 
 from cdpify.domains import browser, network, page
-from cdpify.shared.models import CDPModel
 
 from .types import (
     RelatedWebsiteSet,
@@ -46,232 +45,240 @@ class StorageCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class GetStorageKeyForFrameParams(CDPModel):
+class GetStorageKeyForFrameParams:
     """
     Returns a storage key given a frame id. Deprecated. Please use
     Storage.getStorageKey instead.
     """
 
-    frame_id: page.FrameId
+    frame_id: page.FrameId = field(metadata={"cdp_name": "frameId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetStorageKeyForFrameResult(CDPModel):
-    storage_key: SerializedStorageKey
+class GetStorageKeyForFrameResult:
+    storage_key: SerializedStorageKey = field(metadata={"cdp_name": "storageKey"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetStorageKeyParams(CDPModel):
+class GetStorageKeyParams:
     """
     Returns storage key for the given frame. If no frame ID is provided, the storage
     key of the target executing this command is returned.
     """
 
-    frame_id: page.FrameId | None = None
+    frame_id: page.FrameId | None = field(
+        default=None, metadata={"cdp_name": "frameId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetStorageKeyResult(CDPModel):
-    storage_key: SerializedStorageKey
+class GetStorageKeyResult:
+    storage_key: SerializedStorageKey = field(metadata={"cdp_name": "storageKey"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ClearDataForOriginParams(CDPModel):
+class ClearDataForOriginParams:
     """
     Clears storage for origin.
     """
 
-    origin: str
-    storage_types: str
+    origin: str = field(metadata={"cdp_name": "origin"})
+    storage_types: str = field(metadata={"cdp_name": "storageTypes"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ClearDataForStorageKeyParams(CDPModel):
+class ClearDataForStorageKeyParams:
     """
     Clears storage for storage key.
     """
 
-    storage_key: str
-    storage_types: str
+    storage_key: str = field(metadata={"cdp_name": "storageKey"})
+    storage_types: str = field(metadata={"cdp_name": "storageTypes"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetCookiesParams(CDPModel):
+class GetCookiesParams:
     """
     Returns all browser cookies.
     """
 
-    browser_context_id: browser.BrowserContextID | None = None
+    browser_context_id: browser.BrowserContextID | None = field(
+        default=None, metadata={"cdp_name": "browserContextId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetCookiesResult(CDPModel):
-    cookies: list[network.Cookie]
+class GetCookiesResult:
+    cookies: list[network.Cookie] = field(metadata={"cdp_name": "cookies"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetCookiesParams(CDPModel):
+class SetCookiesParams:
     """
     Sets given cookies.
     """
 
-    cookies: list[network.CookieParam]
-    browser_context_id: browser.BrowserContextID | None = None
+    cookies: list[network.CookieParam] = field(metadata={"cdp_name": "cookies"})
+    browser_context_id: browser.BrowserContextID | None = field(
+        default=None, metadata={"cdp_name": "browserContextId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ClearCookiesParams(CDPModel):
+class ClearCookiesParams:
     """
     Clears cookies.
     """
 
-    browser_context_id: browser.BrowserContextID | None = None
+    browser_context_id: browser.BrowserContextID | None = field(
+        default=None, metadata={"cdp_name": "browserContextId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetUsageAndQuotaParams(CDPModel):
+class GetUsageAndQuotaParams:
     """
     Returns usage and quota in bytes.
     """
 
-    origin: str
+    origin: str = field(metadata={"cdp_name": "origin"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetUsageAndQuotaResult(CDPModel):
-    usage: float
-    quota: float
-    override_active: bool
-    usage_breakdown: list[UsageForType]
+class GetUsageAndQuotaResult:
+    usage: float = field(metadata={"cdp_name": "usage"})
+    quota: float = field(metadata={"cdp_name": "quota"})
+    override_active: bool = field(metadata={"cdp_name": "overrideActive"})
+    usage_breakdown: list[UsageForType] = field(metadata={"cdp_name": "usageBreakdown"})
 
 
 @dataclass(kw_only=True, slots=True)
-class OverrideQuotaForOriginParams(CDPModel):
+class OverrideQuotaForOriginParams:
     """
     Override quota for the specified origin
     """
 
-    origin: str
-    quota_size: float | None = None
+    origin: str = field(metadata={"cdp_name": "origin"})
+    quota_size: float | None = field(default=None, metadata={"cdp_name": "quotaSize"})
 
 
 @dataclass(kw_only=True, slots=True)
-class TrackCacheStorageForOriginParams(CDPModel):
+class TrackCacheStorageForOriginParams:
     """
     Registers origin to be notified when an update occurs to its cache storage list.
     """
 
-    origin: str
+    origin: str = field(metadata={"cdp_name": "origin"})
 
 
 @dataclass(kw_only=True, slots=True)
-class TrackCacheStorageForStorageKeyParams(CDPModel):
+class TrackCacheStorageForStorageKeyParams:
     """
     Registers storage key to be notified when an update occurs to its cache storage
     list.
     """
 
-    storage_key: str
+    storage_key: str = field(metadata={"cdp_name": "storageKey"})
 
 
 @dataclass(kw_only=True, slots=True)
-class TrackIndexedDBForOriginParams(CDPModel):
+class TrackIndexedDBForOriginParams:
     """
     Registers origin to be notified when an update occurs to its IndexedDB.
     """
 
-    origin: str
+    origin: str = field(metadata={"cdp_name": "origin"})
 
 
 @dataclass(kw_only=True, slots=True)
-class TrackIndexedDBForStorageKeyParams(CDPModel):
+class TrackIndexedDBForStorageKeyParams:
     """
     Registers storage key to be notified when an update occurs to its IndexedDB.
     """
 
-    storage_key: str
+    storage_key: str = field(metadata={"cdp_name": "storageKey"})
 
 
 @dataclass(kw_only=True, slots=True)
-class UntrackCacheStorageForOriginParams(CDPModel):
+class UntrackCacheStorageForOriginParams:
     """
     Unregisters origin from receiving notifications for cache storage.
     """
 
-    origin: str
+    origin: str = field(metadata={"cdp_name": "origin"})
 
 
 @dataclass(kw_only=True, slots=True)
-class UntrackCacheStorageForStorageKeyParams(CDPModel):
+class UntrackCacheStorageForStorageKeyParams:
     """
     Unregisters storage key from receiving notifications for cache storage.
     """
 
-    storage_key: str
+    storage_key: str = field(metadata={"cdp_name": "storageKey"})
 
 
 @dataclass(kw_only=True, slots=True)
-class UntrackIndexedDBForOriginParams(CDPModel):
+class UntrackIndexedDBForOriginParams:
     """
     Unregisters origin from receiving notifications for IndexedDB.
     """
 
-    origin: str
+    origin: str = field(metadata={"cdp_name": "origin"})
 
 
 @dataclass(kw_only=True, slots=True)
-class UntrackIndexedDBForStorageKeyParams(CDPModel):
+class UntrackIndexedDBForStorageKeyParams:
     """
     Unregisters storage key from receiving notifications for IndexedDB.
     """
 
-    storage_key: str
+    storage_key: str = field(metadata={"cdp_name": "storageKey"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetTrustTokensResult(CDPModel):
-    tokens: list[TrustTokens]
+class GetTrustTokensResult:
+    tokens: list[TrustTokens] = field(metadata={"cdp_name": "tokens"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ClearTrustTokensParams(CDPModel):
+class ClearTrustTokensParams:
     """
     Removes all Trust Tokens issued by the provided issuerOrigin. Leaves other stored
     data, including the issuer's Redemption Records, intact.
     """
 
-    issuer_origin: str
+    issuer_origin: str = field(metadata={"cdp_name": "issuerOrigin"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ClearTrustTokensResult(CDPModel):
-    did_delete_tokens: bool
+class ClearTrustTokensResult:
+    did_delete_tokens: bool = field(metadata={"cdp_name": "didDeleteTokens"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetStorageBucketTrackingParams(CDPModel):
+class SetStorageBucketTrackingParams:
     """
     Set tracking for a storage key's buckets.
     """
 
-    storage_key: str
-    enable: bool
+    storage_key: str = field(metadata={"cdp_name": "storageKey"})
+    enable: bool = field(metadata={"cdp_name": "enable"})
 
 
 @dataclass(kw_only=True, slots=True)
-class DeleteStorageBucketParams(CDPModel):
+class DeleteStorageBucketParams:
     """
     Deletes the Storage Bucket with the given storage key and bucket name.
     """
 
-    bucket: StorageBucket
+    bucket: StorageBucket = field(metadata={"cdp_name": "bucket"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RunBounceTrackingMitigationsResult(CDPModel):
-    deleted_sites: list[str]
+class RunBounceTrackingMitigationsResult:
+    deleted_sites: list[str] = field(metadata={"cdp_name": "deletedSites"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetRelatedWebsiteSetsResult(CDPModel):
-    sets: list[RelatedWebsiteSet]
+class GetRelatedWebsiteSetsResult:
+    sets: list[RelatedWebsiteSet] = field(metadata={"cdp_name": "sets"})

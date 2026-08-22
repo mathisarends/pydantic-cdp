@@ -4,28 +4,26 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Literal
-
-from cdpify.shared.models import CDPModel
 
 
 @dataclass(kw_only=True, slots=True)
-class FileHandlerAccept(CDPModel):
+class FileHandlerAccept:
     """
     The following types are the replica of
     https://crsrc.org/c/chrome/browser/web_applications/proto/web_app_os_integration_state.proto;drc=9910d3be894c8f142c977ba1023f30a656bc13fc;l=67
     """
 
-    media_type: str
-    file_extensions: list[str]
+    media_type: str = field(metadata={"cdp_name": "mediaType"})
+    file_extensions: list[str] = field(metadata={"cdp_name": "fileExtensions"})
 
 
 @dataclass(kw_only=True, slots=True)
-class FileHandler(CDPModel):
-    action: str
-    accepts: list[FileHandlerAccept]
-    display_name: str
+class FileHandler:
+    action: str = field(metadata={"cdp_name": "action"})
+    accepts: list[FileHandlerAccept] = field(metadata={"cdp_name": "accepts"})
+    display_name: str = field(metadata={"cdp_name": "displayName"})
 
 
 """

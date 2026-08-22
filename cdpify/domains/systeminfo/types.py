@@ -4,61 +4,61 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, Literal
-
-from cdpify.shared.models import CDPModel
 
 
 @dataclass(kw_only=True, slots=True)
-class GPUDevice(CDPModel):
+class GPUDevice:
     """
     Describes a single graphics processor (GPU).
     """
 
-    vendor_id: float
-    device_id: float
-    sub_sys_id: float | None = None
-    revision: float | None = None
-    vendor_string: str
-    device_string: str
-    driver_vendor: str
-    driver_version: str
+    vendor_id: float = field(metadata={"cdp_name": "vendorId"})
+    device_id: float = field(metadata={"cdp_name": "deviceId"})
+    sub_sys_id: float | None = field(default=None, metadata={"cdp_name": "subSysId"})
+    revision: float | None = field(default=None, metadata={"cdp_name": "revision"})
+    vendor_string: str = field(metadata={"cdp_name": "vendorString"})
+    device_string: str = field(metadata={"cdp_name": "deviceString"})
+    driver_vendor: str = field(metadata={"cdp_name": "driverVendor"})
+    driver_version: str = field(metadata={"cdp_name": "driverVersion"})
 
 
 @dataclass(kw_only=True, slots=True)
-class Size(CDPModel):
+class Size:
     """
     Describes the width and height dimensions of an entity.
     """
 
-    width: int
-    height: int
+    width: int = field(metadata={"cdp_name": "width"})
+    height: int = field(metadata={"cdp_name": "height"})
 
 
 @dataclass(kw_only=True, slots=True)
-class VideoDecodeAcceleratorCapability(CDPModel):
+class VideoDecodeAcceleratorCapability:
     """
     Describes a supported video decoding profile with its associated minimum and
     maximum resolutions.
     """
 
-    profile: str
-    max_resolution: Size
-    min_resolution: Size
+    profile: str = field(metadata={"cdp_name": "profile"})
+    max_resolution: Size = field(metadata={"cdp_name": "maxResolution"})
+    min_resolution: Size = field(metadata={"cdp_name": "minResolution"})
 
 
 @dataclass(kw_only=True, slots=True)
-class VideoEncodeAcceleratorCapability(CDPModel):
+class VideoEncodeAcceleratorCapability:
     """
     Describes a supported video encoding profile with its associated maximum resolution
     and maximum framerate.
     """
 
-    profile: str
-    max_resolution: Size
-    max_framerate_numerator: int
-    max_framerate_denominator: int
+    profile: str = field(metadata={"cdp_name": "profile"})
+    max_resolution: Size = field(metadata={"cdp_name": "maxResolution"})
+    max_framerate_numerator: int = field(metadata={"cdp_name": "maxFramerateNumerator"})
+    max_framerate_denominator: int = field(
+        metadata={"cdp_name": "maxFramerateDenominator"}
+    )
 
 
 """
@@ -73,25 +73,35 @@ type ImageType = Literal["jpeg", "webp", "unknown"]
 
 
 @dataclass(kw_only=True, slots=True)
-class GPUInfo(CDPModel):
+class GPUInfo:
     """
     Provides information about the GPU(s) on the system.
     """
 
-    devices: list[GPUDevice]
-    aux_attributes: dict[str, Any] | None = None
-    feature_status: dict[str, Any] | None = None
-    driver_bug_workarounds: list[str]
-    video_decoding: list[VideoDecodeAcceleratorCapability]
-    video_encoding: list[VideoEncodeAcceleratorCapability]
+    devices: list[GPUDevice] = field(metadata={"cdp_name": "devices"})
+    aux_attributes: dict[str, Any] | None = field(
+        default=None, metadata={"cdp_name": "auxAttributes"}
+    )
+    feature_status: dict[str, Any] | None = field(
+        default=None, metadata={"cdp_name": "featureStatus"}
+    )
+    driver_bug_workarounds: list[str] = field(
+        metadata={"cdp_name": "driverBugWorkarounds"}
+    )
+    video_decoding: list[VideoDecodeAcceleratorCapability] = field(
+        metadata={"cdp_name": "videoDecoding"}
+    )
+    video_encoding: list[VideoEncodeAcceleratorCapability] = field(
+        metadata={"cdp_name": "videoEncoding"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ProcessInfo(CDPModel):
+class ProcessInfo:
     """
     Represents process info.
     """
 
-    type: str
-    id: int
-    cpu_time: float
+    type: str = field(metadata={"cdp_name": "type"})
+    id: int = field(metadata={"cdp_name": "id"})
+    cpu_time: float = field(metadata={"cdp_name": "cpuTime"})

@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPModel
 
 
 class DeviceOrientationCommand(StrEnum):
@@ -18,11 +16,11 @@ class DeviceOrientationCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class SetDeviceOrientationOverrideParams(CDPModel):
+class SetDeviceOrientationOverrideParams:
     """
     Overrides the Device Orientation.
     """
 
-    alpha: float
-    beta: float
-    gamma: float
+    alpha: float = field(metadata={"cdp_name": "alpha"})
+    beta: float = field(metadata={"cdp_name": "beta"})
+    gamma: float = field(metadata={"cdp_name": "gamma"})

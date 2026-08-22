@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+from cdpify.codec import decode_cdp, encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -41,10 +42,10 @@ class PWA:
 
         result = await self._command_sender.send_raw(
             method=PWACommand.GET_OS_APP_STATE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetOsAppStateResult.from_cdp(result)
+        return decode_cdp(GetOsAppStateResult, result)
 
     async def install(
         self,
@@ -75,7 +76,7 @@ class PWA:
 
         await self._command_sender.send_raw(
             method=PWACommand.INSTALL,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -92,7 +93,7 @@ class PWA:
 
         await self._command_sender.send_raw(
             method=PWACommand.UNINSTALL,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -112,10 +113,10 @@ class PWA:
 
         result = await self._command_sender.send_raw(
             method=PWACommand.LAUNCH,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return LaunchResult.from_cdp(result)
+        return decode_cdp(LaunchResult, result)
 
     async def launch_files_in_app(
         self,
@@ -140,10 +141,10 @@ class PWA:
 
         result = await self._command_sender.send_raw(
             method=PWACommand.LAUNCH_FILES_IN_APP,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return LaunchFilesInAppResult.from_cdp(result)
+        return decode_cdp(LaunchFilesInAppResult, result)
 
     async def open_current_page_in_app(
         self,
@@ -160,7 +161,7 @@ class PWA:
 
         await self._command_sender.send_raw(
             method=PWACommand.OPEN_CURRENT_PAGE_IN_APP,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -188,6 +189,6 @@ class PWA:
 
         await self._command_sender.send_raw(
             method=PWACommand.CHANGE_APP_USER_SETTINGS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )

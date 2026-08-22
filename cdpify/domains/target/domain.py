@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from cdpify.codec import decode_cdp, encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
 
@@ -68,7 +69,7 @@ class Target:
 
         await self._command_sender.send_raw(
             method=TargetCommand.ACTIVATE_TARGET,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -86,10 +87,10 @@ class Target:
 
         result = await self._command_sender.send_raw(
             method=TargetCommand.ATTACH_TO_TARGET,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return AttachToTargetResult.from_cdp(result)
+        return decode_cdp(AttachToTargetResult, result)
 
     async def attach_to_browser_target(
         self,
@@ -103,7 +104,7 @@ class Target:
             params=None,
             session_id=session_id,
         )
-        return AttachToBrowserTargetResult.from_cdp(result)
+        return decode_cdp(AttachToBrowserTargetResult, result)
 
     async def close_target(
         self,
@@ -118,10 +119,10 @@ class Target:
 
         result = await self._command_sender.send_raw(
             method=TargetCommand.CLOSE_TARGET,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return CloseTargetResult.from_cdp(result)
+        return decode_cdp(CloseTargetResult, result)
 
     async def expose_dev_tools_protocol(
         self,
@@ -147,7 +148,7 @@ class Target:
 
         await self._command_sender.send_raw(
             method=TargetCommand.EXPOSE_DEV_TOOLS_PROTOCOL,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -173,10 +174,10 @@ class Target:
 
         result = await self._command_sender.send_raw(
             method=TargetCommand.CREATE_BROWSER_CONTEXT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return CreateBrowserContextResult.from_cdp(result)
+        return decode_cdp(CreateBrowserContextResult, result)
 
     async def get_browser_contexts(
         self,
@@ -190,7 +191,7 @@ class Target:
             params=None,
             session_id=session_id,
         )
-        return GetBrowserContextsResult.from_cdp(result)
+        return decode_cdp(GetBrowserContextsResult, result)
 
     async def create_target(
         self,
@@ -231,10 +232,10 @@ class Target:
 
         result = await self._command_sender.send_raw(
             method=TargetCommand.CREATE_TARGET,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return CreateTargetResult.from_cdp(result)
+        return decode_cdp(CreateTargetResult, result)
 
     async def detach_from_target(
         self,
@@ -252,7 +253,7 @@ class Target:
 
         await self._command_sender.send_raw(
             method=TargetCommand.DETACH_FROM_TARGET,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -270,7 +271,7 @@ class Target:
 
         await self._command_sender.send_raw(
             method=TargetCommand.DISPOSE_BROWSER_CONTEXT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -287,10 +288,10 @@ class Target:
 
         result = await self._command_sender.send_raw(
             method=TargetCommand.GET_TARGET_INFO,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetTargetInfoResult.from_cdp(result)
+        return decode_cdp(GetTargetInfoResult, result)
 
     async def get_targets(
         self,
@@ -305,10 +306,10 @@ class Target:
 
         result = await self._command_sender.send_raw(
             method=TargetCommand.GET_TARGETS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetTargetsResult.from_cdp(result)
+        return decode_cdp(GetTargetsResult, result)
 
     @deprecated()
     async def send_message_to_target(
@@ -331,7 +332,7 @@ class Target:
 
         await self._command_sender.send_raw(
             method=TargetCommand.SEND_MESSAGE_TO_TARGET,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -362,7 +363,7 @@ class Target:
 
         await self._command_sender.send_raw(
             method=TargetCommand.SET_AUTO_ATTACH,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -390,7 +391,7 @@ class Target:
 
         await self._command_sender.send_raw(
             method=TargetCommand.AUTO_ATTACH_RELATED,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -409,7 +410,7 @@ class Target:
 
         await self._command_sender.send_raw(
             method=TargetCommand.SET_DISCOVER_TARGETS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -427,7 +428,7 @@ class Target:
 
         await self._command_sender.send_raw(
             method=TargetCommand.SET_REMOTE_LOCATIONS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -445,10 +446,10 @@ class Target:
 
         result = await self._command_sender.send_raw(
             method=TargetCommand.GET_DEV_TOOLS_TARGET,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetDevToolsTargetResult.from_cdp(result)
+        return decode_cdp(GetDevToolsTargetResult, result)
 
     async def open_dev_tools(
         self,
@@ -464,7 +465,7 @@ class Target:
 
         result = await self._command_sender.send_raw(
             method=TargetCommand.OPEN_DEV_TOOLS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return OpenDevToolsResult.from_cdp(result)
+        return decode_cdp(OpenDevToolsResult, result)

@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPEvent
 
 from .types import (
     ConsoleMessage,
@@ -19,9 +17,15 @@ class ConsoleEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class MessageAddedEvent(CDPEvent):
+class MessageAddedEvent:
     """
     Issued when new console message is added.
     """
 
-    message: ConsoleMessage
+    message: ConsoleMessage = field(metadata={"cdp_name": "message"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPEvent
 
 
 class HeapProfilerEvent(StrEnum):
@@ -19,22 +17,34 @@ class HeapProfilerEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class AddHeapSnapshotChunkEvent(CDPEvent):
-    chunk: str
+class AddHeapSnapshotChunkEvent:
+    chunk: str = field(metadata={"cdp_name": "chunk"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class HeapStatsUpdateEvent(CDPEvent):
+class HeapStatsUpdateEvent:
     """
     If heap objects tracking has been started then backend may send update for one or
     more fragments
     """
 
-    stats_update: list[int]
+    stats_update: list[int] = field(metadata={"cdp_name": "statsUpdate"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class LastSeenObjectIdEvent(CDPEvent):
+class LastSeenObjectIdEvent:
     """
     If heap objects tracking has been started then backend regularly sends a current
     value for last seen object id and corresponding timestamp. If the were changes in
@@ -42,17 +52,34 @@ class LastSeenObjectIdEvent(CDPEvent):
     before a new lastSeenObjectId event.
     """
 
-    last_seen_object_id: int
-    timestamp: float
+    last_seen_object_id: int = field(metadata={"cdp_name": "lastSeenObjectId"})
+    timestamp: float = field(metadata={"cdp_name": "timestamp"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ReportHeapSnapshotProgressEvent(CDPEvent):
-    done: int
-    total: int
-    finished: bool | None = None
+class ReportHeapSnapshotProgressEvent:
+    done: int = field(metadata={"cdp_name": "done"})
+    total: int = field(metadata={"cdp_name": "total"})
+    finished: bool | None = field(default=None, metadata={"cdp_name": "finished"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ResetProfilesEvent(CDPEvent):
-    pass
+class ResetProfilesEvent:
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

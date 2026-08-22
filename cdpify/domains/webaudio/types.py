@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Literal
-
-from cdpify.shared.models import CDPModel
 
 """
 An unique ID for a graph object (AudioContext, AudioNode, AudioParam) in Web Audio API
@@ -51,70 +49,80 @@ type AutomationRate = Literal["a-rate", "k-rate"]
 
 
 @dataclass(kw_only=True, slots=True)
-class ContextRealtimeData(CDPModel):
+class ContextRealtimeData:
     """
     Fields in AudioContext that change in real-time.
     """
 
-    current_time: float
-    render_capacity: float
-    callback_interval_mean: float
-    callback_interval_variance: float
+    current_time: float = field(metadata={"cdp_name": "currentTime"})
+    render_capacity: float = field(metadata={"cdp_name": "renderCapacity"})
+    callback_interval_mean: float = field(metadata={"cdp_name": "callbackIntervalMean"})
+    callback_interval_variance: float = field(
+        metadata={"cdp_name": "callbackIntervalVariance"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class BaseAudioContext(CDPModel):
+class BaseAudioContext:
     """
     Protocol object for BaseAudioContext
     """
 
-    context_id: GraphObjectId
-    context_type: ContextType
-    context_state: ContextState
-    realtime_data: ContextRealtimeData | None = None
-    callback_buffer_size: float
-    max_output_channel_count: float
-    sample_rate: float
-    render_quantum_size: float
+    context_id: GraphObjectId = field(metadata={"cdp_name": "contextId"})
+    context_type: ContextType = field(metadata={"cdp_name": "contextType"})
+    context_state: ContextState = field(metadata={"cdp_name": "contextState"})
+    realtime_data: ContextRealtimeData | None = field(
+        default=None, metadata={"cdp_name": "realtimeData"}
+    )
+    callback_buffer_size: float = field(metadata={"cdp_name": "callbackBufferSize"})
+    max_output_channel_count: float = field(
+        metadata={"cdp_name": "maxOutputChannelCount"}
+    )
+    sample_rate: float = field(metadata={"cdp_name": "sampleRate"})
+    render_quantum_size: float = field(metadata={"cdp_name": "renderQuantumSize"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AudioListener(CDPModel):
+class AudioListener:
     """
     Protocol object for AudioListener
     """
 
-    listener_id: GraphObjectId
-    context_id: GraphObjectId
+    listener_id: GraphObjectId = field(metadata={"cdp_name": "listenerId"})
+    context_id: GraphObjectId = field(metadata={"cdp_name": "contextId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AudioNode(CDPModel):
+class AudioNode:
     """
     Protocol object for AudioNode
     """
 
-    node_id: GraphObjectId
-    context_id: GraphObjectId
-    node_type: NodeType
-    number_of_inputs: float
-    number_of_outputs: float
-    channel_count: float
-    channel_count_mode: ChannelCountMode
-    channel_interpretation: ChannelInterpretation
+    node_id: GraphObjectId = field(metadata={"cdp_name": "nodeId"})
+    context_id: GraphObjectId = field(metadata={"cdp_name": "contextId"})
+    node_type: NodeType = field(metadata={"cdp_name": "nodeType"})
+    number_of_inputs: float = field(metadata={"cdp_name": "numberOfInputs"})
+    number_of_outputs: float = field(metadata={"cdp_name": "numberOfOutputs"})
+    channel_count: float = field(metadata={"cdp_name": "channelCount"})
+    channel_count_mode: ChannelCountMode = field(
+        metadata={"cdp_name": "channelCountMode"}
+    )
+    channel_interpretation: ChannelInterpretation = field(
+        metadata={"cdp_name": "channelInterpretation"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class AudioParam(CDPModel):
+class AudioParam:
     """
     Protocol object for AudioParam
     """
 
-    param_id: GraphObjectId
-    node_id: GraphObjectId
-    context_id: GraphObjectId
-    param_type: ParamType
-    rate: AutomationRate
-    default_value: float
-    min_value: float
-    max_value: float
+    param_id: GraphObjectId = field(metadata={"cdp_name": "paramId"})
+    node_id: GraphObjectId = field(metadata={"cdp_name": "nodeId"})
+    context_id: GraphObjectId = field(metadata={"cdp_name": "contextId"})
+    param_type: ParamType = field(metadata={"cdp_name": "paramType"})
+    rate: AutomationRate = field(metadata={"cdp_name": "rate"})
+    default_value: float = field(metadata={"cdp_name": "defaultValue"})
+    min_value: float = field(metadata={"cdp_name": "minValue"})
+    max_value: float = field(metadata={"cdp_name": "maxValue"})

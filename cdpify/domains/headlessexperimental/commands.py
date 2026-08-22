@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPModel
 
 from .types import (
     ScreenshotParams,
@@ -21,7 +19,7 @@ class HeadlessExperimentalCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class BeginFrameParams(CDPModel):
+class BeginFrameParams:
     """
     Sends a BeginFrame to the target and returns when the frame was completed.
     Optionally captures a screenshot from the resulting frame. Requires that the target
@@ -30,13 +28,21 @@ class BeginFrameParams(CDPModel):
     https://goo.gle/chrome-headless-rendering for more background.
     """
 
-    frame_time_ticks: float | None = None
-    interval: float | None = None
-    no_display_updates: bool | None = None
-    screenshot: ScreenshotParams | None = None
+    frame_time_ticks: float | None = field(
+        default=None, metadata={"cdp_name": "frameTimeTicks"}
+    )
+    interval: float | None = field(default=None, metadata={"cdp_name": "interval"})
+    no_display_updates: bool | None = field(
+        default=None, metadata={"cdp_name": "noDisplayUpdates"}
+    )
+    screenshot: ScreenshotParams | None = field(
+        default=None, metadata={"cdp_name": "screenshot"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class BeginFrameResult(CDPModel):
-    has_damage: bool
-    screenshot_data: str | None = None
+class BeginFrameResult:
+    has_damage: bool = field(metadata={"cdp_name": "hasDamage"})
+    screenshot_data: str | None = field(
+        default=None, metadata={"cdp_name": "screenshotData"}
+    )

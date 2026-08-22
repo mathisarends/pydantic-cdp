@@ -1,6 +1,6 @@
 import asyncio
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from unittest.mock import AsyncMock
 
 import pytest
@@ -12,7 +12,6 @@ from cdpify.exceptions import (
     CDPConnectionException,
     CDPTimeoutException,
 )
-from cdpify.shared.models import CDPEvent
 
 
 class _FakeWebSocket:
@@ -28,8 +27,12 @@ class _FakeWebSocket:
 
 
 @dataclass
-class _EventModel(CDPEvent):
-    value: int
+class _EventModel:
+    value: int = field(metadata={"cdp_name": "value"})
+    cdp_session_id: str | None = field(
+        default=None,
+        metadata={"cdp": False},
+    )
 
 
 def test_domain_clients_are_cached() -> None:

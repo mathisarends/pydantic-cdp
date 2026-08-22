@@ -4,14 +4,12 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Literal
-
-from cdpify.shared.models import CDPModel
 
 
 @dataclass(kw_only=True, slots=True)
-class ConsoleMessage(CDPModel):
+class ConsoleMessage:
     """
     Console message.
     """
@@ -28,9 +26,13 @@ class ConsoleMessage(CDPModel):
         "other",
         "deprecation",
         "worker",
-    ]
-    level: Literal["log", "warning", "error", "debug", "info"]
-    text: str
-    url: str | None = None
-    line: int | None = None
-    column: int | None = None
+    ] = field(  # noqa: E501
+        metadata={"cdp_name": "source"},
+    )
+    level: Literal["log", "warning", "error", "debug", "info"] = field(
+        metadata={"cdp_name": "level"}
+    )
+    text: str = field(metadata={"cdp_name": "text"})
+    url: str | None = field(default=None, metadata={"cdp_name": "url"})
+    line: int | None = field(default=None, metadata={"cdp_name": "line"})
+    column: int | None = field(default=None, metadata={"cdp_name": "column"})

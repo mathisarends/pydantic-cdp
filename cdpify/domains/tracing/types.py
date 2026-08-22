@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, Literal
-
-from cdpify.shared.models import CDPModel
 
 """
 Configuration for memory dump. Used only when "memory-infra" category is enabled.
@@ -16,7 +14,7 @@ MemoryDumpConfig = dict[str, Any]
 
 
 @dataclass(kw_only=True, slots=True)
-class TraceConfig(CDPModel):
+class TraceConfig:
     record_mode: (
         Literal[
             "recordUntilFull",
@@ -25,15 +23,34 @@ class TraceConfig(CDPModel):
             "echoToConsole",
         ]
         | None
-    ) = None
-    trace_buffer_size_in_kb: float | None = None
-    enable_sampling: bool | None = None
-    enable_systrace: bool | None = None
-    enable_argument_filter: bool | None = None
-    included_categories: list[str] | None = None
-    excluded_categories: list[str] | None = None
-    synthetic_delays: list[str] | None = None
-    memory_dump_config: MemoryDumpConfig | None = None
+    ) = field(  # noqa: E501
+        default=None,
+        metadata={"cdp_name": "recordMode"},
+    )
+    trace_buffer_size_in_kb: float | None = field(
+        default=None, metadata={"cdp_name": "traceBufferSizeInKb"}
+    )
+    enable_sampling: bool | None = field(
+        default=None, metadata={"cdp_name": "enableSampling"}
+    )
+    enable_systrace: bool | None = field(
+        default=None, metadata={"cdp_name": "enableSystrace"}
+    )
+    enable_argument_filter: bool | None = field(
+        default=None, metadata={"cdp_name": "enableArgumentFilter"}
+    )
+    included_categories: list[str] | None = field(
+        default=None, metadata={"cdp_name": "includedCategories"}
+    )
+    excluded_categories: list[str] | None = field(
+        default=None, metadata={"cdp_name": "excludedCategories"}
+    )
+    synthetic_delays: list[str] | None = field(
+        default=None, metadata={"cdp_name": "syntheticDelays"}
+    )
+    memory_dump_config: MemoryDumpConfig | None = field(
+        default=None, metadata={"cdp_name": "memoryDumpConfig"}
+    )
 
 
 """

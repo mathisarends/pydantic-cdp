@@ -4,11 +4,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 
 from cdpify.domains import debugger
-from cdpify.shared.models import CDPEvent
 
 from .types import (
     Profile,
@@ -23,26 +22,38 @@ class ProfilerEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class ConsoleProfileFinishedEvent(CDPEvent):
-    id: str
-    location: debugger.Location
-    profile: Profile
-    title: str | None = None
+class ConsoleProfileFinishedEvent:
+    id: str = field(metadata={"cdp_name": "id"})
+    location: debugger.Location = field(metadata={"cdp_name": "location"})
+    profile: Profile = field(metadata={"cdp_name": "profile"})
+    title: str | None = field(default=None, metadata={"cdp_name": "title"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ConsoleProfileStartedEvent(CDPEvent):
+class ConsoleProfileStartedEvent:
     """
     Sent when new profile recording is started using console.profile() call.
     """
 
-    id: str
-    location: debugger.Location
-    title: str | None = None
+    id: str = field(metadata={"cdp_name": "id"})
+    location: debugger.Location = field(metadata={"cdp_name": "location"})
+    title: str | None = field(default=None, metadata={"cdp_name": "title"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class PreciseCoverageDeltaUpdateEvent(CDPEvent):
+class PreciseCoverageDeltaUpdateEvent:
     """
     Reports coverage delta since the last poll (either from an event like this, or from
     `takePreciseCoverage` for the current isolate. May only be sent if precise code
@@ -50,6 +61,12 @@ class PreciseCoverageDeltaUpdateEvent(CDPEvent):
     example, trigger collection of coverage data immediately at a certain point in time.
     """
 
-    timestamp: float
-    occasion: str
-    result: list[ScriptCoverage]
+    timestamp: float = field(metadata={"cdp_name": "timestamp"})
+    occasion: str = field(metadata={"cdp_name": "occasion"})
+    result: list[ScriptCoverage] = field(metadata={"cdp_name": "result"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

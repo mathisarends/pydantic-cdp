@@ -4,11 +4,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 
 from cdpify.domains import dom, network
-from cdpify.shared.models import CDPEvent
 
 from .types import (
     BackendNode,
@@ -41,190 +40,310 @@ class DOMEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class AttributeModifiedEvent(CDPEvent):
+class AttributeModifiedEvent:
     """
     Fired when `Element`'s attribute is modified.
     """
 
-    node_id: NodeId
-    name: str
-    value: str
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
+    name: str = field(metadata={"cdp_name": "name"})
+    value: str = field(metadata={"cdp_name": "value"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class AdoptedStyleSheetsModifiedEvent(CDPEvent):
+class AdoptedStyleSheetsModifiedEvent:
     """
     Fired when `Element`'s adoptedStyleSheets are modified.
     """
 
-    node_id: NodeId
-    adopted_style_sheets: list[StyleSheetId]
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
+    adopted_style_sheets: list[StyleSheetId] = field(
+        metadata={"cdp_name": "adoptedStyleSheets"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class AttributeRemovedEvent(CDPEvent):
+class AttributeRemovedEvent:
     """
     Fired when `Element`'s attribute is removed.
     """
 
-    node_id: NodeId
-    name: str
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
+    name: str = field(metadata={"cdp_name": "name"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class CharacterDataModifiedEvent(CDPEvent):
+class CharacterDataModifiedEvent:
     """
     Mirrors `DOMCharacterDataModified` event.
     """
 
-    node_id: NodeId
-    character_data: str
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
+    character_data: str = field(metadata={"cdp_name": "characterData"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ChildNodeCountUpdatedEvent(CDPEvent):
+class ChildNodeCountUpdatedEvent:
     """
     Fired when `Container`'s child node count has changed.
     """
 
-    node_id: NodeId
-    child_node_count: int
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
+    child_node_count: int = field(metadata={"cdp_name": "childNodeCount"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ChildNodeInsertedEvent(CDPEvent):
+class ChildNodeInsertedEvent:
     """
     Mirrors `DOMNodeInserted` event.
     """
 
-    parent_node_id: NodeId
-    previous_node_id: NodeId
-    node: Node
+    parent_node_id: NodeId = field(metadata={"cdp_name": "parentNodeId"})
+    previous_node_id: NodeId = field(metadata={"cdp_name": "previousNodeId"})
+    node: Node = field(metadata={"cdp_name": "node"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ChildNodeRemovedEvent(CDPEvent):
+class ChildNodeRemovedEvent:
     """
     Mirrors `DOMNodeRemoved` event.
     """
 
-    parent_node_id: NodeId
-    node_id: NodeId
+    parent_node_id: NodeId = field(metadata={"cdp_name": "parentNodeId"})
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DistributedNodesUpdatedEvent(CDPEvent):
+class DistributedNodesUpdatedEvent:
     """
     Called when distribution is changed.
     """
 
-    insertion_point_id: NodeId
-    distributed_nodes: list[BackendNode]
+    insertion_point_id: NodeId = field(metadata={"cdp_name": "insertionPointId"})
+    distributed_nodes: list[BackendNode] = field(
+        metadata={"cdp_name": "distributedNodes"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DocumentUpdatedEvent(CDPEvent):
+class DocumentUpdatedEvent:
     """
     Fired when `Document` has been totally updated. Node ids are no longer valid.
     """
 
-    pass
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class InlineStyleInvalidatedEvent(CDPEvent):
+class InlineStyleInvalidatedEvent:
     """
     Fired when `Element`'s inline style is modified via a CSS property modification.
     """
 
-    node_ids: list[NodeId]
+    node_ids: list[NodeId] = field(metadata={"cdp_name": "nodeIds"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class PseudoElementAddedEvent(CDPEvent):
+class PseudoElementAddedEvent:
     """
     Called when a pseudo element is added to an element.
     """
 
-    parent_id: NodeId
-    pseudo_element: Node
+    parent_id: NodeId = field(metadata={"cdp_name": "parentId"})
+    pseudo_element: Node = field(metadata={"cdp_name": "pseudoElement"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class TopLayerElementsUpdatedEvent(CDPEvent):
+class TopLayerElementsUpdatedEvent:
     """
     Called when top layer elements are changed.
     """
 
-    pass
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ScrollableFlagUpdatedEvent(CDPEvent):
+class ScrollableFlagUpdatedEvent:
     """
     Fired when a node's scrollability state changes.
     """
 
-    node_id: dom.NodeId
-    is_scrollable: bool
+    node_id: dom.NodeId = field(metadata={"cdp_name": "nodeId"})
+    is_scrollable: bool = field(metadata={"cdp_name": "isScrollable"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class AdRelatedStateUpdatedEvent(CDPEvent):
+class AdRelatedStateUpdatedEvent:
     """
     Fired when a node's ad related state changes.
     """
 
-    node_id: dom.NodeId
-    ad_provenance: network.AdProvenance | None = None
+    node_id: dom.NodeId = field(metadata={"cdp_name": "nodeId"})
+    ad_provenance: network.AdProvenance | None = field(
+        default=None, metadata={"cdp_name": "adProvenance"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class AffectedByStartingStylesFlagUpdatedEvent(CDPEvent):
+class AffectedByStartingStylesFlagUpdatedEvent:
     """
     Fired when a node's starting styles changes.
     """
 
-    node_id: dom.NodeId
-    affected_by_starting_styles: bool
+    node_id: dom.NodeId = field(metadata={"cdp_name": "nodeId"})
+    affected_by_starting_styles: bool = field(
+        metadata={"cdp_name": "affectedByStartingStyles"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class PseudoElementRemovedEvent(CDPEvent):
+class PseudoElementRemovedEvent:
     """
     Called when a pseudo element is removed from an element.
     """
 
-    parent_id: NodeId
-    pseudo_element_id: NodeId
+    parent_id: NodeId = field(metadata={"cdp_name": "parentId"})
+    pseudo_element_id: NodeId = field(metadata={"cdp_name": "pseudoElementId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetChildNodesEvent(CDPEvent):
+class SetChildNodesEvent:
     """
     Fired when backend wants to provide client with the missing DOM structure. This
     happens upon most of the calls requesting node ids.
     """
 
-    parent_id: NodeId
-    nodes: list[Node]
+    parent_id: NodeId = field(metadata={"cdp_name": "parentId"})
+    nodes: list[Node] = field(metadata={"cdp_name": "nodes"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ShadowRootPoppedEvent(CDPEvent):
+class ShadowRootPoppedEvent:
     """
     Called when shadow root is popped from the element.
     """
 
-    host_id: NodeId
-    root_id: NodeId
+    host_id: NodeId = field(metadata={"cdp_name": "hostId"})
+    root_id: NodeId = field(metadata={"cdp_name": "rootId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ShadowRootPushedEvent(CDPEvent):
+class ShadowRootPushedEvent:
     """
     Called when shadow root is pushed into the element.
     """
 
-    host_id: NodeId
-    root: Node
+    host_id: NodeId = field(metadata={"cdp_name": "hostId"})
+    root: Node = field(metadata={"cdp_name": "root"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

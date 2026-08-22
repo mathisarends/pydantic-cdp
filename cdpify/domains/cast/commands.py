@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPModel
 
 
 class CastCommand(StrEnum):
@@ -20,7 +18,7 @@ class CastCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class EnableParams(CDPModel):
+class EnableParams:
     """
     Starts observing for sinks that can be used for tab mirroring, and if set, sinks
     compatible with |presentationUrl| as well. When sinks are found, a |sinksUpdated|
@@ -28,41 +26,43 @@ class EnableParams(CDPModel):
     removed, an |issueUpdated| event is fired.
     """
 
-    presentation_url: str | None = None
+    presentation_url: str | None = field(
+        default=None, metadata={"cdp_name": "presentationUrl"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetSinkToUseParams(CDPModel):
+class SetSinkToUseParams:
     """
     Sets a sink to be used when the web page requests the browser to choose a sink via
     Presentation API, Remote Playback API, or Cast SDK.
     """
 
-    sink_name: str
+    sink_name: str = field(metadata={"cdp_name": "sinkName"})
 
 
 @dataclass(kw_only=True, slots=True)
-class StartDesktopMirroringParams(CDPModel):
+class StartDesktopMirroringParams:
     """
     Starts mirroring the desktop to the sink.
     """
 
-    sink_name: str
+    sink_name: str = field(metadata={"cdp_name": "sinkName"})
 
 
 @dataclass(kw_only=True, slots=True)
-class StartTabMirroringParams(CDPModel):
+class StartTabMirroringParams:
     """
     Starts mirroring the tab to the sink.
     """
 
-    sink_name: str
+    sink_name: str = field(metadata={"cdp_name": "sinkName"})
 
 
 @dataclass(kw_only=True, slots=True)
-class StopCastingParams(CDPModel):
+class StopCastingParams:
     """
     Stops the active Cast session on the sink.
     """
 
-    sink_name: str
+    sink_name: str = field(metadata={"cdp_name": "sinkName"})

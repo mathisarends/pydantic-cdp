@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+from cdpify.codec import decode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -28,4 +29,4 @@ class CrashReportContext:
             params=None,
             session_id=session_id,
         )
-        return GetEntriesResult.from_cdp(result)
+        return decode_cdp(GetEntriesResult, result)

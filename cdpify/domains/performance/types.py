@@ -4,16 +4,14 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-
-from cdpify.shared.models import CDPModel
+from dataclasses import dataclass, field
 
 
 @dataclass(kw_only=True, slots=True)
-class Metric(CDPModel):
+class Metric:
     """
     Run-time execution metric.
     """
 
-    name: str
-    value: float
+    name: str = field(metadata={"cdp_name": "name"})
+    value: float = field(metadata={"cdp_name": "value"})

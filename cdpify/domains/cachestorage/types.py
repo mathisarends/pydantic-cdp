@@ -4,11 +4,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Literal
 
 from cdpify.domains import storage
-from cdpify.shared.models import CDPModel
 
 """
 Unique identifier of the Cache object.
@@ -24,44 +23,46 @@ type CachedResponseType = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class DataEntry(CDPModel):
+class DataEntry:
     """
     Data entry.
     """
 
-    request_url: str
-    request_method: str
-    request_headers: list[Header]
-    response_time: float
-    response_status: int
-    response_status_text: str
-    response_type: CachedResponseType
-    response_headers: list[Header]
+    request_url: str = field(metadata={"cdp_name": "requestURL"})
+    request_method: str = field(metadata={"cdp_name": "requestMethod"})
+    request_headers: list[Header] = field(metadata={"cdp_name": "requestHeaders"})
+    response_time: float = field(metadata={"cdp_name": "responseTime"})
+    response_status: int = field(metadata={"cdp_name": "responseStatus"})
+    response_status_text: str = field(metadata={"cdp_name": "responseStatusText"})
+    response_type: CachedResponseType = field(metadata={"cdp_name": "responseType"})
+    response_headers: list[Header] = field(metadata={"cdp_name": "responseHeaders"})
 
 
 @dataclass(kw_only=True, slots=True)
-class Cache(CDPModel):
+class Cache:
     """
     Cache identifier.
     """
 
-    cache_id: CacheId
-    security_origin: str
-    storage_key: str
-    storage_bucket: storage.StorageBucket | None = None
-    cache_name: str
+    cache_id: CacheId = field(metadata={"cdp_name": "cacheId"})
+    security_origin: str = field(metadata={"cdp_name": "securityOrigin"})
+    storage_key: str = field(metadata={"cdp_name": "storageKey"})
+    storage_bucket: storage.StorageBucket | None = field(
+        default=None, metadata={"cdp_name": "storageBucket"}
+    )
+    cache_name: str = field(metadata={"cdp_name": "cacheName"})
 
 
 @dataclass(kw_only=True, slots=True)
-class Header(CDPModel):
-    name: str
-    value: str
+class Header:
+    name: str = field(metadata={"cdp_name": "name"})
+    value: str = field(metadata={"cdp_name": "value"})
 
 
 @dataclass(kw_only=True, slots=True)
-class CachedResponse(CDPModel):
+class CachedResponse:
     """
     Cached response
     """
 
-    body: str
+    body: str = field(metadata={"cdp_name": "body"})

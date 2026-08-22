@@ -4,11 +4,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Literal
 
 from cdpify.domains import network
-from cdpify.shared.models import CDPModel
 
 SerializedStorageKey = str
 
@@ -31,51 +30,51 @@ type StorageType = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class UsageForType(CDPModel):
+class UsageForType:
     """
     Usage for a storage type.
     """
 
-    storage_type: StorageType
-    usage: float
+    storage_type: StorageType = field(metadata={"cdp_name": "storageType"})
+    usage: float = field(metadata={"cdp_name": "usage"})
 
 
 @dataclass(kw_only=True, slots=True)
-class TrustTokens(CDPModel):
+class TrustTokens:
     """
     Pair of issuer origin and number of available (signed, but not used) Trust Tokens
     from that issuer.
     """
 
-    issuer_origin: str
-    count: float
+    issuer_origin: str = field(metadata={"cdp_name": "issuerOrigin"})
+    count: float = field(metadata={"cdp_name": "count"})
 
 
 type StorageBucketsDurability = Literal["relaxed", "strict"]
 
 
 @dataclass(kw_only=True, slots=True)
-class StorageBucket(CDPModel):
-    storage_key: SerializedStorageKey
-    name: str | None = None
+class StorageBucket:
+    storage_key: SerializedStorageKey = field(metadata={"cdp_name": "storageKey"})
+    name: str | None = field(default=None, metadata={"cdp_name": "name"})
 
 
 @dataclass(kw_only=True, slots=True)
-class StorageBucketInfo(CDPModel):
-    bucket: StorageBucket
-    id: str
-    expiration: network.TimeSinceEpoch
-    quota: float
-    persistent: bool
-    durability: StorageBucketsDurability
+class StorageBucketInfo:
+    bucket: StorageBucket = field(metadata={"cdp_name": "bucket"})
+    id: str = field(metadata={"cdp_name": "id"})
+    expiration: network.TimeSinceEpoch = field(metadata={"cdp_name": "expiration"})
+    quota: float = field(metadata={"cdp_name": "quota"})
+    persistent: bool = field(metadata={"cdp_name": "persistent"})
+    durability: StorageBucketsDurability = field(metadata={"cdp_name": "durability"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RelatedWebsiteSet(CDPModel):
+class RelatedWebsiteSet:
     """
     A single Related Website Set object.
     """
 
-    primary_sites: list[str]
-    associated_sites: list[str]
-    service_sites: list[str]
+    primary_sites: list[str] = field(metadata={"cdp_name": "primarySites"})
+    associated_sites: list[str] = field(metadata={"cdp_name": "associatedSites"})
+    service_sites: list[str] = field(metadata={"cdp_name": "serviceSites"})

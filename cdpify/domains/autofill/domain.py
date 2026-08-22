@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from cdpify.codec import encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -45,7 +46,7 @@ class Autofill:
 
         await self._command_sender.send_raw(
             method=AutofillCommand.TRIGGER,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -62,7 +63,7 @@ class Autofill:
 
         await self._command_sender.send_raw(
             method=AutofillCommand.SET_ADDRESSES,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 

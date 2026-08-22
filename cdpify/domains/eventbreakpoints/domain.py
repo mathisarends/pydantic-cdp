@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+from cdpify.codec import encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -30,7 +31,7 @@ class EventBreakpoints:
 
         await self._command_sender.send_raw(
             method=EventBreakpointsCommand.SET_INSTRUMENTATION_BREAKPOINT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -47,7 +48,7 @@ class EventBreakpoints:
 
         await self._command_sender.send_raw(
             method=EventBreakpointsCommand.REMOVE_INSTRUMENTATION_BREAKPOINT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 

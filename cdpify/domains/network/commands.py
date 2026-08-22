@@ -4,11 +4,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 
 from cdpify.domains import debugger, emulation, page
-from cdpify.shared.models import CDPModel
 
 from .types import (
     BlockPattern,
@@ -69,54 +68,62 @@ class NetworkCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class CanClearBrowserCacheResult(CDPModel):
-    result: bool
+class CanClearBrowserCacheResult:
+    result: bool = field(metadata={"cdp_name": "result"})
 
 
 @dataclass(kw_only=True, slots=True)
-class CanClearBrowserCookiesResult(CDPModel):
-    result: bool
+class CanClearBrowserCookiesResult:
+    result: bool = field(metadata={"cdp_name": "result"})
 
 
 @dataclass(kw_only=True, slots=True)
-class CanEmulateNetworkConditionsResult(CDPModel):
-    result: bool
+class CanEmulateNetworkConditionsResult:
+    result: bool = field(metadata={"cdp_name": "result"})
 
 
 @dataclass(kw_only=True, slots=True)
-class DeleteCookiesParams(CDPModel):
+class DeleteCookiesParams:
     """
     Deletes browser cookies with matching name and url or domain/path/partitionKey
     pair.
     """
 
-    name: str
-    url: str | None = None
-    domain: str | None = None
-    path: str | None = None
-    partition_key: CookiePartitionKey | None = None
+    name: str = field(metadata={"cdp_name": "name"})
+    url: str | None = field(default=None, metadata={"cdp_name": "url"})
+    domain: str | None = field(default=None, metadata={"cdp_name": "domain"})
+    path: str | None = field(default=None, metadata={"cdp_name": "path"})
+    partition_key: CookiePartitionKey | None = field(
+        default=None, metadata={"cdp_name": "partitionKey"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class EmulateNetworkConditionsParams(CDPModel):
+class EmulateNetworkConditionsParams:
     """
     Activates emulation of network conditions. This command is deprecated in favor of
     the emulateNetworkConditionsByRule and overrideNetworkState commands, which can be
     used together to the same effect.
     """
 
-    offline: bool
-    latency: float
-    download_throughput: float
-    upload_throughput: float
-    connection_type: ConnectionType | None = None
-    packet_loss: float | None = None
-    packet_queue_length: int | None = None
-    packet_reordering: bool | None = None
+    offline: bool = field(metadata={"cdp_name": "offline"})
+    latency: float = field(metadata={"cdp_name": "latency"})
+    download_throughput: float = field(metadata={"cdp_name": "downloadThroughput"})
+    upload_throughput: float = field(metadata={"cdp_name": "uploadThroughput"})
+    connection_type: ConnectionType | None = field(
+        default=None, metadata={"cdp_name": "connectionType"}
+    )
+    packet_loss: float | None = field(default=None, metadata={"cdp_name": "packetLoss"})
+    packet_queue_length: int | None = field(
+        default=None, metadata={"cdp_name": "packetQueueLength"}
+    )
+    packet_reordering: bool | None = field(
+        default=None, metadata={"cdp_name": "packetReordering"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class EmulateNetworkConditionsByRuleParams(CDPModel):
+class EmulateNetworkConditionsByRuleParams:
     """
     Activates emulation of network conditions for individual requests using URL match
     patterns. Unlike the deprecated Network.emulateNetworkConditions this method does
@@ -124,335 +131,379 @@ class EmulateNetworkConditionsByRuleParams(CDPModel):
     `navigator` behavior.
     """
 
-    offline: bool | None = None
-    emulate_offline_service_worker: bool | None = None
-    matched_network_conditions: list[NetworkConditions]
+    offline: bool | None = field(default=None, metadata={"cdp_name": "offline"})
+    emulate_offline_service_worker: bool | None = field(
+        default=None, metadata={"cdp_name": "emulateOfflineServiceWorker"}
+    )
+    matched_network_conditions: list[NetworkConditions] = field(
+        metadata={"cdp_name": "matchedNetworkConditions"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class EmulateNetworkConditionsByRuleResult(CDPModel):
-    rule_ids: list[str]
+class EmulateNetworkConditionsByRuleResult:
+    rule_ids: list[str] = field(metadata={"cdp_name": "ruleIds"})
 
 
 @dataclass(kw_only=True, slots=True)
-class OverrideNetworkStateParams(CDPModel):
+class OverrideNetworkStateParams:
     """
     Override the state of navigator.onLine and navigator.connection.
     """
 
-    offline: bool
-    latency: float
-    download_throughput: float
-    upload_throughput: float
-    connection_type: ConnectionType | None = None
+    offline: bool = field(metadata={"cdp_name": "offline"})
+    latency: float = field(metadata={"cdp_name": "latency"})
+    download_throughput: float = field(metadata={"cdp_name": "downloadThroughput"})
+    upload_throughput: float = field(metadata={"cdp_name": "uploadThroughput"})
+    connection_type: ConnectionType | None = field(
+        default=None, metadata={"cdp_name": "connectionType"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class EnableParams(CDPModel):
+class EnableParams:
     """
     Enables network tracking, network events will now be delivered to the client.
     """
 
-    max_total_buffer_size: int | None = None
-    max_resource_buffer_size: int | None = None
-    max_post_data_size: int | None = None
-    report_direct_socket_traffic: bool | None = None
-    enable_durable_messages: bool | None = None
+    max_total_buffer_size: int | None = field(
+        default=None, metadata={"cdp_name": "maxTotalBufferSize"}
+    )
+    max_resource_buffer_size: int | None = field(
+        default=None, metadata={"cdp_name": "maxResourceBufferSize"}
+    )
+    max_post_data_size: int | None = field(
+        default=None, metadata={"cdp_name": "maxPostDataSize"}
+    )
+    report_direct_socket_traffic: bool | None = field(
+        default=None, metadata={"cdp_name": "reportDirectSocketTraffic"}
+    )
+    enable_durable_messages: bool | None = field(
+        default=None, metadata={"cdp_name": "enableDurableMessages"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ConfigureDurableMessagesParams(CDPModel):
+class ConfigureDurableMessagesParams:
     """
     Configures storing response bodies outside of renderer, so that these survive a
     cross-process navigation. If maxTotalBufferSize is not set, durable messages are
     disabled.
     """
 
-    max_total_buffer_size: int | None = None
-    max_resource_buffer_size: int | None = None
+    max_total_buffer_size: int | None = field(
+        default=None, metadata={"cdp_name": "maxTotalBufferSize"}
+    )
+    max_resource_buffer_size: int | None = field(
+        default=None, metadata={"cdp_name": "maxResourceBufferSize"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetAllCookiesResult(CDPModel):
-    cookies: list[Cookie]
+class GetAllCookiesResult:
+    cookies: list[Cookie] = field(metadata={"cdp_name": "cookies"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetCertificateParams(CDPModel):
+class GetCertificateParams:
     """
     Returns the DER-encoded certificate.
     """
 
-    origin: str
+    origin: str = field(metadata={"cdp_name": "origin"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetCertificateResult(CDPModel):
-    table_names: list[str]
+class GetCertificateResult:
+    table_names: list[str] = field(metadata={"cdp_name": "tableNames"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetCookiesParams(CDPModel):
+class GetCookiesParams:
     """
     Returns all browser cookies for the current URL. Depending on the backend support,
     will return detailed cookie information in the `cookies` field.
     """
 
-    urls: list[str] | None = None
+    urls: list[str] | None = field(default=None, metadata={"cdp_name": "urls"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetCookiesResult(CDPModel):
-    cookies: list[Cookie]
+class GetCookiesResult:
+    cookies: list[Cookie] = field(metadata={"cdp_name": "cookies"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetResponseBodyParams(CDPModel):
+class GetResponseBodyParams:
     """
     Returns content served for the given request.
     """
 
-    request_id: RequestId
+    request_id: RequestId = field(metadata={"cdp_name": "requestId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetResponseBodyResult(CDPModel):
-    body: str
-    base64_encoded: bool
+class GetResponseBodyResult:
+    body: str = field(metadata={"cdp_name": "body"})
+    base64_encoded: bool = field(metadata={"cdp_name": "base64Encoded"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetRequestPostDataParams(CDPModel):
+class GetRequestPostDataParams:
     """
     Returns post data sent with the request. Returns an error when no data was sent
     with the request.
     """
 
-    request_id: RequestId
+    request_id: RequestId = field(metadata={"cdp_name": "requestId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetRequestPostDataResult(CDPModel):
-    post_data: str
-    base64_encoded: bool
+class GetRequestPostDataResult:
+    post_data: str = field(metadata={"cdp_name": "postData"})
+    base64_encoded: bool = field(metadata={"cdp_name": "base64Encoded"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ReplayXHRParams(CDPModel):
+class ReplayXHRParams:
     """
     This method sends a new XMLHttpRequest which is identical to the original one. The
     following parameters should be identical: method, url, async, request body, extra
     headers, withCredentials attribute, user, password.
     """
 
-    request_id: RequestId
+    request_id: RequestId = field(metadata={"cdp_name": "requestId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SearchInResponseBodyParams(CDPModel):
+class SearchInResponseBodyParams:
     """
     Searches for given string in response content.
     """
 
-    request_id: RequestId
-    query: str
-    case_sensitive: bool | None = None
-    is_regex: bool | None = None
+    request_id: RequestId = field(metadata={"cdp_name": "requestId"})
+    query: str = field(metadata={"cdp_name": "query"})
+    case_sensitive: bool | None = field(
+        default=None, metadata={"cdp_name": "caseSensitive"}
+    )
+    is_regex: bool | None = field(default=None, metadata={"cdp_name": "isRegex"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SearchInResponseBodyResult(CDPModel):
-    result: list[debugger.SearchMatch]
+class SearchInResponseBodyResult:
+    result: list[debugger.SearchMatch] = field(metadata={"cdp_name": "result"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetBlockedURLsParams(CDPModel):
+class SetBlockedURLsParams:
     """
     Blocks URLs from loading.
     """
 
-    url_patterns: list[BlockPattern] | None = None
-    urls: list[str] | None = None
+    url_patterns: list[BlockPattern] | None = field(
+        default=None, metadata={"cdp_name": "urlPatterns"}
+    )
+    urls: list[str] | None = field(default=None, metadata={"cdp_name": "urls"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetBypassServiceWorkerParams(CDPModel):
+class SetBypassServiceWorkerParams:
     """
     Toggles ignoring of service worker for each request.
     """
 
-    bypass: bool
+    bypass: bool = field(metadata={"cdp_name": "bypass"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetCacheDisabledParams(CDPModel):
+class SetCacheDisabledParams:
     """
     Toggles ignoring cache for each request. If `true`, cache will not be used.
     """
 
-    cache_disabled: bool
+    cache_disabled: bool = field(metadata={"cdp_name": "cacheDisabled"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetCookieParams(CDPModel):
+class SetCookieParams:
     """
     Sets a cookie with the given cookie data; may overwrite equivalent cookies if they
     exist.
     """
 
-    name: str
-    value: str
-    url: str | None = None
-    domain: str | None = None
-    path: str | None = None
-    secure: bool | None = None
-    http_only: bool | None = None
-    same_site: CookieSameSite | None = None
-    expires: TimeSinceEpoch | None = None
-    priority: CookiePriority | None = None
-    source_scheme: CookieSourceScheme | None = None
-    source_port: int | None = None
-    partition_key: CookiePartitionKey | None = None
+    name: str = field(metadata={"cdp_name": "name"})
+    value: str = field(metadata={"cdp_name": "value"})
+    url: str | None = field(default=None, metadata={"cdp_name": "url"})
+    domain: str | None = field(default=None, metadata={"cdp_name": "domain"})
+    path: str | None = field(default=None, metadata={"cdp_name": "path"})
+    secure: bool | None = field(default=None, metadata={"cdp_name": "secure"})
+    http_only: bool | None = field(default=None, metadata={"cdp_name": "httpOnly"})
+    same_site: CookieSameSite | None = field(
+        default=None, metadata={"cdp_name": "sameSite"}
+    )
+    expires: TimeSinceEpoch | None = field(
+        default=None, metadata={"cdp_name": "expires"}
+    )
+    priority: CookiePriority | None = field(
+        default=None, metadata={"cdp_name": "priority"}
+    )
+    source_scheme: CookieSourceScheme | None = field(
+        default=None, metadata={"cdp_name": "sourceScheme"}
+    )
+    source_port: int | None = field(default=None, metadata={"cdp_name": "sourcePort"})
+    partition_key: CookiePartitionKey | None = field(
+        default=None, metadata={"cdp_name": "partitionKey"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetCookieResult(CDPModel):
-    success: bool
+class SetCookieResult:
+    success: bool = field(metadata={"cdp_name": "success"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetCookiesParams(CDPModel):
+class SetCookiesParams:
     """
     Sets given cookies.
     """
 
-    cookies: list[CookieParam]
+    cookies: list[CookieParam] = field(metadata={"cdp_name": "cookies"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetExtraHTTPHeadersParams(CDPModel):
+class SetExtraHTTPHeadersParams:
     """
     Specifies whether to always send extra HTTP headers with the requests from this
     page.
     """
 
-    headers: Headers
+    headers: Headers = field(metadata={"cdp_name": "headers"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetAttachDebugStackParams(CDPModel):
+class SetAttachDebugStackParams:
     """
     Specifies whether to attach a page script stack id in requests
     """
 
-    enabled: bool
+    enabled: bool = field(metadata={"cdp_name": "enabled"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetUserAgentOverrideParams(CDPModel):
+class SetUserAgentOverrideParams:
     """
     Allows overriding user agent with the given string.
     """
 
-    user_agent: str
-    accept_language: str | None = None
-    platform: str | None = None
-    user_agent_metadata: emulation.UserAgentMetadata | None = None
+    user_agent: str = field(metadata={"cdp_name": "userAgent"})
+    accept_language: str | None = field(
+        default=None, metadata={"cdp_name": "acceptLanguage"}
+    )
+    platform: str | None = field(default=None, metadata={"cdp_name": "platform"})
+    user_agent_metadata: emulation.UserAgentMetadata | None = field(
+        default=None, metadata={"cdp_name": "userAgentMetadata"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class StreamResourceContentParams(CDPModel):
+class StreamResourceContentParams:
     """
     Enables streaming of the response for the given requestId. If enabled, the
     dataReceived event contains the data that was received during streaming.
     """
 
-    request_id: RequestId
+    request_id: RequestId = field(metadata={"cdp_name": "requestId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class StreamResourceContentResult(CDPModel):
-    buffered_data: str
+class StreamResourceContentResult:
+    buffered_data: str = field(metadata={"cdp_name": "bufferedData"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetSecurityIsolationStatusParams(CDPModel):
+class GetSecurityIsolationStatusParams:
     """
     Returns information about the COEP/COOP isolation status.
     """
 
-    frame_id: page.FrameId | None = None
+    frame_id: page.FrameId | None = field(
+        default=None, metadata={"cdp_name": "frameId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetSecurityIsolationStatusResult(CDPModel):
-    status: SecurityIsolationStatus
+class GetSecurityIsolationStatusResult:
+    status: SecurityIsolationStatus = field(metadata={"cdp_name": "status"})
 
 
 @dataclass(kw_only=True, slots=True)
-class EnableReportingApiParams(CDPModel):
+class EnableReportingApiParams:
     """
     Enables tracking for the Reporting API, events generated by the Reporting API will
     now be delivered to the client. Enabling triggers 'reportingApiReportAdded' for all
     existing reports.
     """
 
-    enable: bool
+    enable: bool = field(metadata={"cdp_name": "enable"})
 
 
 @dataclass(kw_only=True, slots=True)
-class EnableDeviceBoundSessionsParams(CDPModel):
+class EnableDeviceBoundSessionsParams:
     """
     Sets up tracking device bound sessions and fetching of initial set of sessions.
     """
 
-    enable: bool
+    enable: bool = field(metadata={"cdp_name": "enable"})
 
 
 @dataclass(kw_only=True, slots=True)
-class DeleteDeviceBoundSessionParams(CDPModel):
+class DeleteDeviceBoundSessionParams:
     """
     Deletes a device bound session.
     """
 
-    key: DeviceBoundSessionKey
+    key: DeviceBoundSessionKey = field(metadata={"cdp_name": "key"})
 
 
 @dataclass(kw_only=True, slots=True)
-class FetchSchemefulSiteParams(CDPModel):
+class FetchSchemefulSiteParams:
     """
     Fetches the schemeful site for a specific origin.
     """
 
-    origin: str
+    origin: str = field(metadata={"cdp_name": "origin"})
 
 
 @dataclass(kw_only=True, slots=True)
-class FetchSchemefulSiteResult(CDPModel):
-    schemeful_site: str
+class FetchSchemefulSiteResult:
+    schemeful_site: str = field(metadata={"cdp_name": "schemefulSite"})
 
 
 @dataclass(kw_only=True, slots=True)
-class LoadNetworkResourceParams(CDPModel):
+class LoadNetworkResourceParams:
     """
     Fetches the resource and returns the content.
     """
 
-    frame_id: page.FrameId | None = None
-    url: str
-    options: LoadNetworkResourceOptions
+    frame_id: page.FrameId | None = field(
+        default=None, metadata={"cdp_name": "frameId"}
+    )
+    url: str = field(metadata={"cdp_name": "url"})
+    options: LoadNetworkResourceOptions = field(metadata={"cdp_name": "options"})
 
 
 @dataclass(kw_only=True, slots=True)
-class LoadNetworkResourceResult(CDPModel):
-    resource: LoadNetworkResourcePageResult
+class LoadNetworkResourceResult:
+    resource: LoadNetworkResourcePageResult = field(metadata={"cdp_name": "resource"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetCookieControlsParams(CDPModel):
+class SetCookieControlsParams:
     """
     Sets Controls for third-party cookie access Page reload is required before the new
     cookie behavior will be observed
     """
 
-    enable_third_party_cookie_restriction: bool
+    enable_third_party_cookie_restriction: bool = field(
+        metadata={"cdp_name": "enableThirdPartyCookieRestriction"}
+    )

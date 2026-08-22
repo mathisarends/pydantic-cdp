@@ -4,12 +4,11 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Any
 
 from cdpify.domains import page
-from cdpify.shared.models import CDPModel
 
 
 class WebMCPCommand(StrEnum):
@@ -20,25 +19,25 @@ class WebMCPCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class InvokeToolParams(CDPModel):
+class InvokeToolParams:
     """
     Invokes a registered tool.
     """
 
-    frame_id: page.FrameId
-    tool_name: str
-    input: dict[str, Any]
+    frame_id: page.FrameId = field(metadata={"cdp_name": "frameId"})
+    tool_name: str = field(metadata={"cdp_name": "toolName"})
+    input: dict[str, Any] = field(metadata={"cdp_name": "input"})
 
 
 @dataclass(kw_only=True, slots=True)
-class InvokeToolResult(CDPModel):
-    invocation_id: str
+class InvokeToolResult:
+    invocation_id: str = field(metadata={"cdp_name": "invocationId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class CancelInvocationParams(CDPModel):
+class CancelInvocationParams:
     """
     Cancels a pending tool invocation.
     """
 
-    invocation_id: str
+    invocation_id: str = field(metadata={"cdp_name": "invocationId"})

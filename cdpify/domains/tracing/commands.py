@@ -4,11 +4,9 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Literal
-
-from cdpify.shared.models import CDPModel
 
 from .types import (
     MemoryDumpLevelOfDetail,
@@ -29,54 +27,76 @@ class TracingCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class GetCategoriesResult(CDPModel):
-    categories: list[str]
+class GetCategoriesResult:
+    categories: list[str] = field(metadata={"cdp_name": "categories"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetTrackEventDescriptorResult(CDPModel):
-    descriptor: str
+class GetTrackEventDescriptorResult:
+    descriptor: str = field(metadata={"cdp_name": "descriptor"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RecordClockSyncMarkerParams(CDPModel):
+class RecordClockSyncMarkerParams:
     """
     Record a clock sync marker in the trace.
     """
 
-    sync_id: str
+    sync_id: str = field(metadata={"cdp_name": "syncId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RequestMemoryDumpParams(CDPModel):
+class RequestMemoryDumpParams:
     """
     Request a global memory dump.
     """
 
-    deterministic: bool | None = None
-    level_of_detail: MemoryDumpLevelOfDetail | None = None
+    deterministic: bool | None = field(
+        default=None, metadata={"cdp_name": "deterministic"}
+    )
+    level_of_detail: MemoryDumpLevelOfDetail | None = field(
+        default=None, metadata={"cdp_name": "levelOfDetail"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class RequestMemoryDumpResult(CDPModel):
-    dump_guid: str
-    success: bool
+class RequestMemoryDumpResult:
+    dump_guid: str = field(metadata={"cdp_name": "dumpGuid"})
+    success: bool = field(metadata={"cdp_name": "success"})
 
 
 @dataclass(kw_only=True, slots=True)
-class StartParams(CDPModel):
+class StartParams:
     """
     Start trace events collection.
     """
 
-    categories: str | None = None
-    options: str | None = None
-    buffer_usage_reporting_interval: float | None = None
-    transfer_mode: Literal["ReportEvents", "ReturnAsStream"] | None = None
-    stream_format: StreamFormat | None = None
-    stream_compression: StreamCompression | None = None
-    trace_config: TraceConfig | None = None
-    perfetto_config: str | None = None
-    tracing_backend: TracingBackend | None = None
-    screenshot_max_size: int | None = None
-    screenshot_max_count: int | None = None
+    categories: str | None = field(default=None, metadata={"cdp_name": "categories"})
+    options: str | None = field(default=None, metadata={"cdp_name": "options"})
+    buffer_usage_reporting_interval: float | None = field(
+        default=None, metadata={"cdp_name": "bufferUsageReportingInterval"}
+    )
+    transfer_mode: Literal["ReportEvents", "ReturnAsStream"] | None = field(
+        default=None, metadata={"cdp_name": "transferMode"}
+    )
+    stream_format: StreamFormat | None = field(
+        default=None, metadata={"cdp_name": "streamFormat"}
+    )
+    stream_compression: StreamCompression | None = field(
+        default=None, metadata={"cdp_name": "streamCompression"}
+    )
+    trace_config: TraceConfig | None = field(
+        default=None, metadata={"cdp_name": "traceConfig"}
+    )
+    perfetto_config: str | None = field(
+        default=None, metadata={"cdp_name": "perfettoConfig"}
+    )
+    tracing_backend: TracingBackend | None = field(
+        default=None, metadata={"cdp_name": "tracingBackend"}
+    )
+    screenshot_max_size: int | None = field(
+        default=None, metadata={"cdp_name": "screenshotMaxSize"}
+    )
+    screenshot_max_count: int | None = field(
+        default=None, metadata={"cdp_name": "screenshotMaxCount"}
+    )

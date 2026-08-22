@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+from cdpify.codec import decode_cdp, encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -38,7 +39,7 @@ class Memory:
             params=None,
             session_id=session_id,
         )
-        return GetDOMCountersResult.from_cdp(result)
+        return decode_cdp(GetDOMCountersResult, result)
 
     async def get_dom_counters_for_leak_detection(
         self,
@@ -52,7 +53,7 @@ class Memory:
             params=None,
             session_id=session_id,
         )
-        return GetDOMCountersForLeakDetectionResult.from_cdp(result)
+        return decode_cdp(GetDOMCountersForLeakDetectionResult, result)
 
     async def prepare_for_leak_detection(
         self,
@@ -94,7 +95,7 @@ class Memory:
 
         await self._command_sender.send_raw(
             method=MemoryCommand.SET_PRESSURE_NOTIFICATIONS_SUPPRESSED,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -111,7 +112,7 @@ class Memory:
 
         await self._command_sender.send_raw(
             method=MemoryCommand.SIMULATE_PRESSURE_NOTIFICATION,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -131,7 +132,7 @@ class Memory:
 
         await self._command_sender.send_raw(
             method=MemoryCommand.START_SAMPLING,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -161,7 +162,7 @@ class Memory:
             params=None,
             session_id=session_id,
         )
-        return GetAllTimeSamplingProfileResult.from_cdp(result)
+        return decode_cdp(GetAllTimeSamplingProfileResult, result)
 
     async def get_browser_sampling_profile(
         self,
@@ -176,7 +177,7 @@ class Memory:
             params=None,
             session_id=session_id,
         )
-        return GetBrowserSamplingProfileResult.from_cdp(result)
+        return decode_cdp(GetBrowserSamplingProfileResult, result)
 
     async def get_sampling_profile(
         self,
@@ -191,4 +192,4 @@ class Memory:
             params=None,
             session_id=session_id,
         )
-        return GetSamplingProfileResult.from_cdp(result)
+        return decode_cdp(GetSamplingProfileResult, result)

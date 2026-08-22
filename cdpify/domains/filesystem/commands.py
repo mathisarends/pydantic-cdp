@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPModel
 
 from .types import (
     BucketFileSystemLocator,
@@ -20,10 +18,12 @@ class FileSystemCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class GetDirectoryParams(CDPModel):
-    bucket_file_system_locator: BucketFileSystemLocator
+class GetDirectoryParams:
+    bucket_file_system_locator: BucketFileSystemLocator = field(
+        metadata={"cdp_name": "bucketFileSystemLocator"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetDirectoryResult(CDPModel):
-    directory: Directory
+class GetDirectoryResult:
+    directory: Directory = field(metadata={"cdp_name": "directory"})

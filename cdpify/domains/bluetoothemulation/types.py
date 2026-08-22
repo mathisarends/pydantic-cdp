@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Literal
-
-from cdpify.shared.models import CDPModel
 
 """
 Indicates the various states of Central.
@@ -40,51 +38,59 @@ type DescriptorOperationType = Literal["read", "write"]
 
 
 @dataclass(kw_only=True, slots=True)
-class ManufacturerData(CDPModel):
+class ManufacturerData:
     """
     Stores the manufacturer data
     """
 
-    key: int
-    data: str
+    key: int = field(metadata={"cdp_name": "key"})
+    data: str = field(metadata={"cdp_name": "data"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ScanRecord(CDPModel):
+class ScanRecord:
     """
     Stores the byte data of the advertisement packet sent by a Bluetooth device.
     """
 
-    name: str | None = None
-    uuids: list[str] | None = None
-    appearance: int | None = None
-    tx_power: int | None = None
-    manufacturer_data: list[ManufacturerData] | None = None
+    name: str | None = field(default=None, metadata={"cdp_name": "name"})
+    uuids: list[str] | None = field(default=None, metadata={"cdp_name": "uuids"})
+    appearance: int | None = field(default=None, metadata={"cdp_name": "appearance"})
+    tx_power: int | None = field(default=None, metadata={"cdp_name": "txPower"})
+    manufacturer_data: list[ManufacturerData] | None = field(
+        default=None, metadata={"cdp_name": "manufacturerData"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ScanEntry(CDPModel):
+class ScanEntry:
     """
     Stores the advertisement packet information that is sent by a Bluetooth device.
     """
 
-    device_address: str
-    rssi: int
-    scan_record: ScanRecord
+    device_address: str = field(metadata={"cdp_name": "deviceAddress"})
+    rssi: int = field(metadata={"cdp_name": "rssi"})
+    scan_record: ScanRecord = field(metadata={"cdp_name": "scanRecord"})
 
 
 @dataclass(kw_only=True, slots=True)
-class CharacteristicProperties(CDPModel):
+class CharacteristicProperties:
     """
     Describes the properties of a characteristic. This follows Bluetooth Core
     Specification BT 4.2 Vol 3 Part G 3.3.1. Characteristic Properties.
     """
 
-    broadcast: bool | None = None
-    read: bool | None = None
-    write_without_response: bool | None = None
-    write: bool | None = None
-    notify: bool | None = None
-    indicate: bool | None = None
-    authenticated_signed_writes: bool | None = None
-    extended_properties: bool | None = None
+    broadcast: bool | None = field(default=None, metadata={"cdp_name": "broadcast"})
+    read: bool | None = field(default=None, metadata={"cdp_name": "read"})
+    write_without_response: bool | None = field(
+        default=None, metadata={"cdp_name": "writeWithoutResponse"}
+    )
+    write: bool | None = field(default=None, metadata={"cdp_name": "write"})
+    notify: bool | None = field(default=None, metadata={"cdp_name": "notify"})
+    indicate: bool | None = field(default=None, metadata={"cdp_name": "indicate"})
+    authenticated_signed_writes: bool | None = field(
+        default=None, metadata={"cdp_name": "authenticatedSignedWrites"}
+    )
+    extended_properties: bool | None = field(
+        default=None, metadata={"cdp_name": "extendedProperties"}
+    )

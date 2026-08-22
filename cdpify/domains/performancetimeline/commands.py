@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPModel
 
 
 class PerformanceTimelineCommand(StrEnum):
@@ -15,10 +13,10 @@ class PerformanceTimelineCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class EnableParams(CDPModel):
+class EnableParams:
     """
     Previously buffered events would be reported before method returns. See also:
     timelineEventAdded
     """
 
-    event_types: list[str]
+    event_types: list[str] = field(metadata={"cdp_name": "eventTypes"})

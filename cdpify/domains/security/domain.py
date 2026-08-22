@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+from cdpify.codec import encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
 
@@ -61,7 +62,7 @@ class Security:
 
         await self._command_sender.send_raw(
             method=SecurityCommand.SET_IGNORE_CERTIFICATE_ERRORS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -80,7 +81,7 @@ class Security:
 
         await self._command_sender.send_raw(
             method=SecurityCommand.HANDLE_CERTIFICATE_ERROR,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -100,6 +101,6 @@ class Security:
 
         await self._command_sender.send_raw(
             method=SecurityCommand.SET_OVERRIDE_CERTIFICATE_ERRORS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )

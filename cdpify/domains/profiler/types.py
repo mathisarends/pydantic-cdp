@@ -4,77 +4,80 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from cdpify.domains import runtime
-from cdpify.shared.models import CDPModel
 
 
 @dataclass(kw_only=True, slots=True)
-class ProfileNode(CDPModel):
+class ProfileNode:
     """
     Profile node. Holds callsite information, execution statistics and child nodes.
     """
 
-    id: int
-    call_frame: runtime.CallFrame
-    hit_count: int | None = None
-    children: list[int] | None = None
-    deopt_reason: str | None = None
-    position_ticks: list[PositionTickInfo] | None = None
+    id: int = field(metadata={"cdp_name": "id"})
+    call_frame: runtime.CallFrame = field(metadata={"cdp_name": "callFrame"})
+    hit_count: int | None = field(default=None, metadata={"cdp_name": "hitCount"})
+    children: list[int] | None = field(default=None, metadata={"cdp_name": "children"})
+    deopt_reason: str | None = field(default=None, metadata={"cdp_name": "deoptReason"})
+    position_ticks: list[PositionTickInfo] | None = field(
+        default=None, metadata={"cdp_name": "positionTicks"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class Profile(CDPModel):
+class Profile:
     """
     Profile.
     """
 
-    nodes: list[ProfileNode]
-    start_time: float
-    end_time: float
-    samples: list[int] | None = None
-    time_deltas: list[int] | None = None
+    nodes: list[ProfileNode] = field(metadata={"cdp_name": "nodes"})
+    start_time: float = field(metadata={"cdp_name": "startTime"})
+    end_time: float = field(metadata={"cdp_name": "endTime"})
+    samples: list[int] | None = field(default=None, metadata={"cdp_name": "samples"})
+    time_deltas: list[int] | None = field(
+        default=None, metadata={"cdp_name": "timeDeltas"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class PositionTickInfo(CDPModel):
+class PositionTickInfo:
     """
     Specifies a number of samples attributed to a certain source position.
     """
 
-    line: int
-    ticks: int
+    line: int = field(metadata={"cdp_name": "line"})
+    ticks: int = field(metadata={"cdp_name": "ticks"})
 
 
 @dataclass(kw_only=True, slots=True)
-class CoverageRange(CDPModel):
+class CoverageRange:
     """
     Coverage data for a source range.
     """
 
-    start_offset: int
-    end_offset: int
-    count: int
+    start_offset: int = field(metadata={"cdp_name": "startOffset"})
+    end_offset: int = field(metadata={"cdp_name": "endOffset"})
+    count: int = field(metadata={"cdp_name": "count"})
 
 
 @dataclass(kw_only=True, slots=True)
-class FunctionCoverage(CDPModel):
+class FunctionCoverage:
     """
     Coverage data for a JavaScript function.
     """
 
-    function_name: str
-    ranges: list[CoverageRange]
-    is_block_coverage: bool
+    function_name: str = field(metadata={"cdp_name": "functionName"})
+    ranges: list[CoverageRange] = field(metadata={"cdp_name": "ranges"})
+    is_block_coverage: bool = field(metadata={"cdp_name": "isBlockCoverage"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ScriptCoverage(CDPModel):
+class ScriptCoverage:
     """
     Coverage data for a JavaScript script.
     """
 
-    script_id: runtime.ScriptId
-    url: str
-    functions: list[FunctionCoverage]
+    script_id: runtime.ScriptId = field(metadata={"cdp_name": "scriptId"})
+    url: str = field(metadata={"cdp_name": "url"})
+    functions: list[FunctionCoverage] = field(metadata={"cdp_name": "functions"})

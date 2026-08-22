@@ -27,8 +27,9 @@ def test_method_with_params(simple_domain: Domain) -> None:
     assert "params = GetNodeParams(node_id=node_id)" in output
     assert "method=SampleCommand.GET_NODE" in output
     assert "result = await self._command_sender.send_raw(" in output
-    assert "params=params.to_cdp_params()" in output
-    assert "return GetNodeResult.from_cdp(result)" in output
+    assert "from cdpify.codec import decode_cdp, encode_cdp" in output
+    assert "params=encode_cdp(params)" in output
+    assert "return decode_cdp(GetNodeResult, result)" in output
 
 
 def test_method_without_params_or_returns(simple_domain: Domain) -> None:

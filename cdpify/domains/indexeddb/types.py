@@ -4,90 +4,91 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Literal
 
 from cdpify.domains import runtime
-from cdpify.shared.models import CDPModel
 
 
 @dataclass(kw_only=True, slots=True)
-class DatabaseWithObjectStores(CDPModel):
+class DatabaseWithObjectStores:
     """
     Database with an array of object stores.
     """
 
-    name: str
-    version: float
-    object_stores: list[ObjectStore]
+    name: str = field(metadata={"cdp_name": "name"})
+    version: float = field(metadata={"cdp_name": "version"})
+    object_stores: list[ObjectStore] = field(metadata={"cdp_name": "objectStores"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ObjectStore(CDPModel):
+class ObjectStore:
     """
     Object store.
     """
 
-    name: str
-    key_path: KeyPath
-    auto_increment: bool
-    indexes: list[ObjectStoreIndex]
+    name: str = field(metadata={"cdp_name": "name"})
+    key_path: KeyPath = field(metadata={"cdp_name": "keyPath"})
+    auto_increment: bool = field(metadata={"cdp_name": "autoIncrement"})
+    indexes: list[ObjectStoreIndex] = field(metadata={"cdp_name": "indexes"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ObjectStoreIndex(CDPModel):
+class ObjectStoreIndex:
     """
     Object store index.
     """
 
-    name: str
-    key_path: KeyPath
-    unique: bool
-    multi_entry: bool
+    name: str = field(metadata={"cdp_name": "name"})
+    key_path: KeyPath = field(metadata={"cdp_name": "keyPath"})
+    unique: bool = field(metadata={"cdp_name": "unique"})
+    multi_entry: bool = field(metadata={"cdp_name": "multiEntry"})
 
 
 @dataclass(kw_only=True, slots=True)
-class Key(CDPModel):
+class Key:
     """
     Key.
     """
 
-    type: Literal["number", "string", "date", "array"]
-    number: float | None = None
-    string: str | None = None
-    date: float | None = None
-    array: list[Key] | None = None
+    type: Literal["number", "string", "date", "array"] = field(
+        metadata={"cdp_name": "type"}
+    )
+    number: float | None = field(default=None, metadata={"cdp_name": "number"})
+    string: str | None = field(default=None, metadata={"cdp_name": "string"})
+    date: float | None = field(default=None, metadata={"cdp_name": "date"})
+    array: list[Key] | None = field(default=None, metadata={"cdp_name": "array"})
 
 
 @dataclass(kw_only=True, slots=True)
-class KeyRange(CDPModel):
+class KeyRange:
     """
     Key range.
     """
 
-    lower: Key | None = None
-    upper: Key | None = None
-    lower_open: bool
-    upper_open: bool
+    lower: Key | None = field(default=None, metadata={"cdp_name": "lower"})
+    upper: Key | None = field(default=None, metadata={"cdp_name": "upper"})
+    lower_open: bool = field(metadata={"cdp_name": "lowerOpen"})
+    upper_open: bool = field(metadata={"cdp_name": "upperOpen"})
 
 
 @dataclass(kw_only=True, slots=True)
-class DataEntry(CDPModel):
+class DataEntry:
     """
     Data entry.
     """
 
-    key: runtime.RemoteObject
-    primary_key: runtime.RemoteObject
-    value: runtime.RemoteObject
+    key: runtime.RemoteObject = field(metadata={"cdp_name": "key"})
+    primary_key: runtime.RemoteObject = field(metadata={"cdp_name": "primaryKey"})
+    value: runtime.RemoteObject = field(metadata={"cdp_name": "value"})
 
 
 @dataclass(kw_only=True, slots=True)
-class KeyPath(CDPModel):
+class KeyPath:
     """
     Key path.
     """
 
-    type: Literal["null", "string", "array"]
-    string: str | None = None
-    array: list[str] | None = None
+    type: Literal["null", "string", "array"] = field(metadata={"cdp_name": "type"})
+    string: str | None = field(default=None, metadata={"cdp_name": "string"})
+    array: list[str] | None = field(default=None, metadata={"cdp_name": "array"})

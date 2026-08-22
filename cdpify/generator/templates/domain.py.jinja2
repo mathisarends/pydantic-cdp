@@ -6,6 +6,7 @@
 from typing import {{ typing_names | join(", ") }}
 {% endif %}
 
+from cdpify.codec import decode_cdp, encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 {% if has_deprecated %}
 from cdpify.shared.decorators import deprecated
@@ -53,14 +54,14 @@ class {{ domain_name }}:
 {% if method.result_model %}
         result = await self._command_sender.send_raw(
             method={{ domain_name }}Command.{{ method.command_member }},
-            params={% if method.params_model %}params.to_cdp_params(){% else %}None{% endif %},
+            params={% if method.params_model %}encode_cdp(params){% else %}None{% endif %},
             session_id=session_id,
         )
-        return {{ method.result_model }}.from_cdp(result)
+        return decode_cdp({{ method.result_model }}, result)
 {% else %}
         await self._command_sender.send_raw(
             method={{ domain_name }}Command.{{ method.command_member }},
-            params={% if method.params_model %}params.to_cdp_params(){% else %}None{% endif %},
+            params={% if method.params_model %}encode_cdp(params){% else %}None{% endif %},
             session_id=session_id,
         )
 {% endif %}

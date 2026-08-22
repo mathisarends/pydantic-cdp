@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Literal
-
-from cdpify.shared.models import CDPModel
 
 """
 Indicates the PC/SC error code. This maps to: PC/SC Lite:
@@ -68,33 +66,33 @@ type ConnectionState = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class ReaderStateFlags(CDPModel):
+class ReaderStateFlags:
     """
     Maps to the |SCARD_STATE_*| flags.
     """
 
-    unaware: bool | None = None
-    ignore: bool | None = None
-    changed: bool | None = None
-    unknown: bool | None = None
-    unavailable: bool | None = None
-    empty: bool | None = None
-    present: bool | None = None
-    exclusive: bool | None = None
-    inuse: bool | None = None
-    mute: bool | None = None
-    unpowered: bool | None = None
+    unaware: bool | None = field(default=None, metadata={"cdp_name": "unaware"})
+    ignore: bool | None = field(default=None, metadata={"cdp_name": "ignore"})
+    changed: bool | None = field(default=None, metadata={"cdp_name": "changed"})
+    unknown: bool | None = field(default=None, metadata={"cdp_name": "unknown"})
+    unavailable: bool | None = field(default=None, metadata={"cdp_name": "unavailable"})
+    empty: bool | None = field(default=None, metadata={"cdp_name": "empty"})
+    present: bool | None = field(default=None, metadata={"cdp_name": "present"})
+    exclusive: bool | None = field(default=None, metadata={"cdp_name": "exclusive"})
+    inuse: bool | None = field(default=None, metadata={"cdp_name": "inuse"})
+    mute: bool | None = field(default=None, metadata={"cdp_name": "mute"})
+    unpowered: bool | None = field(default=None, metadata={"cdp_name": "unpowered"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ProtocolSet(CDPModel):
+class ProtocolSet:
     """
     Maps to the |SCARD_PROTOCOL_*| flags.
     """
 
-    t0: bool | None = None
-    t1: bool | None = None
-    raw: bool | None = None
+    t0: bool | None = field(default=None, metadata={"cdp_name": "t0"})
+    t1: bool | None = field(default=None, metadata={"cdp_name": "t1"})
+    raw: bool | None = field(default=None, metadata={"cdp_name": "raw"})
 
 
 """
@@ -104,15 +102,15 @@ type Protocol = Literal["t0", "t1", "raw"]
 
 
 @dataclass(kw_only=True, slots=True)
-class ReaderStateIn(CDPModel):
-    reader: str
-    current_state: ReaderStateFlags
-    current_insertion_count: int
+class ReaderStateIn:
+    reader: str = field(metadata={"cdp_name": "reader"})
+    current_state: ReaderStateFlags = field(metadata={"cdp_name": "currentState"})
+    current_insertion_count: int = field(metadata={"cdp_name": "currentInsertionCount"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ReaderStateOut(CDPModel):
-    reader: str
-    event_state: ReaderStateFlags
-    event_count: int
-    atr: str
+class ReaderStateOut:
+    reader: str = field(metadata={"cdp_name": "reader"})
+    event_state: ReaderStateFlags = field(metadata={"cdp_name": "eventState"})
+    event_count: int = field(metadata={"cdp_name": "eventCount"})
+    atr: str = field(metadata={"cdp_name": "atr"})

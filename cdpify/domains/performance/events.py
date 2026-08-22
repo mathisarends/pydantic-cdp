@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPEvent
 
 from .types import (
     Metric,
@@ -19,10 +17,16 @@ class PerformanceEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class MetricsEvent(CDPEvent):
+class MetricsEvent:
     """
     Current values of the metrics.
     """
 
-    metrics: list[Metric]
-    title: str
+    metrics: list[Metric] = field(metadata={"cdp_name": "metrics"})
+    title: str = field(metadata={"cdp_name": "title"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

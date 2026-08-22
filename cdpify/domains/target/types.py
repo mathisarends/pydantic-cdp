@@ -4,11 +4,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, Literal
 
 from cdpify.domains import browser, page
-from cdpify.shared.models import CDPModel
 
 TargetID = str
 
@@ -19,30 +18,38 @@ SessionID = str
 
 
 @dataclass(kw_only=True, slots=True)
-class TargetInfo(CDPModel):
-    target_id: TargetID
-    type: str
-    title: str
-    url: str
-    attached: bool
-    parent_id: TargetID | None = None
-    opener_id: TargetID | None = None
-    can_access_opener: bool
-    opener_frame_id: page.FrameId | None = None
-    parent_frame_id: page.FrameId | None = None
-    browser_context_id: browser.BrowserContextID | None = None
-    subtype: str | None = None
-    embedder_data: dict[str, Any] | None = None
+class TargetInfo:
+    target_id: TargetID = field(metadata={"cdp_name": "targetId"})
+    type: str = field(metadata={"cdp_name": "type"})
+    title: str = field(metadata={"cdp_name": "title"})
+    url: str = field(metadata={"cdp_name": "url"})
+    attached: bool = field(metadata={"cdp_name": "attached"})
+    parent_id: TargetID | None = field(default=None, metadata={"cdp_name": "parentId"})
+    opener_id: TargetID | None = field(default=None, metadata={"cdp_name": "openerId"})
+    can_access_opener: bool = field(metadata={"cdp_name": "canAccessOpener"})
+    opener_frame_id: page.FrameId | None = field(
+        default=None, metadata={"cdp_name": "openerFrameId"}
+    )
+    parent_frame_id: page.FrameId | None = field(
+        default=None, metadata={"cdp_name": "parentFrameId"}
+    )
+    browser_context_id: browser.BrowserContextID | None = field(
+        default=None, metadata={"cdp_name": "browserContextId"}
+    )
+    subtype: str | None = field(default=None, metadata={"cdp_name": "subtype"})
+    embedder_data: dict[str, Any] | None = field(
+        default=None, metadata={"cdp_name": "embedderData"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class FilterEntry(CDPModel):
+class FilterEntry:
     """
     A filter used by target query/discovery/auto-attach operations.
     """
 
-    exclude: bool | None = None
-    type: str | None = None
+    exclude: bool | None = field(default=None, metadata={"cdp_name": "exclude"})
+    type: str | None = field(default=None, metadata={"cdp_name": "type"})
 
 
 """
@@ -56,9 +63,9 @@ TargetFilter = list[Any]
 
 
 @dataclass(kw_only=True, slots=True)
-class RemoteLocation(CDPModel):
-    host: str
-    port: int
+class RemoteLocation:
+    host: str = field(metadata={"cdp_name": "host"})
+    port: int = field(metadata={"cdp_name": "port"})
 
 
 """

@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+from cdpify.codec import decode_cdp, encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
 
@@ -46,10 +47,10 @@ class HeadlessExperimental:
 
         result = await self._command_sender.send_raw(
             method=HeadlessExperimentalCommand.BEGIN_FRAME,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return BeginFrameResult.from_cdp(result)
+        return decode_cdp(BeginFrameResult, result)
 
     @deprecated()
     async def disable(

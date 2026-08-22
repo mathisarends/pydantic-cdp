@@ -4,12 +4,11 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Literal
 
 from cdpify.domains import debugger, dom, emulation, io, network, runtime
-from cdpify.shared.models import CDPModel
 
 from .types import (
     AppManifestError,
@@ -104,109 +103,131 @@ class PageCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class AddScriptToEvaluateOnLoadParams(CDPModel):
+class AddScriptToEvaluateOnLoadParams:
     """
     Deprecated, please use addScriptToEvaluateOnNewDocument instead.
     """
 
-    script_source: str
+    script_source: str = field(metadata={"cdp_name": "scriptSource"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AddScriptToEvaluateOnLoadResult(CDPModel):
-    identifier: ScriptIdentifier
+class AddScriptToEvaluateOnLoadResult:
+    identifier: ScriptIdentifier = field(metadata={"cdp_name": "identifier"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AddScriptToEvaluateOnNewDocumentParams(CDPModel):
+class AddScriptToEvaluateOnNewDocumentParams:
     """
     Evaluates given script in every frame upon creation (before loading frame's
     scripts).
     """
 
-    source: str
-    world_name: str | None = None
-    include_command_line_api: bool | None = None
-    run_immediately: bool | None = None
+    source: str = field(metadata={"cdp_name": "source"})
+    world_name: str | None = field(default=None, metadata={"cdp_name": "worldName"})
+    include_command_line_api: bool | None = field(
+        default=None, metadata={"cdp_name": "includeCommandLineAPI"}
+    )
+    run_immediately: bool | None = field(
+        default=None, metadata={"cdp_name": "runImmediately"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class AddScriptToEvaluateOnNewDocumentResult(CDPModel):
-    identifier: ScriptIdentifier
+class AddScriptToEvaluateOnNewDocumentResult:
+    identifier: ScriptIdentifier = field(metadata={"cdp_name": "identifier"})
 
 
 @dataclass(kw_only=True, slots=True)
-class CaptureScreenshotParams(CDPModel):
+class CaptureScreenshotParams:
     """
     Capture page screenshot.
     """
 
-    format: Literal["jpeg", "png", "webp"] | None = None
-    quality: int | None = None
-    clip: Viewport | None = None
-    from_surface: bool | None = None
-    capture_beyond_viewport: bool | None = None
-    optimize_for_speed: bool | None = None
+    format: Literal["jpeg", "png", "webp"] | None = field(
+        default=None, metadata={"cdp_name": "format"}
+    )
+    quality: int | None = field(default=None, metadata={"cdp_name": "quality"})
+    clip: Viewport | None = field(default=None, metadata={"cdp_name": "clip"})
+    from_surface: bool | None = field(
+        default=None, metadata={"cdp_name": "fromSurface"}
+    )
+    capture_beyond_viewport: bool | None = field(
+        default=None, metadata={"cdp_name": "captureBeyondViewport"}
+    )
+    optimize_for_speed: bool | None = field(
+        default=None, metadata={"cdp_name": "optimizeForSpeed"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class CaptureScreenshotResult(CDPModel):
-    data: str
+class CaptureScreenshotResult:
+    data: str = field(metadata={"cdp_name": "data"})
 
 
 @dataclass(kw_only=True, slots=True)
-class CaptureSnapshotParams(CDPModel):
+class CaptureSnapshotParams:
     """
     Returns a snapshot of the page as a string. For MHTML format, the serialization
     includes iframes, shadow DOM, external resources, and element-inline styles.
     """
 
-    format: Literal["mhtml"] | None = None
+    format: Literal["mhtml"] | None = field(
+        default=None, metadata={"cdp_name": "format"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class CaptureSnapshotResult(CDPModel):
-    data: str
+class CaptureSnapshotResult:
+    data: str = field(metadata={"cdp_name": "data"})
 
 
 @dataclass(kw_only=True, slots=True)
-class CreateIsolatedWorldParams(CDPModel):
+class CreateIsolatedWorldParams:
     """
     Creates an isolated world for the given frame.
     """
 
-    frame_id: FrameId
-    world_name: str | None = None
-    grant_univeral_access: bool | None = None
-    content_security_policy: str | None = None
+    frame_id: FrameId = field(metadata={"cdp_name": "frameId"})
+    world_name: str | None = field(default=None, metadata={"cdp_name": "worldName"})
+    grant_univeral_access: bool | None = field(
+        default=None, metadata={"cdp_name": "grantUniveralAccess"}
+    )
+    content_security_policy: str | None = field(
+        default=None, metadata={"cdp_name": "contentSecurityPolicy"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class CreateIsolatedWorldResult(CDPModel):
-    execution_context_id: runtime.ExecutionContextId
+class CreateIsolatedWorldResult:
+    execution_context_id: runtime.ExecutionContextId = field(
+        metadata={"cdp_name": "executionContextId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DeleteCookieParams(CDPModel):
+class DeleteCookieParams:
     """
     Deletes browser cookie with given name, domain and path.
     """
 
-    cookie_name: str
-    url: str
+    cookie_name: str = field(metadata={"cdp_name": "cookieName"})
+    url: str = field(metadata={"cdp_name": "url"})
 
 
 @dataclass(kw_only=True, slots=True)
-class EnableParams(CDPModel):
+class EnableParams:
     """
     Enables page domain notifications.
     """
 
-    enable_file_chooser_opened_event: bool | None = None
+    enable_file_chooser_opened_event: bool | None = field(
+        default=None, metadata={"cdp_name": "enableFileChooserOpenedEvent"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetAppManifestParams(CDPModel):
+class GetAppManifestParams:
     """
     Gets the processed manifest for this current document. This API always waits for
     the manifest to be loaded. If manifestId is provided, and it does not match the
@@ -214,412 +235,484 @@ class GetAppManifestParams(CDPModel):
     page, this API errors out immediately.
     """
 
-    manifest_id: str | None = None
+    manifest_id: str | None = field(default=None, metadata={"cdp_name": "manifestId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetAppManifestResult(CDPModel):
-    url: str
-    errors: list[AppManifestError]
-    data: str | None = None
-    parsed: AppManifestParsedProperties | None = None
-    manifest: WebAppManifest
+class GetAppManifestResult:
+    url: str = field(metadata={"cdp_name": "url"})
+    errors: list[AppManifestError] = field(metadata={"cdp_name": "errors"})
+    data: str | None = field(default=None, metadata={"cdp_name": "data"})
+    parsed: AppManifestParsedProperties | None = field(
+        default=None, metadata={"cdp_name": "parsed"}
+    )
+    manifest: WebAppManifest = field(metadata={"cdp_name": "manifest"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetInstallabilityErrorsResult(CDPModel):
-    installability_errors: list[InstallabilityError]
+class GetInstallabilityErrorsResult:
+    installability_errors: list[InstallabilityError] = field(
+        metadata={"cdp_name": "installabilityErrors"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetManifestIconsResult(CDPModel):
-    primary_icon: str | None = None
+class GetManifestIconsResult:
+    primary_icon: str | None = field(default=None, metadata={"cdp_name": "primaryIcon"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetAppIdResult(CDPModel):
-    app_id: str | None = None
-    recommended_id: str | None = None
+class GetAppIdResult:
+    app_id: str | None = field(default=None, metadata={"cdp_name": "appId"})
+    recommended_id: str | None = field(
+        default=None, metadata={"cdp_name": "recommendedId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetAdScriptAncestryParams(CDPModel):
-    frame_id: FrameId
+class GetAdScriptAncestryParams:
+    frame_id: FrameId = field(metadata={"cdp_name": "frameId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetAdScriptAncestryResult(CDPModel):
-    ad_script_ancestry: network.AdAncestry | None = None
+class GetAdScriptAncestryResult:
+    ad_script_ancestry: network.AdAncestry | None = field(
+        default=None, metadata={"cdp_name": "adScriptAncestry"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetFrameTreeResult(CDPModel):
-    frame_tree: FrameTree
+class GetFrameTreeResult:
+    frame_tree: FrameTree = field(metadata={"cdp_name": "frameTree"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetLayoutMetricsResult(CDPModel):
-    layout_viewport: LayoutViewport
-    visual_viewport: VisualViewport
-    content_size: dom.Rect
-    css_layout_viewport: LayoutViewport
-    css_visual_viewport: VisualViewport
-    css_content_size: dom.Rect
+class GetLayoutMetricsResult:
+    layout_viewport: LayoutViewport = field(metadata={"cdp_name": "layoutViewport"})
+    visual_viewport: VisualViewport = field(metadata={"cdp_name": "visualViewport"})
+    content_size: dom.Rect = field(metadata={"cdp_name": "contentSize"})
+    css_layout_viewport: LayoutViewport = field(
+        metadata={"cdp_name": "cssLayoutViewport"}
+    )
+    css_visual_viewport: VisualViewport = field(
+        metadata={"cdp_name": "cssVisualViewport"}
+    )
+    css_content_size: dom.Rect = field(metadata={"cdp_name": "cssContentSize"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetNavigationHistoryResult(CDPModel):
-    current_index: int
-    entries: list[NavigationEntry]
+class GetNavigationHistoryResult:
+    current_index: int = field(metadata={"cdp_name": "currentIndex"})
+    entries: list[NavigationEntry] = field(metadata={"cdp_name": "entries"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetResourceContentParams(CDPModel):
+class GetResourceContentParams:
     """
     Returns content of the given resource.
     """
 
-    frame_id: FrameId
-    url: str
+    frame_id: FrameId = field(metadata={"cdp_name": "frameId"})
+    url: str = field(metadata={"cdp_name": "url"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetResourceContentResult(CDPModel):
-    content: str
-    base64_encoded: bool
+class GetResourceContentResult:
+    content: str = field(metadata={"cdp_name": "content"})
+    base64_encoded: bool = field(metadata={"cdp_name": "base64Encoded"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetResourceTreeResult(CDPModel):
-    frame_tree: FrameResourceTree
+class GetResourceTreeResult:
+    frame_tree: FrameResourceTree = field(metadata={"cdp_name": "frameTree"})
 
 
 @dataclass(kw_only=True, slots=True)
-class HandleJavaScriptDialogParams(CDPModel):
+class HandleJavaScriptDialogParams:
     """
     Accepts or dismisses a JavaScript initiated dialog (alert, confirm, prompt, or
     onbeforeunload).
     """
 
-    accept: bool
-    prompt_text: str | None = None
+    accept: bool = field(metadata={"cdp_name": "accept"})
+    prompt_text: str | None = field(default=None, metadata={"cdp_name": "promptText"})
 
 
 @dataclass(kw_only=True, slots=True)
-class NavigateParams(CDPModel):
+class NavigateParams:
     """
     Navigates current page to the given URL.
     """
 
-    url: str
-    referrer: str | None = None
-    transition_type: TransitionType | None = None
-    frame_id: FrameId | None = None
-    referrer_policy: ReferrerPolicy | None = None
+    url: str = field(metadata={"cdp_name": "url"})
+    referrer: str | None = field(default=None, metadata={"cdp_name": "referrer"})
+    transition_type: TransitionType | None = field(
+        default=None, metadata={"cdp_name": "transitionType"}
+    )
+    frame_id: FrameId | None = field(default=None, metadata={"cdp_name": "frameId"})
+    referrer_policy: ReferrerPolicy | None = field(
+        default=None, metadata={"cdp_name": "referrerPolicy"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class NavigateResult(CDPModel):
-    frame_id: FrameId
-    loader_id: network.LoaderId | None = None
-    error_text: str | None = None
-    is_download: bool | None = None
+class NavigateResult:
+    frame_id: FrameId = field(metadata={"cdp_name": "frameId"})
+    loader_id: network.LoaderId | None = field(
+        default=None, metadata={"cdp_name": "loaderId"}
+    )
+    error_text: str | None = field(default=None, metadata={"cdp_name": "errorText"})
+    is_download: bool | None = field(default=None, metadata={"cdp_name": "isDownload"})
 
 
 @dataclass(kw_only=True, slots=True)
-class NavigateToHistoryEntryParams(CDPModel):
+class NavigateToHistoryEntryParams:
     """
     Navigates current page to the given history entry.
     """
 
-    entry_id: int
+    entry_id: int = field(metadata={"cdp_name": "entryId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class PrintToPDFParams(CDPModel):
+class PrintToPDFParams:
     """
     Print page as PDF.
     """
 
-    landscape: bool | None = None
-    display_header_footer: bool | None = None
-    print_background: bool | None = None
-    scale: float | None = None
-    paper_width: float | None = None
-    paper_height: float | None = None
-    margin_top: float | None = None
-    margin_bottom: float | None = None
-    margin_left: float | None = None
-    margin_right: float | None = None
-    page_ranges: str | None = None
-    header_template: str | None = None
-    footer_template: str | None = None
-    prefer_css_page_size: bool | None = None
-    transfer_mode: Literal["ReturnAsBase64", "ReturnAsStream"] | None = None
-    generate_tagged_pdf: bool | None = None
-    generate_document_outline: bool | None = None
+    landscape: bool | None = field(default=None, metadata={"cdp_name": "landscape"})
+    display_header_footer: bool | None = field(
+        default=None, metadata={"cdp_name": "displayHeaderFooter"}
+    )
+    print_background: bool | None = field(
+        default=None, metadata={"cdp_name": "printBackground"}
+    )
+    scale: float | None = field(default=None, metadata={"cdp_name": "scale"})
+    paper_width: float | None = field(default=None, metadata={"cdp_name": "paperWidth"})
+    paper_height: float | None = field(
+        default=None, metadata={"cdp_name": "paperHeight"}
+    )
+    margin_top: float | None = field(default=None, metadata={"cdp_name": "marginTop"})
+    margin_bottom: float | None = field(
+        default=None, metadata={"cdp_name": "marginBottom"}
+    )
+    margin_left: float | None = field(default=None, metadata={"cdp_name": "marginLeft"})
+    margin_right: float | None = field(
+        default=None, metadata={"cdp_name": "marginRight"}
+    )
+    page_ranges: str | None = field(default=None, metadata={"cdp_name": "pageRanges"})
+    header_template: str | None = field(
+        default=None, metadata={"cdp_name": "headerTemplate"}
+    )
+    footer_template: str | None = field(
+        default=None, metadata={"cdp_name": "footerTemplate"}
+    )
+    prefer_css_page_size: bool | None = field(
+        default=None, metadata={"cdp_name": "preferCSSPageSize"}
+    )
+    transfer_mode: Literal["ReturnAsBase64", "ReturnAsStream"] | None = field(
+        default=None, metadata={"cdp_name": "transferMode"}
+    )
+    generate_tagged_pdf: bool | None = field(
+        default=None, metadata={"cdp_name": "generateTaggedPDF"}
+    )
+    generate_document_outline: bool | None = field(
+        default=None, metadata={"cdp_name": "generateDocumentOutline"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class PrintToPDFResult(CDPModel):
-    data: str
-    stream: io.StreamHandle | None = None
+class PrintToPDFResult:
+    data: str = field(metadata={"cdp_name": "data"})
+    stream: io.StreamHandle | None = field(
+        default=None, metadata={"cdp_name": "stream"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ReloadParams(CDPModel):
+class ReloadParams:
     """
     Reloads given page optionally ignoring the cache.
     """
 
-    ignore_cache: bool | None = None
-    script_to_evaluate_on_load: str | None = None
-    loader_id: network.LoaderId | None = None
+    ignore_cache: bool | None = field(
+        default=None, metadata={"cdp_name": "ignoreCache"}
+    )
+    script_to_evaluate_on_load: str | None = field(
+        default=None, metadata={"cdp_name": "scriptToEvaluateOnLoad"}
+    )
+    loader_id: network.LoaderId | None = field(
+        default=None, metadata={"cdp_name": "loaderId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class RemoveScriptToEvaluateOnLoadParams(CDPModel):
+class RemoveScriptToEvaluateOnLoadParams:
     """
     Deprecated, please use removeScriptToEvaluateOnNewDocument instead.
     """
 
-    identifier: ScriptIdentifier
+    identifier: ScriptIdentifier = field(metadata={"cdp_name": "identifier"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RemoveScriptToEvaluateOnNewDocumentParams(CDPModel):
+class RemoveScriptToEvaluateOnNewDocumentParams:
     """
     Removes given script from the list.
     """
 
-    identifier: ScriptIdentifier
+    identifier: ScriptIdentifier = field(metadata={"cdp_name": "identifier"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ScreencastFrameAckParams(CDPModel):
+class ScreencastFrameAckParams:
     """
     Acknowledges that a screencast frame has been received by the frontend.
     """
 
-    session_id: int
+    session_id: int = field(metadata={"cdp_name": "sessionId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SearchInResourceParams(CDPModel):
+class SearchInResourceParams:
     """
     Searches for given string in resource content.
     """
 
-    frame_id: FrameId
-    url: str
-    query: str
-    case_sensitive: bool | None = None
-    is_regex: bool | None = None
+    frame_id: FrameId = field(metadata={"cdp_name": "frameId"})
+    url: str = field(metadata={"cdp_name": "url"})
+    query: str = field(metadata={"cdp_name": "query"})
+    case_sensitive: bool | None = field(
+        default=None, metadata={"cdp_name": "caseSensitive"}
+    )
+    is_regex: bool | None = field(default=None, metadata={"cdp_name": "isRegex"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SearchInResourceResult(CDPModel):
-    result: list[debugger.SearchMatch]
+class SearchInResourceResult:
+    result: list[debugger.SearchMatch] = field(metadata={"cdp_name": "result"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetAdBlockingEnabledParams(CDPModel):
+class SetAdBlockingEnabledParams:
     """
     Enable Chrome's experimental ad filter on all sites.
     """
 
-    enabled: bool
+    enabled: bool = field(metadata={"cdp_name": "enabled"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetBypassCSPParams(CDPModel):
+class SetBypassCSPParams:
     """
     Enable page Content Security Policy by-passing.
     """
 
-    enabled: bool
+    enabled: bool = field(metadata={"cdp_name": "enabled"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetPermissionsPolicyStateParams(CDPModel):
+class GetPermissionsPolicyStateParams:
     """
     Get Permissions Policy state on given frame.
     """
 
-    frame_id: FrameId
+    frame_id: FrameId = field(metadata={"cdp_name": "frameId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetPermissionsPolicyStateResult(CDPModel):
-    states: list[PermissionsPolicyFeatureState]
+class GetPermissionsPolicyStateResult:
+    states: list[PermissionsPolicyFeatureState] = field(metadata={"cdp_name": "states"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetOriginTrialsParams(CDPModel):
+class GetOriginTrialsParams:
     """
     Get Origin Trials on given frame.
     """
 
-    frame_id: FrameId
+    frame_id: FrameId = field(metadata={"cdp_name": "frameId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetOriginTrialsResult(CDPModel):
-    origin_trials: list[OriginTrial]
+class GetOriginTrialsResult:
+    origin_trials: list[OriginTrial] = field(metadata={"cdp_name": "originTrials"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetDeviceMetricsOverrideParams(CDPModel):
+class SetDeviceMetricsOverrideParams:
     """
     Overrides the values of device screen dimensions (window.screen.width,
     window.screen.height, window.innerWidth, window.innerHeight, and
     "device-width"/"device-height"-related CSS media query results).
     """
 
-    width: int
-    height: int
-    device_scale_factor: float
-    mobile: bool
-    scale: float | None = None
-    screen_width: int | None = None
-    screen_height: int | None = None
-    position_x: int | None = None
-    position_y: int | None = None
-    dont_set_visible_size: bool | None = None
-    screen_orientation: emulation.ScreenOrientation | None = None
-    viewport: Viewport | None = None
+    width: int = field(metadata={"cdp_name": "width"})
+    height: int = field(metadata={"cdp_name": "height"})
+    device_scale_factor: float = field(metadata={"cdp_name": "deviceScaleFactor"})
+    mobile: bool = field(metadata={"cdp_name": "mobile"})
+    scale: float | None = field(default=None, metadata={"cdp_name": "scale"})
+    screen_width: int | None = field(default=None, metadata={"cdp_name": "screenWidth"})
+    screen_height: int | None = field(
+        default=None, metadata={"cdp_name": "screenHeight"}
+    )
+    position_x: int | None = field(default=None, metadata={"cdp_name": "positionX"})
+    position_y: int | None = field(default=None, metadata={"cdp_name": "positionY"})
+    dont_set_visible_size: bool | None = field(
+        default=None, metadata={"cdp_name": "dontSetVisibleSize"}
+    )
+    screen_orientation: emulation.ScreenOrientation | None = field(
+        default=None, metadata={"cdp_name": "screenOrientation"}
+    )
+    viewport: Viewport | None = field(default=None, metadata={"cdp_name": "viewport"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetDeviceOrientationOverrideParams(CDPModel):
+class SetDeviceOrientationOverrideParams:
     """
     Overrides the Device Orientation.
     """
 
-    alpha: float
-    beta: float
-    gamma: float
+    alpha: float = field(metadata={"cdp_name": "alpha"})
+    beta: float = field(metadata={"cdp_name": "beta"})
+    gamma: float = field(metadata={"cdp_name": "gamma"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetFontFamiliesParams(CDPModel):
+class SetFontFamiliesParams:
     """
     Set generic font families.
     """
 
-    font_families: FontFamilies
-    for_scripts: list[ScriptFontFamilies] | None = None
+    font_families: FontFamilies = field(metadata={"cdp_name": "fontFamilies"})
+    for_scripts: list[ScriptFontFamilies] | None = field(
+        default=None, metadata={"cdp_name": "forScripts"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetFontSizesParams(CDPModel):
+class SetFontSizesParams:
     """
     Set default font sizes.
     """
 
-    font_sizes: FontSizes
+    font_sizes: FontSizes = field(metadata={"cdp_name": "fontSizes"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetDocumentContentParams(CDPModel):
+class SetDocumentContentParams:
     """
     Sets given markup as the document's HTML.
     """
 
-    frame_id: FrameId
-    html: str
+    frame_id: FrameId = field(metadata={"cdp_name": "frameId"})
+    html: str = field(metadata={"cdp_name": "html"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetDownloadBehaviorParams(CDPModel):
+class SetDownloadBehaviorParams:
     """
     Set the behavior when downloading a file.
     """
 
-    behavior: Literal["deny", "allow", "default"]
-    download_path: str | None = None
+    behavior: Literal["deny", "allow", "default"] = field(
+        metadata={"cdp_name": "behavior"}
+    )
+    download_path: str | None = field(
+        default=None, metadata={"cdp_name": "downloadPath"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetGeolocationOverrideParams(CDPModel):
+class SetGeolocationOverrideParams:
     """
     Overrides the Geolocation Position or Error. Omitting any of the parameters
     emulates position unavailable.
     """
 
-    latitude: float | None = None
-    longitude: float | None = None
-    accuracy: float | None = None
+    latitude: float | None = field(default=None, metadata={"cdp_name": "latitude"})
+    longitude: float | None = field(default=None, metadata={"cdp_name": "longitude"})
+    accuracy: float | None = field(default=None, metadata={"cdp_name": "accuracy"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetLifecycleEventsEnabledParams(CDPModel):
+class SetLifecycleEventsEnabledParams:
     """
     Controls whether page will emit lifecycle events.
     """
 
-    enabled: bool
+    enabled: bool = field(metadata={"cdp_name": "enabled"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetTouchEmulationEnabledParams(CDPModel):
+class SetTouchEmulationEnabledParams:
     """
     Toggles mouse event-based touch event emulation.
     """
 
-    enabled: bool
-    configuration: Literal["mobile", "desktop"] | None = None
+    enabled: bool = field(metadata={"cdp_name": "enabled"})
+    configuration: Literal["mobile", "desktop"] | None = field(
+        default=None, metadata={"cdp_name": "configuration"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class StartScreencastParams(CDPModel):
+class StartScreencastParams:
     """
     Starts sending each frame using the `screencastFrame` event.
     """
 
-    format: Literal["jpeg", "png"] | None = None
-    quality: int | None = None
-    max_width: int | None = None
-    max_height: int | None = None
-    every_nth_frame: int | None = None
-    max_frames_in_flight: int | None = None
-    send_last_frame: bool | None = None
+    format: Literal["jpeg", "png"] | None = field(
+        default=None, metadata={"cdp_name": "format"}
+    )
+    quality: int | None = field(default=None, metadata={"cdp_name": "quality"})
+    max_width: int | None = field(default=None, metadata={"cdp_name": "maxWidth"})
+    max_height: int | None = field(default=None, metadata={"cdp_name": "maxHeight"})
+    every_nth_frame: int | None = field(
+        default=None, metadata={"cdp_name": "everyNthFrame"}
+    )
+    max_frames_in_flight: int | None = field(
+        default=None, metadata={"cdp_name": "maxFramesInFlight"}
+    )
+    send_last_frame: bool | None = field(
+        default=None, metadata={"cdp_name": "sendLastFrame"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class StartScreenRecordingParams(CDPModel):
+class StartScreenRecordingParams:
     """
     Starts screencast video recording.
     """
 
-    audio: bool | None = None
-    max_width: int | None = None
-    max_height: int | None = None
-    frame_rate: int | None = None
+    audio: bool | None = field(default=None, metadata={"cdp_name": "audio"})
+    max_width: int | None = field(default=None, metadata={"cdp_name": "maxWidth"})
+    max_height: int | None = field(default=None, metadata={"cdp_name": "maxHeight"})
+    frame_rate: int | None = field(default=None, metadata={"cdp_name": "frameRate"})
 
 
 @dataclass(kw_only=True, slots=True)
-class StartScreenRecordingResult(CDPModel):
-    stream: io.StreamHandle
+class StartScreenRecordingResult:
+    stream: io.StreamHandle = field(metadata={"cdp_name": "stream"})
 
 
 @dataclass(kw_only=True, slots=True)
-class StopScreenRecordingResult(CDPModel):
-    stream: io.StreamHandle
+class StopScreenRecordingResult:
+    stream: io.StreamHandle = field(metadata={"cdp_name": "stream"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetWebLifecycleStateParams(CDPModel):
+class SetWebLifecycleStateParams:
     """
     Tries to update the web lifecycle state of the page. It will transition the page to
     the given state according to: https://github.com/WICG/web-lifecycle/
     """
 
-    state: Literal["frozen", "active"]
+    state: Literal["frozen", "active"] = field(metadata={"cdp_name": "state"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ProduceCompilationCacheParams(CDPModel):
+class ProduceCompilationCacheParams:
     """
     Requests backend to produce compilation cache for the specified scripts. `scripts`
     are appended to the list of scripts for which the cache would be produced. The list
@@ -628,22 +721,22 @@ class ProduceCompilationCacheParams(CDPModel):
     heuristics. See also: `Page.compilationCacheProduced`.
     """
 
-    scripts: list[CompilationCacheParams]
+    scripts: list[CompilationCacheParams] = field(metadata={"cdp_name": "scripts"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AddCompilationCacheParams(CDPModel):
+class AddCompilationCacheParams:
     """
     Seeds compilation cache for given url. Compilation cache does not survive
     cross-process navigation.
     """
 
-    url: str
-    data: str
+    url: str = field(metadata={"cdp_name": "url"})
+    data: str = field(metadata={"cdp_name": "data"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetSPCTransactionModeParams(CDPModel):
+class SetSPCTransactionModeParams:
     """
     Sets the Secure Payment Confirmation transaction mode.
     https://w3c.github.io/secure-payment-confirmation/#sctn-automation-set-spc-transaction-mode
@@ -651,43 +744,47 @@ class SetSPCTransactionModeParams(CDPModel):
 
     mode: Literal[
         "none", "autoAccept", "autoChooseToAuthAnotherWay", "autoReject", "autoOptOut"
-    ]
+    ] = field(  # noqa: E501
+        metadata={"cdp_name": "mode"},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetRPHRegistrationModeParams(CDPModel):
+class SetRPHRegistrationModeParams:
     """
     Extensions for Custom Handlers API:
     https://html.spec.whatwg.org/multipage/system-state.html#rph-automation
     """
 
-    mode: Literal["none", "autoAccept", "autoReject"]
+    mode: Literal["none", "autoAccept", "autoReject"] = field(
+        metadata={"cdp_name": "mode"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GenerateTestReportParams(CDPModel):
+class GenerateTestReportParams:
     """
     Generates a report for testing.
     """
 
-    message: str
-    group: str | None = None
+    message: str = field(metadata={"cdp_name": "message"})
+    group: str | None = field(default=None, metadata={"cdp_name": "group"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetInterceptFileChooserDialogParams(CDPModel):
+class SetInterceptFileChooserDialogParams:
     """
     Intercept file chooser requests and transfer control to protocol clients. When file
     chooser interception is enabled, native file chooser dialog is not shown. Instead, a
     protocol event `Page.fileChooserOpened` is emitted.
     """
 
-    enabled: bool
-    cancel: bool | None = None
+    enabled: bool = field(metadata={"cdp_name": "enabled"})
+    cancel: bool | None = field(default=None, metadata={"cdp_name": "cancel"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetPrerenderingAllowedParams(CDPModel):
+class SetPrerenderingAllowedParams:
     """
     Enable/disable prerendering manually. This command is a short-term solution for
     https://crbug.com/1440085. See
@@ -696,19 +793,21 @@ class SetPrerenderingAllowedParams(CDPModel):
     tab targets.
     """
 
-    is_allowed: bool
+    is_allowed: bool = field(metadata={"cdp_name": "isAllowed"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetAnnotatedPageContentParams(CDPModel):
+class GetAnnotatedPageContentParams:
     """
     Get the annotated page content for the main frame. This is an experimental command
     that is subject to change.
     """
 
-    include_actionable_information: bool | None = None
+    include_actionable_information: bool | None = field(
+        default=None, metadata={"cdp_name": "includeActionableInformation"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetAnnotatedPageContentResult(CDPModel):
-    content: str
+class GetAnnotatedPageContentResult:
+    content: str = field(metadata={"cdp_name": "content"})

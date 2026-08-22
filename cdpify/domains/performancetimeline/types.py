@@ -4,52 +4,61 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from cdpify.domains import dom, network, page
-from cdpify.shared.models import CDPModel
 
 
 @dataclass(kw_only=True, slots=True)
-class LargestContentfulPaint(CDPModel):
+class LargestContentfulPaint:
     """
     See https://github.com/WICG/LargestContentfulPaint and largest_contentful_paint.idl
     """
 
-    render_time: network.TimeSinceEpoch
-    load_time: network.TimeSinceEpoch
-    size: float
-    element_id: str | None = None
-    url: str | None = None
-    node_id: dom.BackendNodeId | None = None
+    render_time: network.TimeSinceEpoch = field(metadata={"cdp_name": "renderTime"})
+    load_time: network.TimeSinceEpoch = field(metadata={"cdp_name": "loadTime"})
+    size: float = field(metadata={"cdp_name": "size"})
+    element_id: str | None = field(default=None, metadata={"cdp_name": "elementId"})
+    url: str | None = field(default=None, metadata={"cdp_name": "url"})
+    node_id: dom.BackendNodeId | None = field(
+        default=None, metadata={"cdp_name": "nodeId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class LayoutShiftAttribution(CDPModel):
-    previous_rect: dom.Rect
-    current_rect: dom.Rect
-    node_id: dom.BackendNodeId | None = None
+class LayoutShiftAttribution:
+    previous_rect: dom.Rect = field(metadata={"cdp_name": "previousRect"})
+    current_rect: dom.Rect = field(metadata={"cdp_name": "currentRect"})
+    node_id: dom.BackendNodeId | None = field(
+        default=None, metadata={"cdp_name": "nodeId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class LayoutShift(CDPModel):
+class LayoutShift:
     """
     See https://wicg.github.io/layout-instability/#sec-layout-shift and
     layout_shift.idl
     """
 
-    value: float
-    had_recent_input: bool
-    last_input_time: network.TimeSinceEpoch
-    sources: list[LayoutShiftAttribution]
+    value: float = field(metadata={"cdp_name": "value"})
+    had_recent_input: bool = field(metadata={"cdp_name": "hadRecentInput"})
+    last_input_time: network.TimeSinceEpoch = field(
+        metadata={"cdp_name": "lastInputTime"}
+    )
+    sources: list[LayoutShiftAttribution] = field(metadata={"cdp_name": "sources"})
 
 
 @dataclass(kw_only=True, slots=True)
-class TimelineEvent(CDPModel):
-    frame_id: page.FrameId
-    type: str
-    name: str
-    time: network.TimeSinceEpoch
-    duration: float | None = None
-    lcp_details: LargestContentfulPaint | None = None
-    layout_shift_details: LayoutShift | None = None
+class TimelineEvent:
+    frame_id: page.FrameId = field(metadata={"cdp_name": "frameId"})
+    type: str = field(metadata={"cdp_name": "type"})
+    name: str = field(metadata={"cdp_name": "name"})
+    time: network.TimeSinceEpoch = field(metadata={"cdp_name": "time"})
+    duration: float | None = field(default=None, metadata={"cdp_name": "duration"})
+    lcp_details: LargestContentfulPaint | None = field(
+        default=None, metadata={"cdp_name": "lcpDetails"}
+    )
+    layout_shift_details: LayoutShift | None = field(
+        default=None, metadata={"cdp_name": "layoutShiftDetails"}
+    )

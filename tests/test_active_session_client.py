@@ -1,15 +1,18 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
 from cdpify import ActiveSessionCDPClient, Client
-from cdpify.shared.models import CDPEvent
 
 
 @dataclass(kw_only=True, slots=True)
-class _Event(CDPEvent):
-    value: int
+class _Event:
+    value: int = field(metadata={"cdp_name": "value"})
+    cdp_session_id: str | None = field(
+        default=None,
+        metadata={"cdp": False},
+    )
 
 
 @pytest.mark.asyncio

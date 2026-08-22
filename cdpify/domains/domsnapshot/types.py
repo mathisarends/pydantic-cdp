@@ -4,93 +4,130 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
 from cdpify.domains import dom, domdebugger, page
-from cdpify.shared.models import CDPModel
 
 
 @dataclass(kw_only=True, slots=True)
-class DOMNode(CDPModel):
+class DOMNode:
     """
     A Node in the DOM tree.
     """
 
-    node_type: int
-    node_name: str
-    node_value: str
-    text_value: str | None = None
-    input_value: str | None = None
-    input_checked: bool | None = None
-    option_selected: bool | None = None
-    backend_node_id: dom.BackendNodeId
-    child_node_indexes: list[int] | None = None
-    attributes: list[NameValue] | None = None
-    pseudo_element_indexes: list[int] | None = None
-    layout_node_index: int | None = None
-    document_url: str | None = None
-    base_url: str | None = None
-    content_language: str | None = None
-    document_encoding: str | None = None
-    public_id: str | None = None
-    system_id: str | None = None
-    frame_id: page.FrameId | None = None
-    content_document_index: int | None = None
-    pseudo_type: dom.PseudoType | None = None
-    shadow_root_type: dom.ShadowRootType | None = None
-    is_clickable: bool | None = None
-    event_listeners: list[domdebugger.EventListener] | None = None
-    current_source_url: str | None = None
-    origin_url: str | None = None
-    scroll_offset_x: float | None = None
-    scroll_offset_y: float | None = None
+    node_type: int = field(metadata={"cdp_name": "nodeType"})
+    node_name: str = field(metadata={"cdp_name": "nodeName"})
+    node_value: str = field(metadata={"cdp_name": "nodeValue"})
+    text_value: str | None = field(default=None, metadata={"cdp_name": "textValue"})
+    input_value: str | None = field(default=None, metadata={"cdp_name": "inputValue"})
+    input_checked: bool | None = field(
+        default=None, metadata={"cdp_name": "inputChecked"}
+    )
+    option_selected: bool | None = field(
+        default=None, metadata={"cdp_name": "optionSelected"}
+    )
+    backend_node_id: dom.BackendNodeId = field(metadata={"cdp_name": "backendNodeId"})
+    child_node_indexes: list[int] | None = field(
+        default=None, metadata={"cdp_name": "childNodeIndexes"}
+    )
+    attributes: list[NameValue] | None = field(
+        default=None, metadata={"cdp_name": "attributes"}
+    )
+    pseudo_element_indexes: list[int] | None = field(
+        default=None, metadata={"cdp_name": "pseudoElementIndexes"}
+    )
+    layout_node_index: int | None = field(
+        default=None, metadata={"cdp_name": "layoutNodeIndex"}
+    )
+    document_url: str | None = field(default=None, metadata={"cdp_name": "documentURL"})
+    base_url: str | None = field(default=None, metadata={"cdp_name": "baseURL"})
+    content_language: str | None = field(
+        default=None, metadata={"cdp_name": "contentLanguage"}
+    )
+    document_encoding: str | None = field(
+        default=None, metadata={"cdp_name": "documentEncoding"}
+    )
+    public_id: str | None = field(default=None, metadata={"cdp_name": "publicId"})
+    system_id: str | None = field(default=None, metadata={"cdp_name": "systemId"})
+    frame_id: page.FrameId | None = field(
+        default=None, metadata={"cdp_name": "frameId"}
+    )
+    content_document_index: int | None = field(
+        default=None, metadata={"cdp_name": "contentDocumentIndex"}
+    )
+    pseudo_type: dom.PseudoType | None = field(
+        default=None, metadata={"cdp_name": "pseudoType"}
+    )
+    shadow_root_type: dom.ShadowRootType | None = field(
+        default=None, metadata={"cdp_name": "shadowRootType"}
+    )
+    is_clickable: bool | None = field(
+        default=None, metadata={"cdp_name": "isClickable"}
+    )
+    event_listeners: list[domdebugger.EventListener] | None = field(
+        default=None, metadata={"cdp_name": "eventListeners"}
+    )
+    current_source_url: str | None = field(
+        default=None, metadata={"cdp_name": "currentSourceURL"}
+    )
+    origin_url: str | None = field(default=None, metadata={"cdp_name": "originURL"})
+    scroll_offset_x: float | None = field(
+        default=None, metadata={"cdp_name": "scrollOffsetX"}
+    )
+    scroll_offset_y: float | None = field(
+        default=None, metadata={"cdp_name": "scrollOffsetY"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class InlineTextBox(CDPModel):
+class InlineTextBox:
     """
     Details of post layout rendered text positions. The exact layout should not be
     regarded as stable and may change between versions.
     """
 
-    bounding_box: dom.Rect
-    start_character_index: int
-    num_characters: int
+    bounding_box: dom.Rect = field(metadata={"cdp_name": "boundingBox"})
+    start_character_index: int = field(metadata={"cdp_name": "startCharacterIndex"})
+    num_characters: int = field(metadata={"cdp_name": "numCharacters"})
 
 
 @dataclass(kw_only=True, slots=True)
-class LayoutTreeNode(CDPModel):
+class LayoutTreeNode:
     """
     Details of an element in the DOM tree with a LayoutObject.
     """
 
-    dom_node_index: int
-    bounding_box: dom.Rect
-    layout_text: str | None = None
-    inline_text_nodes: list[InlineTextBox] | None = None
-    style_index: int | None = None
-    paint_order: int | None = None
-    is_stacking_context: bool | None = None
+    dom_node_index: int = field(metadata={"cdp_name": "domNodeIndex"})
+    bounding_box: dom.Rect = field(metadata={"cdp_name": "boundingBox"})
+    layout_text: str | None = field(default=None, metadata={"cdp_name": "layoutText"})
+    inline_text_nodes: list[InlineTextBox] | None = field(
+        default=None, metadata={"cdp_name": "inlineTextNodes"}
+    )
+    style_index: int | None = field(default=None, metadata={"cdp_name": "styleIndex"})
+    paint_order: int | None = field(default=None, metadata={"cdp_name": "paintOrder"})
+    is_stacking_context: bool | None = field(
+        default=None, metadata={"cdp_name": "isStackingContext"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ComputedStyle(CDPModel):
+class ComputedStyle:
     """
     A subset of the full ComputedStyle as defined by the request whitelist.
     """
 
-    properties: list[NameValue]
+    properties: list[NameValue] = field(metadata={"cdp_name": "properties"})
 
 
 @dataclass(kw_only=True, slots=True)
-class NameValue(CDPModel):
+class NameValue:
     """
     A name/value pair.
     """
 
-    name: str
-    value: str
+    name: str = field(metadata={"cdp_name": "name"})
+    value: str = field(metadata={"cdp_name": "value"})
 
 
 """
@@ -105,104 +142,160 @@ ArrayOfStrings = list[Any]
 
 
 @dataclass(kw_only=True, slots=True)
-class RareStringData(CDPModel):
+class RareStringData:
     """
     Data that is only present on rare nodes.
     """
 
-    index: list[int]
-    value: list[StringIndex]
+    index: list[int] = field(metadata={"cdp_name": "index"})
+    value: list[StringIndex] = field(metadata={"cdp_name": "value"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RareBooleanData(CDPModel):
-    index: list[int]
+class RareBooleanData:
+    index: list[int] = field(metadata={"cdp_name": "index"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RareIntegerData(CDPModel):
-    index: list[int]
-    value: list[int]
+class RareIntegerData:
+    index: list[int] = field(metadata={"cdp_name": "index"})
+    value: list[int] = field(metadata={"cdp_name": "value"})
 
 
 Rectangle = list[Any]
 
 
 @dataclass(kw_only=True, slots=True)
-class DocumentSnapshot(CDPModel):
+class DocumentSnapshot:
     """
     Document snapshot.
     """
 
-    document_url: StringIndex | None = None
-    title: StringIndex
-    base_url: StringIndex | None = None
-    content_language: StringIndex
-    encoding_name: StringIndex
-    public_id: StringIndex
-    system_id: StringIndex
-    frame_id: StringIndex
-    nodes: NodeTreeSnapshot
-    layout: LayoutTreeSnapshot
-    text_boxes: TextBoxSnapshot
-    scroll_offset_x: float | None = None
-    scroll_offset_y: float | None = None
-    content_width: float | None = None
-    content_height: float | None = None
+    document_url: StringIndex | None = field(
+        default=None, metadata={"cdp_name": "documentURL"}
+    )
+    title: StringIndex = field(metadata={"cdp_name": "title"})
+    base_url: StringIndex | None = field(default=None, metadata={"cdp_name": "baseURL"})
+    content_language: StringIndex = field(metadata={"cdp_name": "contentLanguage"})
+    encoding_name: StringIndex = field(metadata={"cdp_name": "encodingName"})
+    public_id: StringIndex = field(metadata={"cdp_name": "publicId"})
+    system_id: StringIndex = field(metadata={"cdp_name": "systemId"})
+    frame_id: StringIndex = field(metadata={"cdp_name": "frameId"})
+    nodes: NodeTreeSnapshot = field(metadata={"cdp_name": "nodes"})
+    layout: LayoutTreeSnapshot = field(metadata={"cdp_name": "layout"})
+    text_boxes: TextBoxSnapshot = field(metadata={"cdp_name": "textBoxes"})
+    scroll_offset_x: float | None = field(
+        default=None, metadata={"cdp_name": "scrollOffsetX"}
+    )
+    scroll_offset_y: float | None = field(
+        default=None, metadata={"cdp_name": "scrollOffsetY"}
+    )
+    content_width: float | None = field(
+        default=None, metadata={"cdp_name": "contentWidth"}
+    )
+    content_height: float | None = field(
+        default=None, metadata={"cdp_name": "contentHeight"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class NodeTreeSnapshot(CDPModel):
+class NodeTreeSnapshot:
     """
     Table containing nodes.
     """
 
-    parent_index: list[int] | None = None
-    node_type: list[int] | None = None
-    shadow_root_type: RareStringData | None = None
-    node_name: list[StringIndex] | None = None
-    node_value: list[StringIndex] | None = None
-    backend_node_id: list[dom.BackendNodeId] | None = None
-    attributes: list[ArrayOfStrings] | None = None
-    text_value: RareStringData | None = None
-    input_value: RareStringData | None = None
-    input_checked: RareBooleanData | None = None
-    option_selected: RareBooleanData | None = None
-    content_document_index: RareIntegerData | None = None
-    pseudo_type: RareStringData | None = None
-    pseudo_identifier: RareStringData | None = None
-    is_clickable: RareBooleanData | None = None
-    current_source_url: RareStringData | None = None
-    origin_url: RareStringData | None = None
+    parent_index: list[int] | None = field(
+        default=None, metadata={"cdp_name": "parentIndex"}
+    )
+    node_type: list[int] | None = field(default=None, metadata={"cdp_name": "nodeType"})
+    shadow_root_type: RareStringData | None = field(
+        default=None, metadata={"cdp_name": "shadowRootType"}
+    )
+    node_name: list[StringIndex] | None = field(
+        default=None, metadata={"cdp_name": "nodeName"}
+    )
+    node_value: list[StringIndex] | None = field(
+        default=None, metadata={"cdp_name": "nodeValue"}
+    )
+    backend_node_id: list[dom.BackendNodeId] | None = field(
+        default=None, metadata={"cdp_name": "backendNodeId"}
+    )
+    attributes: list[ArrayOfStrings] | None = field(
+        default=None, metadata={"cdp_name": "attributes"}
+    )
+    text_value: RareStringData | None = field(
+        default=None, metadata={"cdp_name": "textValue"}
+    )
+    input_value: RareStringData | None = field(
+        default=None, metadata={"cdp_name": "inputValue"}
+    )
+    input_checked: RareBooleanData | None = field(
+        default=None, metadata={"cdp_name": "inputChecked"}
+    )
+    option_selected: RareBooleanData | None = field(
+        default=None, metadata={"cdp_name": "optionSelected"}
+    )
+    content_document_index: RareIntegerData | None = field(
+        default=None, metadata={"cdp_name": "contentDocumentIndex"}
+    )
+    pseudo_type: RareStringData | None = field(
+        default=None, metadata={"cdp_name": "pseudoType"}
+    )
+    pseudo_identifier: RareStringData | None = field(
+        default=None, metadata={"cdp_name": "pseudoIdentifier"}
+    )
+    is_clickable: RareBooleanData | None = field(
+        default=None, metadata={"cdp_name": "isClickable"}
+    )
+    current_source_url: RareStringData | None = field(
+        default=None, metadata={"cdp_name": "currentSourceURL"}
+    )
+    origin_url: RareStringData | None = field(
+        default=None, metadata={"cdp_name": "originURL"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class LayoutTreeSnapshot(CDPModel):
+class LayoutTreeSnapshot:
     """
     Table of details of an element in the DOM tree with a LayoutObject.
     """
 
-    node_index: list[int]
-    styles: list[ArrayOfStrings]
-    bounds: list[Rectangle]
-    text: list[StringIndex]
-    stacking_contexts: RareBooleanData
-    paint_orders: list[int] | None = None
-    offset_rects: list[Rectangle] | None = None
-    scroll_rects: list[Rectangle] | None = None
-    client_rects: list[Rectangle] | None = None
-    blended_background_colors: list[StringIndex] | None = None
-    text_color_opacities: list[float] | None = None
+    node_index: list[int] = field(metadata={"cdp_name": "nodeIndex"})
+    styles: list[ArrayOfStrings] = field(metadata={"cdp_name": "styles"})
+    bounds: list[Rectangle] = field(metadata={"cdp_name": "bounds"})
+    text: list[StringIndex] = field(metadata={"cdp_name": "text"})
+    stacking_contexts: RareBooleanData = field(
+        metadata={"cdp_name": "stackingContexts"}
+    )
+    paint_orders: list[int] | None = field(
+        default=None, metadata={"cdp_name": "paintOrders"}
+    )
+    offset_rects: list[Rectangle] | None = field(
+        default=None, metadata={"cdp_name": "offsetRects"}
+    )
+    scroll_rects: list[Rectangle] | None = field(
+        default=None, metadata={"cdp_name": "scrollRects"}
+    )
+    client_rects: list[Rectangle] | None = field(
+        default=None, metadata={"cdp_name": "clientRects"}
+    )
+    blended_background_colors: list[StringIndex] | None = field(
+        default=None, metadata={"cdp_name": "blendedBackgroundColors"}
+    )
+    text_color_opacities: list[float] | None = field(
+        default=None, metadata={"cdp_name": "textColorOpacities"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class TextBoxSnapshot(CDPModel):
+class TextBoxSnapshot:
     """
     Table of details of the post layout rendered text positions. The exact layout
     should not be regarded as stable and may change between versions.
     """
 
-    layout_index: list[int]
-    bounds: list[Rectangle]
-    start: list[int]
-    length: list[int]
+    layout_index: list[int] = field(metadata={"cdp_name": "layoutIndex"})
+    bounds: list[Rectangle] = field(metadata={"cdp_name": "bounds"})
+    start: list[int] = field(metadata={"cdp_name": "start"})
+    length: list[int] = field(metadata={"cdp_name": "length"})

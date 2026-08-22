@@ -4,18 +4,20 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Literal
-
-from cdpify.shared.models import CDPModel
 
 
 @dataclass(kw_only=True, slots=True)
-class ScreenshotParams(CDPModel):
+class ScreenshotParams:
     """
     Encoding options for a screenshot.
     """
 
-    format: Literal["jpeg", "png", "webp"] | None = None
-    quality: int | None = None
-    optimize_for_speed: bool | None = None
+    format: Literal["jpeg", "png", "webp"] | None = field(
+        default=None, metadata={"cdp_name": "format"}
+    )
+    quality: int | None = field(default=None, metadata={"cdp_name": "quality"})
+    optimize_for_speed: bool | None = field(
+        default=None, metadata={"cdp_name": "optimizeForSpeed"}
+    )

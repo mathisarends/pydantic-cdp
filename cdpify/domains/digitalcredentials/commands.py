@@ -4,12 +4,11 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Any
 
 from cdpify.domains import page
-from cdpify.shared.models import CDPModel
 
 from .types import (
     VirtualWalletAction,
@@ -21,13 +20,17 @@ class DigitalCredentialsCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class SetVirtualWalletBehaviorParams(CDPModel):
+class SetVirtualWalletBehaviorParams:
     """
     Sets the behavior of the virtual wallet for digital credential requests issued from
     this frame.
     """
 
-    action: VirtualWalletAction
-    protocol: str | None = None
-    response: dict[str, Any] | None = None
-    frame_id: page.FrameId | None = None
+    action: VirtualWalletAction = field(metadata={"cdp_name": "action"})
+    protocol: str | None = field(default=None, metadata={"cdp_name": "protocol"})
+    response: dict[str, Any] | None = field(
+        default=None, metadata={"cdp_name": "response"}
+    )
+    frame_id: page.FrameId | None = field(
+        default=None, metadata={"cdp_name": "frameId"}
+    )

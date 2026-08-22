@@ -4,12 +4,11 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Literal
 
 from cdpify.domains import target
-from cdpify.shared.models import CDPModel
 
 from .types import (
     Bounds,
@@ -50,199 +49,219 @@ class BrowserCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class SetPermissionParams(CDPModel):
+class SetPermissionParams:
     """
     Set permission settings for given embedding and embedded origins.
     """
 
-    permission: PermissionDescriptor
-    setting: PermissionSetting
-    origin: str | None = None
-    embedded_origin: str | None = None
-    browser_context_id: BrowserContextID | None = None
+    permission: PermissionDescriptor = field(metadata={"cdp_name": "permission"})
+    setting: PermissionSetting = field(metadata={"cdp_name": "setting"})
+    origin: str | None = field(default=None, metadata={"cdp_name": "origin"})
+    embedded_origin: str | None = field(
+        default=None, metadata={"cdp_name": "embeddedOrigin"}
+    )
+    browser_context_id: BrowserContextID | None = field(
+        default=None, metadata={"cdp_name": "browserContextId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GrantPermissionsParams(CDPModel):
+class GrantPermissionsParams:
     """
     Grant specific permissions to the given origin and reject all others. Deprecated.
     Use setPermission instead.
     """
 
-    permissions: list[PermissionType]
-    origin: str | None = None
-    browser_context_id: BrowserContextID | None = None
+    permissions: list[PermissionType] = field(metadata={"cdp_name": "permissions"})
+    origin: str | None = field(default=None, metadata={"cdp_name": "origin"})
+    browser_context_id: BrowserContextID | None = field(
+        default=None, metadata={"cdp_name": "browserContextId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ResetPermissionsParams(CDPModel):
+class ResetPermissionsParams:
     """
     Reset all permission management for all origins.
     """
 
-    browser_context_id: BrowserContextID | None = None
+    browser_context_id: BrowserContextID | None = field(
+        default=None, metadata={"cdp_name": "browserContextId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetDownloadBehaviorParams(CDPModel):
+class SetDownloadBehaviorParams:
     """
     Set the behavior when downloading a file.
     """
 
-    behavior: Literal["deny", "allow", "allowAndName", "default"]
-    browser_context_id: BrowserContextID | None = None
-    download_path: str | None = None
-    events_enabled: bool | None = None
+    behavior: Literal["deny", "allow", "allowAndName", "default"] = field(
+        metadata={"cdp_name": "behavior"}
+    )
+    browser_context_id: BrowserContextID | None = field(
+        default=None, metadata={"cdp_name": "browserContextId"}
+    )
+    download_path: str | None = field(
+        default=None, metadata={"cdp_name": "downloadPath"}
+    )
+    events_enabled: bool | None = field(
+        default=None, metadata={"cdp_name": "eventsEnabled"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class CancelDownloadParams(CDPModel):
+class CancelDownloadParams:
     """
     Cancel a download if in progress
     """
 
-    guid: str
-    browser_context_id: BrowserContextID | None = None
+    guid: str = field(metadata={"cdp_name": "guid"})
+    browser_context_id: BrowserContextID | None = field(
+        default=None, metadata={"cdp_name": "browserContextId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetVersionResult(CDPModel):
-    protocol_version: str
-    product: str
-    revision: str
-    user_agent: str
-    js_version: str
+class GetVersionResult:
+    protocol_version: str = field(metadata={"cdp_name": "protocolVersion"})
+    product: str = field(metadata={"cdp_name": "product"})
+    revision: str = field(metadata={"cdp_name": "revision"})
+    user_agent: str = field(metadata={"cdp_name": "userAgent"})
+    js_version: str = field(metadata={"cdp_name": "jsVersion"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetBrowserCommandLineResult(CDPModel):
-    arguments: list[str]
+class GetBrowserCommandLineResult:
+    arguments: list[str] = field(metadata={"cdp_name": "arguments"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetHistogramsParams(CDPModel):
+class GetHistogramsParams:
     """
     Get Chrome histograms.
     """
 
-    query: str | None = None
-    delta: bool | None = None
+    query: str | None = field(default=None, metadata={"cdp_name": "query"})
+    delta: bool | None = field(default=None, metadata={"cdp_name": "delta"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetHistogramsResult(CDPModel):
-    histograms: list[Histogram]
+class GetHistogramsResult:
+    histograms: list[Histogram] = field(metadata={"cdp_name": "histograms"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetHistogramParams(CDPModel):
+class GetHistogramParams:
     """
     Get a Chrome histogram by name.
     """
 
-    name: str
-    delta: bool | None = None
+    name: str = field(metadata={"cdp_name": "name"})
+    delta: bool | None = field(default=None, metadata={"cdp_name": "delta"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetHistogramResult(CDPModel):
-    histogram: Histogram
+class GetHistogramResult:
+    histogram: Histogram = field(metadata={"cdp_name": "histogram"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetWindowBoundsParams(CDPModel):
+class GetWindowBoundsParams:
     """
     Get position and size of the browser window.
     """
 
-    window_id: WindowID
+    window_id: WindowID = field(metadata={"cdp_name": "windowId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetWindowBoundsResult(CDPModel):
-    bounds: Bounds
+class GetWindowBoundsResult:
+    bounds: Bounds = field(metadata={"cdp_name": "bounds"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetWindowForTargetParams(CDPModel):
+class GetWindowForTargetParams:
     """
     Get the browser window that contains the devtools target.
     """
 
-    target_id: target.TargetID | None = None
+    target_id: target.TargetID | None = field(
+        default=None, metadata={"cdp_name": "targetId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetWindowForTargetResult(CDPModel):
-    window_id: WindowID
-    bounds: Bounds
+class GetWindowForTargetResult:
+    window_id: WindowID = field(metadata={"cdp_name": "windowId"})
+    bounds: Bounds = field(metadata={"cdp_name": "bounds"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetWindowBoundsParams(CDPModel):
+class SetWindowBoundsParams:
     """
     Set position and/or size of the browser window.
     """
 
-    window_id: WindowID
-    bounds: Bounds
+    window_id: WindowID = field(metadata={"cdp_name": "windowId"})
+    bounds: Bounds = field(metadata={"cdp_name": "bounds"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetContentsSizeParams(CDPModel):
+class SetContentsSizeParams:
     """
     Set size of the browser contents resizing browser window as necessary.
     """
 
-    window_id: WindowID
-    width: int | None = None
-    height: int | None = None
+    window_id: WindowID = field(metadata={"cdp_name": "windowId"})
+    width: int | None = field(default=None, metadata={"cdp_name": "width"})
+    height: int | None = field(default=None, metadata={"cdp_name": "height"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetDockTileParams(CDPModel):
+class SetDockTileParams:
     """
     Set dock tile details, platform-specific.
     """
 
-    badge_label: str | None = None
-    image: str | None = None
+    badge_label: str | None = field(default=None, metadata={"cdp_name": "badgeLabel"})
+    image: str | None = field(default=None, metadata={"cdp_name": "image"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ExecuteBrowserCommandParams(CDPModel):
+class ExecuteBrowserCommandParams:
     """
     Invoke custom browser commands used by telemetry.
     """
 
-    command_id: BrowserCommandId
+    command_id: BrowserCommandId = field(metadata={"cdp_name": "commandId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AddPrivacySandboxEnrollmentOverrideParams(CDPModel):
+class AddPrivacySandboxEnrollmentOverrideParams:
     """
     Allows a site to use privacy sandbox features that require enrollment without the
     site actually being enrolled. Only supported on page targets.
     """
 
-    url: str
+    url: str = field(metadata={"cdp_name": "url"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetGlobalPrivacyControlResult(CDPModel):
-    gpc: bool
+class GetGlobalPrivacyControlResult:
+    gpc: bool = field(metadata={"cdp_name": "gpc"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetGlobalPrivacyControlParams(CDPModel):
+class SetGlobalPrivacyControlParams:
     """
     Sets and then gets the current globally-applied privacy control status See
     https://www.w3.org/TR/gpc/#set-global-privacy-control
     """
 
-    gpc: bool
+    gpc: bool = field(metadata={"cdp_name": "gpc"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetGlobalPrivacyControlResult(CDPModel):
-    gpc: bool
+class SetGlobalPrivacyControlResult:
+    gpc: bool = field(metadata={"cdp_name": "gpc"})

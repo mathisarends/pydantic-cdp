@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+from cdpify.codec import decode_cdp, encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -32,7 +33,7 @@ class FileSystem:
 
         result = await self._command_sender.send_raw(
             method=FileSystemCommand.GET_DIRECTORY,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetDirectoryResult.from_cdp(result)
+        return decode_cdp(GetDirectoryResult, result)

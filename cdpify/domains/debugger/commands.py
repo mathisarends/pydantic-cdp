@@ -4,12 +4,11 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Literal
 
 from cdpify.domains import runtime
-from cdpify.shared.models import CDPModel
 
 from .types import (
     BreakLocation,
@@ -61,159 +60,181 @@ class DebuggerCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class ContinueToLocationParams(CDPModel):
+class ContinueToLocationParams:
     """
     Continues execution until specific location is reached.
     """
 
-    location: Location
-    target_call_frames: Literal["any", "current"] | None = None
+    location: Location = field(metadata={"cdp_name": "location"})
+    target_call_frames: Literal["any", "current"] | None = field(
+        default=None, metadata={"cdp_name": "targetCallFrames"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class EnableParams(CDPModel):
+class EnableParams:
     """
     Enables debugger for the given page. Clients should not assume that the debugging
     has been enabled until the result for this command is received.
     """
 
-    max_scripts_cache_size: float | None = None
+    max_scripts_cache_size: float | None = field(
+        default=None, metadata={"cdp_name": "maxScriptsCacheSize"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class EnableResult(CDPModel):
-    debugger_id: runtime.UniqueDebuggerId
+class EnableResult:
+    debugger_id: runtime.UniqueDebuggerId = field(metadata={"cdp_name": "debuggerId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class EvaluateOnCallFrameParams(CDPModel):
+class EvaluateOnCallFrameParams:
     """
     Evaluates expression on a given call frame.
     """
 
-    call_frame_id: CallFrameId
-    expression: str
-    object_group: str | None = None
-    include_command_line_api: bool | None = None
-    silent: bool | None = None
-    return_by_value: bool | None = None
-    generate_preview: bool | None = None
-    throw_on_side_effect: bool | None = None
-    timeout: runtime.TimeDelta | None = None
-    scope_number: int | None = None
+    call_frame_id: CallFrameId = field(metadata={"cdp_name": "callFrameId"})
+    expression: str = field(metadata={"cdp_name": "expression"})
+    object_group: str | None = field(default=None, metadata={"cdp_name": "objectGroup"})
+    include_command_line_api: bool | None = field(
+        default=None, metadata={"cdp_name": "includeCommandLineAPI"}
+    )
+    silent: bool | None = field(default=None, metadata={"cdp_name": "silent"})
+    return_by_value: bool | None = field(
+        default=None, metadata={"cdp_name": "returnByValue"}
+    )
+    generate_preview: bool | None = field(
+        default=None, metadata={"cdp_name": "generatePreview"}
+    )
+    throw_on_side_effect: bool | None = field(
+        default=None, metadata={"cdp_name": "throwOnSideEffect"}
+    )
+    timeout: runtime.TimeDelta | None = field(
+        default=None, metadata={"cdp_name": "timeout"}
+    )
+    scope_number: int | None = field(default=None, metadata={"cdp_name": "scopeNumber"})
 
 
 @dataclass(kw_only=True, slots=True)
-class EvaluateOnCallFrameResult(CDPModel):
-    result: runtime.RemoteObject
-    exception_details: runtime.ExceptionDetails | None = None
+class EvaluateOnCallFrameResult:
+    result: runtime.RemoteObject = field(metadata={"cdp_name": "result"})
+    exception_details: runtime.ExceptionDetails | None = field(
+        default=None, metadata={"cdp_name": "exceptionDetails"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetPossibleBreakpointsParams(CDPModel):
+class GetPossibleBreakpointsParams:
     """
     Returns possible locations for breakpoint. scriptId in start and end range
     locations should be the same.
     """
 
-    start: Location
-    end: Location | None = None
-    restrict_to_function: bool | None = None
+    start: Location = field(metadata={"cdp_name": "start"})
+    end: Location | None = field(default=None, metadata={"cdp_name": "end"})
+    restrict_to_function: bool | None = field(
+        default=None, metadata={"cdp_name": "restrictToFunction"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetPossibleBreakpointsResult(CDPModel):
-    locations: list[BreakLocation]
+class GetPossibleBreakpointsResult:
+    locations: list[BreakLocation] = field(metadata={"cdp_name": "locations"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetScriptSourceParams(CDPModel):
+class GetScriptSourceParams:
     """
     Returns source for the script with given id.
     """
 
-    script_id: runtime.ScriptId
+    script_id: runtime.ScriptId = field(metadata={"cdp_name": "scriptId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetScriptSourceResult(CDPModel):
-    script_source: str
-    bytecode: str | None = None
+class GetScriptSourceResult:
+    script_source: str = field(metadata={"cdp_name": "scriptSource"})
+    bytecode: str | None = field(default=None, metadata={"cdp_name": "bytecode"})
 
 
 @dataclass(kw_only=True, slots=True)
-class DisassembleWasmModuleParams(CDPModel):
-    script_id: runtime.ScriptId
+class DisassembleWasmModuleParams:
+    script_id: runtime.ScriptId = field(metadata={"cdp_name": "scriptId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class DisassembleWasmModuleResult(CDPModel):
-    stream_id: str | None = None
-    total_number_of_lines: int
-    function_body_offsets: list[int]
-    chunk: WasmDisassemblyChunk
+class DisassembleWasmModuleResult:
+    stream_id: str | None = field(default=None, metadata={"cdp_name": "streamId"})
+    total_number_of_lines: int = field(metadata={"cdp_name": "totalNumberOfLines"})
+    function_body_offsets: list[int] = field(
+        metadata={"cdp_name": "functionBodyOffsets"}
+    )
+    chunk: WasmDisassemblyChunk = field(metadata={"cdp_name": "chunk"})
 
 
 @dataclass(kw_only=True, slots=True)
-class NextWasmDisassemblyChunkParams(CDPModel):
+class NextWasmDisassemblyChunkParams:
     """
     Disassemble the next chunk of lines for the module corresponding to the stream. If
     disassembly is complete, this API will invalidate the streamId and return an empty
     chunk. Any subsequent calls for the now invalid stream will return errors.
     """
 
-    stream_id: str
+    stream_id: str = field(metadata={"cdp_name": "streamId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class NextWasmDisassemblyChunkResult(CDPModel):
-    chunk: WasmDisassemblyChunk
+class NextWasmDisassemblyChunkResult:
+    chunk: WasmDisassemblyChunk = field(metadata={"cdp_name": "chunk"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetWasmBytecodeParams(CDPModel):
+class GetWasmBytecodeParams:
     """
     This command is deprecated. Use getScriptSource instead.
     """
 
-    script_id: runtime.ScriptId
+    script_id: runtime.ScriptId = field(metadata={"cdp_name": "scriptId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetWasmBytecodeResult(CDPModel):
-    bytecode: str
+class GetWasmBytecodeResult:
+    bytecode: str = field(metadata={"cdp_name": "bytecode"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetStackTraceParams(CDPModel):
+class GetStackTraceParams:
     """
     Returns stack trace with given `stackTraceId`.
     """
 
-    stack_trace_id: runtime.StackTraceId
+    stack_trace_id: runtime.StackTraceId = field(metadata={"cdp_name": "stackTraceId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetStackTraceResult(CDPModel):
-    stack_trace: runtime.StackTrace
+class GetStackTraceResult:
+    stack_trace: runtime.StackTrace = field(metadata={"cdp_name": "stackTrace"})
 
 
 @dataclass(kw_only=True, slots=True)
-class PauseOnAsyncCallParams(CDPModel):
-    parent_stack_trace_id: runtime.StackTraceId
+class PauseOnAsyncCallParams:
+    parent_stack_trace_id: runtime.StackTraceId = field(
+        metadata={"cdp_name": "parentStackTraceId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class RemoveBreakpointParams(CDPModel):
+class RemoveBreakpointParams:
     """
     Removes JavaScript breakpoint.
     """
 
-    breakpoint_id: BreakpointId
+    breakpoint_id: BreakpointId = field(metadata={"cdp_name": "breakpointId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RestartFrameParams(CDPModel):
+class RestartFrameParams:
     """
     Restarts particular call frame from the beginning. The old, deprecated behavior of
     `restartFrame` is to stay paused and allow further CDP commands after a restart was
@@ -226,54 +247,64 @@ class RestartFrameParams(CDPModel):
     beginning of the restarted function.
     """
 
-    call_frame_id: CallFrameId
-    mode: Literal["StepInto"] | None = None
+    call_frame_id: CallFrameId = field(metadata={"cdp_name": "callFrameId"})
+    mode: Literal["StepInto"] | None = field(
+        default=None, metadata={"cdp_name": "mode"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class RestartFrameResult(CDPModel):
-    call_frames: list[CallFrame]
-    async_stack_trace: runtime.StackTrace | None = None
-    async_stack_trace_id: runtime.StackTraceId | None = None
+class RestartFrameResult:
+    call_frames: list[CallFrame] = field(metadata={"cdp_name": "callFrames"})
+    async_stack_trace: runtime.StackTrace | None = field(
+        default=None, metadata={"cdp_name": "asyncStackTrace"}
+    )
+    async_stack_trace_id: runtime.StackTraceId | None = field(
+        default=None, metadata={"cdp_name": "asyncStackTraceId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ResumeParams(CDPModel):
+class ResumeParams:
     """
     Resumes JavaScript execution.
     """
 
-    terminate_on_resume: bool | None = None
+    terminate_on_resume: bool | None = field(
+        default=None, metadata={"cdp_name": "terminateOnResume"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SearchInContentParams(CDPModel):
+class SearchInContentParams:
     """
     Searches for given string in script content.
     """
 
-    script_id: runtime.ScriptId
-    query: str
-    case_sensitive: bool | None = None
-    is_regex: bool | None = None
+    script_id: runtime.ScriptId = field(metadata={"cdp_name": "scriptId"})
+    query: str = field(metadata={"cdp_name": "query"})
+    case_sensitive: bool | None = field(
+        default=None, metadata={"cdp_name": "caseSensitive"}
+    )
+    is_regex: bool | None = field(default=None, metadata={"cdp_name": "isRegex"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SearchInContentResult(CDPModel):
-    result: list[SearchMatch]
+class SearchInContentResult:
+    result: list[SearchMatch] = field(metadata={"cdp_name": "result"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetAsyncCallStackDepthParams(CDPModel):
+class SetAsyncCallStackDepthParams:
     """
     Enables or disables async call stacks tracking.
     """
 
-    max_depth: int
+    max_depth: int = field(metadata={"cdp_name": "maxDepth"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetBlackboxExecutionContextsParams(CDPModel):
+class SetBlackboxExecutionContextsParams:
     """
     Replace previous blackbox execution contexts with passed ones. Forces backend to
     skip stepping/pausing in scripts in these execution contexts. VM will try to leave
@@ -281,11 +312,11 @@ class SetBlackboxExecutionContextsParams(CDPModel):
     out' if unsuccessful.
     """
 
-    unique_ids: list[str]
+    unique_ids: list[str] = field(metadata={"cdp_name": "uniqueIds"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetBlackboxPatternsParams(CDPModel):
+class SetBlackboxPatternsParams:
     """
     Replace previous blackbox patterns with passed ones. Forces backend to skip
     stepping/pausing in scripts with url matching one of the patterns. VM will try to
@@ -293,12 +324,14 @@ class SetBlackboxPatternsParams(CDPModel):
     'step out' if unsuccessful.
     """
 
-    patterns: list[str]
-    skip_anonymous: bool | None = None
+    patterns: list[str] = field(metadata={"cdp_name": "patterns"})
+    skip_anonymous: bool | None = field(
+        default=None, metadata={"cdp_name": "skipAnonymous"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetBlackboxedRangesParams(CDPModel):
+class SetBlackboxedRangesParams:
     """
     Makes backend skip steps in the script in blackboxed ranges. VM will try leave
     blacklisted scripts by performing 'step in' several times, finally resorting to
@@ -306,44 +339,46 @@ class SetBlackboxedRangesParams(CDPModel):
     is changed. First interval isn't blackboxed. Array should be sorted.
     """
 
-    script_id: runtime.ScriptId
-    positions: list[ScriptPosition]
+    script_id: runtime.ScriptId = field(metadata={"cdp_name": "scriptId"})
+    positions: list[ScriptPosition] = field(metadata={"cdp_name": "positions"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetBreakpointParams(CDPModel):
+class SetBreakpointParams:
     """
     Sets JavaScript breakpoint at a given location.
     """
 
-    location: Location
-    condition: str | None = None
+    location: Location = field(metadata={"cdp_name": "location"})
+    condition: str | None = field(default=None, metadata={"cdp_name": "condition"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetBreakpointResult(CDPModel):
-    breakpoint_id: BreakpointId
-    actual_location: Location
+class SetBreakpointResult:
+    breakpoint_id: BreakpointId = field(metadata={"cdp_name": "breakpointId"})
+    actual_location: Location = field(metadata={"cdp_name": "actualLocation"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetInstrumentationBreakpointParams(CDPModel):
+class SetInstrumentationBreakpointParams:
     """
     Sets instrumentation breakpoint.
     """
 
     instrumentation: Literal[
         "beforeScriptExecution", "beforeScriptWithSourceMapExecution"
-    ]
+    ] = field(  # noqa: E501
+        metadata={"cdp_name": "instrumentation"},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetInstrumentationBreakpointResult(CDPModel):
-    breakpoint_id: BreakpointId
+class SetInstrumentationBreakpointResult:
+    breakpoint_id: BreakpointId = field(metadata={"cdp_name": "breakpointId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetBreakpointByUrlParams(CDPModel):
+class SetBreakpointByUrlParams:
     """
     Sets JavaScript breakpoint at given location specified either by URL or URL regex.
     Once this command is issued, all existing parsed scripts will have breakpoints
@@ -352,131 +387,155 @@ class SetBreakpointByUrlParams(CDPModel):
     will survive page reloads.
     """
 
-    line_number: int
-    url: str | None = None
-    url_regex: str | None = None
-    script_hash: str | None = None
-    column_number: int | None = None
-    condition: str | None = None
+    line_number: int = field(metadata={"cdp_name": "lineNumber"})
+    url: str | None = field(default=None, metadata={"cdp_name": "url"})
+    url_regex: str | None = field(default=None, metadata={"cdp_name": "urlRegex"})
+    script_hash: str | None = field(default=None, metadata={"cdp_name": "scriptHash"})
+    column_number: int | None = field(
+        default=None, metadata={"cdp_name": "columnNumber"}
+    )
+    condition: str | None = field(default=None, metadata={"cdp_name": "condition"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetBreakpointByUrlResult(CDPModel):
-    breakpoint_id: BreakpointId
-    locations: list[Location]
+class SetBreakpointByUrlResult:
+    breakpoint_id: BreakpointId = field(metadata={"cdp_name": "breakpointId"})
+    locations: list[Location] = field(metadata={"cdp_name": "locations"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetBreakpointOnFunctionCallParams(CDPModel):
+class SetBreakpointOnFunctionCallParams:
     """
     Sets JavaScript breakpoint before each call to the given function. If another
     function was created from the same source as a given one, calling it will also
     trigger the breakpoint.
     """
 
-    object_id: runtime.RemoteObjectId
-    condition: str | None = None
+    object_id: runtime.RemoteObjectId = field(metadata={"cdp_name": "objectId"})
+    condition: str | None = field(default=None, metadata={"cdp_name": "condition"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetBreakpointOnFunctionCallResult(CDPModel):
-    breakpoint_id: BreakpointId
+class SetBreakpointOnFunctionCallResult:
+    breakpoint_id: BreakpointId = field(metadata={"cdp_name": "breakpointId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetBreakpointsActiveParams(CDPModel):
+class SetBreakpointsActiveParams:
     """
     Activates / deactivates all breakpoints on the page.
     """
 
-    active: bool
+    active: bool = field(metadata={"cdp_name": "active"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetPauseOnExceptionsParams(CDPModel):
+class SetPauseOnExceptionsParams:
     """
     Defines pause on exceptions state. Can be set to stop on all exceptions, uncaught
     exceptions, or caught exceptions, no exceptions. Initial pause on exceptions state
     is `none`.
     """
 
-    state: Literal["none", "caught", "uncaught", "all"]
+    state: Literal["none", "caught", "uncaught", "all"] = field(
+        metadata={"cdp_name": "state"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetReturnValueParams(CDPModel):
+class SetReturnValueParams:
     """
     Changes return value in top frame. Available only at return break position.
     """
 
-    new_value: runtime.CallArgument
+    new_value: runtime.CallArgument = field(metadata={"cdp_name": "newValue"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetScriptSourceParams(CDPModel):
+class SetScriptSourceParams:
     """
     Live edit is no longer supported and this command always fails with a "no longer
     available" error.
     """
 
-    script_id: runtime.ScriptId
-    script_source: str
-    dry_run: bool | None = None
-    allow_top_frame_editing: bool | None = None
+    script_id: runtime.ScriptId = field(metadata={"cdp_name": "scriptId"})
+    script_source: str = field(metadata={"cdp_name": "scriptSource"})
+    dry_run: bool | None = field(default=None, metadata={"cdp_name": "dryRun"})
+    allow_top_frame_editing: bool | None = field(
+        default=None, metadata={"cdp_name": "allowTopFrameEditing"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetScriptSourceResult(CDPModel):
-    call_frames: list[CallFrame] | None = None
-    stack_changed: bool | None = None
-    async_stack_trace: runtime.StackTrace | None = None
-    async_stack_trace_id: runtime.StackTraceId | None = None
+class SetScriptSourceResult:
+    call_frames: list[CallFrame] | None = field(
+        default=None, metadata={"cdp_name": "callFrames"}
+    )
+    stack_changed: bool | None = field(
+        default=None, metadata={"cdp_name": "stackChanged"}
+    )
+    async_stack_trace: runtime.StackTrace | None = field(
+        default=None, metadata={"cdp_name": "asyncStackTrace"}
+    )
+    async_stack_trace_id: runtime.StackTraceId | None = field(
+        default=None, metadata={"cdp_name": "asyncStackTraceId"}
+    )
     status: Literal[
         "Ok",
         "CompileError",
         "BlockedByActiveGenerator",
         "BlockedByActiveFunction",
         "BlockedByTopLevelEsModuleChange",
-    ]
-    exception_details: runtime.ExceptionDetails | None = None
+    ] = field(  # noqa: E501
+        metadata={"cdp_name": "status"},
+    )
+    exception_details: runtime.ExceptionDetails | None = field(
+        default=None, metadata={"cdp_name": "exceptionDetails"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetSkipAllPausesParams(CDPModel):
+class SetSkipAllPausesParams:
     """
     Makes page not interrupt on any pauses (breakpoint, exception, dom exception etc).
     """
 
-    skip: bool
+    skip: bool = field(metadata={"cdp_name": "skip"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetVariableValueParams(CDPModel):
+class SetVariableValueParams:
     """
     Changes value of variable in a callframe. Object-based scopes are not supported and
     must be mutated manually.
     """
 
-    scope_number: int
-    variable_name: str
-    new_value: runtime.CallArgument
-    call_frame_id: CallFrameId
+    scope_number: int = field(metadata={"cdp_name": "scopeNumber"})
+    variable_name: str = field(metadata={"cdp_name": "variableName"})
+    new_value: runtime.CallArgument = field(metadata={"cdp_name": "newValue"})
+    call_frame_id: CallFrameId = field(metadata={"cdp_name": "callFrameId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class StepIntoParams(CDPModel):
+class StepIntoParams:
     """
     Steps into the function call.
     """
 
-    break_on_async_call: bool | None = None
-    skip_list: list[LocationRange] | None = None
+    break_on_async_call: bool | None = field(
+        default=None, metadata={"cdp_name": "breakOnAsyncCall"}
+    )
+    skip_list: list[LocationRange] | None = field(
+        default=None, metadata={"cdp_name": "skipList"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class StepOverParams(CDPModel):
+class StepOverParams:
     """
     Steps over the statement.
     """
 
-    skip_list: list[LocationRange] | None = None
+    skip_list: list[LocationRange] | None = field(
+        default=None, metadata={"cdp_name": "skipList"}
+    )

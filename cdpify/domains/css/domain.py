@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from cdpify.codec import decode_cdp, encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
 
@@ -109,10 +110,10 @@ class CSS:
 
         result = await self._command_sender.send_raw(
             method=CSSCommand.ADD_RULE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return AddRuleResult.from_cdp(result)
+        return decode_cdp(AddRuleResult, result)
 
     async def collect_class_names(
         self,
@@ -127,10 +128,10 @@ class CSS:
 
         result = await self._command_sender.send_raw(
             method=CSSCommand.COLLECT_CLASS_NAMES,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return CollectClassNamesResult.from_cdp(result)
+        return decode_cdp(CollectClassNamesResult, result)
 
     async def create_style_sheet(
         self,
@@ -147,10 +148,10 @@ class CSS:
 
         result = await self._command_sender.send_raw(
             method=CSSCommand.CREATE_STYLE_SHEET,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return CreateStyleSheetResult.from_cdp(result)
+        return decode_cdp(CreateStyleSheetResult, result)
 
     async def disable(
         self,
@@ -196,7 +197,7 @@ class CSS:
 
         await self._command_sender.send_raw(
             method=CSSCommand.FORCE_PSEUDO_STATE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -214,7 +215,7 @@ class CSS:
 
         await self._command_sender.send_raw(
             method=CSSCommand.FORCE_STARTING_STYLE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -228,10 +229,10 @@ class CSS:
 
         result = await self._command_sender.send_raw(
             method=CSSCommand.GET_BACKGROUND_COLORS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetBackgroundColorsResult.from_cdp(result)
+        return decode_cdp(GetBackgroundColorsResult, result)
 
     async def get_computed_style_for_node(
         self,
@@ -246,10 +247,10 @@ class CSS:
 
         result = await self._command_sender.send_raw(
             method=CSSCommand.GET_COMPUTED_STYLE_FOR_NODE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetComputedStyleForNodeResult.from_cdp(result)
+        return decode_cdp(GetComputedStyleForNodeResult, result)
 
     async def resolve_values(
         self,
@@ -282,10 +283,10 @@ class CSS:
 
         result = await self._command_sender.send_raw(
             method=CSSCommand.RESOLVE_VALUES,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return ResolveValuesResult.from_cdp(result)
+        return decode_cdp(ResolveValuesResult, result)
 
     async def get_longhand_properties(
         self,
@@ -298,10 +299,10 @@ class CSS:
 
         result = await self._command_sender.send_raw(
             method=CSSCommand.GET_LONGHAND_PROPERTIES,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetLonghandPropertiesResult.from_cdp(result)
+        return decode_cdp(GetLonghandPropertiesResult, result)
 
     async def get_inline_styles_for_node(
         self,
@@ -317,10 +318,10 @@ class CSS:
 
         result = await self._command_sender.send_raw(
             method=CSSCommand.GET_INLINE_STYLES_FOR_NODE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetInlineStylesForNodeResult.from_cdp(result)
+        return decode_cdp(GetInlineStylesForNodeResult, result)
 
     async def get_animated_styles_for_node(
         self,
@@ -336,10 +337,10 @@ class CSS:
 
         result = await self._command_sender.send_raw(
             method=CSSCommand.GET_ANIMATED_STYLES_FOR_NODE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetAnimatedStylesForNodeResult.from_cdp(result)
+        return decode_cdp(GetAnimatedStylesForNodeResult, result)
 
     async def get_matched_styles_for_node(
         self,
@@ -354,10 +355,10 @@ class CSS:
 
         result = await self._command_sender.send_raw(
             method=CSSCommand.GET_MATCHED_STYLES_FOR_NODE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetMatchedStylesForNodeResult.from_cdp(result)
+        return decode_cdp(GetMatchedStylesForNodeResult, result)
 
     async def get_environment_variables(
         self,
@@ -372,7 +373,7 @@ class CSS:
             params=None,
             session_id=session_id,
         )
-        return GetEnvironmentVariablesResult.from_cdp(result)
+        return decode_cdp(GetEnvironmentVariablesResult, result)
 
     async def get_media_queries(
         self,
@@ -386,7 +387,7 @@ class CSS:
             params=None,
             session_id=session_id,
         )
-        return GetMediaQueriesResult.from_cdp(result)
+        return decode_cdp(GetMediaQueriesResult, result)
 
     async def get_platform_fonts_for_node(
         self,
@@ -402,10 +403,10 @@ class CSS:
 
         result = await self._command_sender.send_raw(
             method=CSSCommand.GET_PLATFORM_FONTS_FOR_NODE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetPlatformFontsForNodeResult.from_cdp(result)
+        return decode_cdp(GetPlatformFontsForNodeResult, result)
 
     async def get_style_sheet_text(
         self,
@@ -420,10 +421,10 @@ class CSS:
 
         result = await self._command_sender.send_raw(
             method=CSSCommand.GET_STYLE_SHEET_TEXT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetStyleSheetTextResult.from_cdp(result)
+        return decode_cdp(GetStyleSheetTextResult, result)
 
     async def get_layers_for_node(
         self,
@@ -441,10 +442,10 @@ class CSS:
 
         result = await self._command_sender.send_raw(
             method=CSSCommand.GET_LAYERS_FOR_NODE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetLayersForNodeResult.from_cdp(result)
+        return decode_cdp(GetLayersForNodeResult, result)
 
     async def get_location_for_selector(
         self,
@@ -463,10 +464,10 @@ class CSS:
 
         result = await self._command_sender.send_raw(
             method=CSSCommand.GET_LOCATION_FOR_SELECTOR,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetLocationForSelectorResult.from_cdp(result)
+        return decode_cdp(GetLocationForSelectorResult, result)
 
     async def track_computed_style_updates_for_node(
         self,
@@ -485,7 +486,7 @@ class CSS:
 
         await self._command_sender.send_raw(
             method=CSSCommand.TRACK_COMPUTED_STYLE_UPDATES_FOR_NODE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -510,7 +511,7 @@ class CSS:
 
         await self._command_sender.send_raw(
             method=CSSCommand.TRACK_COMPUTED_STYLE_UPDATES,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -526,7 +527,7 @@ class CSS:
             params=None,
             session_id=session_id,
         )
-        return TakeComputedStyleUpdatesResult.from_cdp(result)
+        return decode_cdp(TakeComputedStyleUpdatesResult, result)
 
     async def set_effective_property_value_for_node(
         self,
@@ -546,7 +547,7 @@ class CSS:
 
         await self._command_sender.send_raw(
             method=CSSCommand.SET_EFFECTIVE_PROPERTY_VALUE_FOR_NODE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -567,10 +568,10 @@ class CSS:
 
         result = await self._command_sender.send_raw(
             method=CSSCommand.SET_PROPERTY_RULE_PROPERTY_NAME,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return SetPropertyRulePropertyNameResult.from_cdp(result)
+        return decode_cdp(SetPropertyRulePropertyNameResult, result)
 
     async def set_keyframe_key(
         self,
@@ -589,10 +590,10 @@ class CSS:
 
         result = await self._command_sender.send_raw(
             method=CSSCommand.SET_KEYFRAME_KEY,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return SetKeyframeKeyResult.from_cdp(result)
+        return decode_cdp(SetKeyframeKeyResult, result)
 
     async def set_media_text(
         self,
@@ -611,10 +612,10 @@ class CSS:
 
         result = await self._command_sender.send_raw(
             method=CSSCommand.SET_MEDIA_TEXT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return SetMediaTextResult.from_cdp(result)
+        return decode_cdp(SetMediaTextResult, result)
 
     @deprecated()
     async def set_container_query_text(
@@ -635,10 +636,10 @@ class CSS:
 
         result = await self._command_sender.send_raw(
             method=CSSCommand.SET_CONTAINER_QUERY_TEXT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return SetContainerQueryTextResult.from_cdp(result)
+        return decode_cdp(SetContainerQueryTextResult, result)
 
     async def set_container_query_condition_text(
         self,
@@ -654,10 +655,10 @@ class CSS:
 
         result = await self._command_sender.send_raw(
             method=CSSCommand.SET_CONTAINER_QUERY_CONDITION_TEXT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return SetContainerQueryConditionTextResult.from_cdp(result)
+        return decode_cdp(SetContainerQueryConditionTextResult, result)
 
     async def set_supports_text(
         self,
@@ -676,10 +677,10 @@ class CSS:
 
         result = await self._command_sender.send_raw(
             method=CSSCommand.SET_SUPPORTS_TEXT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return SetSupportsTextResult.from_cdp(result)
+        return decode_cdp(SetSupportsTextResult, result)
 
     async def set_navigation_text(
         self,
@@ -698,10 +699,10 @@ class CSS:
 
         result = await self._command_sender.send_raw(
             method=CSSCommand.SET_NAVIGATION_TEXT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return SetNavigationTextResult.from_cdp(result)
+        return decode_cdp(SetNavigationTextResult, result)
 
     async def set_scope_text(
         self,
@@ -720,10 +721,10 @@ class CSS:
 
         result = await self._command_sender.send_raw(
             method=CSSCommand.SET_SCOPE_TEXT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return SetScopeTextResult.from_cdp(result)
+        return decode_cdp(SetScopeTextResult, result)
 
     async def set_rule_selector(
         self,
@@ -742,10 +743,10 @@ class CSS:
 
         result = await self._command_sender.send_raw(
             method=CSSCommand.SET_RULE_SELECTOR,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return SetRuleSelectorResult.from_cdp(result)
+        return decode_cdp(SetRuleSelectorResult, result)
 
     async def set_style_sheet_text(
         self,
@@ -761,10 +762,10 @@ class CSS:
 
         result = await self._command_sender.send_raw(
             method=CSSCommand.SET_STYLE_SHEET_TEXT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return SetStyleSheetTextResult.from_cdp(result)
+        return decode_cdp(SetStyleSheetTextResult, result)
 
     async def set_style_texts(
         self,
@@ -783,10 +784,10 @@ class CSS:
 
         result = await self._command_sender.send_raw(
             method=CSSCommand.SET_STYLE_TEXTS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return SetStyleTextsResult.from_cdp(result)
+        return decode_cdp(SetStyleTextsResult, result)
 
     async def start_rule_usage_tracking(
         self,
@@ -814,7 +815,7 @@ class CSS:
             params=None,
             session_id=session_id,
         )
-        return StopRuleUsageTrackingResult.from_cdp(result)
+        return decode_cdp(StopRuleUsageTrackingResult, result)
 
     async def take_coverage_delta(
         self,
@@ -829,7 +830,7 @@ class CSS:
             params=None,
             session_id=session_id,
         )
-        return TakeCoverageDeltaResult.from_cdp(result)
+        return decode_cdp(TakeCoverageDeltaResult, result)
 
     async def set_local_fonts_enabled(
         self,
@@ -844,6 +845,6 @@ class CSS:
 
         await self._command_sender.send_raw(
             method=CSSCommand.SET_LOCAL_FONTS_ENABLED,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )

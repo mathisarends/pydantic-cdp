@@ -4,11 +4,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, Literal
 
 from cdpify.domains import dom
-from cdpify.shared.models import CDPModel
 
 """
 Unique Layer identifier.
@@ -22,60 +21,78 @@ SnapshotId = str
 
 
 @dataclass(kw_only=True, slots=True)
-class ScrollRect(CDPModel):
+class ScrollRect:
     """
     Rectangle where scrolling happens on the main thread.
     """
 
-    rect: dom.Rect
-    type: Literal["RepaintsOnScroll", "TouchEventHandler", "WheelEventHandler"]
+    rect: dom.Rect = field(metadata={"cdp_name": "rect"})
+    type: Literal["RepaintsOnScroll", "TouchEventHandler", "WheelEventHandler"] = field(
+        metadata={"cdp_name": "type"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class StickyPositionConstraint(CDPModel):
+class StickyPositionConstraint:
     """
     Sticky position constraints.
     """
 
-    sticky_box_rect: dom.Rect
-    containing_block_rect: dom.Rect
-    nearest_layer_shifting_sticky_box: LayerId | None = None
-    nearest_layer_shifting_containing_block: LayerId | None = None
+    sticky_box_rect: dom.Rect = field(metadata={"cdp_name": "stickyBoxRect"})
+    containing_block_rect: dom.Rect = field(
+        metadata={"cdp_name": "containingBlockRect"}
+    )
+    nearest_layer_shifting_sticky_box: LayerId | None = field(
+        default=None, metadata={"cdp_name": "nearestLayerShiftingStickyBox"}
+    )
+    nearest_layer_shifting_containing_block: LayerId | None = field(
+        default=None, metadata={"cdp_name": "nearestLayerShiftingContainingBlock"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class PictureTile(CDPModel):
+class PictureTile:
     """
     Serialized fragment of layer picture along with its offset within the layer.
     """
 
-    x: float
-    y: float
-    picture: str
+    x: float = field(metadata={"cdp_name": "x"})
+    y: float = field(metadata={"cdp_name": "y"})
+    picture: str = field(metadata={"cdp_name": "picture"})
 
 
 @dataclass(kw_only=True, slots=True)
-class Layer(CDPModel):
+class Layer:
     """
     Information about a compositing layer.
     """
 
-    layer_id: LayerId
-    parent_layer_id: LayerId | None = None
-    backend_node_id: dom.BackendNodeId | None = None
-    offset_x: float
-    offset_y: float
-    width: float
-    height: float
-    transform: list[float] | None = None
-    anchor_x: float | None = None
-    anchor_y: float | None = None
-    anchor_z: float | None = None
-    paint_count: int
-    draws_content: bool
-    invisible: bool | None = None
-    scroll_rects: list[ScrollRect] | None = None
-    sticky_position_constraint: StickyPositionConstraint | None = None
+    layer_id: LayerId = field(metadata={"cdp_name": "layerId"})
+    parent_layer_id: LayerId | None = field(
+        default=None, metadata={"cdp_name": "parentLayerId"}
+    )
+    backend_node_id: dom.BackendNodeId | None = field(
+        default=None, metadata={"cdp_name": "backendNodeId"}
+    )
+    offset_x: float = field(metadata={"cdp_name": "offsetX"})
+    offset_y: float = field(metadata={"cdp_name": "offsetY"})
+    width: float = field(metadata={"cdp_name": "width"})
+    height: float = field(metadata={"cdp_name": "height"})
+    transform: list[float] | None = field(
+        default=None, metadata={"cdp_name": "transform"}
+    )
+    anchor_x: float | None = field(default=None, metadata={"cdp_name": "anchorX"})
+    anchor_y: float | None = field(default=None, metadata={"cdp_name": "anchorY"})
+    anchor_z: float | None = field(default=None, metadata={"cdp_name": "anchorZ"})
+    paint_count: int = field(metadata={"cdp_name": "paintCount"})
+    draws_content: bool = field(metadata={"cdp_name": "drawsContent"})
+    invisible: bool | None = field(default=None, metadata={"cdp_name": "invisible"})
+    scroll_rects: list[ScrollRect] | None = field(
+        default=None, metadata={"cdp_name": "scrollRects"}
+    )
+    sticky_position_constraint: StickyPositionConstraint | None = field(
+        default=None, metadata={"cdp_name": "stickyPositionConstraint"}
+    )
 
 
 """

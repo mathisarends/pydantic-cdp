@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPModel
 
 from .types import (
     DOMCounter,
@@ -31,55 +29,59 @@ class MemoryCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class GetDOMCountersResult(CDPModel):
-    documents: int
-    nodes: int
-    js_event_listeners: int
+class GetDOMCountersResult:
+    documents: int = field(metadata={"cdp_name": "documents"})
+    nodes: int = field(metadata={"cdp_name": "nodes"})
+    js_event_listeners: int = field(metadata={"cdp_name": "jsEventListeners"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetDOMCountersForLeakDetectionResult(CDPModel):
-    counters: list[DOMCounter]
+class GetDOMCountersForLeakDetectionResult:
+    counters: list[DOMCounter] = field(metadata={"cdp_name": "counters"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetPressureNotificationsSuppressedParams(CDPModel):
+class SetPressureNotificationsSuppressedParams:
     """
     Enable/disable suppressing memory pressure notifications in all processes.
     """
 
-    suppressed: bool
+    suppressed: bool = field(metadata={"cdp_name": "suppressed"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SimulatePressureNotificationParams(CDPModel):
+class SimulatePressureNotificationParams:
     """
     Simulate a memory pressure notification in all processes.
     """
 
-    level: PressureLevel
+    level: PressureLevel = field(metadata={"cdp_name": "level"})
 
 
 @dataclass(kw_only=True, slots=True)
-class StartSamplingParams(CDPModel):
+class StartSamplingParams:
     """
     Start collecting native memory profile.
     """
 
-    sampling_interval: int | None = None
-    suppress_randomness: bool | None = None
+    sampling_interval: int | None = field(
+        default=None, metadata={"cdp_name": "samplingInterval"}
+    )
+    suppress_randomness: bool | None = field(
+        default=None, metadata={"cdp_name": "suppressRandomness"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetAllTimeSamplingProfileResult(CDPModel):
-    profile: SamplingProfile
+class GetAllTimeSamplingProfileResult:
+    profile: SamplingProfile = field(metadata={"cdp_name": "profile"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetBrowserSamplingProfileResult(CDPModel):
-    profile: SamplingProfile
+class GetBrowserSamplingProfileResult:
+    profile: SamplingProfile = field(metadata={"cdp_name": "profile"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetSamplingProfileResult(CDPModel):
-    profile: SamplingProfile
+class GetSamplingProfileResult:
+    profile: SamplingProfile = field(metadata={"cdp_name": "profile"})

@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from typing import Literal
 
+from cdpify.codec import decode_cdp, encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -55,7 +56,7 @@ class Tracing:
             params=None,
             session_id=session_id,
         )
-        return GetCategoriesResult.from_cdp(result)
+        return decode_cdp(GetCategoriesResult, result)
 
     async def get_track_event_descriptor(
         self,
@@ -69,7 +70,7 @@ class Tracing:
             params=None,
             session_id=session_id,
         )
-        return GetTrackEventDescriptorResult.from_cdp(result)
+        return decode_cdp(GetTrackEventDescriptorResult, result)
 
     async def record_clock_sync_marker(
         self,
@@ -84,7 +85,7 @@ class Tracing:
 
         await self._command_sender.send_raw(
             method=TracingCommand.RECORD_CLOCK_SYNC_MARKER,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -104,10 +105,10 @@ class Tracing:
 
         result = await self._command_sender.send_raw(
             method=TracingCommand.REQUEST_MEMORY_DUMP,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return RequestMemoryDumpResult.from_cdp(result)
+        return decode_cdp(RequestMemoryDumpResult, result)
 
     async def start(
         self,
@@ -144,6 +145,6 @@ class Tracing:
 
         await self._command_sender.send_raw(
             method=TracingCommand.START,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )

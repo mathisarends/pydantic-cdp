@@ -4,11 +4,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 
 from cdpify.domains import network, page
-from cdpify.shared.models import CDPEvent
 
 from .types import (
     AuthChallenge,
@@ -23,7 +22,7 @@ class FetchEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class RequestPausedEvent(CDPEvent):
+class RequestPausedEvent:
     """
     Issued when the domain is enabled and the request URL matches the specified filter.
     The request is paused until the client responds with one of continueRequest,
@@ -37,27 +36,51 @@ class RequestPausedEvent(CDPEvent):
     `redirectedRequestId` field set.
     """
 
-    request_id: RequestId
-    request: network.Request
-    frame_id: page.FrameId
-    resource_type: network.ResourceType
-    response_error_reason: network.ErrorReason | None = None
-    response_status_code: int | None = None
-    response_status_text: str | None = None
-    response_headers: list[HeaderEntry] | None = None
-    network_id: network.RequestId | None = None
-    redirected_request_id: RequestId | None = None
+    request_id: RequestId = field(metadata={"cdp_name": "requestId"})
+    request: network.Request = field(metadata={"cdp_name": "request"})
+    frame_id: page.FrameId = field(metadata={"cdp_name": "frameId"})
+    resource_type: network.ResourceType = field(metadata={"cdp_name": "resourceType"})
+    response_error_reason: network.ErrorReason | None = field(
+        default=None, metadata={"cdp_name": "responseErrorReason"}
+    )
+    response_status_code: int | None = field(
+        default=None, metadata={"cdp_name": "responseStatusCode"}
+    )
+    response_status_text: str | None = field(
+        default=None, metadata={"cdp_name": "responseStatusText"}
+    )
+    response_headers: list[HeaderEntry] | None = field(
+        default=None, metadata={"cdp_name": "responseHeaders"}
+    )
+    network_id: network.RequestId | None = field(
+        default=None, metadata={"cdp_name": "networkId"}
+    )
+    redirected_request_id: RequestId | None = field(
+        default=None, metadata={"cdp_name": "redirectedRequestId"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class AuthRequiredEvent(CDPEvent):
+class AuthRequiredEvent:
     """
     Issued when the domain is enabled with handleAuthRequests set to true. The request
     is paused until client responds with continueWithAuth.
     """
 
-    request_id: RequestId
-    request: network.Request
-    frame_id: page.FrameId
-    resource_type: network.ResourceType
-    auth_challenge: AuthChallenge
+    request_id: RequestId = field(metadata={"cdp_name": "requestId"})
+    request: network.Request = field(metadata={"cdp_name": "request"})
+    frame_id: page.FrameId = field(metadata={"cdp_name": "frameId"})
+    resource_type: network.ResourceType = field(metadata={"cdp_name": "resourceType"})
+    auth_challenge: AuthChallenge = field(metadata={"cdp_name": "authChallenge"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

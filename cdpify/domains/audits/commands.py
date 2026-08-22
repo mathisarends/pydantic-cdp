@@ -4,12 +4,11 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Literal
 
 from cdpify.domains import network
-from cdpify.shared.models import CDPModel
 
 from .types import (
     GenericIssueDetails,
@@ -24,25 +23,25 @@ class AuditsCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class GetEncodedResponseParams(CDPModel):
+class GetEncodedResponseParams:
     """
     Returns the response body and size if it were re-encoded with the specified
     settings. Only applies to images.
     """
 
-    request_id: network.RequestId
-    encoding: Literal["webp", "jpeg", "png"]
-    quality: float | None = None
-    size_only: bool | None = None
+    request_id: network.RequestId = field(metadata={"cdp_name": "requestId"})
+    encoding: Literal["webp", "jpeg", "png"] = field(metadata={"cdp_name": "encoding"})
+    quality: float | None = field(default=None, metadata={"cdp_name": "quality"})
+    size_only: bool | None = field(default=None, metadata={"cdp_name": "sizeOnly"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetEncodedResponseResult(CDPModel):
-    body: str | None = None
-    original_size: int
-    encoded_size: int
+class GetEncodedResponseResult:
+    body: str | None = field(default=None, metadata={"cdp_name": "body"})
+    original_size: int = field(metadata={"cdp_name": "originalSize"})
+    encoded_size: int = field(metadata={"cdp_name": "encodedSize"})
 
 
 @dataclass(kw_only=True, slots=True)
-class CheckFormsIssuesResult(CDPModel):
-    form_issues: list[GenericIssueDetails]
+class CheckFormsIssuesResult:
+    form_issues: list[GenericIssueDetails] = field(metadata={"cdp_name": "formIssues"})

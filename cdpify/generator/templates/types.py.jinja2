@@ -6,9 +6,7 @@
 from typing import {{ typing_names | join(", ") }}
 {% endif %}
 
-from dataclasses import dataclass
-
-from cdpify.shared.models import CDPModel
+from dataclasses import dataclass, field
 {% if cross_domain_modules %}
 {{ cross_domain_modules | map("prefix_domain_import") | join("\n") }}
 {% endif %}
@@ -17,7 +15,7 @@ from cdpify.shared.models import CDPModel
 
 {% if definition.kind == "object" %}
 @dataclass(kw_only=True, slots=True)
-class {{ definition.name }}(CDPModel):
+class {{ definition.name }}:
 {% if definition.docstring %}
 {{ definition.docstring }}
 {% endif %}

@@ -4,11 +4,9 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Any, Literal
-
-from cdpify.shared.models import CDPEvent
 
 from .types import (
     ExceptionDetails,
@@ -32,18 +30,26 @@ class RuntimeEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class BindingCalledEvent(CDPEvent):
+class BindingCalledEvent:
     """
     Notification is issued every time when binding is called.
     """
 
-    name: str
-    payload: str
-    execution_context_id: ExecutionContextId
+    name: str = field(metadata={"cdp_name": "name"})
+    payload: str = field(metadata={"cdp_name": "payload"})
+    execution_context_id: ExecutionContextId = field(
+        metadata={"cdp_name": "executionContextId"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ConsoleAPICalledEvent(CDPEvent):
+class ConsoleAPICalledEvent:
     """
     Issued when console API was called.
     """
@@ -67,69 +73,124 @@ class ConsoleAPICalledEvent(CDPEvent):
         "profileEnd",
         "count",
         "timeEnd",
-    ]
-    args: list[RemoteObject]
-    execution_context_id: ExecutionContextId
-    timestamp: Timestamp
-    stack_trace: StackTrace | None = None
-    context: str | None = None
+    ] = field(  # noqa: E501
+        metadata={"cdp_name": "type"},
+    )
+    args: list[RemoteObject] = field(metadata={"cdp_name": "args"})
+    execution_context_id: ExecutionContextId = field(
+        metadata={"cdp_name": "executionContextId"}
+    )
+    timestamp: Timestamp = field(metadata={"cdp_name": "timestamp"})
+    stack_trace: StackTrace | None = field(
+        default=None, metadata={"cdp_name": "stackTrace"}
+    )
+    context: str | None = field(default=None, metadata={"cdp_name": "context"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ExceptionRevokedEvent(CDPEvent):
+class ExceptionRevokedEvent:
     """
     Issued when unhandled exception was revoked.
     """
 
-    reason: str
-    exception_id: int
+    reason: str = field(metadata={"cdp_name": "reason"})
+    exception_id: int = field(metadata={"cdp_name": "exceptionId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ExceptionThrownEvent(CDPEvent):
+class ExceptionThrownEvent:
     """
     Issued when exception was thrown and unhandled.
     """
 
-    timestamp: Timestamp
-    exception_details: ExceptionDetails
+    timestamp: Timestamp = field(metadata={"cdp_name": "timestamp"})
+    exception_details: ExceptionDetails = field(
+        metadata={"cdp_name": "exceptionDetails"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ExecutionContextCreatedEvent(CDPEvent):
+class ExecutionContextCreatedEvent:
     """
     Issued when new execution context is created.
     """
 
-    context: ExecutionContextDescription
+    context: ExecutionContextDescription = field(metadata={"cdp_name": "context"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ExecutionContextDestroyedEvent(CDPEvent):
+class ExecutionContextDestroyedEvent:
     """
     Issued when execution context is destroyed.
     """
 
-    execution_context_id: ExecutionContextId
-    execution_context_unique_id: str
+    execution_context_id: ExecutionContextId = field(
+        metadata={"cdp_name": "executionContextId"}
+    )
+    execution_context_unique_id: str = field(
+        metadata={"cdp_name": "executionContextUniqueId"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ExecutionContextsClearedEvent(CDPEvent):
+class ExecutionContextsClearedEvent:
     """
     Issued when all executionContexts were cleared in browser
     """
 
-    pass
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class InspectRequestedEvent(CDPEvent):
+class InspectRequestedEvent:
     """
     Issued when object should be inspected (for example, as a result of inspect()
     command line API call).
     """
 
-    object: RemoteObject
-    hints: dict[str, Any]
-    execution_context_id: ExecutionContextId | None = None
+    object: RemoteObject = field(metadata={"cdp_name": "object"})
+    hints: dict[str, Any] = field(metadata={"cdp_name": "hints"})
+    execution_context_id: ExecutionContextId | None = field(
+        default=None, metadata={"cdp_name": "executionContextId"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

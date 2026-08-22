@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPEvent
 
 from .types import (
     BackgroundServiceEvent as BackgroundServiceEventType,
@@ -25,20 +23,34 @@ class BackgroundServiceEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class RecordingStateChangedEvent(CDPEvent):
+class RecordingStateChangedEvent:
     """
     Called when the recording state for the service has been updated.
     """
 
-    is_recording: bool
-    service: ServiceName
+    is_recording: bool = field(metadata={"cdp_name": "isRecording"})
+    service: ServiceName = field(metadata={"cdp_name": "service"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class BackgroundServiceEventReceivedEvent(CDPEvent):
+class BackgroundServiceEventReceivedEvent:
     """
     Called with all existing backgroundServiceEvents when enabled, and all new events
     afterwards if enabled and recording.
     """
 
-    background_service_event: BackgroundServiceEventType
+    background_service_event: BackgroundServiceEventType = field(
+        metadata={"cdp_name": "backgroundServiceEvent"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

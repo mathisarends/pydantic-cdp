@@ -4,11 +4,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Literal
 
 from cdpify.domains import dom, network
-from cdpify.shared.models import CDPModel
 
 """
 Unique id
@@ -17,20 +16,28 @@ RuleSetId = str
 
 
 @dataclass(kw_only=True, slots=True)
-class RuleSet(CDPModel):
+class RuleSet:
     """
     Corresponds to SpeculationRuleSet
     """
 
-    id: RuleSetId
-    loader_id: network.LoaderId
-    source_text: str
-    backend_node_id: dom.BackendNodeId | None = None
-    url: str | None = None
-    request_id: network.RequestId | None = None
-    error_type: RuleSetErrorType | None = None
-    error_message: str | None = None
-    tag: str | None = None
+    id: RuleSetId = field(metadata={"cdp_name": "id"})
+    loader_id: network.LoaderId = field(metadata={"cdp_name": "loaderId"})
+    source_text: str = field(metadata={"cdp_name": "sourceText"})
+    backend_node_id: dom.BackendNodeId | None = field(
+        default=None, metadata={"cdp_name": "backendNodeId"}
+    )
+    url: str | None = field(default=None, metadata={"cdp_name": "url"})
+    request_id: network.RequestId | None = field(
+        default=None, metadata={"cdp_name": "requestId"}
+    )
+    error_type: RuleSetErrorType | None = field(
+        default=None, metadata={"cdp_name": "errorType"}
+    )
+    error_message: str | None = field(
+        default=None, metadata={"cdp_name": "errorMessage"}
+    )
+    tag: str | None = field(default=None, metadata={"cdp_name": "tag"})
 
 
 type RuleSetErrorType = Literal[
@@ -51,7 +58,7 @@ type SpeculationTargetHint = Literal["Blank", "Self"]
 
 
 @dataclass(kw_only=True, slots=True)
-class PreloadingAttemptKey(CDPModel):
+class PreloadingAttemptKey:
     """
     A key that identifies a preloading attempt. The url used is the url specified by
     the trigger (i.e. the initial URL), and not the final url that is navigated to. For
@@ -59,15 +66,19 @@ class PreloadingAttemptKey(CDPModel):
     but the attempt is still keyed with the initial URL.
     """
 
-    loader_id: network.LoaderId
-    action: SpeculationAction
-    url: str
-    form_submission: bool | None = None
-    target_hint: SpeculationTargetHint | None = None
+    loader_id: network.LoaderId = field(metadata={"cdp_name": "loaderId"})
+    action: SpeculationAction = field(metadata={"cdp_name": "action"})
+    url: str = field(metadata={"cdp_name": "url"})
+    form_submission: bool | None = field(
+        default=None, metadata={"cdp_name": "formSubmission"}
+    )
+    target_hint: SpeculationTargetHint | None = field(
+        default=None, metadata={"cdp_name": "targetHint"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class PreloadingAttemptSource(CDPModel):
+class PreloadingAttemptSource:
     """
     Lists sources for a preloading attempt, specifically the ids of rule sets that had
     a speculation rule that triggered the attempt, and the BackendNodeIds of <a href> or
@@ -76,9 +87,9 @@ class PreloadingAttemptSource(CDPModel):
     single attempt.
     """
 
-    key: PreloadingAttemptKey
-    rule_set_ids: list[RuleSetId]
-    node_ids: list[dom.BackendNodeId]
+    key: PreloadingAttemptKey = field(metadata={"cdp_name": "key"})
+    rule_set_ids: list[RuleSetId] = field(metadata={"cdp_name": "ruleSetIds"})
+    node_ids: list[dom.BackendNodeId] = field(metadata={"cdp_name": "nodeIds"})
 
 
 """
@@ -225,11 +236,15 @@ type PrefetchStatus = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class PrerenderMismatchedHeaders(CDPModel):
+class PrerenderMismatchedHeaders:
     """
     Information of headers to be displayed when the header mismatch occurred.
     """
 
-    header_name: str
-    initial_value: str | None = None
-    activation_value: str | None = None
+    header_name: str = field(metadata={"cdp_name": "headerName"})
+    initial_value: str | None = field(
+        default=None, metadata={"cdp_name": "initialValue"}
+    )
+    activation_value: str | None = field(
+        default=None, metadata={"cdp_name": "activationValue"}
+    )

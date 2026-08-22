@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from cdpify.codec import decode_cdp, encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -66,7 +67,7 @@ class Fetch:
 
         await self._command_sender.send_raw(
             method=FetchCommand.ENABLE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -84,7 +85,7 @@ class Fetch:
 
         await self._command_sender.send_raw(
             method=FetchCommand.FAIL_REQUEST,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -113,7 +114,7 @@ class Fetch:
 
         await self._command_sender.send_raw(
             method=FetchCommand.FULFILL_REQUEST,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -142,7 +143,7 @@ class Fetch:
 
         await self._command_sender.send_raw(
             method=FetchCommand.CONTINUE_REQUEST,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -163,7 +164,7 @@ class Fetch:
 
         await self._command_sender.send_raw(
             method=FetchCommand.CONTINUE_WITH_AUTH,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -192,7 +193,7 @@ class Fetch:
 
         await self._command_sender.send_raw(
             method=FetchCommand.CONTINUE_RESPONSE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -216,10 +217,10 @@ class Fetch:
 
         result = await self._command_sender.send_raw(
             method=FetchCommand.GET_RESPONSE_BODY,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetResponseBodyResult.from_cdp(result)
+        return decode_cdp(GetResponseBodyResult, result)
 
     async def take_response_body_as_stream(
         self,
@@ -240,7 +241,7 @@ class Fetch:
 
         result = await self._command_sender.send_raw(
             method=FetchCommand.TAKE_RESPONSE_BODY_AS_STREAM,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return TakeResponseBodyAsStreamResult.from_cdp(result)
+        return decode_cdp(TakeResponseBodyAsStreamResult, result)

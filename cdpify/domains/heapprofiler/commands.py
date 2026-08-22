@@ -4,11 +4,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 
 from cdpify.domains import runtime
-from cdpify.shared.models import CDPModel
 
 from .types import (
     HeapSnapshotObjectId,
@@ -32,70 +31,96 @@ class HeapProfilerCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class AddInspectedHeapObjectParams(CDPModel):
+class AddInspectedHeapObjectParams:
     """
     Enables console to refer to the node with given id via $x (see Command Line API for
     more details $x functions).
     """
 
-    heap_object_id: HeapSnapshotObjectId
+    heap_object_id: HeapSnapshotObjectId = field(metadata={"cdp_name": "heapObjectId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetHeapObjectIdParams(CDPModel):
-    object_id: runtime.RemoteObjectId
+class GetHeapObjectIdParams:
+    object_id: runtime.RemoteObjectId = field(metadata={"cdp_name": "objectId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetHeapObjectIdResult(CDPModel):
-    heap_snapshot_object_id: HeapSnapshotObjectId
+class GetHeapObjectIdResult:
+    heap_snapshot_object_id: HeapSnapshotObjectId = field(
+        metadata={"cdp_name": "heapSnapshotObjectId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetObjectByHeapObjectIdParams(CDPModel):
-    object_id: HeapSnapshotObjectId
-    object_group: str | None = None
+class GetObjectByHeapObjectIdParams:
+    object_id: HeapSnapshotObjectId = field(metadata={"cdp_name": "objectId"})
+    object_group: str | None = field(default=None, metadata={"cdp_name": "objectGroup"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetObjectByHeapObjectIdResult(CDPModel):
-    result: runtime.RemoteObject
+class GetObjectByHeapObjectIdResult:
+    result: runtime.RemoteObject = field(metadata={"cdp_name": "result"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetSamplingProfileResult(CDPModel):
-    profile: SamplingHeapProfile
+class GetSamplingProfileResult:
+    profile: SamplingHeapProfile = field(metadata={"cdp_name": "profile"})
 
 
 @dataclass(kw_only=True, slots=True)
-class StartSamplingParams(CDPModel):
-    sampling_interval: float | None = None
-    stack_depth: float | None = None
-    include_objects_collected_by_major_gc: bool | None = None
-    include_objects_collected_by_minor_gc: bool | None = None
+class StartSamplingParams:
+    sampling_interval: float | None = field(
+        default=None, metadata={"cdp_name": "samplingInterval"}
+    )
+    stack_depth: float | None = field(default=None, metadata={"cdp_name": "stackDepth"})
+    include_objects_collected_by_major_gc: bool | None = field(
+        default=None, metadata={"cdp_name": "includeObjectsCollectedByMajorGC"}
+    )
+    include_objects_collected_by_minor_gc: bool | None = field(
+        default=None, metadata={"cdp_name": "includeObjectsCollectedByMinorGC"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class StartTrackingHeapObjectsParams(CDPModel):
-    track_allocations: bool | None = None
+class StartTrackingHeapObjectsParams:
+    track_allocations: bool | None = field(
+        default=None, metadata={"cdp_name": "trackAllocations"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class StopSamplingResult(CDPModel):
-    profile: SamplingHeapProfile
+class StopSamplingResult:
+    profile: SamplingHeapProfile = field(metadata={"cdp_name": "profile"})
 
 
 @dataclass(kw_only=True, slots=True)
-class StopTrackingHeapObjectsParams(CDPModel):
-    report_progress: bool | None = None
-    treat_global_objects_as_roots: bool | None = None
-    capture_numeric_value: bool | None = None
-    expose_internals: bool | None = None
+class StopTrackingHeapObjectsParams:
+    report_progress: bool | None = field(
+        default=None, metadata={"cdp_name": "reportProgress"}
+    )
+    treat_global_objects_as_roots: bool | None = field(
+        default=None, metadata={"cdp_name": "treatGlobalObjectsAsRoots"}
+    )
+    capture_numeric_value: bool | None = field(
+        default=None, metadata={"cdp_name": "captureNumericValue"}
+    )
+    expose_internals: bool | None = field(
+        default=None, metadata={"cdp_name": "exposeInternals"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class TakeHeapSnapshotParams(CDPModel):
-    report_progress: bool | None = None
-    treat_global_objects_as_roots: bool | None = None
-    capture_numeric_value: bool | None = None
-    expose_internals: bool | None = None
+class TakeHeapSnapshotParams:
+    report_progress: bool | None = field(
+        default=None, metadata={"cdp_name": "reportProgress"}
+    )
+    treat_global_objects_as_roots: bool | None = field(
+        default=None, metadata={"cdp_name": "treatGlobalObjectsAsRoots"}
+    )
+    capture_numeric_value: bool | None = field(
+        default=None, metadata={"cdp_name": "captureNumericValue"}
+    )
+    expose_internals: bool | None = field(
+        default=None, metadata={"cdp_name": "exposeInternals"}
+    )

@@ -4,11 +4,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 
 from cdpify.domains import network, page
-from cdpify.shared.models import CDPEvent
 
 from .types import (
     PrefetchStatus,
@@ -33,66 +32,118 @@ class PreloadEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class RuleSetUpdatedEvent(CDPEvent):
+class RuleSetUpdatedEvent:
     """
     Upsert. Currently, it is only emitted when a rule set added.
     """
 
-    rule_set: RuleSet
+    rule_set: RuleSet = field(metadata={"cdp_name": "ruleSet"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class RuleSetRemovedEvent(CDPEvent):
-    id: RuleSetId
+class RuleSetRemovedEvent:
+    id: RuleSetId = field(metadata={"cdp_name": "id"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class PreloadEnabledStateUpdatedEvent(CDPEvent):
+class PreloadEnabledStateUpdatedEvent:
     """
     Fired when a preload enabled state is updated.
     """
 
-    disabled_by_preference: bool
-    disabled_by_data_saver: bool
-    disabled_by_battery_saver: bool
-    disabled_by_holdback_prefetch_speculation_rules: bool
-    disabled_by_holdback_prerender_speculation_rules: bool
+    disabled_by_preference: bool = field(metadata={"cdp_name": "disabledByPreference"})
+    disabled_by_data_saver: bool = field(metadata={"cdp_name": "disabledByDataSaver"})
+    disabled_by_battery_saver: bool = field(
+        metadata={"cdp_name": "disabledByBatterySaver"}
+    )
+    disabled_by_holdback_prefetch_speculation_rules: bool = field(
+        metadata={"cdp_name": "disabledByHoldbackPrefetchSpeculationRules"}
+    )
+    disabled_by_holdback_prerender_speculation_rules: bool = field(
+        metadata={"cdp_name": "disabledByHoldbackPrerenderSpeculationRules"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class PrefetchStatusUpdatedEvent(CDPEvent):
+class PrefetchStatusUpdatedEvent:
     """
     Fired when a prefetch attempt is updated.
     """
 
-    key: PreloadingAttemptKey
-    pipeline_id: PreloadPipelineId
-    initiating_frame_id: page.FrameId
-    prefetch_url: str
-    status: PreloadingStatus
-    prefetch_status: PrefetchStatus
-    request_id: network.RequestId
+    key: PreloadingAttemptKey = field(metadata={"cdp_name": "key"})
+    pipeline_id: PreloadPipelineId = field(metadata={"cdp_name": "pipelineId"})
+    initiating_frame_id: page.FrameId = field(
+        metadata={"cdp_name": "initiatingFrameId"}
+    )
+    prefetch_url: str = field(metadata={"cdp_name": "prefetchUrl"})
+    status: PreloadingStatus = field(metadata={"cdp_name": "status"})
+    prefetch_status: PrefetchStatus = field(metadata={"cdp_name": "prefetchStatus"})
+    request_id: network.RequestId = field(metadata={"cdp_name": "requestId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class PrerenderStatusUpdatedEvent(CDPEvent):
+class PrerenderStatusUpdatedEvent:
     """
     Fired when a prerender attempt is updated.
     """
 
-    key: PreloadingAttemptKey
-    pipeline_id: PreloadPipelineId
-    status: PreloadingStatus
-    prerender_status: PrerenderFinalStatus | None = None
-    disallowed_mojo_interface: str | None = None
-    mismatched_headers: list[PrerenderMismatchedHeaders] | None = None
+    key: PreloadingAttemptKey = field(metadata={"cdp_name": "key"})
+    pipeline_id: PreloadPipelineId = field(metadata={"cdp_name": "pipelineId"})
+    status: PreloadingStatus = field(metadata={"cdp_name": "status"})
+    prerender_status: PrerenderFinalStatus | None = field(
+        default=None, metadata={"cdp_name": "prerenderStatus"}
+    )
+    disallowed_mojo_interface: str | None = field(
+        default=None, metadata={"cdp_name": "disallowedMojoInterface"}
+    )
+    mismatched_headers: list[PrerenderMismatchedHeaders] | None = field(
+        default=None, metadata={"cdp_name": "mismatchedHeaders"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class PreloadingAttemptSourcesUpdatedEvent(CDPEvent):
+class PreloadingAttemptSourcesUpdatedEvent:
     """
     Send a list of sources for all preloading attempts in a document.
     """
 
-    loader_id: network.LoaderId
-    preloading_attempt_sources: list[PreloadingAttemptSource]
+    loader_id: network.LoaderId = field(metadata={"cdp_name": "loaderId"})
+    preloading_attempt_sources: list[PreloadingAttemptSource] = field(
+        metadata={"cdp_name": "preloadingAttemptSources"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

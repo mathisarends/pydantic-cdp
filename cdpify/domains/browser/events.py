@@ -4,12 +4,11 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Literal
 
 from cdpify.domains import page
-from cdpify.shared.models import CDPEvent
 
 
 class BrowserEvent(StrEnum):
@@ -18,25 +17,39 @@ class BrowserEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class DownloadWillBeginEvent(CDPEvent):
+class DownloadWillBeginEvent:
     """
     Fired when page is about to start a download.
     """
 
-    frame_id: page.FrameId
-    guid: str
-    url: str
-    suggested_filename: str
+    frame_id: page.FrameId = field(metadata={"cdp_name": "frameId"})
+    guid: str = field(metadata={"cdp_name": "guid"})
+    url: str = field(metadata={"cdp_name": "url"})
+    suggested_filename: str = field(metadata={"cdp_name": "suggestedFilename"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DownloadProgressEvent(CDPEvent):
+class DownloadProgressEvent:
     """
     Fired when download makes progress. Last call has |done| == true.
     """
 
-    guid: str
-    total_bytes: float
-    received_bytes: float
-    state: Literal["inProgress", "completed", "canceled"]
-    file_path: str | None = None
+    guid: str = field(metadata={"cdp_name": "guid"})
+    total_bytes: float = field(metadata={"cdp_name": "totalBytes"})
+    received_bytes: float = field(metadata={"cdp_name": "receivedBytes"})
+    state: Literal["inProgress", "completed", "canceled"] = field(
+        metadata={"cdp_name": "state"}
+    )
+    file_path: str | None = field(default=None, metadata={"cdp_name": "filePath"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

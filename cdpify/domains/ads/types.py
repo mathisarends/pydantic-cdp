@@ -4,42 +4,51 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from cdpify.domains import network, page, runtime
-from cdpify.shared.models import CDPModel
 
 
 @dataclass(kw_only=True, slots=True)
-class AdFrameData(CDPModel):
+class AdFrameData:
     """
     Ad frame data.
     """
 
-    frame_id: page.FrameId
-    initial_origin: str | None = None
-    network_bytes: float
-    cpu_time: float
+    frame_id: page.FrameId = field(metadata={"cdp_name": "frameId"})
+    initial_origin: str | None = field(
+        default=None, metadata={"cdp_name": "initialOrigin"}
+    )
+    network_bytes: float = field(metadata={"cdp_name": "networkBytes"})
+    cpu_time: float = field(metadata={"cdp_name": "cpuTime"})
 
 
 @dataclass(kw_only=True, slots=True)
-class AdMetrics(CDPModel):
+class AdMetrics:
     """
     Ad metrics for a page.
     """
 
-    viewport_ad_density_by_area: int
-    average_viewport_ad_density_by_area: float
-    viewport_ad_count: int
-    average_viewport_ad_count: float
-    total_ad_cpu_time: float
-    total_ad_network_bytes: float
-    update_ad_frames: list[AdFrameData]
-    remove_ad_frames: list[page.FrameId]
+    viewport_ad_density_by_area: int = field(
+        metadata={"cdp_name": "viewportAdDensityByArea"}
+    )
+    average_viewport_ad_density_by_area: float = field(
+        metadata={"cdp_name": "averageViewportAdDensityByArea"}
+    )
+    viewport_ad_count: int = field(metadata={"cdp_name": "viewportAdCount"})
+    average_viewport_ad_count: float = field(
+        metadata={"cdp_name": "averageViewportAdCount"}
+    )
+    total_ad_cpu_time: float = field(metadata={"cdp_name": "totalAdCpuTime"})
+    total_ad_network_bytes: float = field(metadata={"cdp_name": "totalAdNetworkBytes"})
+    update_ad_frames: list[AdFrameData] = field(metadata={"cdp_name": "updateAdFrames"})
+    remove_ad_frames: list[page.FrameId] = field(
+        metadata={"cdp_name": "removeAdFrames"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class AdScript(CDPModel):
+class AdScript:
     """
     An ad script. Note: when the script is a transitive ad script, we only fill in the
     immediate ancestor script in the provenance's adScriptAncestry field (as its first
@@ -47,5 +56,5 @@ class AdScript(CDPModel):
     and the frontend can reconstruct the full ancestry if necessary.
     """
 
-    script_id: runtime.ScriptId
-    provenance: network.AdProvenance
+    script_id: runtime.ScriptId = field(metadata={"cdp_name": "scriptId"})
+    provenance: network.AdProvenance = field(metadata={"cdp_name": "provenance"})

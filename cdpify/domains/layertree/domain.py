@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from cdpify.codec import decode_cdp, encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -51,10 +52,10 @@ class LayerTree:
 
         result = await self._command_sender.send_raw(
             method=LayerTreeCommand.COMPOSITING_REASONS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return CompositingReasonsResult.from_cdp(result)
+        return decode_cdp(CompositingReasonsResult, result)
 
     async def disable(
         self,
@@ -95,10 +96,10 @@ class LayerTree:
 
         result = await self._command_sender.send_raw(
             method=LayerTreeCommand.LOAD_SNAPSHOT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return LoadSnapshotResult.from_cdp(result)
+        return decode_cdp(LoadSnapshotResult, result)
 
     async def make_snapshot(
         self,
@@ -113,10 +114,10 @@ class LayerTree:
 
         result = await self._command_sender.send_raw(
             method=LayerTreeCommand.MAKE_SNAPSHOT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return MakeSnapshotResult.from_cdp(result)
+        return decode_cdp(MakeSnapshotResult, result)
 
     async def profile_snapshot(
         self,
@@ -136,10 +137,10 @@ class LayerTree:
 
         result = await self._command_sender.send_raw(
             method=LayerTreeCommand.PROFILE_SNAPSHOT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return ProfileSnapshotResult.from_cdp(result)
+        return decode_cdp(ProfileSnapshotResult, result)
 
     async def release_snapshot(
         self,
@@ -154,7 +155,7 @@ class LayerTree:
 
         await self._command_sender.send_raw(
             method=LayerTreeCommand.RELEASE_SNAPSHOT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -176,10 +177,10 @@ class LayerTree:
 
         result = await self._command_sender.send_raw(
             method=LayerTreeCommand.REPLAY_SNAPSHOT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return ReplaySnapshotResult.from_cdp(result)
+        return decode_cdp(ReplaySnapshotResult, result)
 
     async def snapshot_command_log(
         self,
@@ -194,7 +195,7 @@ class LayerTree:
 
         result = await self._command_sender.send_raw(
             method=LayerTreeCommand.SNAPSHOT_COMMAND_LOG,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return SnapshotCommandLogResult.from_cdp(result)
+        return decode_cdp(SnapshotCommandLogResult, result)

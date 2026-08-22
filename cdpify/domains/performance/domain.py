@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from typing import Literal
 
+from cdpify.codec import decode_cdp, encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
 
@@ -47,7 +48,7 @@ class Performance:
 
         await self._command_sender.send_raw(
             method=PerformanceCommand.ENABLE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -67,7 +68,7 @@ class Performance:
 
         await self._command_sender.send_raw(
             method=PerformanceCommand.SET_TIME_DOMAIN,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -83,4 +84,4 @@ class Performance:
             params=None,
             session_id=session_id,
         )
-        return GetMetricsResult.from_cdp(result)
+        return decode_cdp(GetMetricsResult, result)

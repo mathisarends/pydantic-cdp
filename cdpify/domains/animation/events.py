@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPEvent
 
 from .types import (
     Animation,
@@ -22,36 +20,60 @@ class AnimationEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class AnimationCanceledEvent(CDPEvent):
+class AnimationCanceledEvent:
     """
     Event for when an animation has been cancelled.
     """
 
-    id: str
+    id: str = field(metadata={"cdp_name": "id"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class AnimationCreatedEvent(CDPEvent):
+class AnimationCreatedEvent:
     """
     Event for each animation that has been created.
     """
 
-    id: str
+    id: str = field(metadata={"cdp_name": "id"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class AnimationStartedEvent(CDPEvent):
+class AnimationStartedEvent:
     """
     Event for animation that has been started.
     """
 
-    animation: Animation
+    animation: Animation = field(metadata={"cdp_name": "animation"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class AnimationUpdatedEvent(CDPEvent):
+class AnimationUpdatedEvent:
     """
     Event for animation that has been updated.
     """
 
-    animation: Animation
+    animation: Animation = field(metadata={"cdp_name": "animation"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

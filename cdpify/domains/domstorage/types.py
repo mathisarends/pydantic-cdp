@@ -4,23 +4,25 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
-
-from cdpify.shared.models import CDPModel
 
 SerializedStorageKey = str
 
 
 @dataclass(kw_only=True, slots=True)
-class StorageId(CDPModel):
+class StorageId:
     """
     DOM Storage identifier.
     """
 
-    security_origin: str | None = None
-    storage_key: SerializedStorageKey | None = None
-    is_local_storage: bool
+    security_origin: str | None = field(
+        default=None, metadata={"cdp_name": "securityOrigin"}
+    )
+    storage_key: SerializedStorageKey | None = field(
+        default=None, metadata={"cdp_name": "storageKey"}
+    )
+    is_local_storage: bool = field(metadata={"cdp_name": "isLocalStorage"})
 
 
 """

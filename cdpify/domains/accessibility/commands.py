@@ -4,11 +4,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 
 from cdpify.domains import dom, page, runtime
-from cdpify.shared.models import CDPModel
 
 from .types import (
     AXNode,
@@ -28,87 +27,103 @@ class AccessibilityCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class GetPartialAXTreeParams(CDPModel):
+class GetPartialAXTreeParams:
     """
     Fetches the accessibility node and partial accessibility tree for this DOM node, if
     it exists.
     """
 
-    node_id: dom.NodeId | None = None
-    backend_node_id: dom.BackendNodeId | None = None
-    object_id: runtime.RemoteObjectId | None = None
-    fetch_relatives: bool | None = None
+    node_id: dom.NodeId | None = field(default=None, metadata={"cdp_name": "nodeId"})
+    backend_node_id: dom.BackendNodeId | None = field(
+        default=None, metadata={"cdp_name": "backendNodeId"}
+    )
+    object_id: runtime.RemoteObjectId | None = field(
+        default=None, metadata={"cdp_name": "objectId"}
+    )
+    fetch_relatives: bool | None = field(
+        default=None, metadata={"cdp_name": "fetchRelatives"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetPartialAXTreeResult(CDPModel):
-    nodes: list[AXNode]
+class GetPartialAXTreeResult:
+    nodes: list[AXNode] = field(metadata={"cdp_name": "nodes"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetFullAXTreeParams(CDPModel):
+class GetFullAXTreeParams:
     """
     Fetches the entire accessibility tree for the root Document
     """
 
-    depth: int | None = None
-    frame_id: page.FrameId | None = None
+    depth: int | None = field(default=None, metadata={"cdp_name": "depth"})
+    frame_id: page.FrameId | None = field(
+        default=None, metadata={"cdp_name": "frameId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetFullAXTreeResult(CDPModel):
-    nodes: list[AXNode]
+class GetFullAXTreeResult:
+    nodes: list[AXNode] = field(metadata={"cdp_name": "nodes"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetRootAXNodeParams(CDPModel):
+class GetRootAXNodeParams:
     """
     Fetches the root node. Requires `enable()` to have been called previously.
     """
 
-    frame_id: page.FrameId | None = None
+    frame_id: page.FrameId | None = field(
+        default=None, metadata={"cdp_name": "frameId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetRootAXNodeResult(CDPModel):
-    node: AXNode
+class GetRootAXNodeResult:
+    node: AXNode = field(metadata={"cdp_name": "node"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetAXNodeAndAncestorsParams(CDPModel):
+class GetAXNodeAndAncestorsParams:
     """
     Fetches a node and all ancestors up to and including the root. Requires `enable()`
     to have been called previously.
     """
 
-    node_id: dom.NodeId | None = None
-    backend_node_id: dom.BackendNodeId | None = None
-    object_id: runtime.RemoteObjectId | None = None
+    node_id: dom.NodeId | None = field(default=None, metadata={"cdp_name": "nodeId"})
+    backend_node_id: dom.BackendNodeId | None = field(
+        default=None, metadata={"cdp_name": "backendNodeId"}
+    )
+    object_id: runtime.RemoteObjectId | None = field(
+        default=None, metadata={"cdp_name": "objectId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetAXNodeAndAncestorsResult(CDPModel):
-    nodes: list[AXNode]
+class GetAXNodeAndAncestorsResult:
+    nodes: list[AXNode] = field(metadata={"cdp_name": "nodes"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetChildAXNodesParams(CDPModel):
+class GetChildAXNodesParams:
     """
     Fetches a particular accessibility node by AXNodeId. Requires `enable()` to have
     been called previously.
     """
 
-    id: AXNodeId
-    frame_id: page.FrameId | None = None
+    id: AXNodeId = field(metadata={"cdp_name": "id"})
+    frame_id: page.FrameId | None = field(
+        default=None, metadata={"cdp_name": "frameId"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetChildAXNodesResult(CDPModel):
-    nodes: list[AXNode]
+class GetChildAXNodesResult:
+    nodes: list[AXNode] = field(metadata={"cdp_name": "nodes"})
 
 
 @dataclass(kw_only=True, slots=True)
-class QueryAXTreeParams(CDPModel):
+class QueryAXTreeParams:
     """
     Query a DOM node's accessibility subtree for accessible name and role. This command
     computes the name and role for all nodes in the subtree, including those that are
@@ -118,13 +133,19 @@ class QueryAXTreeParams(CDPModel):
     accessibility nodes in the subtree.
     """
 
-    node_id: dom.NodeId | None = None
-    backend_node_id: dom.BackendNodeId | None = None
-    object_id: runtime.RemoteObjectId | None = None
-    accessible_name: str | None = None
-    role: str | None = None
+    node_id: dom.NodeId | None = field(default=None, metadata={"cdp_name": "nodeId"})
+    backend_node_id: dom.BackendNodeId | None = field(
+        default=None, metadata={"cdp_name": "backendNodeId"}
+    )
+    object_id: runtime.RemoteObjectId | None = field(
+        default=None, metadata={"cdp_name": "objectId"}
+    )
+    accessible_name: str | None = field(
+        default=None, metadata={"cdp_name": "accessibleName"}
+    )
+    role: str | None = field(default=None, metadata={"cdp_name": "role"})
 
 
 @dataclass(kw_only=True, slots=True)
-class QueryAXTreeResult(CDPModel):
-    nodes: list[AXNode]
+class QueryAXTreeResult:
+    nodes: list[AXNode] = field(metadata={"cdp_name": "nodes"})

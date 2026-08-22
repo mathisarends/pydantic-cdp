@@ -4,24 +4,23 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Literal
 
 from cdpify.domains import target
-from cdpify.shared.models import CDPModel
 
 RegistrationID = str
 
 
 @dataclass(kw_only=True, slots=True)
-class ServiceWorkerRegistration(CDPModel):
+class ServiceWorkerRegistration:
     """
     ServiceWorker registration.
     """
 
-    registration_id: RegistrationID
-    scope_url: str
-    is_deleted: bool
+    registration_id: RegistrationID = field(metadata={"cdp_name": "registrationId"})
+    scope_url: str = field(metadata={"cdp_name": "scopeURL"})
+    is_deleted: bool = field(metadata={"cdp_name": "isDeleted"})
 
 
 type ServiceWorkerVersionRunningStatus = Literal[
@@ -34,7 +33,7 @@ type ServiceWorkerVersionStatus = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class ServiceWorkerRouterCondition(CDPModel):
+class ServiceWorkerRouterCondition:
     """
     Mostly corresponds to `RouterCondition` in ServiceWorker spec
     (https://www.w3.org/TR/service-workers/#dictdef-routercondition) while this
@@ -42,11 +41,17 @@ class ServiceWorkerRouterCondition(CDPModel):
     TODO(crbug.com/540469610): Support recursive conditions.
     """
 
-    url_pattern: str | None = None
-    request_method: str | None = None
-    request_mode: str | None = None
-    request_destination: str | None = None
-    running_status: ServiceWorkerVersionRunningStatus | None = None
+    url_pattern: str | None = field(default=None, metadata={"cdp_name": "urlPattern"})
+    request_method: str | None = field(
+        default=None, metadata={"cdp_name": "requestMethod"}
+    )
+    request_mode: str | None = field(default=None, metadata={"cdp_name": "requestMode"})
+    request_destination: str | None = field(
+        default=None, metadata={"cdp_name": "requestDestination"}
+    )
+    running_status: ServiceWorkerVersionRunningStatus | None = field(
+        default=None, metadata={"cdp_name": "runningStatus"}
+    )
 
 
 type ServiceWorkerRouterSourceType = Literal[
@@ -60,16 +65,16 @@ type ServiceWorkerRouterSourceType = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class ServiceWorkerRouterSourceDict(CDPModel):
+class ServiceWorkerRouterSourceDict:
     """
     https://www.w3.org/TR/service-workers/#dictdef-routersourcedict
     """
 
-    cache_name: str
+    cache_name: str = field(metadata={"cdp_name": "cacheName"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ServiceWorkerRouterSource(CDPModel):
+class ServiceWorkerRouterSource:
     """
     Corresponds to `RouterSource` in the spec while the representation is different as
     follows. (https://www.w3.org/TR/service-workers/#typedefdef-routersource) -
@@ -77,45 +82,59 @@ class ServiceWorkerRouterSource(CDPModel):
     `RouterSourceDict`: `type` equals `sourceDict`, `sourceDict` has valid value.
     """
 
-    type: ServiceWorkerRouterSourceType
-    source_dict: ServiceWorkerRouterSourceDict | None = None
+    type: ServiceWorkerRouterSourceType = field(metadata={"cdp_name": "type"})
+    source_dict: ServiceWorkerRouterSourceDict | None = field(
+        default=None, metadata={"cdp_name": "sourceDict"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ServiceWorkerRouterRule(CDPModel):
-    condition: ServiceWorkerRouterCondition
-    source: ServiceWorkerRouterSource
-    id: int
+class ServiceWorkerRouterRule:
+    condition: ServiceWorkerRouterCondition = field(metadata={"cdp_name": "condition"})
+    source: ServiceWorkerRouterSource = field(metadata={"cdp_name": "source"})
+    id: int = field(metadata={"cdp_name": "id"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ServiceWorkerVersion(CDPModel):
+class ServiceWorkerVersion:
     """
     ServiceWorker version.
     """
 
-    version_id: str
-    registration_id: RegistrationID
-    script_url: str
-    running_status: ServiceWorkerVersionRunningStatus
-    status: ServiceWorkerVersionStatus
-    script_last_modified: float | None = None
-    script_response_time: float | None = None
-    controlled_clients: list[target.TargetID] | None = None
-    target_id: target.TargetID | None = None
-    router_rules: str | None = None
-    typed_router_rules: list[ServiceWorkerRouterRule] | None = None
+    version_id: str = field(metadata={"cdp_name": "versionId"})
+    registration_id: RegistrationID = field(metadata={"cdp_name": "registrationId"})
+    script_url: str = field(metadata={"cdp_name": "scriptURL"})
+    running_status: ServiceWorkerVersionRunningStatus = field(
+        metadata={"cdp_name": "runningStatus"}
+    )
+    status: ServiceWorkerVersionStatus = field(metadata={"cdp_name": "status"})
+    script_last_modified: float | None = field(
+        default=None, metadata={"cdp_name": "scriptLastModified"}
+    )
+    script_response_time: float | None = field(
+        default=None, metadata={"cdp_name": "scriptResponseTime"}
+    )
+    controlled_clients: list[target.TargetID] | None = field(
+        default=None, metadata={"cdp_name": "controlledClients"}
+    )
+    target_id: target.TargetID | None = field(
+        default=None, metadata={"cdp_name": "targetId"}
+    )
+    router_rules: str | None = field(default=None, metadata={"cdp_name": "routerRules"})
+    typed_router_rules: list[ServiceWorkerRouterRule] | None = field(
+        default=None, metadata={"cdp_name": "typedRouterRules"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ServiceWorkerErrorMessage(CDPModel):
+class ServiceWorkerErrorMessage:
     """
     ServiceWorker error message.
     """
 
-    error_message: str
-    registration_id: RegistrationID
-    version_id: str
-    source_url: str
-    line_number: int
-    column_number: int
+    error_message: str = field(metadata={"cdp_name": "errorMessage"})
+    registration_id: RegistrationID = field(metadata={"cdp_name": "registrationId"})
+    version_id: str = field(metadata={"cdp_name": "versionId"})
+    source_url: str = field(metadata={"cdp_name": "sourceURL"})
+    line_number: int = field(metadata={"cdp_name": "lineNumber"})
+    column_number: int = field(metadata={"cdp_name": "columnNumber"})

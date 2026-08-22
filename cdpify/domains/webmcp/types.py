@@ -4,23 +4,26 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, Literal
 
 from cdpify.domains import dom, page, runtime
-from cdpify.shared.models import CDPModel
 
 
 @dataclass(kw_only=True, slots=True)
-class Annotation(CDPModel):
+class Annotation:
     """
     Tool annotations
     """
 
-    read_only: bool | None = None
-    untrusted_content: bool | None = None
-    consequential: bool | None = None
-    autosubmit: bool | None = None
+    read_only: bool | None = field(default=None, metadata={"cdp_name": "readOnly"})
+    untrusted_content: bool | None = field(
+        default=None, metadata={"cdp_name": "untrustedContent"}
+    )
+    consequential: bool | None = field(
+        default=None, metadata={"cdp_name": "consequential"}
+    )
+    autosubmit: bool | None = field(default=None, metadata={"cdp_name": "autosubmit"})
 
 
 """
@@ -30,25 +33,33 @@ type InvocationStatus = Literal["Completed", "Canceled", "Error"]
 
 
 @dataclass(kw_only=True, slots=True)
-class Tool(CDPModel):
+class Tool:
     """
     Definition of a tool that can be invoked.
     """
 
-    name: str
-    description: str
-    input_schema: dict[str, Any] | None = None
-    annotations: Annotation | None = None
-    frame_id: page.FrameId
-    backend_node_id: dom.BackendNodeId | None = None
-    stack_trace: runtime.StackTrace | None = None
+    name: str = field(metadata={"cdp_name": "name"})
+    description: str = field(metadata={"cdp_name": "description"})
+    input_schema: dict[str, Any] | None = field(
+        default=None, metadata={"cdp_name": "inputSchema"}
+    )
+    annotations: Annotation | None = field(
+        default=None, metadata={"cdp_name": "annotations"}
+    )
+    frame_id: page.FrameId = field(metadata={"cdp_name": "frameId"})
+    backend_node_id: dom.BackendNodeId | None = field(
+        default=None, metadata={"cdp_name": "backendNodeId"}
+    )
+    stack_trace: runtime.StackTrace | None = field(
+        default=None, metadata={"cdp_name": "stackTrace"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class RemovedTool(CDPModel):
+class RemovedTool:
     """
     Definition of a tool that was removed.
     """
 
-    name: str
-    frame_id: page.FrameId
+    name: str = field(metadata={"cdp_name": "name"})
+    frame_id: page.FrameId = field(metadata={"cdp_name": "frameId"})

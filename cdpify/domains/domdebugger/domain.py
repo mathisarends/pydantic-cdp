@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from cdpify.codec import decode_cdp, encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
 
@@ -53,10 +54,10 @@ class DOMDebugger:
 
         result = await self._command_sender.send_raw(
             method=DOMDebuggerCommand.GET_EVENT_LISTENERS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetEventListenersResult.from_cdp(result)
+        return decode_cdp(GetEventListenersResult, result)
 
     async def remove_dom_breakpoint(
         self,
@@ -72,7 +73,7 @@ class DOMDebugger:
 
         await self._command_sender.send_raw(
             method=DOMDebuggerCommand.REMOVE_DOM_BREAKPOINT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -92,7 +93,7 @@ class DOMDebugger:
 
         await self._command_sender.send_raw(
             method=DOMDebuggerCommand.REMOVE_EVENT_LISTENER_BREAKPOINT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -110,7 +111,7 @@ class DOMDebugger:
 
         await self._command_sender.send_raw(
             method=DOMDebuggerCommand.REMOVE_INSTRUMENTATION_BREAKPOINT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -127,7 +128,7 @@ class DOMDebugger:
 
         await self._command_sender.send_raw(
             method=DOMDebuggerCommand.REMOVE_XHR_BREAKPOINT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -144,7 +145,7 @@ class DOMDebugger:
 
         await self._command_sender.send_raw(
             method=DOMDebuggerCommand.SET_BREAK_ON_CSP_VIOLATION,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -162,7 +163,7 @@ class DOMDebugger:
 
         await self._command_sender.send_raw(
             method=DOMDebuggerCommand.SET_DOM_BREAKPOINT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -182,7 +183,7 @@ class DOMDebugger:
 
         await self._command_sender.send_raw(
             method=DOMDebuggerCommand.SET_EVENT_LISTENER_BREAKPOINT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -200,7 +201,7 @@ class DOMDebugger:
 
         await self._command_sender.send_raw(
             method=DOMDebuggerCommand.SET_INSTRUMENTATION_BREAKPOINT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -217,6 +218,6 @@ class DOMDebugger:
 
         await self._command_sender.send_raw(
             method=DOMDebuggerCommand.SET_XHR_BREAKPOINT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )

@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Literal
-
-from cdpify.shared.models import CDPModel
 
 """
 Memory pressure level.
@@ -16,43 +14,43 @@ type PressureLevel = Literal["moderate", "critical"]
 
 
 @dataclass(kw_only=True, slots=True)
-class SamplingProfileNode(CDPModel):
+class SamplingProfileNode:
     """
     Heap profile sample.
     """
 
-    size: float
-    total: float
-    stack: list[str]
+    size: float = field(metadata={"cdp_name": "size"})
+    total: float = field(metadata={"cdp_name": "total"})
+    stack: list[str] = field(metadata={"cdp_name": "stack"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SamplingProfile(CDPModel):
+class SamplingProfile:
     """
     Array of heap profile samples.
     """
 
-    samples: list[SamplingProfileNode]
-    modules: list[Module]
+    samples: list[SamplingProfileNode] = field(metadata={"cdp_name": "samples"})
+    modules: list[Module] = field(metadata={"cdp_name": "modules"})
 
 
 @dataclass(kw_only=True, slots=True)
-class Module(CDPModel):
+class Module:
     """
     Executable module information
     """
 
-    name: str
-    uuid: str
-    base_address: str
-    size: float
+    name: str = field(metadata={"cdp_name": "name"})
+    uuid: str = field(metadata={"cdp_name": "uuid"})
+    base_address: str = field(metadata={"cdp_name": "baseAddress"})
+    size: float = field(metadata={"cdp_name": "size"})
 
 
 @dataclass(kw_only=True, slots=True)
-class DOMCounter(CDPModel):
+class DOMCounter:
     """
     DOM object counter data.
     """
 
-    name: str
-    count: int
+    name: str = field(metadata={"cdp_name": "name"})
+    count: int = field(metadata={"cdp_name": "count"})

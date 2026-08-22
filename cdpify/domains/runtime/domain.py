@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+from cdpify.codec import decode_cdp, encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -69,10 +70,10 @@ class Runtime:
 
         result = await self._command_sender.send_raw(
             method=RuntimeCommand.AWAIT_PROMISE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return AwaitPromiseResult.from_cdp(result)
+        return decode_cdp(AwaitPromiseResult, result)
 
     async def call_function_on(
         self,
@@ -114,10 +115,10 @@ class Runtime:
 
         result = await self._command_sender.send_raw(
             method=RuntimeCommand.CALL_FUNCTION_ON,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return CallFunctionOnResult.from_cdp(result)
+        return decode_cdp(CallFunctionOnResult, result)
 
     async def compile_script(
         self,
@@ -140,10 +141,10 @@ class Runtime:
 
         result = await self._command_sender.send_raw(
             method=RuntimeCommand.COMPILE_SCRIPT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return CompileScriptResult.from_cdp(result)
+        return decode_cdp(CompileScriptResult, result)
 
     async def disable(
         self,
@@ -231,10 +232,10 @@ class Runtime:
 
         result = await self._command_sender.send_raw(
             method=RuntimeCommand.EVALUATE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return EvaluateResult.from_cdp(result)
+        return decode_cdp(EvaluateResult, result)
 
     async def get_isolate_id(
         self,
@@ -248,7 +249,7 @@ class Runtime:
             params=None,
             session_id=session_id,
         )
-        return GetIsolateIdResult.from_cdp(result)
+        return decode_cdp(GetIsolateIdResult, result)
 
     async def get_heap_usage(
         self,
@@ -263,7 +264,7 @@ class Runtime:
             params=None,
             session_id=session_id,
         )
-        return GetHeapUsageResult.from_cdp(result)
+        return decode_cdp(GetHeapUsageResult, result)
 
     async def get_properties(
         self,
@@ -289,10 +290,10 @@ class Runtime:
 
         result = await self._command_sender.send_raw(
             method=RuntimeCommand.GET_PROPERTIES,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetPropertiesResult.from_cdp(result)
+        return decode_cdp(GetPropertiesResult, result)
 
     async def global_lexical_scope_names(
         self,
@@ -309,10 +310,10 @@ class Runtime:
 
         result = await self._command_sender.send_raw(
             method=RuntimeCommand.GLOBAL_LEXICAL_SCOPE_NAMES,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GlobalLexicalScopeNamesResult.from_cdp(result)
+        return decode_cdp(GlobalLexicalScopeNamesResult, result)
 
     async def query_objects(
         self,
@@ -327,10 +328,10 @@ class Runtime:
 
         result = await self._command_sender.send_raw(
             method=RuntimeCommand.QUERY_OBJECTS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return QueryObjectsResult.from_cdp(result)
+        return decode_cdp(QueryObjectsResult, result)
 
     async def release_object(
         self,
@@ -345,7 +346,7 @@ class Runtime:
 
         await self._command_sender.send_raw(
             method=RuntimeCommand.RELEASE_OBJECT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -362,7 +363,7 @@ class Runtime:
 
         await self._command_sender.send_raw(
             method=RuntimeCommand.RELEASE_OBJECT_GROUP,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -408,10 +409,10 @@ class Runtime:
 
         result = await self._command_sender.send_raw(
             method=RuntimeCommand.RUN_SCRIPT,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return RunScriptResult.from_cdp(result)
+        return decode_cdp(RunScriptResult, result)
 
     async def set_async_call_stack_depth(
         self,
@@ -426,7 +427,7 @@ class Runtime:
 
         await self._command_sender.send_raw(
             method=RuntimeCommand.SET_ASYNC_CALL_STACK_DEPTH,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -440,7 +441,7 @@ class Runtime:
 
         await self._command_sender.send_raw(
             method=RuntimeCommand.SET_CUSTOM_OBJECT_FORMATTER_ENABLED,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -454,7 +455,7 @@ class Runtime:
 
         await self._command_sender.send_raw(
             method=RuntimeCommand.SET_MAX_CALL_STACK_SIZE_TO_CAPTURE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -495,7 +496,7 @@ class Runtime:
 
         await self._command_sender.send_raw(
             method=RuntimeCommand.ADD_BINDING,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -513,7 +514,7 @@ class Runtime:
 
         await self._command_sender.send_raw(
             method=RuntimeCommand.REMOVE_BINDING,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -533,7 +534,7 @@ class Runtime:
 
         result = await self._command_sender.send_raw(
             method=RuntimeCommand.GET_EXCEPTION_DETAILS,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetExceptionDetailsResult.from_cdp(result)
+        return decode_cdp(GetExceptionDetailsResult, result)

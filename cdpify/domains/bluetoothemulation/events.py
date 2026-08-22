@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPEvent
 
 from .types import (
     CharacteristicOperationType,
@@ -26,37 +24,57 @@ class BluetoothEmulationEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class GattOperationReceivedEvent(CDPEvent):
+class GattOperationReceivedEvent:
     """
     Event for when a GATT operation of |type| to the peripheral with |address|
     happened.
     """
 
-    address: str
-    type: GATTOperationType
+    address: str = field(metadata={"cdp_name": "address"})
+    type: GATTOperationType = field(metadata={"cdp_name": "type"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class CharacteristicOperationReceivedEvent(CDPEvent):
+class CharacteristicOperationReceivedEvent:
     """
     Event for when a characteristic operation of |type| to the characteristic
     respresented by |characteristicId| happened. |data| and |writeType| is expected to
     exist when |type| is write.
     """
 
-    characteristic_id: str
-    type: CharacteristicOperationType
-    data: str | None = None
-    write_type: CharacteristicWriteType | None = None
+    characteristic_id: str = field(metadata={"cdp_name": "characteristicId"})
+    type: CharacteristicOperationType = field(metadata={"cdp_name": "type"})
+    data: str | None = field(default=None, metadata={"cdp_name": "data"})
+    write_type: CharacteristicWriteType | None = field(
+        default=None, metadata={"cdp_name": "writeType"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DescriptorOperationReceivedEvent(CDPEvent):
+class DescriptorOperationReceivedEvent:
     """
     Event for when a descriptor operation of |type| to the descriptor respresented by
     |descriptorId| happened. |data| is expected to exist when |type| is write.
     """
 
-    descriptor_id: str
-    type: DescriptorOperationType
-    data: str | None = None
+    descriptor_id: str = field(metadata={"cdp_name": "descriptorId"})
+    type: DescriptorOperationType = field(metadata={"cdp_name": "type"})
+    data: str | None = field(default=None, metadata={"cdp_name": "data"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

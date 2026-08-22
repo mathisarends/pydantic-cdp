@@ -4,9 +4,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-
-from cdpify.shared.models import CDPModel
+from dataclasses import dataclass, field
 
 """
 Device request id.
@@ -20,10 +18,10 @@ DeviceId = str
 
 
 @dataclass(kw_only=True, slots=True)
-class PromptDevice(CDPModel):
+class PromptDevice:
     """
     Device information displayed in a user prompt to select a device.
     """
 
-    id: DeviceId
-    name: str
+    id: DeviceId = field(metadata={"cdp_name": "id"})
+    name: str = field(metadata={"cdp_name": "name"})

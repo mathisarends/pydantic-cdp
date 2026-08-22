@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPModel
 
 from .types import (
     Item,
@@ -25,28 +23,28 @@ class DOMStorageCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class ClearParams(CDPModel):
-    storage_id: StorageId
+class ClearParams:
+    storage_id: StorageId = field(metadata={"cdp_name": "storageId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetDOMStorageItemsParams(CDPModel):
-    storage_id: StorageId
+class GetDOMStorageItemsParams:
+    storage_id: StorageId = field(metadata={"cdp_name": "storageId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetDOMStorageItemsResult(CDPModel):
-    entries: list[Item]
+class GetDOMStorageItemsResult:
+    entries: list[Item] = field(metadata={"cdp_name": "entries"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RemoveDOMStorageItemParams(CDPModel):
-    storage_id: StorageId
-    key: str
+class RemoveDOMStorageItemParams:
+    storage_id: StorageId = field(metadata={"cdp_name": "storageId"})
+    key: str = field(metadata={"cdp_name": "key"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetDOMStorageItemParams(CDPModel):
-    storage_id: StorageId
-    key: str
-    value: str
+class SetDOMStorageItemParams:
+    storage_id: StorageId = field(metadata={"cdp_name": "storageId"})
+    key: str = field(metadata={"cdp_name": "key"})
+    value: str = field(metadata={"cdp_name": "value"})

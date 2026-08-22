@@ -4,11 +4,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 
 from cdpify.domains import runtime
-from cdpify.shared.models import CDPModel
 
 
 class AnimationCommand(StrEnum):
@@ -25,82 +24,82 @@ class AnimationCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class GetCurrentTimeParams(CDPModel):
+class GetCurrentTimeParams:
     """
     Returns the current time of the an animation.
     """
 
-    id: str
+    id: str = field(metadata={"cdp_name": "id"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetCurrentTimeResult(CDPModel):
-    current_time: float
+class GetCurrentTimeResult:
+    current_time: float = field(metadata={"cdp_name": "currentTime"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetPlaybackRateResult(CDPModel):
-    playback_rate: float
+class GetPlaybackRateResult:
+    playback_rate: float = field(metadata={"cdp_name": "playbackRate"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ReleaseAnimationsParams(CDPModel):
+class ReleaseAnimationsParams:
     """
     Releases a set of animations to no longer be manipulated.
     """
 
-    animations: list[str]
+    animations: list[str] = field(metadata={"cdp_name": "animations"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ResolveAnimationParams(CDPModel):
+class ResolveAnimationParams:
     """
     Gets the remote object of the Animation.
     """
 
-    animation_id: str
+    animation_id: str = field(metadata={"cdp_name": "animationId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ResolveAnimationResult(CDPModel):
-    remote_object: runtime.RemoteObject
+class ResolveAnimationResult:
+    remote_object: runtime.RemoteObject = field(metadata={"cdp_name": "remoteObject"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SeekAnimationsParams(CDPModel):
+class SeekAnimationsParams:
     """
     Seek a set of animations to a particular time within each animation.
     """
 
-    animations: list[str]
-    current_time: float
+    animations: list[str] = field(metadata={"cdp_name": "animations"})
+    current_time: float = field(metadata={"cdp_name": "currentTime"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetPausedParams(CDPModel):
+class SetPausedParams:
     """
     Sets the paused state of a set of animations.
     """
 
-    animations: list[str]
-    paused: bool
+    animations: list[str] = field(metadata={"cdp_name": "animations"})
+    paused: bool = field(metadata={"cdp_name": "paused"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetPlaybackRateParams(CDPModel):
+class SetPlaybackRateParams:
     """
     Sets the playback rate of the document timeline.
     """
 
-    playback_rate: float
+    playback_rate: float = field(metadata={"cdp_name": "playbackRate"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetTimingParams(CDPModel):
+class SetTimingParams:
     """
     Sets the timing of an animation node.
     """
 
-    animation_id: str
-    duration: float
-    delay: float
+    animation_id: str = field(metadata={"cdp_name": "animationId"})
+    duration: float = field(metadata={"cdp_name": "duration"})
+    delay: float = field(metadata={"cdp_name": "delay"})

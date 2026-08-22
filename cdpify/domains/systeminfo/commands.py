@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPModel
 
 from .types import (
     GPUInfo,
@@ -22,27 +20,27 @@ class SystemInfoCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class GetInfoResult(CDPModel):
-    gpu: GPUInfo
-    model_name: str
-    model_version: str
-    command_line: str
+class GetInfoResult:
+    gpu: GPUInfo = field(metadata={"cdp_name": "gpu"})
+    model_name: str = field(metadata={"cdp_name": "modelName"})
+    model_version: str = field(metadata={"cdp_name": "modelVersion"})
+    command_line: str = field(metadata={"cdp_name": "commandLine"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetFeatureStateParams(CDPModel):
+class GetFeatureStateParams:
     """
     Returns information about the feature state.
     """
 
-    feature_state: str
+    feature_state: str = field(metadata={"cdp_name": "featureState"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetFeatureStateResult(CDPModel):
-    feature_enabled: bool
+class GetFeatureStateResult:
+    feature_enabled: bool = field(metadata={"cdp_name": "featureEnabled"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetProcessInfoResult(CDPModel):
-    process_info: list[ProcessInfo]
+class GetProcessInfoResult:
+    process_info: list[ProcessInfo] = field(metadata={"cdp_name": "processInfo"})

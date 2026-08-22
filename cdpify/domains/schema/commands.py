@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPModel
 
 from .types import (
     Domain,
@@ -19,5 +17,5 @@ class SchemaCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class GetDomainsResult(CDPModel):
-    domains: list[Domain]
+class GetDomainsResult:
+    domains: list[Domain] = field(metadata={"cdp_name": "domains"})

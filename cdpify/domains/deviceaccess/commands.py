@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPModel
 
 from .types import (
     DeviceId,
@@ -23,19 +21,19 @@ class DeviceAccessCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class SelectPromptParams(CDPModel):
+class SelectPromptParams:
     """
     Select a device in response to a DeviceAccess.deviceRequestPrompted event.
     """
 
-    id: RequestId
-    device_id: DeviceId
+    id: RequestId = field(metadata={"cdp_name": "id"})
+    device_id: DeviceId = field(metadata={"cdp_name": "deviceId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class CancelPromptParams(CDPModel):
+class CancelPromptParams:
     """
     Cancel a prompt in response to a DeviceAccess.deviceRequestPrompted event.
     """
 
-    id: RequestId
+    id: RequestId = field(metadata={"cdp_name": "id"})

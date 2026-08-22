@@ -4,11 +4,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, Literal
 
 from cdpify.domains import network, page
-from cdpify.shared.models import CDPModel
 
 """
 Unique DOM node identifier.
@@ -28,14 +27,14 @@ StyleSheetId = str
 
 
 @dataclass(kw_only=True, slots=True)
-class BackendNode(CDPModel):
+class BackendNode:
     """
     Backend node with a friendly name.
     """
 
-    node_type: int
-    node_name: str
-    backend_node_id: BackendNodeId
+    node_type: int = field(metadata={"cdp_name": "nodeType"})
+    node_name: str = field(metadata={"cdp_name": "nodeName"})
+    backend_node_id: BackendNodeId = field(metadata={"cdp_name": "backendNodeId"})
 
 
 """
@@ -115,70 +114,108 @@ type ScrollOrientation = Literal["horizontal", "vertical"]
 
 
 @dataclass(kw_only=True, slots=True)
-class Node(CDPModel):
+class Node:
     """
     DOM interaction is implemented in terms of mirror objects that represent the actual
     DOM nodes. DOMNode is a base node mirror type.
     """
 
-    node_id: NodeId
-    parent_id: NodeId | None = None
-    backend_node_id: BackendNodeId
-    node_type: int
-    node_name: str
-    local_name: str
-    node_value: str
-    child_node_count: int | None = None
-    children: list[Node] | None = None
-    attributes: list[str] | None = None
-    document_url: str | None = None
-    base_url: str | None = None
-    public_id: str | None = None
-    system_id: str | None = None
-    internal_subset: str | None = None
-    xml_version: str | None = None
-    name: str | None = None
-    value: str | None = None
-    pseudo_type: PseudoType | None = None
-    pseudo_identifier: str | None = None
-    shadow_root_type: ShadowRootType | None = None
-    frame_id: page.FrameId | None = None
-    content_document: Node | None = None
-    shadow_roots: list[Node] | None = None
-    template_content: Node | None = None
-    pseudo_elements: list[Node] | None = None
-    imported_document: Node | None = None
-    distributed_nodes: list[BackendNode] | None = None
-    is_svg: bool | None = None
-    compatibility_mode: CompatibilityMode | None = None
-    assigned_slot: BackendNode | None = None
-    is_scrollable: bool | None = None
-    affected_by_starting_styles: bool | None = None
-    adopted_style_sheets: list[StyleSheetId] | None = None
-    ad_provenance: network.AdProvenance | None = None
+    node_id: NodeId = field(metadata={"cdp_name": "nodeId"})
+    parent_id: NodeId | None = field(default=None, metadata={"cdp_name": "parentId"})
+    backend_node_id: BackendNodeId = field(metadata={"cdp_name": "backendNodeId"})
+    node_type: int = field(metadata={"cdp_name": "nodeType"})
+    node_name: str = field(metadata={"cdp_name": "nodeName"})
+    local_name: str = field(metadata={"cdp_name": "localName"})
+    node_value: str = field(metadata={"cdp_name": "nodeValue"})
+    child_node_count: int | None = field(
+        default=None, metadata={"cdp_name": "childNodeCount"}
+    )
+    children: list[Node] | None = field(default=None, metadata={"cdp_name": "children"})
+    attributes: list[str] | None = field(
+        default=None, metadata={"cdp_name": "attributes"}
+    )
+    document_url: str | None = field(default=None, metadata={"cdp_name": "documentURL"})
+    base_url: str | None = field(default=None, metadata={"cdp_name": "baseURL"})
+    public_id: str | None = field(default=None, metadata={"cdp_name": "publicId"})
+    system_id: str | None = field(default=None, metadata={"cdp_name": "systemId"})
+    internal_subset: str | None = field(
+        default=None, metadata={"cdp_name": "internalSubset"}
+    )
+    xml_version: str | None = field(default=None, metadata={"cdp_name": "xmlVersion"})
+    name: str | None = field(default=None, metadata={"cdp_name": "name"})
+    value: str | None = field(default=None, metadata={"cdp_name": "value"})
+    pseudo_type: PseudoType | None = field(
+        default=None, metadata={"cdp_name": "pseudoType"}
+    )
+    pseudo_identifier: str | None = field(
+        default=None, metadata={"cdp_name": "pseudoIdentifier"}
+    )
+    shadow_root_type: ShadowRootType | None = field(
+        default=None, metadata={"cdp_name": "shadowRootType"}
+    )
+    frame_id: page.FrameId | None = field(
+        default=None, metadata={"cdp_name": "frameId"}
+    )
+    content_document: Node | None = field(
+        default=None, metadata={"cdp_name": "contentDocument"}
+    )
+    shadow_roots: list[Node] | None = field(
+        default=None, metadata={"cdp_name": "shadowRoots"}
+    )
+    template_content: Node | None = field(
+        default=None, metadata={"cdp_name": "templateContent"}
+    )
+    pseudo_elements: list[Node] | None = field(
+        default=None, metadata={"cdp_name": "pseudoElements"}
+    )
+    imported_document: Node | None = field(
+        default=None, metadata={"cdp_name": "importedDocument"}
+    )
+    distributed_nodes: list[BackendNode] | None = field(
+        default=None, metadata={"cdp_name": "distributedNodes"}
+    )
+    is_svg: bool | None = field(default=None, metadata={"cdp_name": "isSVG"})
+    compatibility_mode: CompatibilityMode | None = field(
+        default=None, metadata={"cdp_name": "compatibilityMode"}
+    )
+    assigned_slot: BackendNode | None = field(
+        default=None, metadata={"cdp_name": "assignedSlot"}
+    )
+    is_scrollable: bool | None = field(
+        default=None, metadata={"cdp_name": "isScrollable"}
+    )
+    affected_by_starting_styles: bool | None = field(
+        default=None, metadata={"cdp_name": "affectedByStartingStyles"}
+    )
+    adopted_style_sheets: list[StyleSheetId] | None = field(
+        default=None, metadata={"cdp_name": "adoptedStyleSheets"}
+    )
+    ad_provenance: network.AdProvenance | None = field(
+        default=None, metadata={"cdp_name": "adProvenance"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DetachedElementInfo(CDPModel):
+class DetachedElementInfo:
     """
     A structure to hold the top-level node of a detached tree and an array of its
     retained descendants.
     """
 
-    tree_node: Node
-    retained_node_ids: list[NodeId]
+    tree_node: Node = field(metadata={"cdp_name": "treeNode"})
+    retained_node_ids: list[NodeId] = field(metadata={"cdp_name": "retainedNodeIds"})
 
 
 @dataclass(kw_only=True, slots=True)
-class RGBA(CDPModel):
+class RGBA:
     """
     A structure holding an RGBA color.
     """
 
-    r: int
-    g: int
-    b: int
-    a: float | None = None
+    r: int = field(metadata={"cdp_name": "r"})
+    g: int = field(metadata={"cdp_name": "g"})
+    b: int = field(metadata={"cdp_name": "b"})
+    a: float | None = field(default=None, metadata={"cdp_name": "a"})
 
 
 """
@@ -189,44 +226,46 @@ Quad = list[Any]
 
 
 @dataclass(kw_only=True, slots=True)
-class BoxModel(CDPModel):
+class BoxModel:
     """
     Box model.
     """
 
-    content: Quad
-    padding: Quad
-    border: Quad
-    margin: Quad
-    width: int
-    height: int
-    shape_outside: ShapeOutsideInfo | None = None
+    content: Quad = field(metadata={"cdp_name": "content"})
+    padding: Quad = field(metadata={"cdp_name": "padding"})
+    border: Quad = field(metadata={"cdp_name": "border"})
+    margin: Quad = field(metadata={"cdp_name": "margin"})
+    width: int = field(metadata={"cdp_name": "width"})
+    height: int = field(metadata={"cdp_name": "height"})
+    shape_outside: ShapeOutsideInfo | None = field(
+        default=None, metadata={"cdp_name": "shapeOutside"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ShapeOutsideInfo(CDPModel):
+class ShapeOutsideInfo:
     """
     CSS Shape Outside details.
     """
 
-    bounds: Quad
-    shape: list[Any]
-    margin_shape: list[Any]
+    bounds: Quad = field(metadata={"cdp_name": "bounds"})
+    shape: list[Any] = field(metadata={"cdp_name": "shape"})
+    margin_shape: list[Any] = field(metadata={"cdp_name": "marginShape"})
 
 
 @dataclass(kw_only=True, slots=True)
-class Rect(CDPModel):
+class Rect:
     """
     Rectangle.
     """
 
-    x: float
-    y: float
-    width: float
-    height: float
+    x: float = field(metadata={"cdp_name": "x"})
+    y: float = field(metadata={"cdp_name": "y"})
+    width: float = field(metadata={"cdp_name": "width"})
+    height: float = field(metadata={"cdp_name": "height"})
 
 
 @dataclass(kw_only=True, slots=True)
-class CSSComputedStyleProperty(CDPModel):
-    name: str
-    value: str
+class CSSComputedStyleProperty:
+    name: str = field(metadata={"cdp_name": "name"})
+    value: str = field(metadata={"cdp_name": "value"})

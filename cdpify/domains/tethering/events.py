@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPEvent
 
 
 class TetheringEvent(StrEnum):
@@ -15,10 +13,16 @@ class TetheringEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class AcceptedEvent(CDPEvent):
+class AcceptedEvent:
     """
     Informs that port was successfully bound and got a specified connection id.
     """
 
-    port: int
-    connection_id: str
+    port: int = field(metadata={"cdp_name": "port"})
+    connection_id: str = field(metadata={"cdp_name": "connectionId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

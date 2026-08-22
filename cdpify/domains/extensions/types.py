@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Literal
-
-from cdpify.shared.models import CDPModel
 
 """
 Storage areas.
@@ -16,13 +14,13 @@ type StorageArea = Literal["session", "local", "sync", "managed"]
 
 
 @dataclass(kw_only=True, slots=True)
-class ExtensionInfo(CDPModel):
+class ExtensionInfo:
     """
     Detailed information about an extension.
     """
 
-    id: str
-    name: str
-    version: str
-    path: str
-    enabled: bool
+    id: str = field(metadata={"cdp_name": "id"})
+    name: str = field(metadata={"cdp_name": "name"})
+    version: str = field(metadata={"cdp_name": "version"})
+    path: str = field(metadata={"cdp_name": "path"})
+    enabled: bool = field(metadata={"cdp_name": "enabled"})

@@ -4,52 +4,54 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Literal
 
-from cdpify.shared.models import CDPModel
+
+@dataclass(kw_only=True, slots=True)
+class SafeAreaInsets:
+    top: int | None = field(default=None, metadata={"cdp_name": "top"})
+    top_max: int | None = field(default=None, metadata={"cdp_name": "topMax"})
+    left: int | None = field(default=None, metadata={"cdp_name": "left"})
+    left_max: int | None = field(default=None, metadata={"cdp_name": "leftMax"})
+    bottom: int | None = field(default=None, metadata={"cdp_name": "bottom"})
+    bottom_max: int | None = field(default=None, metadata={"cdp_name": "bottomMax"})
+    right: int | None = field(default=None, metadata={"cdp_name": "right"})
+    right_max: int | None = field(default=None, metadata={"cdp_name": "rightMax"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SafeAreaInsets(CDPModel):
-    top: int | None = None
-    top_max: int | None = None
-    left: int | None = None
-    left_max: int | None = None
-    bottom: int | None = None
-    bottom_max: int | None = None
-    right: int | None = None
-    right_max: int | None = None
-
-
-@dataclass(kw_only=True, slots=True)
-class ScreenOrientation(CDPModel):
+class ScreenOrientation:
     """
     Screen orientation.
     """
 
     type: Literal[
         "portraitPrimary", "portraitSecondary", "landscapePrimary", "landscapeSecondary"
-    ]
-    angle: int
+    ] = field(  # noqa: E501
+        metadata={"cdp_name": "type"},
+    )
+    angle: int = field(metadata={"cdp_name": "angle"})
 
 
 @dataclass(kw_only=True, slots=True)
-class DisplayFeature(CDPModel):
-    orientation: Literal["vertical", "horizontal"]
-    offset: int
-    mask_length: int
+class DisplayFeature:
+    orientation: Literal["vertical", "horizontal"] = field(
+        metadata={"cdp_name": "orientation"}
+    )
+    offset: int = field(metadata={"cdp_name": "offset"})
+    mask_length: int = field(metadata={"cdp_name": "maskLength"})
 
 
 @dataclass(kw_only=True, slots=True)
-class DevicePosture(CDPModel):
-    type: Literal["continuous", "folded"]
+class DevicePosture:
+    type: Literal["continuous", "folded"] = field(metadata={"cdp_name": "type"})
 
 
 @dataclass(kw_only=True, slots=True)
-class MediaFeature(CDPModel):
-    name: str
-    value: str
+class MediaFeature:
+    name: str = field(metadata={"cdp_name": "name"})
+    value: str = field(metadata={"cdp_name": "value"})
 
 
 """
@@ -62,35 +64,41 @@ type VirtualTimePolicy = Literal["advance", "pause", "pauseIfNetworkFetchesPendi
 
 
 @dataclass(kw_only=True, slots=True)
-class UserAgentBrandVersion(CDPModel):
+class UserAgentBrandVersion:
     """
     Used to specify User Agent Client Hints to emulate. See
     https://wicg.github.io/ua-client-hints
     """
 
-    brand: str
-    version: str
+    brand: str = field(metadata={"cdp_name": "brand"})
+    version: str = field(metadata={"cdp_name": "version"})
 
 
 @dataclass(kw_only=True, slots=True)
-class UserAgentMetadata(CDPModel):
+class UserAgentMetadata:
     """
     Used to specify User Agent Client Hints to emulate. See
     https://wicg.github.io/ua-client-hints Missing optional values will be filled in by
     the target with what it would normally use.
     """
 
-    brands: list[UserAgentBrandVersion] | None = None
-    full_version_list: list[UserAgentBrandVersion] | None = None
-    full_version: str | None = None
-    platform: str
-    platform_version: str
-    architecture: str
-    model: str
-    mobile: bool
-    bitness: str | None = None
-    wow64: bool | None = None
-    form_factors: list[str] | None = None
+    brands: list[UserAgentBrandVersion] | None = field(
+        default=None, metadata={"cdp_name": "brands"}
+    )
+    full_version_list: list[UserAgentBrandVersion] | None = field(
+        default=None, metadata={"cdp_name": "fullVersionList"}
+    )
+    full_version: str | None = field(default=None, metadata={"cdp_name": "fullVersion"})
+    platform: str = field(metadata={"cdp_name": "platform"})
+    platform_version: str = field(metadata={"cdp_name": "platformVersion"})
+    architecture: str = field(metadata={"cdp_name": "architecture"})
+    model: str = field(metadata={"cdp_name": "model"})
+    mobile: bool = field(metadata={"cdp_name": "mobile"})
+    bitness: str | None = field(default=None, metadata={"cdp_name": "bitness"})
+    wow64: bool | None = field(default=None, metadata={"cdp_name": "wow64"})
+    form_factors: list[str] | None = field(
+        default=None, metadata={"cdp_name": "formFactors"}
+    )
 
 
 """
@@ -110,37 +118,45 @@ type SensorType = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
-class SensorMetadata(CDPModel):
-    available: bool | None = None
-    minimum_frequency: float | None = None
-    maximum_frequency: float | None = None
+class SensorMetadata:
+    available: bool | None = field(default=None, metadata={"cdp_name": "available"})
+    minimum_frequency: float | None = field(
+        default=None, metadata={"cdp_name": "minimumFrequency"}
+    )
+    maximum_frequency: float | None = field(
+        default=None, metadata={"cdp_name": "maximumFrequency"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SensorReadingSingle(CDPModel):
-    value: float
+class SensorReadingSingle:
+    value: float = field(metadata={"cdp_name": "value"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SensorReadingXYZ(CDPModel):
-    x: float
-    y: float
-    z: float
+class SensorReadingXYZ:
+    x: float = field(metadata={"cdp_name": "x"})
+    y: float = field(metadata={"cdp_name": "y"})
+    z: float = field(metadata={"cdp_name": "z"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SensorReadingQuaternion(CDPModel):
-    x: float
-    y: float
-    z: float
-    w: float
+class SensorReadingQuaternion:
+    x: float = field(metadata={"cdp_name": "x"})
+    y: float = field(metadata={"cdp_name": "y"})
+    z: float = field(metadata={"cdp_name": "z"})
+    w: float = field(metadata={"cdp_name": "w"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SensorReading(CDPModel):
-    single: SensorReadingSingle | None = None
-    xyz: SensorReadingXYZ | None = None
-    quaternion: SensorReadingQuaternion | None = None
+class SensorReading:
+    single: SensorReadingSingle | None = field(
+        default=None, metadata={"cdp_name": "single"}
+    )
+    xyz: SensorReadingXYZ | None = field(default=None, metadata={"cdp_name": "xyz"})
+    quaternion: SensorReadingQuaternion | None = field(
+        default=None, metadata={"cdp_name": "quaternion"}
+    )
 
 
 type PressureSource = Literal["cpu"]
@@ -149,44 +165,44 @@ type PressureState = Literal["nominal", "fair", "serious", "critical"]
 
 
 @dataclass(kw_only=True, slots=True)
-class PressureMetadata(CDPModel):
-    available: bool | None = None
+class PressureMetadata:
+    available: bool | None = field(default=None, metadata={"cdp_name": "available"})
 
 
 @dataclass(kw_only=True, slots=True)
-class WorkAreaInsets(CDPModel):
-    top: int | None = None
-    left: int | None = None
-    bottom: int | None = None
-    right: int | None = None
+class WorkAreaInsets:
+    top: int | None = field(default=None, metadata={"cdp_name": "top"})
+    left: int | None = field(default=None, metadata={"cdp_name": "left"})
+    bottom: int | None = field(default=None, metadata={"cdp_name": "bottom"})
+    right: int | None = field(default=None, metadata={"cdp_name": "right"})
 
 
 ScreenId = str
 
 
 @dataclass(kw_only=True, slots=True)
-class ScreenInfo(CDPModel):
+class ScreenInfo:
     """
     Screen information similar to the one returned by window.getScreenDetails() method,
     see https://w3c.github.io/window-management/#screendetailed.
     """
 
-    left: int
-    top: int
-    width: int
-    height: int
-    avail_left: int
-    avail_top: int
-    avail_width: int
-    avail_height: int
-    device_pixel_ratio: float
-    orientation: ScreenOrientation
-    color_depth: int
-    is_extended: bool
-    is_internal: bool
-    is_primary: bool
-    label: str
-    id: ScreenId
+    left: int = field(metadata={"cdp_name": "left"})
+    top: int = field(metadata={"cdp_name": "top"})
+    width: int = field(metadata={"cdp_name": "width"})
+    height: int = field(metadata={"cdp_name": "height"})
+    avail_left: int = field(metadata={"cdp_name": "availLeft"})
+    avail_top: int = field(metadata={"cdp_name": "availTop"})
+    avail_width: int = field(metadata={"cdp_name": "availWidth"})
+    avail_height: int = field(metadata={"cdp_name": "availHeight"})
+    device_pixel_ratio: float = field(metadata={"cdp_name": "devicePixelRatio"})
+    orientation: ScreenOrientation = field(metadata={"cdp_name": "orientation"})
+    color_depth: int = field(metadata={"cdp_name": "colorDepth"})
+    is_extended: bool = field(metadata={"cdp_name": "isExtended"})
+    is_internal: bool = field(metadata={"cdp_name": "isInternal"})
+    is_primary: bool = field(metadata={"cdp_name": "isPrimary"})
+    label: str = field(metadata={"cdp_name": "label"})
+    id: ScreenId = field(metadata={"cdp_name": "id"})
 
 
 """

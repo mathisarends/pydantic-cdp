@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from cdpify.codec import decode_cdp, encode_cdp
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .commands import (
@@ -57,7 +58,7 @@ class IndexedDB:
 
         await self._command_sender.send_raw(
             method=IndexedDBCommand.CLEAR_OBJECT_STORE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -82,7 +83,7 @@ class IndexedDB:
 
         await self._command_sender.send_raw(
             method=IndexedDBCommand.DELETE_DATABASE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -111,7 +112,7 @@ class IndexedDB:
 
         await self._command_sender.send_raw(
             method=IndexedDBCommand.DELETE_OBJECT_STORE_ENTRIES,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
 
@@ -172,10 +173,10 @@ class IndexedDB:
 
         result = await self._command_sender.send_raw(
             method=IndexedDBCommand.REQUEST_DATA,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return RequestDataResult.from_cdp(result)
+        return decode_cdp(RequestDataResult, result)
 
     async def get_metadata(
         self,
@@ -200,10 +201,10 @@ class IndexedDB:
 
         result = await self._command_sender.send_raw(
             method=IndexedDBCommand.GET_METADATA,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return GetMetadataResult.from_cdp(result)
+        return decode_cdp(GetMetadataResult, result)
 
     async def request_database(
         self,
@@ -226,10 +227,10 @@ class IndexedDB:
 
         result = await self._command_sender.send_raw(
             method=IndexedDBCommand.REQUEST_DATABASE,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return RequestDatabaseResult.from_cdp(result)
+        return decode_cdp(RequestDatabaseResult, result)
 
     async def request_database_names(
         self,
@@ -250,7 +251,7 @@ class IndexedDB:
 
         result = await self._command_sender.send_raw(
             method=IndexedDBCommand.REQUEST_DATABASE_NAMES,
-            params=params.to_cdp_params(),
+            params=encode_cdp(params),
             session_id=session_id,
         )
-        return RequestDatabaseNamesResult.from_cdp(result)
+        return decode_cdp(RequestDatabaseNamesResult, result)

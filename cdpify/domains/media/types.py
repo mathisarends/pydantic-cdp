@@ -4,11 +4,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, Literal
 
 from cdpify.domains import dom
-from cdpify.shared.models import CDPModel
 
 """
 Players will get an ID that is unique within the agent context.
@@ -19,60 +18,64 @@ Timestamp = float
 
 
 @dataclass(kw_only=True, slots=True)
-class PlayerMessage(CDPModel):
+class PlayerMessage:
     """
     Have one type per entry in MediaLogRecord::Type Corresponds to kMessage
     """
 
-    level: Literal["error", "warning", "info", "debug"]
-    message: str
+    level: Literal["error", "warning", "info", "debug"] = field(
+        metadata={"cdp_name": "level"}
+    )
+    message: str = field(metadata={"cdp_name": "message"})
 
 
 @dataclass(kw_only=True, slots=True)
-class PlayerProperty(CDPModel):
+class PlayerProperty:
     """
     Corresponds to kMediaPropertyChange
     """
 
-    name: str
-    value: str
+    name: str = field(metadata={"cdp_name": "name"})
+    value: str = field(metadata={"cdp_name": "value"})
 
 
 @dataclass(kw_only=True, slots=True)
-class PlayerEvent(CDPModel):
+class PlayerEvent:
     """
     Corresponds to kMediaEventTriggered
     """
 
-    timestamp: Timestamp
-    value: str
+    timestamp: Timestamp = field(metadata={"cdp_name": "timestamp"})
+    value: str = field(metadata={"cdp_name": "value"})
 
 
 @dataclass(kw_only=True, slots=True)
-class PlayerErrorSourceLocation(CDPModel):
+class PlayerErrorSourceLocation:
     """
     Represents logged source line numbers reported in an error. NOTE: file and line are
     from chromium c++ implementation code, not js.
     """
 
-    file: str
-    line: int
+    file: str = field(metadata={"cdp_name": "file"})
+    line: int = field(metadata={"cdp_name": "line"})
 
 
 @dataclass(kw_only=True, slots=True)
-class PlayerError(CDPModel):
+class PlayerError:
     """
     Corresponds to kMediaError
     """
 
-    error_type: str
-    code: int
-    stack: list[PlayerErrorSourceLocation]
-    cause: list[PlayerError]
-    data: dict[str, Any]
+    error_type: str = field(metadata={"cdp_name": "errorType"})
+    code: int = field(metadata={"cdp_name": "code"})
+    stack: list[PlayerErrorSourceLocation] = field(metadata={"cdp_name": "stack"})
+    cause: list[PlayerError] = field(metadata={"cdp_name": "cause"})
+    data: dict[str, Any] = field(metadata={"cdp_name": "data"})
 
 
 @dataclass(kw_only=True, slots=True)
-class Player(CDPModel):
-    player_id: PlayerId
-    dom_node_id: dom.BackendNodeId | None = None
+class Player:
+    player_id: PlayerId = field(metadata={"cdp_name": "playerId"})
+    dom_node_id: dom.BackendNodeId | None = field(
+        default=None, metadata={"cdp_name": "domNodeId"}
+    )

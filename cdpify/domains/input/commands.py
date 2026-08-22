@@ -4,11 +4,9 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Literal
-
-from cdpify.shared.models import CDPModel
 
 from .types import (
     DragData,
@@ -36,181 +34,235 @@ class InputCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class DispatchDragEventParams(CDPModel):
+class DispatchDragEventParams:
     """
     Dispatches a drag event into the page.
     """
 
-    type: Literal["dragEnter", "dragOver", "drop", "dragCancel"]
-    x: float
-    y: float
-    data: DragData
-    modifiers: int | None = None
+    type: Literal["dragEnter", "dragOver", "drop", "dragCancel"] = field(
+        metadata={"cdp_name": "type"}
+    )
+    x: float = field(metadata={"cdp_name": "x"})
+    y: float = field(metadata={"cdp_name": "y"})
+    data: DragData = field(metadata={"cdp_name": "data"})
+    modifiers: int | None = field(default=None, metadata={"cdp_name": "modifiers"})
 
 
 @dataclass(kw_only=True, slots=True)
-class DispatchKeyEventParams(CDPModel):
+class DispatchKeyEventParams:
     """
     Dispatches a key event to the page.
     """
 
-    type: Literal["keyDown", "keyUp", "rawKeyDown", "char"]
-    modifiers: int | None = None
-    timestamp: TimeSinceEpoch | None = None
-    text: str | None = None
-    unmodified_text: str | None = None
-    key_identifier: str | None = None
-    code: str | None = None
-    key: str | None = None
-    windows_virtual_key_code: int | None = None
-    native_virtual_key_code: int | None = None
-    auto_repeat: bool | None = None
-    is_keypad: bool | None = None
-    is_system_key: bool | None = None
-    location: int | None = None
-    commands: list[str] | None = None
+    type: Literal["keyDown", "keyUp", "rawKeyDown", "char"] = field(
+        metadata={"cdp_name": "type"}
+    )
+    modifiers: int | None = field(default=None, metadata={"cdp_name": "modifiers"})
+    timestamp: TimeSinceEpoch | None = field(
+        default=None, metadata={"cdp_name": "timestamp"}
+    )
+    text: str | None = field(default=None, metadata={"cdp_name": "text"})
+    unmodified_text: str | None = field(
+        default=None, metadata={"cdp_name": "unmodifiedText"}
+    )
+    key_identifier: str | None = field(
+        default=None, metadata={"cdp_name": "keyIdentifier"}
+    )
+    code: str | None = field(default=None, metadata={"cdp_name": "code"})
+    key: str | None = field(default=None, metadata={"cdp_name": "key"})
+    windows_virtual_key_code: int | None = field(
+        default=None, metadata={"cdp_name": "windowsVirtualKeyCode"}
+    )
+    native_virtual_key_code: int | None = field(
+        default=None, metadata={"cdp_name": "nativeVirtualKeyCode"}
+    )
+    auto_repeat: bool | None = field(default=None, metadata={"cdp_name": "autoRepeat"})
+    is_keypad: bool | None = field(default=None, metadata={"cdp_name": "isKeypad"})
+    is_system_key: bool | None = field(
+        default=None, metadata={"cdp_name": "isSystemKey"}
+    )
+    location: int | None = field(default=None, metadata={"cdp_name": "location"})
+    commands: list[str] | None = field(default=None, metadata={"cdp_name": "commands"})
 
 
 @dataclass(kw_only=True, slots=True)
-class InsertTextParams(CDPModel):
+class InsertTextParams:
     """
     This method emulates inserting text that doesn't come from a key press, for example
     an emoji keyboard or an IME.
     """
 
-    text: str
+    text: str = field(metadata={"cdp_name": "text"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ImeSetCompositionParams(CDPModel):
+class ImeSetCompositionParams:
     """
     This method sets the current candidate text for IME. Use imeCommitComposition to
     commit the final text. Use imeSetComposition with empty string as text to cancel
     composition.
     """
 
-    text: str
-    selection_start: int
-    selection_end: int
-    replacement_start: int | None = None
-    replacement_end: int | None = None
+    text: str = field(metadata={"cdp_name": "text"})
+    selection_start: int = field(metadata={"cdp_name": "selectionStart"})
+    selection_end: int = field(metadata={"cdp_name": "selectionEnd"})
+    replacement_start: int | None = field(
+        default=None, metadata={"cdp_name": "replacementStart"}
+    )
+    replacement_end: int | None = field(
+        default=None, metadata={"cdp_name": "replacementEnd"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DispatchMouseEventParams(CDPModel):
+class DispatchMouseEventParams:
     """
     Dispatches a mouse event to the page.
     """
 
-    type: Literal["mousePressed", "mouseReleased", "mouseMoved", "mouseWheel"]
-    x: float
-    y: float
-    modifiers: int | None = None
-    timestamp: TimeSinceEpoch | None = None
-    button: MouseButton | None = None
-    buttons: int | None = None
-    click_count: int | None = None
-    force: float | None = None
-    tangential_pressure: float | None = None
-    tilt_x: float | None = None
-    tilt_y: float | None = None
-    twist: int | None = None
-    delta_x: float | None = None
-    delta_y: float | None = None
-    pointer_type: Literal["mouse", "pen"] | None = None
+    type: Literal["mousePressed", "mouseReleased", "mouseMoved", "mouseWheel"] = field(
+        metadata={"cdp_name": "type"}
+    )
+    x: float = field(metadata={"cdp_name": "x"})
+    y: float = field(metadata={"cdp_name": "y"})
+    modifiers: int | None = field(default=None, metadata={"cdp_name": "modifiers"})
+    timestamp: TimeSinceEpoch | None = field(
+        default=None, metadata={"cdp_name": "timestamp"}
+    )
+    button: MouseButton | None = field(default=None, metadata={"cdp_name": "button"})
+    buttons: int | None = field(default=None, metadata={"cdp_name": "buttons"})
+    click_count: int | None = field(default=None, metadata={"cdp_name": "clickCount"})
+    force: float | None = field(default=None, metadata={"cdp_name": "force"})
+    tangential_pressure: float | None = field(
+        default=None, metadata={"cdp_name": "tangentialPressure"}
+    )
+    tilt_x: float | None = field(default=None, metadata={"cdp_name": "tiltX"})
+    tilt_y: float | None = field(default=None, metadata={"cdp_name": "tiltY"})
+    twist: int | None = field(default=None, metadata={"cdp_name": "twist"})
+    delta_x: float | None = field(default=None, metadata={"cdp_name": "deltaX"})
+    delta_y: float | None = field(default=None, metadata={"cdp_name": "deltaY"})
+    pointer_type: Literal["mouse", "pen"] | None = field(
+        default=None, metadata={"cdp_name": "pointerType"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DispatchTouchEventParams(CDPModel):
+class DispatchTouchEventParams:
     """
     Dispatches a touch event to the page.
     """
 
-    type: Literal["touchStart", "touchEnd", "touchMove", "touchCancel"]
-    touch_points: list[TouchPoint]
-    modifiers: int | None = None
-    timestamp: TimeSinceEpoch | None = None
+    type: Literal["touchStart", "touchEnd", "touchMove", "touchCancel"] = field(
+        metadata={"cdp_name": "type"}
+    )
+    touch_points: list[TouchPoint] = field(metadata={"cdp_name": "touchPoints"})
+    modifiers: int | None = field(default=None, metadata={"cdp_name": "modifiers"})
+    timestamp: TimeSinceEpoch | None = field(
+        default=None, metadata={"cdp_name": "timestamp"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class EmulateTouchFromMouseEventParams(CDPModel):
+class EmulateTouchFromMouseEventParams:
     """
     Emulates touch event from the mouse event parameters.
     """
 
-    type: Literal["mousePressed", "mouseReleased", "mouseMoved", "mouseWheel"]
-    x: int
-    y: int
-    button: MouseButton
-    timestamp: TimeSinceEpoch | None = None
-    delta_x: float | None = None
-    delta_y: float | None = None
-    modifiers: int | None = None
-    click_count: int | None = None
+    type: Literal["mousePressed", "mouseReleased", "mouseMoved", "mouseWheel"] = field(
+        metadata={"cdp_name": "type"}
+    )
+    x: int = field(metadata={"cdp_name": "x"})
+    y: int = field(metadata={"cdp_name": "y"})
+    button: MouseButton = field(metadata={"cdp_name": "button"})
+    timestamp: TimeSinceEpoch | None = field(
+        default=None, metadata={"cdp_name": "timestamp"}
+    )
+    delta_x: float | None = field(default=None, metadata={"cdp_name": "deltaX"})
+    delta_y: float | None = field(default=None, metadata={"cdp_name": "deltaY"})
+    modifiers: int | None = field(default=None, metadata={"cdp_name": "modifiers"})
+    click_count: int | None = field(default=None, metadata={"cdp_name": "clickCount"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetIgnoreInputEventsParams(CDPModel):
+class SetIgnoreInputEventsParams:
     """
     Ignores input events (useful while auditing page).
     """
 
-    ignore: bool
+    ignore: bool = field(metadata={"cdp_name": "ignore"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetInterceptDragsParams(CDPModel):
+class SetInterceptDragsParams:
     """
     Prevents default drag and drop behavior and instead emits `Input.dragIntercepted`
     events. Drag and drop behavior can be directly controlled via
     `Input.dispatchDragEvent`.
     """
 
-    enabled: bool
+    enabled: bool = field(metadata={"cdp_name": "enabled"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SynthesizePinchGestureParams(CDPModel):
+class SynthesizePinchGestureParams:
     """
     Synthesizes a pinch gesture over a time period by issuing appropriate touch events.
     """
 
-    x: float
-    y: float
-    scale_factor: float
-    relative_speed: int | None = None
-    gesture_source_type: GestureSourceType | None = None
+    x: float = field(metadata={"cdp_name": "x"})
+    y: float = field(metadata={"cdp_name": "y"})
+    scale_factor: float = field(metadata={"cdp_name": "scaleFactor"})
+    relative_speed: int | None = field(
+        default=None, metadata={"cdp_name": "relativeSpeed"}
+    )
+    gesture_source_type: GestureSourceType | None = field(
+        default=None, metadata={"cdp_name": "gestureSourceType"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SynthesizeScrollGestureParams(CDPModel):
+class SynthesizeScrollGestureParams:
     """
     Synthesizes a scroll gesture over a time period by issuing appropriate touch
     events.
     """
 
-    x: float
-    y: float
-    x_distance: float | None = None
-    y_distance: float | None = None
-    x_overscroll: float | None = None
-    y_overscroll: float | None = None
-    prevent_fling: bool | None = None
-    speed: int | None = None
-    gesture_source_type: GestureSourceType | None = None
-    repeat_count: int | None = None
-    repeat_delay_ms: int | None = None
-    interaction_marker_name: str | None = None
+    x: float = field(metadata={"cdp_name": "x"})
+    y: float = field(metadata={"cdp_name": "y"})
+    x_distance: float | None = field(default=None, metadata={"cdp_name": "xDistance"})
+    y_distance: float | None = field(default=None, metadata={"cdp_name": "yDistance"})
+    x_overscroll: float | None = field(
+        default=None, metadata={"cdp_name": "xOverscroll"}
+    )
+    y_overscroll: float | None = field(
+        default=None, metadata={"cdp_name": "yOverscroll"}
+    )
+    prevent_fling: bool | None = field(
+        default=None, metadata={"cdp_name": "preventFling"}
+    )
+    speed: int | None = field(default=None, metadata={"cdp_name": "speed"})
+    gesture_source_type: GestureSourceType | None = field(
+        default=None, metadata={"cdp_name": "gestureSourceType"}
+    )
+    repeat_count: int | None = field(default=None, metadata={"cdp_name": "repeatCount"})
+    repeat_delay_ms: int | None = field(
+        default=None, metadata={"cdp_name": "repeatDelayMs"}
+    )
+    interaction_marker_name: str | None = field(
+        default=None, metadata={"cdp_name": "interactionMarkerName"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SynthesizeTapGestureParams(CDPModel):
+class SynthesizeTapGestureParams:
     """
     Synthesizes a tap gesture over a time period by issuing appropriate touch events.
     """
 
-    x: float
-    y: float
-    duration: int | None = None
-    tap_count: int | None = None
-    gesture_source_type: GestureSourceType | None = None
+    x: float = field(metadata={"cdp_name": "x"})
+    y: float = field(metadata={"cdp_name": "y"})
+    duration: int | None = field(default=None, metadata={"cdp_name": "duration"})
+    tap_count: int | None = field(default=None, metadata={"cdp_name": "tapCount"})
+    gesture_source_type: GestureSourceType | None = field(
+        default=None, metadata={"cdp_name": "gestureSourceType"}
+    )

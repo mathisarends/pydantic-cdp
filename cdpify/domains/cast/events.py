@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPEvent
 
 from .types import (
     Sink,
@@ -20,20 +18,32 @@ class CastEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class SinksUpdatedEvent(CDPEvent):
+class SinksUpdatedEvent:
     """
     This is fired whenever the list of available sinks changes. A sink is a device or a
     software surface that you can cast to.
     """
 
-    sinks: list[Sink]
+    sinks: list[Sink] = field(metadata={"cdp_name": "sinks"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class IssueUpdatedEvent(CDPEvent):
+class IssueUpdatedEvent:
     """
     This is fired whenever the outstanding issue/error message changes. |issueMessage|
     is empty if there is no issue.
     """
 
-    issue_message: str
+    issue_message: str = field(metadata={"cdp_name": "issueMessage"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

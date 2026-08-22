@@ -4,12 +4,11 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Any
 
 from cdpify.domains import dom, page
-from cdpify.shared.models import CDPModel
 
 from .types import (
     ComputedStyleExtraFields,
@@ -87,102 +86,114 @@ class CSSCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class AddRuleParams(CDPModel):
+class AddRuleParams:
     """
     Inserts a new rule with the given `ruleText` in a stylesheet with given
     `styleSheetId`, at the position specified by `location`.
     """
 
-    style_sheet_id: dom.StyleSheetId
-    rule_text: str
-    location: SourceRange
-    node_for_property_syntax_validation: dom.NodeId | None = None
+    style_sheet_id: dom.StyleSheetId = field(metadata={"cdp_name": "styleSheetId"})
+    rule_text: str = field(metadata={"cdp_name": "ruleText"})
+    location: SourceRange = field(metadata={"cdp_name": "location"})
+    node_for_property_syntax_validation: dom.NodeId | None = field(
+        default=None, metadata={"cdp_name": "nodeForPropertySyntaxValidation"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class AddRuleResult(CDPModel):
-    rule: CSSRule
+class AddRuleResult:
+    rule: CSSRule = field(metadata={"cdp_name": "rule"})
 
 
 @dataclass(kw_only=True, slots=True)
-class CollectClassNamesParams(CDPModel):
+class CollectClassNamesParams:
     """
     Returns all class names from specified stylesheet.
     """
 
-    style_sheet_id: dom.StyleSheetId
+    style_sheet_id: dom.StyleSheetId = field(metadata={"cdp_name": "styleSheetId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class CollectClassNamesResult(CDPModel):
-    class_names: list[str]
+class CollectClassNamesResult:
+    class_names: list[str] = field(metadata={"cdp_name": "classNames"})
 
 
 @dataclass(kw_only=True, slots=True)
-class CreateStyleSheetParams(CDPModel):
+class CreateStyleSheetParams:
     """
     Creates a new special "via-inspector" stylesheet in the frame with given `frameId`.
     """
 
-    frame_id: page.FrameId
-    force: bool | None = None
+    frame_id: page.FrameId = field(metadata={"cdp_name": "frameId"})
+    force: bool | None = field(default=None, metadata={"cdp_name": "force"})
 
 
 @dataclass(kw_only=True, slots=True)
-class CreateStyleSheetResult(CDPModel):
-    style_sheet_id: dom.StyleSheetId
+class CreateStyleSheetResult:
+    style_sheet_id: dom.StyleSheetId = field(metadata={"cdp_name": "styleSheetId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ForcePseudoStateParams(CDPModel):
+class ForcePseudoStateParams:
     """
     Ensures that the given node will have specified pseudo-classes whenever its style
     is computed by the browser.
     """
 
-    node_id: dom.NodeId
-    forced_pseudo_classes: list[str]
+    node_id: dom.NodeId = field(metadata={"cdp_name": "nodeId"})
+    forced_pseudo_classes: list[str] = field(
+        metadata={"cdp_name": "forcedPseudoClasses"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ForceStartingStyleParams(CDPModel):
+class ForceStartingStyleParams:
     """
     Ensures that the given node is in its starting-style state.
     """
 
-    node_id: dom.NodeId
-    forced: bool
+    node_id: dom.NodeId = field(metadata={"cdp_name": "nodeId"})
+    forced: bool = field(metadata={"cdp_name": "forced"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetBackgroundColorsParams(CDPModel):
-    node_id: dom.NodeId
+class GetBackgroundColorsParams:
+    node_id: dom.NodeId = field(metadata={"cdp_name": "nodeId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetBackgroundColorsResult(CDPModel):
-    background_colors: list[str] | None = None
-    computed_font_size: str | None = None
-    computed_font_weight: str | None = None
+class GetBackgroundColorsResult:
+    background_colors: list[str] | None = field(
+        default=None, metadata={"cdp_name": "backgroundColors"}
+    )
+    computed_font_size: str | None = field(
+        default=None, metadata={"cdp_name": "computedFontSize"}
+    )
+    computed_font_weight: str | None = field(
+        default=None, metadata={"cdp_name": "computedFontWeight"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetComputedStyleForNodeParams(CDPModel):
+class GetComputedStyleForNodeParams:
     """
     Returns the computed style for a DOM node identified by `nodeId`.
     """
 
-    node_id: dom.NodeId
+    node_id: dom.NodeId = field(metadata={"cdp_name": "nodeId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetComputedStyleForNodeResult(CDPModel):
-    computed_style: list[CSSComputedStyleProperty]
-    extra_fields: ComputedStyleExtraFields
+class GetComputedStyleForNodeResult:
+    computed_style: list[CSSComputedStyleProperty] = field(
+        metadata={"cdp_name": "computedStyle"}
+    )
+    extra_fields: ComputedStyleExtraFields = field(metadata={"cdp_name": "extraFields"})
 
 
 @dataclass(kw_only=True, slots=True)
-class ResolveValuesParams(CDPModel):
+class ResolveValuesParams:
     """
     Resolve the specified values in the context of the provided element. For example, a
     value of '1em' is evaluated according to the computed 'font-size' of the element and
@@ -195,130 +206,178 @@ class ResolveValuesParams(CDPModel):
     unmodified random() function parts.`
     """
 
-    values: list[str]
-    node_id: dom.NodeId
-    property_name: str | None = None
-    pseudo_type: dom.PseudoType | None = None
-    pseudo_identifier: str | None = None
+    values: list[str] = field(metadata={"cdp_name": "values"})
+    node_id: dom.NodeId = field(metadata={"cdp_name": "nodeId"})
+    property_name: str | None = field(
+        default=None, metadata={"cdp_name": "propertyName"}
+    )
+    pseudo_type: dom.PseudoType | None = field(
+        default=None, metadata={"cdp_name": "pseudoType"}
+    )
+    pseudo_identifier: str | None = field(
+        default=None, metadata={"cdp_name": "pseudoIdentifier"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ResolveValuesResult(CDPModel):
-    results: list[str]
+class ResolveValuesResult:
+    results: list[str] = field(metadata={"cdp_name": "results"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetLonghandPropertiesParams(CDPModel):
-    shorthand_name: str
-    value: str
+class GetLonghandPropertiesParams:
+    shorthand_name: str = field(metadata={"cdp_name": "shorthandName"})
+    value: str = field(metadata={"cdp_name": "value"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetLonghandPropertiesResult(CDPModel):
-    longhand_properties: list[CSSProperty]
+class GetLonghandPropertiesResult:
+    longhand_properties: list[CSSProperty] = field(
+        metadata={"cdp_name": "longhandProperties"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetInlineStylesForNodeParams(CDPModel):
+class GetInlineStylesForNodeParams:
     """
     Returns the styles defined inline (explicitly in the "style" attribute and
     implicitly, using DOM attributes) for a DOM node identified by `nodeId`.
     """
 
-    node_id: dom.NodeId
+    node_id: dom.NodeId = field(metadata={"cdp_name": "nodeId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetInlineStylesForNodeResult(CDPModel):
-    inline_style: CSSStyle | None = None
-    attributes_style: CSSStyle | None = None
+class GetInlineStylesForNodeResult:
+    inline_style: CSSStyle | None = field(
+        default=None, metadata={"cdp_name": "inlineStyle"}
+    )
+    attributes_style: CSSStyle | None = field(
+        default=None, metadata={"cdp_name": "attributesStyle"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetAnimatedStylesForNodeParams(CDPModel):
+class GetAnimatedStylesForNodeParams:
     """
     Returns the styles coming from animations & transitions including the animation &
     transition styles coming from inheritance chain.
     """
 
-    node_id: dom.NodeId
+    node_id: dom.NodeId = field(metadata={"cdp_name": "nodeId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetAnimatedStylesForNodeResult(CDPModel):
-    animation_styles: list[CSSAnimationStyle] | None = None
-    transitions_style: CSSStyle | None = None
-    inherited: list[InheritedAnimatedStyleEntry] | None = None
+class GetAnimatedStylesForNodeResult:
+    animation_styles: list[CSSAnimationStyle] | None = field(
+        default=None, metadata={"cdp_name": "animationStyles"}
+    )
+    transitions_style: CSSStyle | None = field(
+        default=None, metadata={"cdp_name": "transitionsStyle"}
+    )
+    inherited: list[InheritedAnimatedStyleEntry] | None = field(
+        default=None, metadata={"cdp_name": "inherited"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetMatchedStylesForNodeParams(CDPModel):
+class GetMatchedStylesForNodeParams:
     """
     Returns requested styles for a DOM node identified by `nodeId`.
     """
 
-    node_id: dom.NodeId
+    node_id: dom.NodeId = field(metadata={"cdp_name": "nodeId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetMatchedStylesForNodeResult(CDPModel):
-    inline_style: CSSStyle | None = None
-    attributes_style: CSSStyle | None = None
-    matched_css_rules: list[RuleMatch] | None = None
-    pseudo_elements: list[PseudoElementMatches] | None = None
-    inherited: list[InheritedStyleEntry] | None = None
-    inherited_pseudo_elements: list[InheritedPseudoElementMatches] | None = None
-    css_keyframes_rules: list[CSSKeyframesRule] | None = None
-    css_position_try_rules: list[CSSPositionTryRule] | None = None
-    active_position_fallback_index: int | None = None
-    css_property_rules: list[CSSPropertyRule] | None = None
-    css_property_registrations: list[CSSPropertyRegistration] | None = None
-    css_at_rules: list[CSSAtRule] | None = None
-    parent_layout_node_id: dom.NodeId | None = None
-    css_function_rules: list[CSSFunctionRule] | None = None
+class GetMatchedStylesForNodeResult:
+    inline_style: CSSStyle | None = field(
+        default=None, metadata={"cdp_name": "inlineStyle"}
+    )
+    attributes_style: CSSStyle | None = field(
+        default=None, metadata={"cdp_name": "attributesStyle"}
+    )
+    matched_css_rules: list[RuleMatch] | None = field(
+        default=None, metadata={"cdp_name": "matchedCSSRules"}
+    )
+    pseudo_elements: list[PseudoElementMatches] | None = field(
+        default=None, metadata={"cdp_name": "pseudoElements"}
+    )
+    inherited: list[InheritedStyleEntry] | None = field(
+        default=None, metadata={"cdp_name": "inherited"}
+    )
+    inherited_pseudo_elements: list[InheritedPseudoElementMatches] | None = field(
+        default=None, metadata={"cdp_name": "inheritedPseudoElements"}
+    )
+    css_keyframes_rules: list[CSSKeyframesRule] | None = field(
+        default=None, metadata={"cdp_name": "cssKeyframesRules"}
+    )
+    css_position_try_rules: list[CSSPositionTryRule] | None = field(
+        default=None, metadata={"cdp_name": "cssPositionTryRules"}
+    )
+    active_position_fallback_index: int | None = field(
+        default=None, metadata={"cdp_name": "activePositionFallbackIndex"}
+    )
+    css_property_rules: list[CSSPropertyRule] | None = field(
+        default=None, metadata={"cdp_name": "cssPropertyRules"}
+    )
+    css_property_registrations: list[CSSPropertyRegistration] | None = field(
+        default=None, metadata={"cdp_name": "cssPropertyRegistrations"}
+    )
+    css_at_rules: list[CSSAtRule] | None = field(
+        default=None, metadata={"cdp_name": "cssAtRules"}
+    )
+    parent_layout_node_id: dom.NodeId | None = field(
+        default=None, metadata={"cdp_name": "parentLayoutNodeId"}
+    )
+    css_function_rules: list[CSSFunctionRule] | None = field(
+        default=None, metadata={"cdp_name": "cssFunctionRules"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetEnvironmentVariablesResult(CDPModel):
-    environment_variables: dict[str, Any]
+class GetEnvironmentVariablesResult:
+    environment_variables: dict[str, Any] = field(
+        metadata={"cdp_name": "environmentVariables"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class GetMediaQueriesResult(CDPModel):
-    medias: list[CSSMedia]
+class GetMediaQueriesResult:
+    medias: list[CSSMedia] = field(metadata={"cdp_name": "medias"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetPlatformFontsForNodeParams(CDPModel):
+class GetPlatformFontsForNodeParams:
     """
     Requests information about platform fonts which we used to render child TextNodes
     in the given node.
     """
 
-    node_id: dom.NodeId
+    node_id: dom.NodeId = field(metadata={"cdp_name": "nodeId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetPlatformFontsForNodeResult(CDPModel):
-    fonts: list[PlatformFontUsage]
+class GetPlatformFontsForNodeResult:
+    fonts: list[PlatformFontUsage] = field(metadata={"cdp_name": "fonts"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetStyleSheetTextParams(CDPModel):
+class GetStyleSheetTextParams:
     """
     Returns the current textual content for a stylesheet.
     """
 
-    style_sheet_id: dom.StyleSheetId
+    style_sheet_id: dom.StyleSheetId = field(metadata={"cdp_name": "styleSheetId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetStyleSheetTextResult(CDPModel):
-    text: str
+class GetStyleSheetTextResult:
+    text: str = field(metadata={"cdp_name": "text"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetLayersForNodeParams(CDPModel):
+class GetLayersForNodeParams:
     """
     Returns all layers parsed by the rendering engine for the tree scope of a node.
     Given a DOM element identified by nodeId, getLayersForNode returns the root layer
@@ -326,32 +385,32 @@ class GetLayersForNodeParams(CDPModel):
     layer tree for the tree scope and their ordering.
     """
 
-    node_id: dom.NodeId
+    node_id: dom.NodeId = field(metadata={"cdp_name": "nodeId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetLayersForNodeResult(CDPModel):
-    root_layer: CSSLayerData
+class GetLayersForNodeResult:
+    root_layer: CSSLayerData = field(metadata={"cdp_name": "rootLayer"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetLocationForSelectorParams(CDPModel):
+class GetLocationForSelectorParams:
     """
     Given a CSS selector text and a style sheet ID, getLocationForSelector returns an
     array of locations of the CSS selector in the style sheet.
     """
 
-    style_sheet_id: dom.StyleSheetId
-    selector_text: str
+    style_sheet_id: dom.StyleSheetId = field(metadata={"cdp_name": "styleSheetId"})
+    selector_text: str = field(metadata={"cdp_name": "selectorText"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetLocationForSelectorResult(CDPModel):
-    ranges: list[SourceRange]
+class GetLocationForSelectorResult:
+    ranges: list[SourceRange] = field(metadata={"cdp_name": "ranges"})
 
 
 @dataclass(kw_only=True, slots=True)
-class TrackComputedStyleUpdatesForNodeParams(CDPModel):
+class TrackComputedStyleUpdatesForNodeParams:
     """
     Starts tracking the given node for the computed style updates and whenever the
     computed style is updated for node, it queues a `computedStyleUpdated` event with
@@ -360,11 +419,11 @@ class TrackComputedStyleUpdatesForNodeParams(CDPModel):
     tracking.
     """
 
-    node_id: dom.NodeId | None = None
+    node_id: dom.NodeId | None = field(default=None, metadata={"cdp_name": "nodeId"})
 
 
 @dataclass(kw_only=True, slots=True)
-class TrackComputedStyleUpdatesParams(CDPModel):
+class TrackComputedStyleUpdatesParams:
     """
     Starts tracking the given computed styles for updates. The specified array of
     properties replaces the one previously specified. Pass empty array to disable
@@ -375,212 +434,218 @@ class TrackComputedStyleUpdatesParams(CDPModel):
     issued for the node.
     """
 
-    properties_to_track: list[CSSComputedStyleProperty]
+    properties_to_track: list[CSSComputedStyleProperty] = field(
+        metadata={"cdp_name": "propertiesToTrack"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class TakeComputedStyleUpdatesResult(CDPModel):
-    node_ids: list[dom.NodeId]
+class TakeComputedStyleUpdatesResult:
+    node_ids: list[dom.NodeId] = field(metadata={"cdp_name": "nodeIds"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetEffectivePropertyValueForNodeParams(CDPModel):
+class SetEffectivePropertyValueForNodeParams:
     """
     Find a rule with the given active property for the given node and set the new value
     for this property
     """
 
-    node_id: dom.NodeId
-    property_name: str
-    value: str
+    node_id: dom.NodeId = field(metadata={"cdp_name": "nodeId"})
+    property_name: str = field(metadata={"cdp_name": "propertyName"})
+    value: str = field(metadata={"cdp_name": "value"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetPropertyRulePropertyNameParams(CDPModel):
+class SetPropertyRulePropertyNameParams:
     """
     Modifies the property rule property name.
     """
 
-    style_sheet_id: dom.StyleSheetId
-    range: SourceRange
-    property_name: str
+    style_sheet_id: dom.StyleSheetId = field(metadata={"cdp_name": "styleSheetId"})
+    range: SourceRange = field(metadata={"cdp_name": "range"})
+    property_name: str = field(metadata={"cdp_name": "propertyName"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetPropertyRulePropertyNameResult(CDPModel):
-    property_name: Value
+class SetPropertyRulePropertyNameResult:
+    property_name: Value = field(metadata={"cdp_name": "propertyName"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetKeyframeKeyParams(CDPModel):
+class SetKeyframeKeyParams:
     """
     Modifies the keyframe rule key text.
     """
 
-    style_sheet_id: dom.StyleSheetId
-    range: SourceRange
-    key_text: str
+    style_sheet_id: dom.StyleSheetId = field(metadata={"cdp_name": "styleSheetId"})
+    range: SourceRange = field(metadata={"cdp_name": "range"})
+    key_text: str = field(metadata={"cdp_name": "keyText"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetKeyframeKeyResult(CDPModel):
-    key_text: Value
+class SetKeyframeKeyResult:
+    key_text: Value = field(metadata={"cdp_name": "keyText"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetMediaTextParams(CDPModel):
+class SetMediaTextParams:
     """
     Modifies the rule selector.
     """
 
-    style_sheet_id: dom.StyleSheetId
-    range: SourceRange
-    text: str
+    style_sheet_id: dom.StyleSheetId = field(metadata={"cdp_name": "styleSheetId"})
+    range: SourceRange = field(metadata={"cdp_name": "range"})
+    text: str = field(metadata={"cdp_name": "text"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetMediaTextResult(CDPModel):
-    media: CSSMedia
+class SetMediaTextResult:
+    media: CSSMedia = field(metadata={"cdp_name": "media"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetContainerQueryTextParams(CDPModel):
+class SetContainerQueryTextParams:
     """
     Modifies the expression of a container query. Deprecated. Use
     setContainerQueryConditionText instead.
     """
 
-    style_sheet_id: dom.StyleSheetId
-    range: SourceRange
-    text: str
+    style_sheet_id: dom.StyleSheetId = field(metadata={"cdp_name": "styleSheetId"})
+    range: SourceRange = field(metadata={"cdp_name": "range"})
+    text: str = field(metadata={"cdp_name": "text"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetContainerQueryTextResult(CDPModel):
-    container_query: CSSContainerQuery
+class SetContainerQueryTextResult:
+    container_query: CSSContainerQuery = field(metadata={"cdp_name": "containerQuery"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetContainerQueryConditionTextParams(CDPModel):
-    style_sheet_id: dom.StyleSheetId
-    range: SourceRange
-    text: str
+class SetContainerQueryConditionTextParams:
+    style_sheet_id: dom.StyleSheetId = field(metadata={"cdp_name": "styleSheetId"})
+    range: SourceRange = field(metadata={"cdp_name": "range"})
+    text: str = field(metadata={"cdp_name": "text"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetContainerQueryConditionTextResult(CDPModel):
-    container_query: CSSContainerQuery
+class SetContainerQueryConditionTextResult:
+    container_query: CSSContainerQuery = field(metadata={"cdp_name": "containerQuery"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetSupportsTextParams(CDPModel):
+class SetSupportsTextParams:
     """
     Modifies the expression of a supports at-rule.
     """
 
-    style_sheet_id: dom.StyleSheetId
-    range: SourceRange
-    text: str
+    style_sheet_id: dom.StyleSheetId = field(metadata={"cdp_name": "styleSheetId"})
+    range: SourceRange = field(metadata={"cdp_name": "range"})
+    text: str = field(metadata={"cdp_name": "text"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetSupportsTextResult(CDPModel):
-    supports: CSSSupports
+class SetSupportsTextResult:
+    supports: CSSSupports = field(metadata={"cdp_name": "supports"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetNavigationTextParams(CDPModel):
+class SetNavigationTextParams:
     """
     Modifies the expression of a navigation at-rule.
     """
 
-    style_sheet_id: dom.StyleSheetId
-    range: SourceRange
-    text: str
+    style_sheet_id: dom.StyleSheetId = field(metadata={"cdp_name": "styleSheetId"})
+    range: SourceRange = field(metadata={"cdp_name": "range"})
+    text: str = field(metadata={"cdp_name": "text"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetNavigationTextResult(CDPModel):
-    navigation: CSSNavigation
+class SetNavigationTextResult:
+    navigation: CSSNavigation = field(metadata={"cdp_name": "navigation"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetScopeTextParams(CDPModel):
+class SetScopeTextParams:
     """
     Modifies the expression of a scope at-rule.
     """
 
-    style_sheet_id: dom.StyleSheetId
-    range: SourceRange
-    text: str
+    style_sheet_id: dom.StyleSheetId = field(metadata={"cdp_name": "styleSheetId"})
+    range: SourceRange = field(metadata={"cdp_name": "range"})
+    text: str = field(metadata={"cdp_name": "text"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetScopeTextResult(CDPModel):
-    scope: CSSScope
+class SetScopeTextResult:
+    scope: CSSScope = field(metadata={"cdp_name": "scope"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetRuleSelectorParams(CDPModel):
+class SetRuleSelectorParams:
     """
     Modifies the rule selector.
     """
 
-    style_sheet_id: dom.StyleSheetId
-    range: SourceRange
-    selector: str
+    style_sheet_id: dom.StyleSheetId = field(metadata={"cdp_name": "styleSheetId"})
+    range: SourceRange = field(metadata={"cdp_name": "range"})
+    selector: str = field(metadata={"cdp_name": "selector"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetRuleSelectorResult(CDPModel):
-    selector_list: SelectorList
+class SetRuleSelectorResult:
+    selector_list: SelectorList = field(metadata={"cdp_name": "selectorList"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetStyleSheetTextParams(CDPModel):
+class SetStyleSheetTextParams:
     """
     Sets the new stylesheet text.
     """
 
-    style_sheet_id: dom.StyleSheetId
-    text: str
+    style_sheet_id: dom.StyleSheetId = field(metadata={"cdp_name": "styleSheetId"})
+    text: str = field(metadata={"cdp_name": "text"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetStyleSheetTextResult(CDPModel):
-    source_map_url: str | None = None
+class SetStyleSheetTextResult:
+    source_map_url: str | None = field(
+        default=None, metadata={"cdp_name": "sourceMapURL"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetStyleTextsParams(CDPModel):
+class SetStyleTextsParams:
     """
     Applies specified style edits one after another in the given order.
     """
 
-    edits: list[StyleDeclarationEdit]
-    node_for_property_syntax_validation: dom.NodeId | None = None
+    edits: list[StyleDeclarationEdit] = field(metadata={"cdp_name": "edits"})
+    node_for_property_syntax_validation: dom.NodeId | None = field(
+        default=None, metadata={"cdp_name": "nodeForPropertySyntaxValidation"}
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class SetStyleTextsResult(CDPModel):
-    styles: list[CSSStyle]
+class SetStyleTextsResult:
+    styles: list[CSSStyle] = field(metadata={"cdp_name": "styles"})
 
 
 @dataclass(kw_only=True, slots=True)
-class StopRuleUsageTrackingResult(CDPModel):
-    rule_usage: list[RuleUsage]
+class StopRuleUsageTrackingResult:
+    rule_usage: list[RuleUsage] = field(metadata={"cdp_name": "ruleUsage"})
 
 
 @dataclass(kw_only=True, slots=True)
-class TakeCoverageDeltaResult(CDPModel):
-    coverage: list[RuleUsage]
-    timestamp: float
+class TakeCoverageDeltaResult:
+    coverage: list[RuleUsage] = field(metadata={"cdp_name": "coverage"})
+    timestamp: float = field(metadata={"cdp_name": "timestamp"})
 
 
 @dataclass(kw_only=True, slots=True)
-class SetLocalFontsEnabledParams(CDPModel):
+class SetLocalFontsEnabledParams:
     """
     Enables/disables rendering of local CSS fonts (enabled by default).
     """
 
-    enabled: bool
+    enabled: bool = field(metadata={"cdp_name": "enabled"})

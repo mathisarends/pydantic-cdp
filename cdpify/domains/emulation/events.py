@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPEvent
 
 from .types import (
     ScreenOrientation,
@@ -20,22 +18,35 @@ class EmulationEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class VirtualTimeBudgetExpiredEvent(CDPEvent):
+class VirtualTimeBudgetExpiredEvent:
     """
     Notification sent after the virtual time budget for the current VirtualTimePolicy
     has run out.
     """
 
-    pass
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ScreenOrientationLockChangedEvent(CDPEvent):
+class ScreenOrientationLockChangedEvent:
     """
     Fired when a page calls screen.orientation.lock() or screen.orientation.unlock()
     while device emulation is enabled. This allows the DevTools frontend to update the
     emulated device orientation accordingly.
     """
 
-    locked: bool
-    orientation: ScreenOrientation | None = None
+    locked: bool = field(metadata={"cdp_name": "locked"})
+    orientation: ScreenOrientation | None = field(
+        default=None, metadata={"cdp_name": "orientation"}
+    )
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

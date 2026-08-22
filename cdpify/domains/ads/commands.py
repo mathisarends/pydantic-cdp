@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPModel
 
 from .types import (
     AdMetrics,
@@ -21,10 +19,10 @@ class AdsCommand(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class GetAdMetricsResult(CDPModel):
-    metrics: AdMetrics
+class GetAdMetricsResult:
+    metrics: AdMetrics = field(metadata={"cdp_name": "metrics"})
 
 
 @dataclass(kw_only=True, slots=True)
-class GetAdScriptsResult(CDPModel):
-    new_scripts: list[AdScript]
+class GetAdScriptsResult:
+    new_scripts: list[AdScript] = field(metadata={"cdp_name": "newScripts"})

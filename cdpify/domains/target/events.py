@@ -4,10 +4,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-
-from cdpify.shared.models import CDPEvent
 
 from .types import (
     SessionID,
@@ -27,74 +25,116 @@ class TargetEvent(StrEnum):
 
 
 @dataclass(kw_only=True, slots=True)
-class AttachedToTargetEvent(CDPEvent):
+class AttachedToTargetEvent:
     """
     Issued when attached to target because of auto-attach or `attachToTarget` command.
     """
 
-    session_id: SessionID
-    target_info: TargetInfo
-    waiting_for_debugger: bool
+    session_id: SessionID = field(metadata={"cdp_name": "sessionId"})
+    target_info: TargetInfo = field(metadata={"cdp_name": "targetInfo"})
+    waiting_for_debugger: bool = field(metadata={"cdp_name": "waitingForDebugger"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class DetachedFromTargetEvent(CDPEvent):
+class DetachedFromTargetEvent:
     """
     Issued when detached from target for any reason (including `detachFromTarget`
     command). Can be issued multiple times per target if multiple sessions have been
     attached to it.
     """
 
-    session_id: SessionID
-    target_id: TargetID | None = None
+    session_id: SessionID = field(metadata={"cdp_name": "sessionId"})
+    target_id: TargetID | None = field(default=None, metadata={"cdp_name": "targetId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class ReceivedMessageFromTargetEvent(CDPEvent):
+class ReceivedMessageFromTargetEvent:
     """
     Notifies about a new protocol message received from the session (as reported in
     `attachedToTarget` event).
     """
 
-    session_id: SessionID
-    message: str
-    target_id: TargetID | None = None
+    session_id: SessionID = field(metadata={"cdp_name": "sessionId"})
+    message: str = field(metadata={"cdp_name": "message"})
+    target_id: TargetID | None = field(default=None, metadata={"cdp_name": "targetId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class TargetCreatedEvent(CDPEvent):
+class TargetCreatedEvent:
     """
     Issued when a possible inspection target is created.
     """
 
-    target_info: TargetInfo
+    target_info: TargetInfo = field(metadata={"cdp_name": "targetInfo"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class TargetDestroyedEvent(CDPEvent):
+class TargetDestroyedEvent:
     """
     Issued when a target is destroyed.
     """
 
-    target_id: TargetID
+    target_id: TargetID = field(metadata={"cdp_name": "targetId"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class TargetCrashedEvent(CDPEvent):
+class TargetCrashedEvent:
     """
     Issued when a target has crashed.
     """
 
-    target_id: TargetID
-    status: str
-    error_code: int
+    target_id: TargetID = field(metadata={"cdp_name": "targetId"})
+    status: str = field(metadata={"cdp_name": "status"})
+    error_code: int = field(metadata={"cdp_name": "errorCode"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )
 
 
 @dataclass(kw_only=True, slots=True)
-class TargetInfoChangedEvent(CDPEvent):
+class TargetInfoChangedEvent:
     """
     Issued when some information about a target has changed. This only happens between
     `targetCreated` and `targetDestroyed`.
     """
 
-    target_info: TargetInfo
+    target_info: TargetInfo = field(metadata={"cdp_name": "targetInfo"})
+    cdp_session_id: str | None = field(
+        default=None,
+        repr=False,
+        compare=False,
+        metadata={"cdp": False},
+    )

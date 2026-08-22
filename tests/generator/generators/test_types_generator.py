@@ -7,8 +7,8 @@ def test_generates_header_and_dataclass_imports(simple_domain: Domain) -> None:
 
     assert "auto-generated" in output
     assert "from __future__ import annotations" in output
-    assert "from dataclasses import dataclass" in output
-    assert "from cdpify.shared.models import CDPModel" in output
+    assert "from dataclasses import dataclass, field" in output
+    assert "cdpify.shared.models" not in output
 
 
 def test_renders_alias_for_primitive_type(simple_domain: Domain) -> None:
@@ -26,10 +26,13 @@ def test_renders_object_as_dataclass(simple_domain: Domain) -> None:
     output = types.generate(simple_domain)
 
     assert "@dataclass(kw_only=True, slots=True)" in output
-    assert "class Box(CDPModel):" in output
-    assert "width: int" in output
-    assert "height: int" in output
-    assert "label: str | None = None" in output
+    assert "class Box:" in output
+    assert 'width: int = field(metadata={"cdp_name": "width"})' in output
+    assert 'height: int = field(metadata={"cdp_name": "height"})' in output
+    assert (
+        'label: str | None = field(default=None, metadata={"cdp_name": "label"})'
+        in output
+    )
 
 
 def test_includes_descriptions_as_docstrings(simple_domain: Domain) -> None:
@@ -79,5 +82,30 @@ def test_optional_override_makes_field_optional() -> None:
 
     output = types.generate(domain)
 
-    assert "document_url: str | None = None" in output
-    assert "title: str\n" in output or "title: str" in output
+    assert (
+        "document_url: str | None = field("
+        'default=None, metadata={"cdp_name": "documentURL"})'
+    ) in output
+    assert 'title: str = field(metadata={"cdp_name": "title"})' in output
+
+
+def test_long_aliased_field_declaration_is_lint_safe() -> None:
+    domain = Domain(
+        domain="Sample",
+        types=[
+            TypeDefinition(
+                id="Container",
+                type="object",
+                properties=[
+                    Parameter(
+                        name="federatedAuthUserInfoRequestIssueReason",
+                        ref="FederatedAuthUserInfoRequestIssueReason",
+                    )
+                ],
+            )
+        ],
+    )
+
+    output = types.generate(domain)
+
+    assert "field(  # noqa: E501" in output

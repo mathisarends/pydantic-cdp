@@ -14,18 +14,25 @@ def test_renders_event_models(simple_domain: Domain) -> None:
     output = events.generate(simple_domain)
 
     assert "@dataclass(kw_only=True, slots=True)" in output
-    assert "from cdpify.shared.models import CDPEvent" in output
-    assert "class NodeAddedEvent(CDPEvent):" in output
-    assert "node_id: NodeId" in output
-    assert "parent_id: NodeId | None = None" in output
+    assert "cdpify.shared.models" not in output
+    assert "class NodeAddedEvent:" in output
+    assert 'node_id: NodeId = field(metadata={"cdp_name": "nodeId"})' in output
+    assert (
+        "parent_id: NodeId | None = field("
+        'default=None, metadata={"cdp_name": "parentId"})'
+    ) in output
+    assert "cdp_session_id: str | None = field(" in output
+    assert 'metadata={"cdp": False}' in output
 
 
-def test_event_without_parameters_uses_pass(simple_domain: Domain) -> None:
+def test_event_without_parameters_only_contains_session_metadata(
+    simple_domain: Domain,
+) -> None:
     output = events.generate(simple_domain)
 
-    assert "class ClearedEvent(CDPEvent):" in output
-    cleared_section = output.split("class ClearedEvent(CDPEvent):")[1].splitlines()
-    assert any("pass" in line for line in cleared_section[:3])
+    assert "class ClearedEvent:" in output
+    cleared_section = output.split("class ClearedEvent:")[1].splitlines()
+    assert any("cdp_session_id" in line for line in cleared_section[:3])
 
 
 def test_includes_event_descriptions(simple_domain: Domain) -> None:
@@ -97,5 +104,8 @@ def test_optional_override_for_request_will_be_sent() -> None:
 
     output = events.generate(domain)
 
-    assert "document_url: str | None = None" in output
-    assert "request_id: str\n" in output or "request_id: str" in output
+    assert (
+        "document_url: str | None = field("
+        'default=None, metadata={"cdp_name": "documentURL"})'
+    ) in output
+    assert 'request_id: str = field(metadata={"cdp_name": "requestId"})' in output
