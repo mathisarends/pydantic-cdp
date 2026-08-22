@@ -18,7 +18,7 @@ def test_renders_alias_for_primitive_type(simple_domain: Domain) -> None:
 
 def test_renders_enum_as_literal(simple_domain: Domain) -> None:
     output = TypesGenerator().generate(simple_domain)
-    assert 'Color = Literal["red", "green", "blue"]' in output
+    assert 'type Color = Literal["red", "green", "blue"]' in output
     assert "from typing import" in output and "Literal" in output
 
 
