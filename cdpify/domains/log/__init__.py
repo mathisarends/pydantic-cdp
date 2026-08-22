@@ -4,8 +4,8 @@
 
 """CDP Log Domain."""
 
-from .client import Log
 from .commands import LogCommand, StartViolationsReportParams
+from .domain import Log
 from .events import EntryAddedEvent, LogEvent
 from .types import LogEntry, ViolationSetting
 

@@ -4,7 +4,6 @@
 
 """CDP CacheStorage Domain."""
 
-from .client import CacheStorage
 from .commands import (
     CacheStorageCommand,
     DeleteCacheParams,
@@ -16,6 +15,7 @@ from .commands import (
     RequestEntriesParams,
     RequestEntriesResult,
 )
+from .domain import CacheStorage
 from .types import (
     Cache,
     CachedResponse,

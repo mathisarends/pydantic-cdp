@@ -4,7 +4,6 @@
 
 """CDP Network Domain."""
 
-from .client import Network
 from .commands import (
     CanClearBrowserCacheResult,
     CanClearBrowserCookiesResult,
@@ -51,6 +50,7 @@ from .commands import (
     StreamResourceContentParams,
     StreamResourceContentResult,
 )
+from .domain import Network
 from .events import (
     DataReceivedEvent,
     DeviceBoundSessionEventOccurredEvent,

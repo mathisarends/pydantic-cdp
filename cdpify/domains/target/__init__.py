@@ -4,7 +4,6 @@
 
 """CDP Target Domain."""
 
-from .client import Target
 from .commands import (
     ActivateTargetParams,
     AttachToBrowserTargetResult,
@@ -35,6 +34,7 @@ from .commands import (
     SetRemoteLocationsParams,
     TargetCommand,
 )
+from .domain import Target
 from .events import (
     AttachedToTargetEvent,
     DetachedFromTargetEvent,

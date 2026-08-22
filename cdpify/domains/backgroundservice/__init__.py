@@ -4,7 +4,6 @@
 
 """CDP BackgroundService Domain."""
 
-from .client import BackgroundService
 from .commands import (
     BackgroundServiceCommand,
     ClearEventsParams,
@@ -12,6 +11,7 @@ from .commands import (
     StartObservingParams,
     StopObservingParams,
 )
+from .domain import BackgroundService
 from .events import (
     BackgroundServiceEvent as BackgroundServiceEventName,
 )

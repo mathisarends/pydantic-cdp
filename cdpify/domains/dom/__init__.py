@@ -4,7 +4,6 @@
 
 """CDP DOM Domain."""
 
-from .client import DOM
 from .commands import (
     CollectClassNamesFromSubtreeParams,
     CollectClassNamesFromSubtreeResult,
@@ -85,6 +84,7 @@ from .commands import (
     SetNodeValueParams,
     SetOuterHTMLParams,
 )
+from .domain import DOM
 from .events import (
     AdoptedStyleSheetsModifiedEvent,
     AdRelatedStateUpdatedEvent,

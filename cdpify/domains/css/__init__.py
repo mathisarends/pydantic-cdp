@@ -4,7 +4,6 @@
 
 """CDP CSS Domain."""
 
-from .client import CSS
 from .commands import (
     AddRuleParams,
     AddRuleResult,
@@ -69,6 +68,7 @@ from .commands import (
     TrackComputedStyleUpdatesForNodeParams,
     TrackComputedStyleUpdatesParams,
 )
+from .domain import CSS
 from .events import (
     ComputedStyleUpdatedEvent,
     CSSEvent,

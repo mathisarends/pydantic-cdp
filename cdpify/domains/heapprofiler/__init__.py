@@ -4,7 +4,6 @@
 
 """CDP HeapProfiler Domain."""
 
-from .client import HeapProfiler
 from .commands import (
     AddInspectedHeapObjectParams,
     GetHeapObjectIdParams,
@@ -19,6 +18,7 @@ from .commands import (
     StopTrackingHeapObjectsParams,
     TakeHeapSnapshotParams,
 )
+from .domain import HeapProfiler
 from .events import (
     AddHeapSnapshotChunkEvent,
     HeapProfilerEvent,

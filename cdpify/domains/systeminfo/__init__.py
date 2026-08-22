@@ -4,7 +4,6 @@
 
 """CDP SystemInfo Domain."""
 
-from .client import SystemInfo
 from .commands import (
     GetFeatureStateParams,
     GetFeatureStateResult,
@@ -12,6 +11,7 @@ from .commands import (
     GetProcessInfoResult,
     SystemInfoCommand,
 )
+from .domain import SystemInfo
 from .types import (
     GPUDevice,
     GPUInfo,

@@ -4,7 +4,6 @@
 
 """CDP Fetch Domain."""
 
-from .client import Fetch
 from .commands import (
     ContinueRequestParams,
     ContinueResponseParams,
@@ -18,6 +17,7 @@ from .commands import (
     TakeResponseBodyAsStreamParams,
     TakeResponseBodyAsStreamResult,
 )
+from .domain import Fetch
 from .events import AuthRequiredEvent, FetchEvent, RequestPausedEvent
 from .types import (
     AuthChallenge,

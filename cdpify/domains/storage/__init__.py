@@ -4,7 +4,6 @@
 
 """CDP Storage Domain."""
 
-from .client import Storage
 from .commands import (
     ClearCookiesParams,
     ClearDataForOriginParams,
@@ -36,6 +35,7 @@ from .commands import (
     UntrackIndexedDBForOriginParams,
     UntrackIndexedDBForStorageKeyParams,
 )
+from .domain import Storage
 from .events import (
     CacheStorageContentUpdatedEvent,
     CacheStorageListUpdatedEvent,

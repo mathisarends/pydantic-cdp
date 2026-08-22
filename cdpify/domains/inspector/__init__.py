@@ -4,8 +4,8 @@
 
 """CDP Inspector Domain."""
 
-from .client import Inspector
 from .commands import InspectorCommand
+from .domain import Inspector
 from .events import (
     DetachedEvent,
     InspectorEvent,

@@ -4,8 +4,8 @@
 
 """CDP DigitalCredentials Domain."""
 
-from .client import DigitalCredentials
 from .commands import DigitalCredentialsCommand, SetVirtualWalletBehaviorParams
+from .domain import DigitalCredentials
 from .types import VirtualWalletAction
 
 __all__ = [

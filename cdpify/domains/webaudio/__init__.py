@@ -4,8 +4,8 @@
 
 """CDP WebAudio Domain."""
 
-from .client import WebAudio
 from .commands import GetRealtimeDataParams, GetRealtimeDataResult, WebAudioCommand
+from .domain import WebAudio
 from .events import (
     AudioListenerCreatedEvent,
     AudioListenerWillBeDestroyedEvent,

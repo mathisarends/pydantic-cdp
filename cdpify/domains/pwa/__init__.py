@@ -4,7 +4,6 @@
 
 """CDP PWA Domain."""
 
-from .client import PWA
 from .commands import (
     ChangeAppUserSettingsParams,
     GetOsAppStateParams,
@@ -18,6 +17,7 @@ from .commands import (
     PWACommand,
     UninstallParams,
 )
+from .domain import PWA
 from .types import DisplayMode, FileHandler, FileHandlerAccept
 
 __all__ = [

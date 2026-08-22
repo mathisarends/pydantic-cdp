@@ -4,8 +4,8 @@
 
 """CDP Media Domain."""
 
-from .client import Media
 from .commands import MediaCommand
+from .domain import Media
 from .events import (
     MediaEvent,
     PlayerCreatedEvent,

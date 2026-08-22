@@ -4,7 +4,6 @@
 
 """CDP DOMStorage Domain."""
 
-from .client import DOMStorage
 from .commands import (
     ClearParams,
     DOMStorageCommand,
@@ -13,6 +12,7 @@ from .commands import (
     RemoveDOMStorageItemParams,
     SetDOMStorageItemParams,
 )
+from .domain import DOMStorage
 from .events import (
     DOMStorageEvent,
     DomStorageItemAddedEvent,

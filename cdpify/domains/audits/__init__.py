@@ -4,13 +4,13 @@
 
 """CDP Audits Domain."""
 
-from .client import Audits
 from .commands import (
     AuditsCommand,
     CheckFormsIssuesResult,
     GetEncodedResponseParams,
     GetEncodedResponseResult,
 )
+from .domain import Audits
 from .events import AuditsEvent, IssueAddedEvent
 from .types import (
     AffectedCookie,

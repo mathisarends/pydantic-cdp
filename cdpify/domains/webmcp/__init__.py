@@ -4,13 +4,13 @@
 
 """CDP WebMCP Domain."""
 
-from .client import WebMCP
 from .commands import (
     CancelInvocationParams,
     InvokeToolParams,
     InvokeToolResult,
     WebMCPCommand,
 )
+from .domain import WebMCP
 from .events import (
     ToolInvokedEvent,
     ToolRespondedEvent,

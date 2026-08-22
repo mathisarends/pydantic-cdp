@@ -4,7 +4,6 @@
 
 """CDP FedCm Domain."""
 
-from .client import FedCm
 from .commands import (
     ClickDialogButtonParams,
     DismissDialogParams,
@@ -13,6 +12,7 @@ from .commands import (
     OpenUrlParams,
     SelectAccountParams,
 )
+from .domain import FedCm
 from .events import DialogClosedEvent, DialogShownEvent, FedCmEvent
 from .types import (
     Account,

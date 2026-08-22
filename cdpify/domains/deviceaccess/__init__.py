@@ -4,8 +4,8 @@
 
 """CDP DeviceAccess Domain."""
 
-from .client import DeviceAccess
 from .commands import CancelPromptParams, DeviceAccessCommand, SelectPromptParams
+from .domain import DeviceAccess
 from .events import DeviceAccessEvent, DeviceRequestPromptedEvent
 from .types import DeviceId, PromptDevice, RequestId
 

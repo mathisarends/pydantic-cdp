@@ -4,7 +4,6 @@
 
 """CDP SmartCardEmulation Domain."""
 
-from .client import SmartCardEmulation
 from .commands import (
     ReportBeginTransactionResultParams,
     ReportConnectResultParams,
@@ -18,6 +17,7 @@ from .commands import (
     ReportStatusResultParams,
     SmartCardEmulationCommand,
 )
+from .domain import SmartCardEmulation
 from .events import (
     BeginTransactionRequestedEvent,
     CancelRequestedEvent,

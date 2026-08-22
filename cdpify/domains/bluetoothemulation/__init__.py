@@ -4,7 +4,6 @@
 
 """CDP BluetoothEmulation Domain."""
 
-from .client import BluetoothEmulation
 from .commands import (
     AddCharacteristicParams,
     AddCharacteristicResult,
@@ -25,6 +24,7 @@ from .commands import (
     SimulateGATTOperationResponseParams,
     SimulatePreconnectedPeripheralParams,
 )
+from .domain import BluetoothEmulation
 from .events import (
     BluetoothEmulationEvent,
     CharacteristicOperationReceivedEvent,

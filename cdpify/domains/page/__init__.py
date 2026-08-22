@@ -4,7 +4,6 @@
 
 """CDP Page Domain."""
 
-from .client import Page
 from .commands import (
     AddCompilationCacheParams,
     AddScriptToEvaluateOnLoadParams,
@@ -74,6 +73,7 @@ from .commands import (
     StartScreenRecordingResult,
     StopScreenRecordingResult,
 )
+from .domain import Page
 from .events import (
     BackForwardCacheNotUsedEvent,
     CompilationCacheProducedEvent,

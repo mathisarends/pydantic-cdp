@@ -4,13 +4,13 @@
 
 """CDP Performance Domain."""
 
-from .client import Performance
 from .commands import (
     EnableParams,
     GetMetricsResult,
     PerformanceCommand,
     SetTimeDomainParams,
 )
+from .domain import Performance
 from .events import MetricsEvent, PerformanceEvent
 from .types import Metric
 

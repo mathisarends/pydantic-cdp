@@ -4,8 +4,8 @@
 
 """CDP Autofill Domain."""
 
-from .client import Autofill
 from .commands import AutofillCommand, SetAddressesParams, TriggerParams
+from .domain import Autofill
 from .events import AddressFormFilledEvent, AutofillEvent
 from .types import (
     Address,

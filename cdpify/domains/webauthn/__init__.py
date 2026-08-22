@@ -4,7 +4,6 @@
 
 """CDP WebAuthn Domain."""
 
-from .client import WebAuthn
 from .commands import (
     AddCredentialParams,
     AddVirtualAuthenticatorParams,
@@ -23,6 +22,7 @@ from .commands import (
     SetUserVerifiedParams,
     WebAuthnCommand,
 )
+from .domain import WebAuthn
 from .events import (
     CredentialAddedEvent,
     CredentialAssertedEvent,

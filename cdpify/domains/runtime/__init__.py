@@ -4,7 +4,6 @@
 
 """CDP Runtime Domain."""
 
-from .client import Runtime
 from .commands import (
     AddBindingParams,
     AwaitPromiseParams,
@@ -35,6 +34,7 @@ from .commands import (
     SetCustomObjectFormatterEnabledParams,
     SetMaxCallStackSizeToCaptureParams,
 )
+from .domain import Runtime
 from .events import (
     BindingCalledEvent,
     ConsoleAPICalledEvent,

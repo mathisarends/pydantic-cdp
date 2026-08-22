@@ -4,7 +4,6 @@
 
 """CDP DOMSnapshot Domain."""
 
-from .client import DOMSnapshot
 from .commands import (
     CaptureSnapshotParams,
     CaptureSnapshotResult,
@@ -12,6 +11,7 @@ from .commands import (
     GetSnapshotParams,
     GetSnapshotResult,
 )
+from .domain import DOMSnapshot
 from .types import (
     ArrayOfStrings,
     ComputedStyle,

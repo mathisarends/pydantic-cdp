@@ -4,7 +4,6 @@
 
 """CDP LayerTree Domain."""
 
-from .client import LayerTree
 from .commands import (
     CompositingReasonsParams,
     CompositingReasonsResult,
@@ -21,6 +20,7 @@ from .commands import (
     SnapshotCommandLogParams,
     SnapshotCommandLogResult,
 )
+from .domain import LayerTree
 from .events import LayerPaintedEvent, LayerTreeDidChangeEvent, LayerTreeEvent
 from .types import (
     Layer,

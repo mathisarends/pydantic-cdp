@@ -4,7 +4,6 @@
 
 """CDP Overlay Domain."""
 
-from .client import Overlay
 from .commands import (
     GetGridHighlightObjectsForTestParams,
     GetGridHighlightObjectsForTestResult,
@@ -39,6 +38,7 @@ from .commands import (
     SetShowWebVitalsParams,
     SetShowWindowControlsOverlayParams,
 )
+from .domain import Overlay
 from .events import (
     InspectedElementWindowRestoredEvent,
     InspectModeCanceledEvent,

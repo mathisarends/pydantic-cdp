@@ -4,7 +4,6 @@
 
 """CDP IndexedDB Domain."""
 
-from .client import IndexedDB
 from .commands import (
     ClearObjectStoreParams,
     DeleteDatabaseParams,
@@ -19,6 +18,7 @@ from .commands import (
     RequestDataParams,
     RequestDataResult,
 )
+from .domain import IndexedDB
 from .types import (
     DatabaseWithObjectStores,
     DataEntry,

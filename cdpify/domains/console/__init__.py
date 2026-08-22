@@ -4,8 +4,8 @@
 
 """CDP Console Domain."""
 
-from .client import Console
 from .commands import ConsoleCommand
+from .domain import Console
 from .events import ConsoleEvent, MessageAddedEvent
 from .types import ConsoleMessage
 

@@ -4,7 +4,6 @@
 
 """CDP Browser Domain."""
 
-from .client import Browser
 from .commands import (
     AddPrivacySandboxEnrollmentOverrideParams,
     BrowserCommand,
@@ -31,6 +30,7 @@ from .commands import (
     SetPermissionParams,
     SetWindowBoundsParams,
 )
+from .domain import Browser
 from .events import BrowserEvent, DownloadProgressEvent, DownloadWillBeginEvent
 from .types import (
     Bounds,

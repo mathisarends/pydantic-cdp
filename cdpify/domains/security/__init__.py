@@ -4,13 +4,13 @@
 
 """CDP Security Domain."""
 
-from .client import Security
 from .commands import (
     HandleCertificateErrorParams,
     SecurityCommand,
     SetIgnoreCertificateErrorsParams,
     SetOverrideCertificateErrorsParams,
 )
+from .domain import Security
 from .events import (
     CertificateErrorEvent,
     SecurityEvent,

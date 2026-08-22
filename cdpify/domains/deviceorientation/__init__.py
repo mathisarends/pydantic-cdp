@@ -4,8 +4,8 @@
 
 """CDP DeviceOrientation Domain."""
 
-from .client import DeviceOrientation
 from .commands import DeviceOrientationCommand, SetDeviceOrientationOverrideParams
+from .domain import DeviceOrientation
 
 __all__ = [
     "DeviceOrientation",

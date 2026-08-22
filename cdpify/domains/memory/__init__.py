@@ -4,7 +4,6 @@
 
 """CDP Memory Domain."""
 
-from .client import Memory
 from .commands import (
     GetAllTimeSamplingProfileResult,
     GetBrowserSamplingProfileResult,
@@ -16,6 +15,7 @@ from .commands import (
     SimulatePressureNotificationParams,
     StartSamplingParams,
 )
+from .domain import Memory
 from .types import (
     DOMCounter,
     Module,

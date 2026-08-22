@@ -4,7 +4,6 @@
 
 """CDP Animation Domain."""
 
-from .client import Animation
 from .commands import (
     AnimationCommand,
     GetCurrentTimeParams,
@@ -18,6 +17,7 @@ from .commands import (
     SetPlaybackRateParams,
     SetTimingParams,
 )
+from .domain import Animation
 from .events import (
     AnimationCanceledEvent,
     AnimationCreatedEvent,

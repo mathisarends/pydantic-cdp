@@ -4,7 +4,6 @@
 
 """CDP Cast Domain."""
 
-from .client import Cast
 from .commands import (
     CastCommand,
     EnableParams,
@@ -13,6 +12,7 @@ from .commands import (
     StartTabMirroringParams,
     StopCastingParams,
 )
+from .domain import Cast
 from .events import CastEvent, IssueUpdatedEvent, SinksUpdatedEvent
 from .types import Sink
 

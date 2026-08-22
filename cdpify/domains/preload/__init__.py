@@ -4,8 +4,8 @@
 
 """CDP Preload Domain."""
 
-from .client import Preload
 from .commands import PreloadCommand
+from .domain import Preload
 from .events import (
     PrefetchStatusUpdatedEvent,
     PreloadEnabledStateUpdatedEvent,

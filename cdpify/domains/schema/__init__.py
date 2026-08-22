@@ -4,8 +4,8 @@
 
 """CDP Schema Domain."""
 
-from .client import Schema
 from .commands import GetDomainsResult, SchemaCommand
+from .domain import Schema
 from .types import Domain
 
 __all__ = [

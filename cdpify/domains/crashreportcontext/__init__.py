@@ -4,8 +4,8 @@
 
 """CDP CrashReportContext Domain."""
 
-from .client import CrashReportContext
 from .commands import CrashReportContextCommand, GetEntriesResult
+from .domain import CrashReportContext
 from .types import CrashReportContextEntry
 
 __all__ = [

@@ -4,8 +4,8 @@
 
 """CDP PerformanceTimeline Domain."""
 
-from .client import PerformanceTimeline
 from .commands import EnableParams, PerformanceTimelineCommand
+from .domain import PerformanceTimeline
 from .events import PerformanceTimelineEvent, TimelineEventAddedEvent
 from .types import (
     LargestContentfulPaint,

@@ -4,8 +4,8 @@
 
 """CDP Ads Domain."""
 
-from .client import Ads
 from .commands import AdsCommand, GetAdMetricsResult, GetAdScriptsResult
+from .domain import Ads
 from .types import AdFrameData, AdMetrics, AdScript
 
 __all__ = [

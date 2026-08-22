@@ -4,8 +4,8 @@
 
 """CDP HeadlessExperimental Domain."""
 
-from .client import HeadlessExperimental
 from .commands import BeginFrameParams, BeginFrameResult, HeadlessExperimentalCommand
+from .domain import HeadlessExperimental
 from .types import ScreenshotParams
 
 __all__ = [

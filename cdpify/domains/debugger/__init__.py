@@ -4,7 +4,6 @@
 
 """CDP Debugger Domain."""
 
-from .client import Debugger
 from .commands import (
     ContinueToLocationParams,
     DebuggerCommand,
@@ -53,6 +52,7 @@ from .commands import (
     StepIntoParams,
     StepOverParams,
 )
+from .domain import Debugger
 from .events import (
     BreakpointResolvedEvent,
     DebuggerEvent,

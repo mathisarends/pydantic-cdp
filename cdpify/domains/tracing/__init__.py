@@ -4,7 +4,6 @@
 
 """CDP Tracing Domain."""
 
-from .client import Tracing
 from .commands import (
     GetCategoriesResult,
     GetTrackEventDescriptorResult,
@@ -14,6 +13,7 @@ from .commands import (
     StartParams,
     TracingCommand,
 )
+from .domain import Tracing
 from .events import (
     BufferUsageEvent,
     DataCollectedEvent,

@@ -4,8 +4,8 @@
 
 """CDP FileSystem Domain."""
 
-from .client import FileSystem
 from .commands import FileSystemCommand, GetDirectoryParams, GetDirectoryResult
+from .domain import FileSystem
 from .types import BucketFileSystemLocator, Directory, File
 
 __all__ = [

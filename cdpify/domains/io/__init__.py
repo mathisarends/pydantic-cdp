@@ -4,7 +4,6 @@
 
 """CDP IO Domain."""
 
-from .client import IO
 from .commands import (
     CloseParams,
     IOCommand,
@@ -13,6 +12,7 @@ from .commands import (
     ResolveBlobParams,
     ResolveBlobResult,
 )
+from .domain import IO
 from .types import StreamHandle
 
 __all__ = [

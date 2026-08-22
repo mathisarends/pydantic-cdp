@@ -4,7 +4,6 @@
 
 """CDP Accessibility Domain."""
 
-from .client import Accessibility
 from .commands import (
     AccessibilityCommand,
     GetAXNodeAndAncestorsParams,
@@ -20,6 +19,7 @@ from .commands import (
     QueryAXTreeParams,
     QueryAXTreeResult,
 )
+from .domain import Accessibility
 from .events import AccessibilityEvent, LoadCompleteEvent, NodesUpdatedEvent
 from .types import (
     AXNode,

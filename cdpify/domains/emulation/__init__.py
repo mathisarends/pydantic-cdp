@@ -4,7 +4,6 @@
 
 """CDP Emulation Domain."""
 
-from .client import Emulation
 from .commands import (
     AddScreenParams,
     AddScreenResult,
@@ -55,6 +54,7 @@ from .commands import (
     UpdateScreenParams,
     UpdateScreenResult,
 )
+from .domain import Emulation
 from .events import (
     EmulationEvent,
     ScreenOrientationLockChangedEvent,

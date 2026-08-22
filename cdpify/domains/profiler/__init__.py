@@ -4,7 +4,6 @@
 
 """CDP Profiler Domain."""
 
-from .client import Profiler
 from .commands import (
     GetBestEffortCoverageResult,
     ProfilerCommand,
@@ -14,6 +13,7 @@ from .commands import (
     StopResult,
     TakePreciseCoverageResult,
 )
+from .domain import Profiler
 from .events import (
     ConsoleProfileFinishedEvent,
     ConsoleProfileStartedEvent,

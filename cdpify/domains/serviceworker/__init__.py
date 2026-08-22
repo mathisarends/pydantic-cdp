@@ -4,7 +4,6 @@
 
 """CDP ServiceWorker Domain."""
 
-from .client import ServiceWorker
 from .commands import (
     DeliverPushMessageParams,
     DispatchPeriodicSyncEventParams,
@@ -17,6 +16,7 @@ from .commands import (
     UnregisterParams,
     UpdateRegistrationParams,
 )
+from .domain import ServiceWorker
 from .events import (
     ServiceWorkerEvent,
     WorkerErrorReportedEvent,

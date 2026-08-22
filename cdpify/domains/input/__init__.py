@@ -4,7 +4,6 @@
 
 """CDP Input Domain."""
 
-from .client import Input
 from .commands import (
     DispatchDragEventParams,
     DispatchKeyEventParams,
@@ -20,6 +19,7 @@ from .commands import (
     SynthesizeScrollGestureParams,
     SynthesizeTapGestureParams,
 )
+from .domain import Input
 from .events import DragInterceptedEvent, InputEvent
 from .types import (
     DragData,
