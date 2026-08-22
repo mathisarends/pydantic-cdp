@@ -1,11 +1,18 @@
 import logging
 from collections.abc import Awaitable, Callable
+from dataclasses import dataclass
 from typing import Any
 
 logger = logging.getLogger(__name__)
 
 
-_EventHandler = Callable[[dict[str, Any]], Awaitable[None]]
+@dataclass(frozen=True, slots=True)
+class RawCDPEvent:
+    params: dict[str, Any]
+    session_id: str | None = None
+
+
+_EventHandler = Callable[[RawCDPEvent], Awaitable[None]]
 
 
 class EventDispatcher:
@@ -28,23 +35,24 @@ class EventDispatcher:
             if handler in handlers:
                 handlers.remove(handler)
 
-    async def dispatch(self, method: str, params: dict[str, Any]) -> bool:
+    async def dispatch(self, method: str, event: RawCDPEvent) -> bool:
         any_handled = False
 
         for handler in self._specific_handlers.get(method, []):
-            if await self._invoke(handler, params):
+            if await _invoke_handler(handler, event):
                 any_handled = True
 
         for handler in self._wildcard_handlers:
-            if await self._invoke(handler, params):
+            if await _invoke_handler(handler, event):
                 any_handled = True
 
         return any_handled
 
-    async def _invoke(self, handler: _EventHandler, params: dict[str, Any]) -> bool:
-        try:
-            await handler(params)
-            return True
-        except Exception as e:
-            logger.exception(f"Event handler error: {e}")
-            return False
+
+async def _invoke_handler(handler: _EventHandler, event: RawCDPEvent) -> bool:
+    try:
+        await handler(event)
+        return True
+    except Exception as e:
+        logger.exception(f"Event handler error: {e}")
+        return False
