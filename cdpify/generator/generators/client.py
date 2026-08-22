@@ -1,4 +1,4 @@
-from cdpify.generator.generators.base import BaseGenerator
+from cdpify.generator.generators.base import FUTURE_ANNOTATIONS, BaseGenerator
 from cdpify.generator.generators.context import GenerationContext
 from cdpify.generator.generators.utils import (
     format_docstring,
@@ -22,6 +22,7 @@ class ClientGenerator(BaseGenerator):
 
         sections = [
             self.HEADER,
+            FUTURE_ANNOTATIONS,
             self._build_imports(domain, ctx),
             self._render_class(domain, ctx),
         ]
