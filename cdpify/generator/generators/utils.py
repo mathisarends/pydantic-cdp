@@ -1,6 +1,5 @@
-import re
-
-from cdpify.generator.models import Parameter
+from cdpify.generator.schemas import Parameter
+from cdpify.shared.naming import to_snake_case
 
 
 def map_cdp_type(param: Parameter) -> str:
@@ -12,31 +11,22 @@ def map_cdp_type(param: Parameter) -> str:
     return base_type
 
 
-_CAMEL_PATTERN_1 = re.compile(r"(.)([A-Z][a-z]+)")
-_CAMEL_PATTERN_2 = re.compile(r"([a-z0-9])([A-Z])")
-
-
-def to_snake_case(name: str) -> str:
-    """
-    Convert camelCase/PascalCase to snake_case with proper acronym handling.
-
-    Examples:
-        setSPCTransactionMode → set_spc_transaction_mode
-        getDOMNode → get_dom_node
-        parseHTML → parse_html
-        AXTree → ax_tree
-        getSSLCertificate → get_ssl_certificate
-    """
-    s1 = _CAMEL_PATTERN_1.sub(r"\1_\2", name)
-    s2 = _CAMEL_PATTERN_2.sub(r"\1_\2", s1)
-    return s2.lower()
-
-
 def to_pascal_case(name: str) -> str:
     if not name:
         return name
 
     return name[0].upper() + name[1:]
+
+
+def to_enum_name(name: str) -> str:
+    return to_snake_case(name).upper()
+
+
+def resolve_type(param: Parameter) -> str:
+    if param.ref and "." in param.ref:
+        domain, type_name = param.ref.split(".", 1)
+        return f"{domain.lower()}.{type_name}"
+    return map_cdp_type(param)
 
 
 def format_docstring(text: str, indent: int = 4) -> str:
@@ -87,10 +77,6 @@ def _get_base_type(param: Parameter) -> str:
 def _create_enum_literal(enum_values: list[str]) -> str:
     quoted_values = ", ".join(f'"{value}"' for value in enum_values)
     return f"Literal[{quoted_values}]"
-
-
-def _make_optional(type_annotation: str) -> str:
-    return f"{type_annotation} | None"
 
 
 def _create_array_type(items: dict | None) -> str:

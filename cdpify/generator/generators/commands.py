@@ -1,150 +1,105 @@
-from cdpify.generator.generators.base import TypeAwareGenerator
+from cdpify.generator.generators.base import BaseGenerator
+from cdpify.generator.generators.context import GenerationContext
 from cdpify.generator.generators.utils import (
     format_docstring,
-    map_cdp_type,
+    resolve_type,
+    to_enum_name,
     to_pascal_case,
     to_snake_case,
 )
-from cdpify.generator.models import Command, Domain, Parameter
+from cdpify.generator.schemas import Command, Domain, Parameter
 
 
-class CommandsGenerator(TypeAwareGenerator):
+class CommandsGenerator(BaseGenerator):
+    filename = "commands.py"
+
     def generate(self, domain: Domain) -> str:
-        self._reset_tracking()
-        self._uses_type_checking = False
+        ctx = GenerationContext()
+        for command in domain.commands:
+            self._scan_command(command, ctx)
 
-        self._scan_commands(domain)
-
-        command_enum = self._generate_command_enum(domain)
-        command_models = self._generate_command_models(domain)
+        models = self._render_models(domain.commands, ctx)
+        # Cross-domain imports must remain runtime imports so that
+        # `get_type_hints()` (used by CDPModel.from_cdp) can resolve forward
+        # references like `dom.Rect`. Python 3.14 defers annotation evaluation,
+        # avoiding the circular-import problem until first deserialization.
+        cross_domain = ctx.cross_domain_import(type_checking=False)
 
         sections = [
-            self._header(),
-            self._imports(bool(command_models)),
+            self.HEADER,
+            self._build_imports(ctx),
+            cross_domain,
+            self._render_enum(domain),
+            models or "# No commands defined",
         ]
+        return "\n\n".join(filter(None, sections))
 
-        if self._cross_domain_refs:
-            sections.append(self._cross_domain_imports())
-
-        if command_enum:
-            sections.append(command_enum)
-
-        sections.append(command_models if command_models else "# No commands defined")
-
-        return "\n\n".join(sections)
-
-    def _scan_commands(self, domain: Domain) -> None:
-        for command in domain.commands:
-            self._scan_command_parameters(command)
-            self._scan_command_returns(command)
-
-    def _scan_command_parameters(self, command: Command) -> None:
-        if not command.parameters:
-            return
-
+    def _scan_command(self, command: Command, ctx: GenerationContext) -> None:
         for param in command.parameters:
-            self._scan_parameter(param)
-
-    def _scan_command_returns(self, command: Command) -> None:
-        if not command.returns:
-            return
-
+            ctx.scan_param(param)
         for param in command.returns:
-            self._scan_parameter(param)
+            ctx.scan_param(param)
 
-    def _imports(self, has_models: bool) -> str:
-        lines = []
+    def _build_imports(self, ctx: GenerationContext) -> str:
+        return "\n".join(
+            filter(
+                None,
+                [
+                    ctx.typing_import(),
+                    "from dataclasses import dataclass",
+                    "from enum import StrEnum",
+                    "from cdpify.shared.models import CDPModel",
+                    "",
+                    ctx.local_type_import(),
+                ],
+            )
+        )
 
-        typing_imports = self._build_typing_imports()
-        if typing_imports:
-            lines.append(typing_imports)
-
-        lines.append("from dataclasses import dataclass")
-        lines.append("from enum import StrEnum")
-        lines.append("from cdpify.shared.models import CDPModel")
-
-        type_imports = self._build_type_imports()
-        if type_imports:
-            lines.append("")
-            lines.append(type_imports)
-
-        return "\n".join(lines)
-
-    def _cross_domain_imports(self) -> str:
-        return self._build_cross_domain_imports(use_type_checking=False)
-
-    def _generate_command_enum(self, domain: Domain) -> str:
+    def _render_enum(self, domain: Domain) -> str:
         if not domain.commands:
             return ""
 
-        class_name = f"{domain.domain}Command"
-        lines = [f"class {class_name}(StrEnum):"]
-
-        for command in domain.commands:
-            enum_name = self._to_enum_name(command.name)
-            command_value = f"{domain.domain}.{command.name}"
-            lines.append(f'    {enum_name} = "{command_value}"')
-
+        lines = [f"class {domain.domain}Command(StrEnum):"]
+        for cmd in domain.commands:
+            lines.append(f'    {to_enum_name(cmd.name)} = "{domain.domain}.{cmd.name}"')
         return "\n".join(lines)
 
-    def _to_enum_name(self, name: str) -> str:
-        snake = to_snake_case(name)
-        return snake.upper()
-
-    def _generate_command_models(self, domain: Domain) -> str:
-        if not domain.commands:
-            return ""
-
-        models = []
-        for command in domain.commands:
+    def _render_models(self, commands: list[Command], ctx: GenerationContext) -> str:
+        models: list[str] = []
+        for command in commands:
             if command.parameters:
-                models.append(self._create_params_model(command))
+                models.append(self._render_params_model(command, ctx))
             if command.returns:
-                models.append(self._create_returns_model(command))
-
+                models.append(self._render_result_model(command, ctx))
         return "\n\n".join(models)
 
-    def _create_params_model(self, command: Command) -> str:
-        class_name = f"{to_pascal_case(command.name)}Params"
-
-        lines = ["@dataclass(kw_only=True)"]
-        lines.append(f"class {class_name}(CDPModel):")
-
+    def _render_params_model(self, command: Command, ctx: GenerationContext) -> str:
+        lines = [
+            "@dataclass(kw_only=True, slots=True)",
+            f"class {to_pascal_case(command.name)}Params(CDPModel):",
+        ]
         if command.description:
-            doc = format_docstring(command.description, indent=4)
-            lines.extend(doc.rstrip().splitlines())
-
+            lines.extend(
+                format_docstring(command.description, indent=4).rstrip().splitlines()
+            )
         for param in command.parameters:
-            lines.append(f"    {self._create_field(param)}")
-
+            lines.append(f"    {self._render_field(param, ctx)}")
         return "\n".join(lines)
 
-    def _create_returns_model(self, command: Command) -> str:
-        class_name = f"{to_pascal_case(command.name)}Result"
-
-        lines = ["@dataclass(kw_only=True)"]
-        lines.append(f"class {class_name}(CDPModel):")
-
+    def _render_result_model(self, command: Command, ctx: GenerationContext) -> str:
+        lines = [
+            "@dataclass(kw_only=True, slots=True)",
+            f"class {to_pascal_case(command.name)}Result(CDPModel):",
+        ]
         for param in command.returns:
-            lines.append(f"    {self._create_field(param)}")
-
+            lines.append(f"    {self._render_field(param, ctx)}")
         return "\n".join(lines)
 
-    def _create_field(self, param: Parameter) -> str:
+    def _render_field(self, param: Parameter, ctx: GenerationContext) -> str:
         field_name = to_snake_case(param.name)
-        py_type = self._resolve_type(param)
-
-        self._track_type_usage(py_type)
+        py_type = resolve_type(param)
+        ctx.track_type_string(py_type)
 
         if param.optional:
             return f"{field_name}: {py_type} | None = None"
         return f"{field_name}: {py_type}"
-
-    def _resolve_type(self, param: Parameter) -> str:
-        if param.ref and "." in param.ref:
-            parts = param.ref.split(".")
-            domain_lower = parts[0].lower()
-            type_name = parts[1]
-            return f"{domain_lower}.{type_name}"
-
-        return map_cdp_type(param)

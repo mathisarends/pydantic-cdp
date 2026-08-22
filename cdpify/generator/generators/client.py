@@ -1,257 +1,179 @@
-from cdpify.generator.generators.base import TypeAwareGenerator
+from cdpify.generator.generators.base import BaseGenerator
+from cdpify.generator.generators.context import GenerationContext
 from cdpify.generator.generators.utils import (
     format_docstring,
     map_cdp_type,
+    resolve_type,
+    to_enum_name,
     to_pascal_case,
     to_snake_case,
 )
-from cdpify.generator.models import Command, Domain, Parameter
+from cdpify.generator.schemas import Command, Domain, Parameter
+
+_DEPRECATED_DECORATOR = "    @deprecated()"
 
 
-class ClientGenerator(TypeAwareGenerator):
+class ClientGenerator(BaseGenerator):
+    filename = "client.py"
+
     def generate(self, domain: Domain) -> str:
-        self._reset_tracking()
-        self._scan_commands(domain)
+        ctx = GenerationContext()
+        self._scan_commands(domain, ctx)
 
         sections = [
-            self._header(),
-            self._imports(domain),
-            self._client_class(domain),
+            self.HEADER,
+            self._build_imports(domain, ctx),
+            self._render_class(domain, ctx),
         ]
+        return "\n\n".join(filter(None, sections))
 
-        return "\n\n".join(sections)
-
-    def _scan_commands(self, domain: Domain) -> None:
+    def _scan_commands(self, domain: Domain, ctx: GenerationContext) -> None:
         for command in domain.commands:
             if not command.returns:
-                self._uses_any = True
-
-            if not command.parameters:
-                continue
-
+                ctx.use_typing("Any")
             for param in command.parameters:
-                self._scan_parameter(param)
-                self._track_type_usage(map_cdp_type(param))
+                ctx.scan_param(param)
+                ctx.track_type_string(map_cdp_type(param))
 
-    def _imports(self, domain: Domain) -> str:
-        if self._cross_domain_refs:
-            self._build_cross_domain_imports(use_type_checking=True)
+    def _build_imports(self, domain: Domain, ctx: GenerationContext) -> str:
+        cross_domain = ctx.cross_domain_import(type_checking=True)
 
-        lines = [
-            "from __future__ import annotations",
-            "",
+        sections: list[str] = [
+            ctx.typing_import(),
+            "from cdpify.shared.command_sender import CDPCommandSender",
         ]
 
-        # Build typing imports dynamically
-        typing_imports = ["TYPE_CHECKING"]
-        if self._uses_any:
-            typing_imports.append("Any")
-        if self._uses_literal:
-            typing_imports.append("Literal")
-
-        lines.append(f"from typing import {', '.join(typing_imports)}")
-        lines.append("")
-        lines.append("if TYPE_CHECKING:")
-        lines.append("    from cdpify.client import CDPClient")
-        lines.append("")
-
-        # Add deprecated decorator import if needed
-        if self._has_deprecated_commands(domain):
-            lines.append("from cdpify.shared.decorators import deprecated")
-            lines.append("")
+        if self._has_deprecated(domain):
+            sections.append("")
+            sections.append("from cdpify.shared.decorators import deprecated")
 
         if domain.commands:
-            lines.extend(self._build_command_imports(domain))
+            sections.append("")
+            sections.append(self._render_command_imports(domain))
 
-            type_imports = self._build_type_imports()
-            if type_imports:
-                lines.append(type_imports)
-                lines.append("")
+            local_imports = ctx.local_type_import()
+            if local_imports:
+                sections.append(local_imports)
 
-            if self._cross_domain_refs:
-                lines.append(self._cross_domain_imports())
+            if cross_domain:
+                sections.append("")
+                sections.append(cross_domain)
 
-        return "\n".join(lines)
+        return "\n".join(sections)
 
-    def _has_deprecated_commands(self, domain: Domain) -> bool:
-        """Check if domain has any deprecated commands."""
-        return any(getattr(cmd, "deprecated", False) for cmd in domain.commands)
+    def _has_deprecated(self, domain: Domain) -> bool:
+        return any(cmd.deprecated for cmd in domain.commands)
 
-    def _build_command_imports(self, domain: Domain) -> list[str]:
+    def _render_command_imports(self, domain: Domain) -> str:
         param_classes = {
-            f"{to_pascal_case(cmd.name)}Params"
-            for cmd in domain.commands
-            if cmd.parameters
+            f"{to_pascal_case(c.name)}Params" for c in domain.commands if c.parameters
         }
         return_classes = {
-            f"{to_pascal_case(cmd.name)}Result"
-            for cmd in domain.commands
-            if cmd.returns
+            f"{to_pascal_case(c.name)}Result" for c in domain.commands if c.returns
         }
-
-        all_classes = sorted(param_classes | return_classes)
-
-        command_enum = f"{domain.domain}Command"
-        all_classes.insert(0, command_enum)
+        names = [f"{domain.domain}Command", *sorted(param_classes | return_classes)]
 
         lines = ["from .commands import ("]
-        for cls in all_classes:
-            lines.append(f"    {cls},")
+        lines.extend(f"    {name}," for name in names)
         lines.append(")")
-        lines.append("")
+        return "\n".join(lines)
 
-        return lines
-
-    def _cross_domain_imports(self) -> str:
-        return self._build_cross_domain_imports(use_type_checking=True)
-
-    def _client_class(self, domain: Domain) -> str:
-        class_name = f"{domain.domain}Client"
-
-        lines = [f"class {class_name}:"]
-        lines.append("    def __init__(self, client: CDPClient) -> None:")
-        lines.append("        self._client = client")
-
+    def _render_class(self, domain: Domain, ctx: GenerationContext) -> str:
+        lines = [
+            f"class {domain.domain}Client:",
+            "    def __init__(self, command_sender: CDPCommandSender) -> None:",
+            "        self._command_sender = command_sender",
+        ]
         for command in domain.commands:
             lines.append("")
-            lines.append(self._generate_method(command, domain.domain))
-
+            lines.append(self._render_method(command, domain.domain, ctx))
         return "\n".join(lines)
 
-    def _generate_method(self, command: Command, domain_name: str) -> str:
-        method_name = to_snake_case(command.name)
+    def _render_method(
+        self, command: Command, domain_name: str, ctx: GenerationContext
+    ) -> str:
+        lines: list[str] = []
+        if command.deprecated:
+            lines.append(_DEPRECATED_DECORATOR)
 
-        params = self._build_params(command)
-        return_type = self._get_return_type(command)
-        method_body = self._build_method_body(command, domain_name)
-
-        lines = []
-
-        # Add deprecated decorator if command is deprecated
-        if getattr(command, "deprecated", False):
-            lines.append(self._build_deprecated_decorator(command))
-
-        lines.append(f"    async def {method_name}(")
-
-        for param in params:
+        lines.append(f"    async def {to_snake_case(command.name)}(")
+        for param in self._render_params(command, ctx):
             lines.append(f"        {param},")
-
-        lines.append(f"    ) -> {return_type}:")
+        lines.append(f"    ) -> {self._return_type(command, ctx)}:")
 
         if command.description:
-            doc = format_docstring(command.description, indent=8)
-            lines.extend(doc.rstrip().splitlines())
+            lines.extend(
+                format_docstring(command.description, indent=8).rstrip().splitlines()
+            )
 
-        lines.extend(f"        {line}" for line in method_body)
-
+        body = self._render_body(command, domain_name)
+        lines.extend(f"        {line}" for line in body)
         return "\n".join(lines)
 
-    def _build_deprecated_decorator(self, command: Command) -> str:
-        return "    @deprecated()"
-
-    def _build_params(self, command: Command) -> list[str]:
+    def _render_params(self, command: Command, ctx: GenerationContext) -> list[str]:
         params = ["self"]
-
         if not command.parameters:
             params.append("session_id: str | None = None")
             return params
 
         params.append("*")
-
         for param in command.parameters:
-            param_signature = self._build_param_signature(command, param)
-            params.append(param_signature)
-
+            params.append(self._render_param_signature(command, param, ctx))
         params.append("session_id: str | None = None")
         return params
 
-    def _build_param_signature(self, command: Command, param: Parameter) -> str:
-        param_name = self._resolve_param_name(command, param)
-        base_type = self._resolve_base_param_type(param)
+    def _render_param_signature(
+        self, command: Command, param: Parameter, ctx: GenerationContext
+    ) -> str:
+        name = self._param_name(command, param)
+        py_type = resolve_type(param)
+        ctx.track_type_string(py_type)
 
         if param.optional:
-            return f"{param_name}: {base_type} | None = None"
-        return f"{param_name}: {base_type}"
+            return f"{name}: {py_type} | None = None"
+        return f"{name}: {py_type}"
 
-    def _resolve_param_name(self, command: Command, param: Parameter) -> str:
-        param_name = to_snake_case(param.name)
-
-        if param_name == "session_id":
+    def _param_name(self, command: Command, param: Parameter) -> str:
+        name = to_snake_case(param.name)
+        if name == "session_id":
             return f"{to_snake_case(command.name)}_session_id"
+        return name
 
-        return param_name
-
-    def _resolve_base_param_type(self, param: Parameter) -> str:
-        # Resolve type with proper cross-domain formatting (lowercase domain)
-        if param.ref and "." in param.ref:
-            parts = param.ref.split(".")
-            domain_lower = parts[0].lower()
-            type_name = parts[1]
-            param_type = f"{domain_lower}.{type_name}"
-        else:
-            param_type = map_cdp_type(param)
-
-        self._track_type_usage(param_type)
-        return param_type.removesuffix(" | None")
-
-    def _build_method_body(self, command: Command, domain_name: str) -> list[str]:
-        lines = []
-
-        if command.parameters:
-            lines.extend(self._build_params_construction(command))
-            lines.append("")
-            lines.extend(self._build_send_with_params(command, domain_name))
-        else:
-            lines.extend(self._build_send_without_params(command, domain_name))
-
-        lines.extend(self._build_return_statement(command))
-        return lines
-
-    def _build_params_construction(self, command: Command) -> list[str]:
-        param_class = f"{to_pascal_case(command.name)}Params"
-
-        constructor_args = ", ".join(
-            f"{to_snake_case(param.name)}={self._resolve_param_name(command, param)}"
-            for param in command.parameters
-        )
-
-        return [f"params = {param_class}({constructor_args})"]
-
-    def _to_enum_name(self, name: str) -> str:
-        snake = to_snake_case(name)
-        return snake.upper()
-
-    def _build_send_with_params(self, command: Command, domain_name: str) -> list[str]:
-        enum_ref = f"{domain_name}Command.{self._to_enum_name(command.name)}"
-        return [
-            "result = await self._client.send_raw(",
-            f"    method={enum_ref},",
-            "    params=params.to_cdp_params(),",
-            "    session_id=session_id,",
-            ")",
-        ]
-
-    def _build_send_without_params(
-        self, command: Command, domain_name: str
-    ) -> list[str]:
-        enum_ref = f"{domain_name}Command.{self._to_enum_name(command.name)}"
-        return [
-            "result = await self._client.send_raw(",
-            f"    method={enum_ref},",
-            "    params=None,",
-            "    session_id=session_id,",
-            ")",
-        ]
-
-    def _build_return_statement(self, command: Command) -> list[str]:
-        if command.returns:
-            result_class = f"{to_pascal_case(command.name)}Result"
-            return [f"return {result_class}.from_cdp(result)"]
-        return ["return result"]
-
-    def _get_return_type(self, command: Command) -> str:
+    def _return_type(self, command: Command, ctx: GenerationContext) -> str:
         if command.returns:
             return f"{to_pascal_case(command.name)}Result"
-
-        self._uses_any = True
+        ctx.use_typing("Any")
         return "dict[str, Any]"
+
+    def _render_body(self, command: Command, domain_name: str) -> list[str]:
+        lines: list[str] = []
+        if command.parameters:
+            lines.extend(self._render_params_construction(command))
+            lines.append("")
+        lines.extend(self._render_send(command, domain_name))
+        lines.append(self._render_return(command))
+        return lines
+
+    def _render_params_construction(self, command: Command) -> list[str]:
+        param_class = f"{to_pascal_case(command.name)}Params"
+        constructor_args = ", ".join(
+            f"{to_snake_case(p.name)}={self._param_name(command, p)}"
+            for p in command.parameters
+        )
+        return [f"params = {param_class}({constructor_args})"]
+
+    def _render_send(self, command: Command, domain_name: str) -> list[str]:
+        method_ref = f"{domain_name}Command.{to_enum_name(command.name)}"
+        params_arg = "params.to_cdp_params()" if command.parameters else "None"
+        return [
+            "result = await self._command_sender.send_raw(",
+            f"    method={method_ref},",
+            f"    params={params_arg},",
+            "    session_id=session_id,",
+            ")",
+        ]
+
+    def _render_return(self, command: Command) -> str:
+        if command.returns:
+            return f"return {to_pascal_case(command.name)}Result.from_cdp(result)"
+        return "return result"

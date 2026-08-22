@@ -1,145 +1,139 @@
-from cdpify.generator.generators.base import TypeAwareGenerator
+from cdpify.generator.generators.base import BaseGenerator
+from cdpify.generator.generators.context import GenerationContext
 from cdpify.generator.generators.utils import (
     format_docstring,
-    map_cdp_type,
+    resolve_type,
+    to_enum_name,
     to_pascal_case,
     to_snake_case,
 )
-from cdpify.generator.models import Domain, Event, Parameter
+from cdpify.generator.schemas import Domain, Event, Parameter
+
+OPTIONAL_OVERRIDES: dict[str, set[str]] = {
+    "Network.requestWillBeSent": {"documentURL"},
+}
 
 
-class EventsGenerator(TypeAwareGenerator):
-    OPTIONAL_OVERRIDES: dict[str, set[str]] = {
-        "Network.requestWillBeSent": {"documentURL"},
-    }
+class EventsGenerator(BaseGenerator):
+    filename = "events.py"
 
     def generate(self, domain: Domain) -> str:
-        self._reset_tracking()
-        self._scan_events(domain)
-
-        event_enum = self._generate_event_enum(domain)
-        event_models = self._generate_event_models(domain)
-
-        sections = [self._header()]
-
-        if event_models:
-            sections.append(self._imports())
-
-        if self._cross_domain_refs:
-            sections.append(self._cross_domain_imports())
-
-        if event_enum:
-            sections.append(event_enum)
-
-        sections.append(event_models if event_models else "# No events defined")
-
-        return "\n\n".join(sections)
-
-    def _scan_events(self, domain: Domain) -> None:
+        ctx = GenerationContext()
         for event in domain.events:
-            self._scan_event_parameters(event)
+            for param in event.parameters:
+                ctx.scan_param(param)
 
-    def _scan_event_parameters(self, event: Event) -> None:
-        if not event.parameters:
-            return
+        aliases = self._aliases_for(domain, ctx)
 
-        for param in event.parameters:
-            self._scan_parameter(param)
+        models = self._render_models(domain, aliases, ctx)
+        cross_domain = ctx.cross_domain_import(type_checking=False)
 
-    def _imports(self) -> str:
-        # Pre-build cross-domain imports to set TYPE_CHECKING flag
-        if self._cross_domain_refs:
-            self._build_cross_domain_imports(use_type_checking=True)
+        sections = [self.HEADER]
+        if models:
+            sections.append(
+                self._build_imports(
+                    ctx,
+                    aliases,
+                )
+            )
+        if cross_domain:
+            sections.append(cross_domain)
+        if domain.events:
+            sections.append(self._render_enum(domain))
+        sections.append(models or "# No events defined")
 
-        lines = []
+        return "\n\n".join(filter(None, sections))
 
-        if self._uses_type_checking:
-            lines.append("from __future__ import annotations")
-            lines.append("")
+    def _aliases_for(self, domain: Domain, ctx: GenerationContext) -> dict[str, str]:
+        enum_name = f"{domain.domain}Event"
+        if enum_name in ctx.local_type_refs:
+            return {enum_name: f"{enum_name}Type"}
+        return {}
 
-        typing_imports = self._build_typing_imports()
-        if typing_imports:
-            lines.append(typing_imports)
+    def _build_imports(
+        self,
+        ctx: GenerationContext,
+        aliases: dict[str, str],
+    ) -> str:
+        local_imports = ctx.local_type_import(aliases)
 
-        lines.append("from dataclasses import dataclass")
-        lines.append("from enum import StrEnum")
-        lines.append("from cdpify.shared.models import CDPModel")
-
-        type_imports = self._build_type_imports()
-        if type_imports:
-            lines.append("")
-            lines.append(type_imports)
-
-        return "\n".join(lines)
-
-    def _cross_domain_imports(self) -> str:
-        return self._build_cross_domain_imports(use_type_checking=True)
-
-    def _generate_event_enum(self, domain: Domain) -> str:
-        if not domain.events:
-            return ""
-
-        class_name = f"{domain.domain}Event"
-        lines = [f"class {class_name}(StrEnum):"]
-
-        for event in domain.events:
-            enum_name = self._to_enum_name(event.name)
-            event_value = f"{domain.domain}.{event.name}"
-            lines.append(f'    {enum_name} = "{event_value}"')
-
-        return "\n".join(lines)
-
-    def _to_enum_name(self, name: str) -> str:
-        snake = to_snake_case(name)
-        return snake.upper()
-
-    def _generate_event_models(self, domain: Domain) -> str:
-        if not domain.events:
-            return ""
-
-        return "\n\n".join(
-            self._create_event_model(event, domain.domain) for event in domain.events
+        return "\n".join(
+            filter(
+                None,
+                [
+                    ctx.typing_import(),
+                    "from dataclasses import dataclass",
+                    "from enum import StrEnum",
+                    "from cdpify.shared.models import CDPEvent",
+                    "",
+                    local_imports,
+                ],
+            )
         )
 
-    def _create_event_model(self, event: Event, domain_name: str) -> str:
-        class_name = f"{to_pascal_case(event.name)}Event"
-        event_fqn = f"{domain_name}.{event.name}"
+    def _render_enum(self, domain: Domain) -> str:
+        lines = [f"class {domain.domain}Event(StrEnum):"]
+        for event in domain.events:
+            lines.append(
+                f'    {to_enum_name(event.name)} = "{domain.domain}.{event.name}"'
+            )
+        return "\n".join(lines)
 
-        lines = ["@dataclass(kw_only=True)"]
-        lines.append(f"class {class_name}(CDPModel):")
+    def _render_models(
+        self,
+        domain: Domain,
+        aliases: dict[str, str],
+        ctx: GenerationContext,
+    ) -> str:
+        if not domain.events:
+            return ""
+        return "\n\n".join(
+            self._render_event_model(event, domain.domain, aliases, ctx)
+            for event in domain.events
+        )
+
+    def _render_event_model(
+        self,
+        event: Event,
+        domain_name: str,
+        aliases: dict[str, str],
+        ctx: GenerationContext,
+    ) -> str:
+        event_fqn = f"{domain_name}.{event.name}"
+        class_name = f"{to_pascal_case(event.name)}Event"
+
+        lines = [
+            "@dataclass(kw_only=True, slots=True)",
+            f"class {class_name}(CDPEvent):",
+        ]
 
         if event.description:
-            doc = format_docstring(event.description, indent=4)
-            lines.extend(doc.rstrip().splitlines())
+            lines.extend(
+                format_docstring(event.description, indent=4).rstrip().splitlines()
+            )
 
-        if event.parameters:
-            for param in event.parameters:
-                lines.append(f"    {self._create_field(param, event_fqn)}")
-        else:
+        if not event.parameters:
             lines.append("    pass")
+            return "\n".join(lines)
 
+        for param in event.parameters:
+            lines.append(f"    {self._render_field(param, event_fqn, aliases, ctx)}")
         return "\n".join(lines)
 
-    def _create_field(self, param: Parameter, event_fqn: str) -> str:
+    def _render_field(
+        self,
+        param: Parameter,
+        event_fqn: str,
+        aliases: dict[str, str],
+        ctx: GenerationContext,
+    ) -> str:
         field_name = to_snake_case(param.name)
-        py_type = self._resolve_type(param)
+        py_type = aliases.get(resolve_type(param), resolve_type(param))
+        ctx.track_type_string(py_type)
 
-        self._track_type_usage(py_type)
-
-        should_override = (
-            event_fqn in self.OPTIONAL_OVERRIDES
-            and param.name in self.OPTIONAL_OVERRIDES[event_fqn]
+        is_optional = param.optional or param.name in OPTIONAL_OVERRIDES.get(
+            event_fqn, set()
         )
-
-        if param.optional or should_override:
+        if is_optional:
             return f"{field_name}: {py_type} | None = None"
         return f"{field_name}: {py_type}"
-
-    def _resolve_type(self, param: Parameter) -> str:
-        if param.ref and "." in param.ref:
-            parts = param.ref.split(".")
-            domain_lower = parts[0].lower()
-            type_name = parts[1]
-            return f"{domain_lower}.{type_name}"
-
-        return map_cdp_type(param)

@@ -1,161 +1,110 @@
 from cdpify.generator.generators.base import BaseGenerator
+from cdpify.generator.generators.context import GenerationContext
 from cdpify.generator.generators.utils import (
     format_docstring,
     map_cdp_type,
+    resolve_type,
     to_snake_case,
 )
-from cdpify.generator.models import Domain, Parameter, TypeDefinition
+from cdpify.generator.schemas import Domain, Parameter, TypeDefinition
+
+OPTIONAL_OVERRIDES: dict[str, set[str]] = {
+    "DocumentSnapshot": {"documentURL", "baseURL"},
+    "AXRelatedNode": {"backendDOMNodeId"},
+}
 
 
 class TypesGenerator(BaseGenerator):
-    OPTIONAL_OVERRIDES: dict[str, set[str]] = {
-        "DocumentSnapshot": {
-            "documentURL",
-            "baseURL",
-        },
-        "AXRelatedNode": {
-            "backendDOMNodeId",
-        },
-    }
+    filename = "types.py"
 
     def generate(self, domain: Domain) -> str:
-        self._reset_tracking()
+        ctx = GenerationContext()
+        type_defs = self._generate_type_defs(domain.types, ctx)
+        cross_domain = ctx.cross_domain_import(type_checking=False)
 
         sections = [
-            self._header(),
+            self.HEADER,
+            self._build_imports(ctx),
+            cross_domain,
+            type_defs or "# No types defined",
         ]
+        return "\n\n".join(filter(None, sections))
 
-        type_defs = self._generate_type_definitions(domain)
-        sections.append(self._imports())
-
-        if self._cross_domain_refs:
-            sections.append(self._cross_domain_imports())
-
-        if type_defs:
-            sections.append(type_defs)
-        else:
-            sections.append("# No types defined")
-
-        return "\n\n".join(sections)
-
-    def _imports(self) -> str:
-        if self._cross_domain_refs:
-            self._build_cross_domain_imports(use_type_checking=True)
-
-        lines = []
-
-        lines.append("from __future__ import annotations")
-        lines.append("")
-
-        typing_imports = self._build_typing_imports()
-        if typing_imports:
-            lines.append(typing_imports)
-
-        lines.append("from dataclasses import dataclass")
-        lines.append("from cdpify.shared.models import CDPModel")
-
-        return "\n".join(lines)
-
-    def _cross_domain_imports(self) -> str:
-        return self._build_cross_domain_imports(use_type_checking=True)
-
-    def _generate_type_definitions(self, domain: Domain) -> str:
-        if not domain.types:
-            return ""
-
-        type_defs = []
-        for type_def in domain.types:
-            code = self._generate_single_type(type_def)
-            if code:
-                type_defs.append(code)
-
-        return "\n\n".join(type_defs)
-
-    def _generate_single_type(self, type_def: TypeDefinition) -> str:
-        if type_def.enum:
-            return self._create_enum_type(type_def)
-
-        if type_def.properties:
-            return self._create_object_model(type_def)
-
-        return self._create_type_alias(type_def)
-
-    def _create_enum_type(self, type_def: TypeDefinition) -> str:
-        lines = []
-
-        if type_def.description:
-            lines.append(format_docstring(type_def.description, indent=0))
-
-        values = ", ".join(f'"{v}"' for v in type_def.enum)
-        literal_type = f"Literal[{values}]"
-
-        self._uses_literal = True
-
-        lines.append(f"{type_def.id} = {literal_type}")
-
-        return "\n".join(lines)
-
-    def _create_object_model(self, type_def: TypeDefinition) -> str:
-        lines = ["@dataclass(kw_only=True)"]
-        lines.append(f"class {type_def.id}(CDPModel):")
-
-        if type_def.description:
-            doc = format_docstring(type_def.description, indent=4)
-            lines.extend(doc.rstrip().splitlines())
-
-        for prop in type_def.properties:
-            lines.append(f"    {self._create_field(prop, type_def.id)}")
-
-        return "\n".join(lines)
-
-    def _create_field(self, param: Parameter, type_id: str = "") -> str:
-        field_name = to_snake_case(param.name)
-        py_type = self._resolve_type(param)  # always returns bare type, no | None
-
-        if param.ref and "." in param.ref:
-            self._cross_domain_refs.add(param.ref)
-
-        self._track_type_usage(py_type)
-
-        should_override = (
-            type_id in self.OPTIONAL_OVERRIDES
-            and param.name in self.OPTIONAL_OVERRIDES[type_id]
-        )
-
-        if param.optional or should_override:
-            return f"{field_name}: {py_type} | None = None"
-        return f"{field_name}: {py_type}"
-
-    def _resolve_type(self, param: Parameter) -> str:
-        if param.ref and "." in param.ref:
-            parts = param.ref.split(".")
-            domain_lower = parts[0].lower()
-            type_name = parts[1]
-            return f"{domain_lower}.{type_name}"
-
-        return map_cdp_type(
-            Parameter(
-                name=param.name,
-                type=param.type,
-                ref=param.ref,
-                optional=False,
-                items=param.items,
-                enum=param.enum,
+    def _build_imports(self, ctx: GenerationContext) -> str:
+        return "\n".join(
+            filter(
+                None,
+                [
+                    ctx.typing_import(),
+                    "from dataclasses import dataclass",
+                    "from cdpify.shared.models import CDPModel",
+                ],
             )
         )
 
-    def _create_type_alias(self, type_def: TypeDefinition) -> str:
-        lines = []
+    def _generate_type_defs(
+        self, types: list[TypeDefinition], ctx: GenerationContext
+    ) -> str:
+        return "\n\n".join(self._render_type_def(t, ctx) for t in types)
 
+    def _render_type_def(self, type_def: TypeDefinition, ctx: GenerationContext) -> str:
+        if type_def.enum:
+            return self._render_enum(type_def, ctx)
+        if type_def.properties:
+            return self._render_object(type_def, ctx)
+        return self._render_alias(type_def, ctx)
+
+    def _render_enum(self, type_def: TypeDefinition, ctx: GenerationContext) -> str:
+        ctx.use_typing("Literal")
+        values = ", ".join(f'"{v}"' for v in type_def.enum)
+
+        lines = []
         if type_def.description:
             lines.append(format_docstring(type_def.description, indent=0))
+        lines.append(f"{type_def.id} = Literal[{values}]")
+        return "\n".join(lines)
 
+    def _render_object(self, type_def: TypeDefinition, ctx: GenerationContext) -> str:
+        lines = [
+            "@dataclass(kw_only=True, slots=True)",
+            f"class {type_def.id}(CDPModel):",
+        ]
+
+        if type_def.description:
+            lines.extend(
+                format_docstring(type_def.description, indent=4).rstrip().splitlines()
+            )
+
+        for prop in type_def.properties:
+            lines.append(f"    {self._render_field(prop, type_def.id, ctx)}")
+
+        return "\n".join(lines)
+
+    def _render_alias(self, type_def: TypeDefinition, ctx: GenerationContext) -> str:
         py_type = map_cdp_type(
             Parameter(name=type_def.id, type=type_def.type, optional=False)
         )
+        ctx.track_type_string(py_type)
 
-        self._track_type_usage(py_type)
-
+        lines = []
+        if type_def.description:
+            lines.append(format_docstring(type_def.description, indent=0))
         lines.append(f"{type_def.id} = {py_type}")
-
         return "\n".join(lines)
+
+    def _render_field(
+        self, param: Parameter, type_id: str, ctx: GenerationContext
+    ) -> str:
+        field_name = to_snake_case(param.name)
+        py_type = resolve_type(param)
+
+        if param.ref and "." in param.ref:
+            ctx.cross_domain_refs.add(param.ref)
+        ctx.track_type_string(py_type)
+
+        is_optional = param.optional or param.name in OPTIONAL_OVERRIDES.get(
+            type_id, set()
+        )
+        if is_optional:
+            return f"{field_name}: {py_type} | None = None"
+        return f"{field_name}: {py_type}"
