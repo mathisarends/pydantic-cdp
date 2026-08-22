@@ -3,7 +3,7 @@ import logging
 from collections.abc import AsyncIterator
 from typing import Any, Self
 
-from cdpify.domains import CDPDomainAccessors
+from cdpify.domains import DomainAccessors
 from cdpify.events import EventRouter, ReceivedEvent
 from cdpify.executor import BoundCommandExecutor
 from cdpify.session import CDPSession
@@ -12,7 +12,7 @@ from cdpify.transport import Transport, TransportEvent
 logger = logging.getLogger(__name__)
 
 
-class Client(CDPDomainAccessors):
+class Client(DomainAccessors):
     def __init__(
         self,
         url: str | None = None,

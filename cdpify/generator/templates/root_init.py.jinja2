@@ -1,9 +1,9 @@
 {{ header }}
 
-from .accessors import CDPDomainAccessors
+from .accessors import DomainAccessors
 {{ domains | map(attribute="import_statement") | join("\n") }}
 
 __all__ = [
-    "CDPDomainAccessors",
+    "DomainAccessors",
     {{ domains | map(attribute="export") | join("\n    ") }}
 ]

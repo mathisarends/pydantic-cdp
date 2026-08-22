@@ -66,7 +66,7 @@ from .webauthn import WebAuthn
 from .webmcp import WebMCP
 
 
-class CDPDomainAccessors:
+class DomainAccessors:
     """Generated domain API mixed into executor-backed objects."""
 
     _executor: CommandExecutor
