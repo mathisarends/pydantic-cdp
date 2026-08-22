@@ -7,26 +7,37 @@ from functools import cached_property
 from cdpify.shared.command_sender import CDPCommandSender
 
 from .accessibility import AccessibilityClient
+from .ads import AdsClient
 from .animation import AnimationClient
 from .audits import AuditsClient
+from .autofill import AutofillClient
 from .backgroundservice import BackgroundServiceClient
+from .bluetoothemulation import BluetoothEmulationClient
 from .browser import BrowserClient
 from .cachestorage import CacheStorageClient
 from .cast import CastClient
 from .console import ConsoleClient
+from .crashreportcontext import CrashReportContextClient
 from .css import CSSClient
 from .debugger import DebuggerClient
+from .deviceaccess import DeviceAccessClient
 from .deviceorientation import DeviceOrientationClient
+from .digitalcredentials import DigitalCredentialsClient
 from .dom import DOMClient
 from .domdebugger import DOMDebuggerClient
 from .domsnapshot import DOMSnapshotClient
 from .domstorage import DOMStorageClient
 from .emulation import EmulationClient
 from .eventbreakpoints import EventBreakpointsClient
+from .extensions import ExtensionsClient
+from .fedcm import FedCmClient
 from .fetch import FetchClient
+from .filesystem import FileSystemClient
+from .headlessexperimental import HeadlessExperimentalClient
 from .heapprofiler import HeapProfilerClient
 from .indexeddb import IndexedDBClient
 from .input import InputClient
+from .inspector import InspectorClient
 from .io import IOClient
 from .layertree import LayerTreeClient
 from .log import LogClient
@@ -36,11 +47,15 @@ from .network import NetworkClient
 from .overlay import OverlayClient
 from .page import PageClient
 from .performance import PerformanceClient
+from .performancetimeline import PerformanceTimelineClient
+from .preload import PreloadClient
 from .profiler import ProfilerClient
+from .pwa import PWAClient
 from .runtime import RuntimeClient
 from .schema import SchemaClient
 from .security import SecurityClient
 from .serviceworker import ServiceWorkerClient
+from .smartcardemulation import SmartCardEmulationClient
 from .storage import StorageClient
 from .systeminfo import SystemInfoClient
 from .target import TargetClient
@@ -48,90 +63,207 @@ from .tethering import TetheringClient
 from .tracing import TracingClient
 from .webaudio import WebAudioClient
 from .webauthn import WebAuthnClient
+from .webmcp import WebMCPClient
 
 
 class CDPDomains(CDPCommandSender):
     """Generated accessors for the configured CDP domains."""
 
     @cached_property
-    def page(self) -> PageClient:
-        return PageClient(self)
+    def accessibility(self) -> AccessibilityClient:
+        return AccessibilityClient(self)
 
     @cached_property
-    def dom(self) -> DOMClient:
-        return DOMClient(self)
-
-    @cached_property
-    def input(self) -> InputClient:
-        return InputClient(self)
-
-    @cached_property
-    def network(self) -> NetworkClient:
-        return NetworkClient(self)
-
-    @cached_property
-    def target(self) -> TargetClient:
-        return TargetClient(self)
-
-    @cached_property
-    def runtime(self) -> RuntimeClient:
-        return RuntimeClient(self)
-
-    @cached_property
-    def console(self) -> ConsoleClient:
-        return ConsoleClient(self)
-
-    @cached_property
-    def debugger(self) -> DebuggerClient:
-        return DebuggerClient(self)
-
-    @cached_property
-    def profiler(self) -> ProfilerClient:
-        return ProfilerClient(self)
-
-    @cached_property
-    def heap_profiler(self) -> HeapProfilerClient:
-        return HeapProfilerClient(self)
-
-    @cached_property
-    def performance(self) -> PerformanceClient:
-        return PerformanceClient(self)
-
-    @cached_property
-    def css(self) -> CSSClient:
-        return CSSClient(self)
-
-    @cached_property
-    def overlay(self) -> OverlayClient:
-        return OverlayClient(self)
+    def ads(self) -> AdsClient:
+        return AdsClient(self)
 
     @cached_property
     def animation(self) -> AnimationClient:
         return AnimationClient(self)
 
     @cached_property
-    def layer_tree(self) -> LayerTreeClient:
-        return LayerTreeClient(self)
+    def audits(self) -> AuditsClient:
+        return AuditsClient(self)
 
     @cached_property
-    def storage(self) -> StorageClient:
-        return StorageClient(self)
+    def autofill(self) -> AutofillClient:
+        return AutofillClient(self)
 
     @cached_property
-    def indexed_db(self) -> IndexedDBClient:
-        return IndexedDBClient(self)
+    def background_service(self) -> BackgroundServiceClient:
+        return BackgroundServiceClient(self)
+
+    @cached_property
+    def bluetooth_emulation(self) -> BluetoothEmulationClient:
+        return BluetoothEmulationClient(self)
+
+    @cached_property
+    def browser(self) -> BrowserClient:
+        return BrowserClient(self)
+
+    @cached_property
+    def css(self) -> CSSClient:
+        return CSSClient(self)
 
     @cached_property
     def cache_storage(self) -> CacheStorageClient:
         return CacheStorageClient(self)
 
     @cached_property
+    def cast(self) -> CastClient:
+        return CastClient(self)
+
+    @cached_property
+    def crash_report_context(self) -> CrashReportContextClient:
+        return CrashReportContextClient(self)
+
+    @cached_property
+    def dom(self) -> DOMClient:
+        return DOMClient(self)
+
+    @cached_property
+    def dom_debugger(self) -> DOMDebuggerClient:
+        return DOMDebuggerClient(self)
+
+    @cached_property
+    def dom_snapshot(self) -> DOMSnapshotClient:
+        return DOMSnapshotClient(self)
+
+    @cached_property
     def dom_storage(self) -> DOMStorageClient:
         return DOMStorageClient(self)
 
     @cached_property
+    def device_access(self) -> DeviceAccessClient:
+        return DeviceAccessClient(self)
+
+    @cached_property
+    def device_orientation(self) -> DeviceOrientationClient:
+        return DeviceOrientationClient(self)
+
+    @cached_property
+    def digital_credentials(self) -> DigitalCredentialsClient:
+        return DigitalCredentialsClient(self)
+
+    @cached_property
+    def emulation(self) -> EmulationClient:
+        return EmulationClient(self)
+
+    @cached_property
+    def event_breakpoints(self) -> EventBreakpointsClient:
+        return EventBreakpointsClient(self)
+
+    @cached_property
+    def extensions(self) -> ExtensionsClient:
+        return ExtensionsClient(self)
+
+    @cached_property
+    def fed_cm(self) -> FedCmClient:
+        return FedCmClient(self)
+
+    @cached_property
     def fetch(self) -> FetchClient:
         return FetchClient(self)
+
+    @cached_property
+    def file_system(self) -> FileSystemClient:
+        return FileSystemClient(self)
+
+    @cached_property
+    def headless_experimental(self) -> HeadlessExperimentalClient:
+        return HeadlessExperimentalClient(self)
+
+    @cached_property
+    def io(self) -> IOClient:
+        return IOClient(self)
+
+    @cached_property
+    def indexed_db(self) -> IndexedDBClient:
+        return IndexedDBClient(self)
+
+    @cached_property
+    def input(self) -> InputClient:
+        return InputClient(self)
+
+    @cached_property
+    def inspector(self) -> InspectorClient:
+        return InspectorClient(self)
+
+    @cached_property
+    def layer_tree(self) -> LayerTreeClient:
+        return LayerTreeClient(self)
+
+    @cached_property
+    def log(self) -> LogClient:
+        return LogClient(self)
+
+    @cached_property
+    def media(self) -> MediaClient:
+        return MediaClient(self)
+
+    @cached_property
+    def memory(self) -> MemoryClient:
+        return MemoryClient(self)
+
+    @cached_property
+    def network(self) -> NetworkClient:
+        return NetworkClient(self)
+
+    @cached_property
+    def overlay(self) -> OverlayClient:
+        return OverlayClient(self)
+
+    @cached_property
+    def pwa(self) -> PWAClient:
+        return PWAClient(self)
+
+    @cached_property
+    def page(self) -> PageClient:
+        return PageClient(self)
+
+    @cached_property
+    def performance(self) -> PerformanceClient:
+        return PerformanceClient(self)
+
+    @cached_property
+    def performance_timeline(self) -> PerformanceTimelineClient:
+        return PerformanceTimelineClient(self)
+
+    @cached_property
+    def preload(self) -> PreloadClient:
+        return PreloadClient(self)
+
+    @cached_property
+    def security(self) -> SecurityClient:
+        return SecurityClient(self)
+
+    @cached_property
+    def service_worker(self) -> ServiceWorkerClient:
+        return ServiceWorkerClient(self)
+
+    @cached_property
+    def smart_card_emulation(self) -> SmartCardEmulationClient:
+        return SmartCardEmulationClient(self)
+
+    @cached_property
+    def storage(self) -> StorageClient:
+        return StorageClient(self)
+
+    @cached_property
+    def system_info(self) -> SystemInfoClient:
+        return SystemInfoClient(self)
+
+    @cached_property
+    def target(self) -> TargetClient:
+        return TargetClient(self)
+
+    @cached_property
+    def tethering(self) -> TetheringClient:
+        return TetheringClient(self)
+
+    @cached_property
+    def tracing(self) -> TracingClient:
+        return TracingClient(self)
 
     @cached_property
     def web_audio(self) -> WebAudioClient:
@@ -142,81 +274,29 @@ class CDPDomains(CDPCommandSender):
         return WebAuthnClient(self)
 
     @cached_property
-    def media(self) -> MediaClient:
-        return MediaClient(self)
+    def web_mcp(self) -> WebMCPClient:
+        return WebMCPClient(self)
 
     @cached_property
-    def service_worker(self) -> ServiceWorkerClient:
-        return ServiceWorkerClient(self)
+    def console(self) -> ConsoleClient:
+        return ConsoleClient(self)
 
     @cached_property
-    def background_service(self) -> BackgroundServiceClient:
-        return BackgroundServiceClient(self)
+    def debugger(self) -> DebuggerClient:
+        return DebuggerClient(self)
 
     @cached_property
-    def emulation(self) -> EmulationClient:
-        return EmulationClient(self)
+    def heap_profiler(self) -> HeapProfilerClient:
+        return HeapProfilerClient(self)
 
     @cached_property
-    def device_orientation(self) -> DeviceOrientationClient:
-        return DeviceOrientationClient(self)
+    def profiler(self) -> ProfilerClient:
+        return ProfilerClient(self)
 
     @cached_property
-    def browser(self) -> BrowserClient:
-        return BrowserClient(self)
-
-    @cached_property
-    def system_info(self) -> SystemInfoClient:
-        return SystemInfoClient(self)
-
-    @cached_property
-    def security(self) -> SecurityClient:
-        return SecurityClient(self)
-
-    @cached_property
-    def log(self) -> LogClient:
-        return LogClient(self)
-
-    @cached_property
-    def tethering(self) -> TetheringClient:
-        return TetheringClient(self)
-
-    @cached_property
-    def accessibility(self) -> AccessibilityClient:
-        return AccessibilityClient(self)
-
-    @cached_property
-    def audits(self) -> AuditsClient:
-        return AuditsClient(self)
-
-    @cached_property
-    def tracing(self) -> TracingClient:
-        return TracingClient(self)
+    def runtime(self) -> RuntimeClient:
+        return RuntimeClient(self)
 
     @cached_property
     def schema(self) -> SchemaClient:
         return SchemaClient(self)
-
-    @cached_property
-    def cast(self) -> CastClient:
-        return CastClient(self)
-
-    @cached_property
-    def dom_snapshot(self) -> DOMSnapshotClient:
-        return DOMSnapshotClient(self)
-
-    @cached_property
-    def dom_debugger(self) -> DOMDebuggerClient:
-        return DOMDebuggerClient(self)
-
-    @cached_property
-    def event_breakpoints(self) -> EventBreakpointsClient:
-        return EventBreakpointsClient(self)
-
-    @cached_property
-    def io(self) -> IOClient:
-        return IOClient(self)
-
-    @cached_property
-    def memory(self) -> MemoryClient:
-        return MemoryClient(self)
