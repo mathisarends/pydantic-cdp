@@ -1,5 +1,5 @@
 from cdpify.generator.generators.init import InitGenerator
-from cdpify.generator.schemas import Domain
+from cdpify.generator.schemas import Domain, Event, TypeDefinition
 
 
 def test_renders_module_docstring(simple_domain: Domain) -> None:
@@ -78,3 +78,17 @@ def test_empty_domain_only_imports_client(empty_domain: Domain) -> None:
     assert "from .commands import" not in output
     assert "from .events import" not in output
     assert '"EmptyClient"' in output
+
+
+def test_aliases_event_enum_when_it_collides_with_a_type() -> None:
+    domain = Domain(
+        domain="BackgroundService",
+        types=[TypeDefinition(id="BackgroundServiceEvent", type="object")],
+        events=[Event(name="eventReceived")],
+    )
+
+    output = InitGenerator().generate(domain)
+
+    assert "BackgroundServiceEvent as BackgroundServiceEventName" in output
+    assert '"BackgroundServiceEvent",' in output
+    assert '"BackgroundServiceEventName",' in output

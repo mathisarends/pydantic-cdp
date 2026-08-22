@@ -12,18 +12,15 @@ from .commands import (
     StartObservingParams,
     StopObservingParams,
 )
-from .events import (
-    BackgroundServiceEvent,
-    BackgroundServiceEventReceivedEvent,
-    RecordingStateChangedEvent,
-)
+from .events import BackgroundServiceEvent as BackgroundServiceEventName
+from .events import BackgroundServiceEventReceivedEvent, RecordingStateChangedEvent
 from .types import BackgroundServiceEvent, EventMetadata, ServiceName
 
 __all__ = [
     "BackgroundServiceClient",
     "BackgroundServiceCommand",
     "BackgroundServiceEvent",
-    "BackgroundServiceEvent",
+    "BackgroundServiceEventName",
     "BackgroundServiceEventReceivedEvent",
     "ClearEventsParams",
     "EventMetadata",
