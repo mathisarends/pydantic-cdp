@@ -2,7 +2,7 @@ from collections.abc import Callable
 
 import pytest
 
-from cdpify.generator.generators import client, commands, events, init, types
+from cdpify.generator.generators import commands, domain, events, init, types
 from cdpify.generator.schemas import Domain
 
 
@@ -12,7 +12,7 @@ from cdpify.generator.schemas import Domain
         ("types.py", types.generate),
         ("commands.py", commands.generate),
         ("events.py", events.generate),
-        ("client.py", client.generate),
+        ("domain.py", domain.generate),
         ("__init__.py", init.generate),
     ],
 )

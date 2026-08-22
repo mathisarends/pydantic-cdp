@@ -2,7 +2,16 @@ import shutil
 from pathlib import Path
 
 from cdpify.generator.formatting import format_python_tree
-from cdpify.generator.generators import accessors, client, commands, events, init, types
+from cdpify.generator.generators import (
+    accessors,
+    commands,
+    events,
+    init,
+    types,
+)
+from cdpify.generator.generators import (
+    domain as domain_generator,
+)
 from cdpify.generator.schemas import Domain
 
 
@@ -27,7 +36,7 @@ def _render_files(domains: list[Domain]) -> dict[Path, str]:
 def _render_domain(domain: Domain) -> dict[Path, str]:
     directory = Path(domain.domain.lower())
     files = {
-        directory / "client.py": client.generate(domain),
+        directory / "domain.py": domain_generator.generate(domain),
         directory / "__init__.py": init.generate(domain),
     }
 

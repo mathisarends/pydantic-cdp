@@ -12,7 +12,7 @@ def test_render_domain_includes_available_modules(simple_domain: Domain) -> None
 
     assert set(files) == {
         directory / "__init__.py",
-        directory / "client.py",
+        directory / "domain.py",
         directory / "commands.py",
         directory / "events.py",
         directory / "types.py",
@@ -25,7 +25,7 @@ def test_render_domain_omits_empty_optional_modules(empty_domain: Domain) -> Non
 
     assert set(files) == {
         directory / "__init__.py",
-        directory / "client.py",
+        directory / "domain.py",
     }
 
 

@@ -20,7 +20,7 @@ def generate(domain: Domain) -> str:
         ctx.use_typing("TYPE_CHECKING")
 
     return render_template(
-        "client.py.jinja2",
+        "domain.py.jinja2",
         header=HEADER,
         future_annotations=FUTURE_ANNOTATIONS,
         typing_names=ctx.sorted_typing_names,

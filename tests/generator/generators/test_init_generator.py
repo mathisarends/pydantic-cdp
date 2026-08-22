@@ -30,9 +30,9 @@ def test_imports_commands_and_events(simple_domain: Domain) -> None:
     assert "ClearedEvent" in output
 
 
-def test_imports_client(simple_domain: Domain) -> None:
+def test_imports_domain_class(simple_domain: Domain) -> None:
     output = init.generate(simple_domain)
-    assert "from .client import Sample" in output
+    assert "from .domain import Sample" in output
 
 
 def test_all_exports_sorted_and_complete(simple_domain: Domain) -> None:
@@ -73,7 +73,7 @@ def test_block_import_for_many_names(simple_domain: Domain) -> None:
 def test_empty_domain_only_imports_domain_class(empty_domain: Domain) -> None:
     output = init.generate(empty_domain)
 
-    assert "from .client import Empty" in output
+    assert "from .domain import Empty" in output
     assert "from .types import" not in output
     assert "from .commands import" not in output
     assert "from .events import" not in output
@@ -89,7 +89,7 @@ def test_aliases_type_that_collides_with_domain_class() -> None:
     output = init.generate(domain)
 
     assert "from .types import Animation as AnimationType" in output
-    assert "from .client import Animation" in output
+    assert "from .domain import Animation" in output
     assert '"Animation"' in output
     assert '"AnimationType"' in output
 

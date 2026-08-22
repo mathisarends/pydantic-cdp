@@ -1,3 +1,3 @@
-from . import accessors, client, commands, events, init, types
+from . import accessors, commands, domain, events, init, types
 
-__all__ = ["accessors", "client", "commands", "events", "init", "types"]
+__all__ = ["accessors", "commands", "domain", "events", "init", "types"]
