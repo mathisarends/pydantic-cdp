@@ -1,4 +1,3 @@
-import logging
 import shutil
 from pathlib import Path
 
@@ -6,19 +5,13 @@ from cdpify.generator.formatting import format_python_tree
 from cdpify.generator.generators import accessors, client, commands, events, init, types
 from cdpify.generator.schemas import Domain
 
-logger = logging.getLogger(__name__)
-
 _CDP_DIR = Path(__file__).parent.parent / "domains"
 
 
 def generate_all_domains(domains: list[Domain]) -> None:
-    logger.info("Generating %d CDP domains", len(domains))
-
     generated_files = _render_files(domains)
     _replace_output(generated_files)
     format_python_tree(_CDP_DIR)
-
-    logger.info("Generation complete")
 
 
 def _render_files(domains: list[Domain]) -> dict[Path, str]:
@@ -29,13 +22,6 @@ def _render_files(domains: list[Domain]) -> dict[Path, str]:
 
     for domain in domains:
         files.update(_render_domain(domain))
-        logger.info(
-            "Rendered %s (%d types, %d commands, %d events)",
-            domain.domain,
-            len(domain.types),
-            len(domain.commands),
-            len(domain.events),
-        )
 
     return files
 
