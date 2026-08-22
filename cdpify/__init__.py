@@ -6,7 +6,6 @@ from .exceptions import (
     CDPException,
     CDPTimeoutException,
 )
-from .logging import configure_websocket_logging
 
 __all__ = [
     "Client",
@@ -17,5 +16,4 @@ __all__ = [
     "CDPConnectionException",
     "CDPCommandException",
     "CDPTimeoutException",
-    "configure_websocket_logging",
 ]
