@@ -119,6 +119,3 @@ class Histogram(CDPModel):
     sum: int
     count: int
     buckets: list[Bucket]
-
-
-type PrivacySandboxAPI = Literal["BiddingAndAuctionServices", "TrustedKeyValue"]

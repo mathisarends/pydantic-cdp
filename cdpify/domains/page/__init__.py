@@ -70,6 +70,9 @@ from .commands import (
     SetTouchEmulationEnabledParams,
     SetWebLifecycleStateParams,
     StartScreencastParams,
+    StartScreenRecordingParams,
+    StartScreenRecordingResult,
+    StopScreenRecordingResult,
 )
 from .events import (
     BackForwardCacheNotUsedEvent,
@@ -310,7 +313,10 @@ __all__ = [
     "SetWebLifecycleStateParams",
     "ShareTarget",
     "Shortcut",
+    "StartScreenRecordingParams",
+    "StartScreenRecordingResult",
     "StartScreencastParams",
+    "StopScreenRecordingResult",
     "TransitionType",
     "Viewport",
     "VisualViewport",

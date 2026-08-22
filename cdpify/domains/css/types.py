@@ -90,6 +90,18 @@ class Value(CDPModel):
 
 
 @dataclass(kw_only=True, slots=True)
+class SpecificityComponent(CDPModel):
+    """
+    Contribution of an individual simple selector to specificity.
+    """
+
+    text: str
+    a: int
+    b: int
+    c: int
+
+
+@dataclass(kw_only=True, slots=True)
 class Specificity(CDPModel):
     """
     Specificity: https://drafts.csswg.org/selectors/#specificity-rules
@@ -98,6 +110,7 @@ class Specificity(CDPModel):
     a: int
     b: int
     c: int
+    components: list[SpecificityComponent] | None = None
 
 
 @dataclass(kw_only=True, slots=True)
@@ -298,6 +311,7 @@ class CSSContainerQuery(CDPModel):
     logical_axes: dom.LogicalAxes | None = None
     queries_scroll_state: bool | None = None
     queries_anchored: bool | None = None
+    condition_text: str
 
 
 @dataclass(kw_only=True, slots=True)
@@ -464,7 +478,9 @@ class CSSAtRule(CDPModel):
     CSS generic @rule representation.
     """
 
-    type: Literal["font-face", "font-feature-values", "font-palette-values"]
+    type: Literal[
+        "font-face", "font-feature-values", "font-palette-values", "counter-style"
+    ]
     subsection: (
         Literal[
             "swash",

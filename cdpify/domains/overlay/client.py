@@ -27,6 +27,7 @@ from .commands import (
     SetShowAdHighlightsParams,
     SetShowContainerQueryOverlaysParams,
     SetShowDebugBordersParams,
+    SetShowDisplayCutoutParams,
     SetShowFlexOverlaysParams,
     SetShowFPSCounterParams,
     SetShowGridOverlaysParams,
@@ -45,6 +46,7 @@ from .commands import (
 from .types import (
     ColorFormat,
     ContainerQueryHighlightConfig,
+    DisplayCutoutConfig,
     FlexNodeHighlightConfig,
     GridNodeHighlightConfig,
     HighlightConfig,
@@ -613,6 +615,24 @@ class OverlayClient:
 
         result = await self._command_sender.send_raw(
             method=OverlayCommand.SET_SHOW_HINGE,
+            params=params.to_cdp_params(),
+            session_id=session_id,
+        )
+        return result
+
+    async def set_show_display_cutout(
+        self,
+        *,
+        display_cutout_config: DisplayCutoutConfig | None = None,
+        session_id: str | None = None,
+    ) -> dict[str, Any]:
+        """
+        Add a display cutout overlay.
+        """
+        params = SetShowDisplayCutoutParams(display_cutout_config=display_cutout_config)
+
+        result = await self._command_sender.send_raw(
+            method=OverlayCommand.SET_SHOW_DISPLAY_CUTOUT,
             params=params.to_cdp_params(),
             session_id=session_id,
         )

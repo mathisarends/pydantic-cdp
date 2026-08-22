@@ -14,7 +14,6 @@ from .commands import (
     CanClearBrowserCookiesResult,
     CanEmulateNetworkConditionsResult,
     ConfigureDurableMessagesParams,
-    ContinueInterceptedRequestParams,
     DeleteCookiesParams,
     DeleteDeviceBoundSessionParams,
     EmulateNetworkConditionsByRuleParams,
@@ -32,8 +31,6 @@ from .commands import (
     GetCookiesResult,
     GetRequestPostDataParams,
     GetRequestPostDataResult,
-    GetResponseBodyForInterceptionParams,
-    GetResponseBodyForInterceptionResult,
     GetResponseBodyParams,
     GetResponseBodyResult,
     GetSecurityIsolationStatusParams,
@@ -45,7 +42,6 @@ from .commands import (
     ReplayXHRParams,
     SearchInResponseBodyParams,
     SearchInResponseBodyResult,
-    SetAcceptedEncodingsParams,
     SetAttachDebugStackParams,
     SetBlockedURLsParams,
     SetBypassServiceWorkerParams,
@@ -55,31 +51,23 @@ from .commands import (
     SetCookieResult,
     SetCookiesParams,
     SetExtraHTTPHeadersParams,
-    SetRequestInterceptionParams,
     SetUserAgentOverrideParams,
     StreamResourceContentParams,
     StreamResourceContentResult,
-    TakeResponseBodyForInterceptionAsStreamParams,
-    TakeResponseBodyForInterceptionAsStreamResult,
 )
 from .types import (
-    AuthChallengeResponse,
     BlockPattern,
     ConnectionType,
-    ContentEncoding,
     CookieParam,
     CookiePartitionKey,
     CookiePriority,
     CookieSameSite,
     CookieSourceScheme,
     DeviceBoundSessionKey,
-    ErrorReason,
     Headers,
-    InterceptionId,
     LoadNetworkResourceOptions,
     NetworkConditions,
     RequestId,
-    RequestPattern,
     TimeSinceEpoch,
 )
 
@@ -90,39 +78,6 @@ if TYPE_CHECKING:
 class NetworkClient:
     def __init__(self, command_sender: CDPCommandSender) -> None:
         self._command_sender = command_sender
-
-    async def set_accepted_encodings(
-        self,
-        *,
-        encodings: list[ContentEncoding],
-        session_id: str | None = None,
-    ) -> dict[str, Any]:
-        """
-        Sets a list of content encodings that will be accepted. Empty list means no
-        encoding is accepted.
-        """
-        params = SetAcceptedEncodingsParams(encodings=encodings)
-
-        result = await self._command_sender.send_raw(
-            method=NetworkCommand.SET_ACCEPTED_ENCODINGS,
-            params=params.to_cdp_params(),
-            session_id=session_id,
-        )
-        return result
-
-    async def clear_accepted_encodings_override(
-        self,
-        session_id: str | None = None,
-    ) -> dict[str, Any]:
-        """
-        Clears accepted encodings set by setAcceptedEncodings
-        """
-        result = await self._command_sender.send_raw(
-            method=NetworkCommand.CLEAR_ACCEPTED_ENCODINGS_OVERRIDE,
-            params=None,
-            session_id=session_id,
-        )
-        return result
 
     @deprecated()
     async def can_clear_browser_cache(
@@ -193,46 +148,6 @@ class NetworkClient:
         result = await self._command_sender.send_raw(
             method=NetworkCommand.CLEAR_BROWSER_COOKIES,
             params=None,
-            session_id=session_id,
-        )
-        return result
-
-    @deprecated()
-    async def continue_intercepted_request(
-        self,
-        *,
-        interception_id: InterceptionId,
-        error_reason: ErrorReason | None = None,
-        raw_response: str | None = None,
-        url: str | None = None,
-        method: str | None = None,
-        post_data: str | None = None,
-        headers: Headers | None = None,
-        auth_challenge_response: AuthChallengeResponse | None = None,
-        session_id: str | None = None,
-    ) -> dict[str, Any]:
-        """
-        Response to Network.requestIntercepted which either modifies the request to
-        continue with any modifications, or blocks it, or completes it with the provided
-        response bytes. If a network fetch occurs as a result which encounters a
-        redirect an additional Network.requestIntercepted event will be sent with the
-        same InterceptionId. Deprecated, use Fetch.continueRequest, Fetch.fulfillRequest
-        and Fetch.failRequest instead.
-        """
-        params = ContinueInterceptedRequestParams(
-            interception_id=interception_id,
-            error_reason=error_reason,
-            raw_response=raw_response,
-            url=url,
-            method=method,
-            post_data=post_data,
-            headers=headers,
-            auth_challenge_response=auth_challenge_response,
-        )
-
-        result = await self._command_sender.send_raw(
-            method=NetworkCommand.CONTINUE_INTERCEPTED_REQUEST,
-            params=params.to_cdp_params(),
             session_id=session_id,
         )
         return result
@@ -512,47 +427,6 @@ class NetworkClient:
         )
         return GetRequestPostDataResult.from_cdp(result)
 
-    async def get_response_body_for_interception(
-        self,
-        *,
-        interception_id: InterceptionId,
-        session_id: str | None = None,
-    ) -> GetResponseBodyForInterceptionResult:
-        """
-        Returns content served for the given currently intercepted request.
-        """
-        params = GetResponseBodyForInterceptionParams(interception_id=interception_id)
-
-        result = await self._command_sender.send_raw(
-            method=NetworkCommand.GET_RESPONSE_BODY_FOR_INTERCEPTION,
-            params=params.to_cdp_params(),
-            session_id=session_id,
-        )
-        return GetResponseBodyForInterceptionResult.from_cdp(result)
-
-    async def take_response_body_for_interception_as_stream(
-        self,
-        *,
-        interception_id: InterceptionId,
-        session_id: str | None = None,
-    ) -> TakeResponseBodyForInterceptionAsStreamResult:
-        """
-        Returns a handle to the stream representing the response body. Note that after
-        this command, the intercepted request can't be continued as is -- you either
-        need to cancel it or to provide the response body. The stream only supports
-        sequential read, IO.read will fail if the position is specified.
-        """
-        params = TakeResponseBodyForInterceptionAsStreamParams(
-            interception_id=interception_id
-        )
-
-        result = await self._command_sender.send_raw(
-            method=NetworkCommand.TAKE_RESPONSE_BODY_FOR_INTERCEPTION_AS_STREAM,
-            params=params.to_cdp_params(),
-            session_id=session_id,
-        )
-        return TakeResponseBodyForInterceptionAsStreamResult.from_cdp(result)
-
     async def replay_xhr(
         self,
         *,
@@ -749,26 +623,6 @@ class NetworkClient:
 
         result = await self._command_sender.send_raw(
             method=NetworkCommand.SET_ATTACH_DEBUG_STACK,
-            params=params.to_cdp_params(),
-            session_id=session_id,
-        )
-        return result
-
-    @deprecated()
-    async def set_request_interception(
-        self,
-        *,
-        patterns: list[RequestPattern],
-        session_id: str | None = None,
-    ) -> dict[str, Any]:
-        """
-        Sets the requests to intercept that match the provided patterns and optionally
-        resource types. Deprecated, please use Fetch.enable instead.
-        """
-        params = SetRequestInterceptionParams(patterns=patterns)
-
-        result = await self._command_sender.send_raw(
-            method=NetworkCommand.SET_REQUEST_INTERCEPTION,
             params=params.to_cdp_params(),
             session_id=session_id,
         )

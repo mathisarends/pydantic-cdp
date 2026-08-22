@@ -15,7 +15,12 @@ type AuthenticatorProtocol = Literal["u2f", "ctap2"]
 
 type Ctap2Version = Literal["ctap2_0", "ctap2_1", "ctap2_2"]
 
-type AuthenticatorTransport = Literal["usb", "nfc", "ble", "cable", "internal"]
+"""
+LINT.IfChange(AuthenticatorTransport)
+"""
+type AuthenticatorTransport = Literal[
+    "usb", "nfc", "ble", "cable", "hybrid", "smart-card", "internal"
+]
 
 
 @dataclass(kw_only=True, slots=True)
@@ -31,6 +36,7 @@ class VirtualAuthenticatorOptions(CDPModel):
     has_prf: bool | None = None
     has_hmac_secret: bool | None = None
     has_hmac_secret_mc: bool | None = None
+    has_cmtg_key: bool | None = None
     automatic_presence_simulation: bool | None = None
     is_user_verified: bool | None = None
     default_backup_eligibility: bool | None = None
@@ -50,3 +56,6 @@ class Credential(CDPModel):
     backup_state: bool | None = None
     user_name: str | None = None
     user_display_name: str | None = None
+    cmtg_keys: list[str] | None = None
+    active_cmtg_key_index: int | None = None
+    generate_cmtg_key_on_next_operation: bool | None = None

@@ -79,6 +79,7 @@ class DOMCommand(StrEnum):
     GET_QUERYING_DESCENDANTS_FOR_CONTAINER = "DOM.getQueryingDescendantsForContainer"
     GET_ANCHOR_ELEMENT = "DOM.getAnchorElement"
     FORCE_SHOW_POPOVER = "DOM.forceShowPopover"
+    FORCE_SHOW_INTEREST = "DOM.forceShowInterest"
 
 
 @dataclass(kw_only=True, slots=True)
@@ -717,8 +718,20 @@ class ForceShowPopoverParams(CDPModel):
 
     node_id: NodeId
     enable: bool
+    invoker_node_id: BackendNodeId | None = None
 
 
 @dataclass(kw_only=True, slots=True)
 class ForceShowPopoverResult(CDPModel):
     node_ids: list[NodeId]
+
+
+@dataclass(kw_only=True, slots=True)
+class ForceShowInterestParams(CDPModel):
+    """
+    When enabling, this API forces an element to gain interest in its target, keeping
+    interest active until disabled.
+    """
+
+    node_id: NodeId
+    enable: bool

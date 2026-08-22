@@ -84,6 +84,8 @@ class PageCommand(StrEnum):
     SET_LIFECYCLE_EVENTS_ENABLED = "Page.setLifecycleEventsEnabled"
     SET_TOUCH_EMULATION_ENABLED = "Page.setTouchEmulationEnabled"
     START_SCREENCAST = "Page.startScreencast"
+    START_SCREEN_RECORDING = "Page.startScreenRecording"
+    STOP_SCREEN_RECORDING = "Page.stopScreenRecording"
     STOP_LOADING = "Page.stopLoading"
     CRASH = "Page.crash"
     CLOSE = "Page.close"
@@ -176,6 +178,7 @@ class CreateIsolatedWorldParams(CDPModel):
     frame_id: FrameId
     world_name: str | None = None
     grant_univeral_access: bool | None = None
+    content_security_policy: str | None = None
 
 
 @dataclass(kw_only=True, slots=True)
@@ -579,6 +582,30 @@ class StartScreencastParams(CDPModel):
     max_width: int | None = None
     max_height: int | None = None
     every_nth_frame: int | None = None
+    max_frames_in_flight: int | None = None
+    send_last_frame: bool | None = None
+
+
+@dataclass(kw_only=True, slots=True)
+class StartScreenRecordingParams(CDPModel):
+    """
+    Starts screencast video recording.
+    """
+
+    audio: bool | None = None
+    max_width: int | None = None
+    max_height: int | None = None
+    frame_rate: int | None = None
+
+
+@dataclass(kw_only=True, slots=True)
+class StartScreenRecordingResult(CDPModel):
+    stream: io.StreamHandle
+
+
+@dataclass(kw_only=True, slots=True)
+class StopScreenRecordingResult(CDPModel):
+    stream: io.StreamHandle
 
 
 @dataclass(kw_only=True, slots=True)

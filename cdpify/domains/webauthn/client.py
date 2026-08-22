@@ -284,6 +284,9 @@ class WebAuthnClient:
         credential_id: str,
         backup_eligibility: bool | None = None,
         backup_state: bool | None = None,
+        active_cmtg_key_index: int | None = None,
+        generate_cmtg_key_on_next_operation: bool | None = None,
+        sign_count: int | None = None,
         session_id: str | None = None,
     ) -> dict[str, Any]:
         """
@@ -295,6 +298,9 @@ class WebAuthnClient:
             credential_id=credential_id,
             backup_eligibility=backup_eligibility,
             backup_state=backup_state,
+            active_cmtg_key_index=active_cmtg_key_index,
+            generate_cmtg_key_on_next_operation=generate_cmtg_key_on_next_operation,
+            sign_count=sign_count,
         )
 
         result = await self._command_sender.send_raw(

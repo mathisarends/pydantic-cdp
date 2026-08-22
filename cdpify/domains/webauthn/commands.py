@@ -170,3 +170,6 @@ class SetCredentialPropertiesParams(CDPModel):
     credential_id: str
     backup_eligibility: bool | None = None
     backup_state: bool | None = None
+    active_cmtg_key_index: int | None = None
+    generate_cmtg_key_on_next_operation: bool | None = None
+    sign_count: int | None = None

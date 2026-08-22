@@ -78,3 +78,5 @@ class StartParams(CDPModel):
     trace_config: TraceConfig | None = None
     perfetto_config: str | None = None
     tracing_backend: TracingBackend | None = None
+    screenshot_max_size: int | None = None
+    screenshot_max_count: int | None = None

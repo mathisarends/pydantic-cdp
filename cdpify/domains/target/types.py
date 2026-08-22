@@ -32,6 +32,7 @@ class TargetInfo(CDPModel):
     parent_frame_id: page.FrameId | None = None
     browser_context_id: browser.BrowserContextID | None = None
     subtype: str | None = None
+    embedder_data: dict[str, Any] | None = None
 
 
 @dataclass(kw_only=True, slots=True)

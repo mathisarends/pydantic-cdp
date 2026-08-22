@@ -125,7 +125,6 @@ type MixedContentResolutionStatus = Literal[
 ]
 
 type MixedContentResourceType = Literal[
-    "AttributionSrc",
     "Audio",
     "Beacon",
     "CSPReport",
@@ -270,30 +269,6 @@ class CorsIssueDetails(CDPModel):
     client_security_state: network.ClientSecurityState | None = None
 
 
-type AttributionReportingIssueType = Literal[
-    "PermissionPolicyDisabled",
-    "UntrustworthyReportingOrigin",
-    "InsecureContext",
-    "InvalidHeader",
-    "InvalidRegisterTriggerHeader",
-    "SourceAndTriggerHeaders",
-    "SourceIgnored",
-    "TriggerIgnored",
-    "OsSourceIgnored",
-    "OsTriggerIgnored",
-    "InvalidRegisterOsSourceHeader",
-    "InvalidRegisterOsTriggerHeader",
-    "WebAndOsHeaders",
-    "NoWebOrOsSupport",
-    "NavigationRegistrationWithoutTransientUserActivation",
-    "InvalidInfoHeader",
-    "NoRegisterSourceHeader",
-    "NoRegisterTriggerHeader",
-    "NoRegisterOsSourceHeader",
-    "NoRegisterOsTriggerHeader",
-    "NavigationRegistrationUniqueScopeAlreadySet",
-]
-
 type SharedDictionaryError = Literal[
     "UseErrorCrossOriginNoCorsRequest",
     "UseErrorDictionaryLoadFailure",
@@ -314,6 +289,7 @@ type SharedDictionaryError = Literal[
     "WriteErrorNonSecureContext",
     "WriteErrorNonStringIdField",
     "WriteErrorNonStringInMatchDestList",
+    "WriteErrorInvalidMatchDestList",
     "WriteErrorNonStringMatchField",
     "WriteErrorNonTokenTypeField",
     "WriteErrorRequestAborted",
@@ -344,6 +320,10 @@ type SRIMessageSignatureError = Literal[
     "ValidationFailedInvalidLength",
     "ValidationFailedSignatureMismatch",
     "ValidationFailedIntegrityMismatch",
+    "SignatureBaseUnknownDerivedComponent",
+    "SignatureBaseMissingHeader",
+    "SignatureBaseInvalidUnencodedDigest",
+    "SignatureBaseUnsupportedComponent",
 ]
 
 type UnencodedDigestError = Literal[
@@ -360,20 +340,10 @@ type ConnectionAllowlistError = Literal[
     "InvalidAllowlistItemType",
     "ReportingEndpointNotToken",
     "InvalidUrlPattern",
+    "IFrameAttributeLoosensEmbeddingRequirement",
+    "InvalidAllowConnectionAllowlistFrom",
+    "EmbeddingRequirementNotSatisfied",
 ]
-
-
-@dataclass(kw_only=True, slots=True)
-class AttributionReportingIssueDetails(CDPModel):
-    """
-    Details for issues around "Attribution Reporting API" usage. Explainer:
-    https://github.com/WICG/attribution-reporting-api
-    """
-
-    violation_type: AttributionReportingIssueType
-    request: AffectedRequest | None = None
-    violating_node_id: dom.BackendNodeId | None = None
-    invalid_parameter: str | None = None
 
 
 @dataclass(kw_only=True, slots=True)
@@ -435,6 +405,7 @@ type GenericIssueErrorType = Literal[
     "FormInputHasWrongButWellIntendedAutocompleteValueError",
     "ResponseWasBlockedByORB",
     "NavigationEntryMarkedSkippable",
+    "BackUINavigationWouldSkipAd",
     "AutofillAndManualTextPolicyControlledFeaturesInfo",
     "AutofillPolicyControlledFeatureInfo",
     "ManualTextPolicyControlledFeatureInfo",
@@ -521,6 +492,7 @@ type FederatedAuthRequestIssueReason = Literal[
     "TooManyRequests",
     "WellKnownHttpNotFound",
     "WellKnownNoResponse",
+    "WellKnownBlockedByConnectionAllowlist",
     "WellKnownInvalidResponse",
     "WellKnownListEmpty",
     "WellKnownInvalidContentType",
@@ -528,6 +500,7 @@ type FederatedAuthRequestIssueReason = Literal[
     "WellKnownTooBig",
     "ConfigHttpNotFound",
     "ConfigNoResponse",
+    "ConfigBlockedByConnectionAllowlist",
     "ConfigInvalidResponse",
     "ConfigInvalidContentType",
     "IdpNotPotentiallyTrustworthy",
@@ -537,11 +510,13 @@ type FederatedAuthRequestIssueReason = Literal[
     "InvalidSigninResponse",
     "AccountsHttpNotFound",
     "AccountsNoResponse",
+    "AccountsBlockedByConnectionAllowlist",
     "AccountsInvalidResponse",
     "AccountsListEmpty",
     "AccountsInvalidContentType",
     "IdTokenHttpNotFound",
     "IdTokenNoResponse",
+    "IdTokenBlockedByConnectionAllowlist",
     "IdTokenInvalidResponse",
     "IdTokenIdpErrorResponse",
     "IdTokenCrossSiteIdpErrorResponse",
@@ -584,6 +559,77 @@ type FederatedAuthUserInfoRequestIssueReason = Literal[
     "InvalidConfigOrWellKnown",
     "InvalidAccountsResponse",
     "NoReturningUserFromFetchedAccounts",
+]
+
+
+@dataclass(kw_only=True, slots=True)
+class EmailVerificationRequestIssueDetails(CDPModel):
+    email_verification_request_issue_reason: EmailVerificationRequestIssueReason
+
+
+"""
+Represents the failure reason when an email verification request fails. Should be
+updated alongside EmailVerificationRequestResult in
+third_party/blink/public/mojom/devtools/inspector_issue.mojom.
+"""
+type EmailVerificationRequestIssueReason = Literal[
+    "InvalidEmail",
+    "DnsFetchFailed",
+    "DnsInvalidRecord",
+    "WellKnownHttpNotFound",
+    "WellKnownNoResponse",
+    "WellKnownInvalidResponse",
+    "WellKnownListEmpty",
+    "WellKnownInvalidContentType",
+    "WellKnownMissingIssuanceEndpoint",
+    "WellKnownIssuanceEndpointCrossOrigin",
+    "WellKnownUnsupportedSigningAlgorithm",
+    "TokenHttpNotFound",
+    "TokenNoResponse",
+    "TokenInvalidResponse",
+    "TokenInvalidContentType",
+    "TokenMalformedSdJwt",
+    "TokenInvalidSdJwt",
+    "KeyBindingSigningFailed",
+    "RpOriginIsOpaque",
+    "WellKnownMissingAccountsEndpoint",
+    "UserLoggedOut",
+    "WellKnownAccountsEndpointCrossOrigin",
+    "AccountsHttpNotFound",
+    "AccountsNoResponse",
+    "AccountsInvalidResponse",
+    "AccountsInvalidContentType",
+    "AccountsEmptyList",
+    "EmailVerificationWellKnownHttpNotFound",
+    "EmailVerificationWellKnownNoResponse",
+    "EmailVerificationWellKnownInvalidResponse",
+    "EmailVerificationWellKnownInvalidContentType",
+    "JwksHttpNotFound",
+    "JwksInvalidResponse",
+    "TokenVerificationSdJwtUnsupportedHeaderAlg",
+    "TokenVerificationSdJwtInvalidTyp",
+    "TokenVerificationSdJwtMissingIss",
+    "TokenVerificationSdJwtMissingIat",
+    "TokenVerificationSdJwtMissingCnf",
+    "TokenVerificationSdJwtMissingEmail",
+    "TokenVerificationSdJwtInvalidIssuedAt",
+    "TokenVerificationSdJwtInvalidIssuer",
+    "TokenVerificationSdJwtJwksMissingKeys",
+    "TokenVerificationSdJwtSignatureFailed",
+    "TokenVerificationSdJwtInvalidEmailVerified",
+    "TokenVerificationSdJwtInvalidEmail",
+    "TokenVerificationSdJwtInvalidHolderKey",
+    "TokenVerificationKbInvalidTyp",
+    "TokenVerificationKbMissingAud",
+    "TokenVerificationKbMissingNonce",
+    "TokenVerificationKbMissingIat",
+    "TokenVerificationKbMissingSdHash",
+    "TokenVerificationKbInvalidIssuedAt",
+    "TokenVerificationKbInvalidAudience",
+    "TokenVerificationKbInvalidNonce",
+    "TokenVerificationKbInvalidSdHash",
+    "TokenVerificationKbMissingCnf",
+    "TokenVerificationKbSignatureFailed",
 ]
 
 
@@ -707,6 +753,8 @@ type PermissionElementIssueType = Literal[
     "FontSizeTooSmall",
     "FontSizeTooLarge",
     "InvalidSizeValue",
+    "NonSecureContext",
+    "MissingTransientUserActivation",
 ]
 
 
@@ -738,6 +786,17 @@ class SelectivePermissionsInterventionIssueDetails(CDPModel):
     stack_trace: runtime.StackTrace | None = None
 
 
+@dataclass(kw_only=True, slots=True)
+class LazyLoadImageIssueDetails(CDPModel):
+    """
+    Details for issues about lazy-loaded images without explicit dimensions.
+    """
+
+    node_id: dom.BackendNodeId
+    url: str
+    frame_id: page.FrameId
+
+
 """
 A unique identifier for the type of issue. Each type may use one of the optional fields
 in InspectorIssueDetails to convey more specific information about the kind of issue.
@@ -750,7 +809,6 @@ type InspectorIssueCode = Literal[
     "ContentSecurityPolicyIssue",
     "SharedArrayBufferIssue",
     "CorsIssue",
-    "AttributionReportingIssue",
     "QuirksModeIssue",
     "PartitioningBlobURLIssue",
     "NavigatorUserAgentIssue",
@@ -772,6 +830,8 @@ type InspectorIssueCode = Literal[
     "PermissionElementIssue",
     "PerformanceIssue",
     "SelectivePermissionsInterventionIssue",
+    "EmailVerificationRequestIssue",
+    "LazyLoadImageIssue",
 ]
 
 
@@ -792,7 +852,6 @@ class InspectorIssueDetails(CDPModel):
     )
     shared_array_buffer_issue_details: SharedArrayBufferIssueDetails | None = None
     cors_issue_details: CorsIssueDetails | None = None
-    attribution_reporting_issue_details: AttributionReportingIssueDetails | None = None
     quirks_mode_issue_details: QuirksModeIssueDetails | None = None
     partitioning_blob_url_issue_details: PartitioningBlobURLIssueDetails | None = None
     navigator_user_agent_issue_details: NavigatorUserAgentIssueDetails | None = None
@@ -820,6 +879,10 @@ class InspectorIssueDetails(CDPModel):
     selective_permissions_intervention_issue_details: (
         SelectivePermissionsInterventionIssueDetails | None
     ) = None
+    email_verification_request_issue_details: (
+        EmailVerificationRequestIssueDetails | None
+    ) = None
+    lazy_load_image_issue_details: LazyLoadImageIssueDetails | None = None
 
 
 """

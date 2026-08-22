@@ -10,12 +10,12 @@ from cdpify.shared.command_sender import CDPCommandSender
 from cdpify.shared.decorators import deprecated
 
 from .commands import (
-    AddPrivacySandboxCoordinatorKeyConfigParams,
     AddPrivacySandboxEnrollmentOverrideParams,
     BrowserCommand,
     CancelDownloadParams,
     ExecuteBrowserCommandParams,
     GetBrowserCommandLineResult,
+    GetGlobalPrivacyControlResult,
     GetHistogramParams,
     GetHistogramResult,
     GetHistogramsParams,
@@ -30,6 +30,8 @@ from .commands import (
     SetContentsSizeParams,
     SetDockTileParams,
     SetDownloadBehaviorParams,
+    SetGlobalPrivacyControlParams,
+    SetGlobalPrivacyControlResult,
     SetPermissionParams,
     SetWindowBoundsParams,
 )
@@ -40,7 +42,6 @@ from .types import (
     PermissionDescriptor,
     PermissionSetting,
     PermissionType,
-    PrivacySandboxAPI,
     WindowID,
 )
 
@@ -409,31 +410,36 @@ class BrowserClient:
         )
         return result
 
-    async def add_privacy_sandbox_coordinator_key_config(
+    async def get_global_privacy_control(
+        self,
+        session_id: str | None = None,
+    ) -> GetGlobalPrivacyControlResult:
+        """
+        Gets the current globally-applied privacy control status See
+        https://www.w3.org/TR/gpc/#get-global-privacy-control
+        """
+        result = await self._command_sender.send_raw(
+            method=BrowserCommand.GET_GLOBAL_PRIVACY_CONTROL,
+            params=None,
+            session_id=session_id,
+        )
+        return GetGlobalPrivacyControlResult.from_cdp(result)
+
+    async def set_global_privacy_control(
         self,
         *,
-        api: PrivacySandboxAPI,
-        coordinator_origin: str,
-        key_config: str,
-        browser_context_id: BrowserContextID | None = None,
+        gpc: bool,
         session_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> SetGlobalPrivacyControlResult:
         """
-        Configures encryption keys used with a given privacy sandbox API to talk to a
-        trusted coordinator. Since this is intended for test automation only,
-        coordinatorOrigin must be a .test domain. No existing coordinator configuration
-        for the origin may exist.
+        Sets and then gets the current globally-applied privacy control status See
+        https://www.w3.org/TR/gpc/#set-global-privacy-control
         """
-        params = AddPrivacySandboxCoordinatorKeyConfigParams(
-            api=api,
-            coordinator_origin=coordinator_origin,
-            key_config=key_config,
-            browser_context_id=browser_context_id,
-        )
+        params = SetGlobalPrivacyControlParams(gpc=gpc)
 
         result = await self._command_sender.send_raw(
-            method=BrowserCommand.ADD_PRIVACY_SANDBOX_COORDINATOR_KEY_CONFIG,
+            method=BrowserCommand.SET_GLOBAL_PRIVACY_CONTROL,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
-        return result
+        return SetGlobalPrivacyControlResult.from_cdp(result)

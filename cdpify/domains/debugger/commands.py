@@ -100,6 +100,7 @@ class EvaluateOnCallFrameParams(CDPModel):
     generate_preview: bool | None = None
     throw_on_side_effect: bool | None = None
     timeout: runtime.TimeDelta | None = None
+    scope_number: int | None = None
 
 
 @dataclass(kw_only=True, slots=True)
@@ -414,11 +415,8 @@ class SetReturnValueParams(CDPModel):
 @dataclass(kw_only=True, slots=True)
 class SetScriptSourceParams(CDPModel):
     """
-    Edits JavaScript source live. In general, functions that are currently on the stack
-    can not be edited with a single exception: If the edited function is the top-most
-    stack frame and that is the only activation of that function on the stack. In this
-    case the live edit will be successful and a `Debugger.restartFrame` for the top-most
-    function is automatically triggered.
+    Live edit is no longer supported and this command always fails with a "no longer
+    available" error.
     """
 
     script_id: runtime.ScriptId

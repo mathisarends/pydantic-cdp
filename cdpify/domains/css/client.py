@@ -7,6 +7,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from cdpify.shared.command_sender import CDPCommandSender
+from cdpify.shared.decorators import deprecated
 
 from .commands import (
     AddRuleParams,
@@ -42,6 +43,8 @@ from .commands import (
     GetStyleSheetTextResult,
     ResolveValuesParams,
     ResolveValuesResult,
+    SetContainerQueryConditionTextParams,
+    SetContainerQueryConditionTextResult,
     SetContainerQueryTextParams,
     SetContainerQueryTextResult,
     SetEffectivePropertyValueForNodeParams,
@@ -620,6 +623,7 @@ class CSSClient:
         )
         return SetMediaTextResult.from_cdp(result)
 
+    @deprecated()
     async def set_container_query_text(
         self,
         *,
@@ -629,7 +633,8 @@ class CSSClient:
         session_id: str | None = None,
     ) -> SetContainerQueryTextResult:
         """
-        Modifies the expression of a container query.
+        Modifies the expression of a container query. Deprecated. Use
+        setContainerQueryConditionText instead.
         """
         params = SetContainerQueryTextParams(
             style_sheet_id=style_sheet_id, range=range, text=text
@@ -641,6 +646,25 @@ class CSSClient:
             session_id=session_id,
         )
         return SetContainerQueryTextResult.from_cdp(result)
+
+    async def set_container_query_condition_text(
+        self,
+        *,
+        style_sheet_id: dom.StyleSheetId,
+        range: SourceRange,
+        text: str,
+        session_id: str | None = None,
+    ) -> SetContainerQueryConditionTextResult:
+        params = SetContainerQueryConditionTextParams(
+            style_sheet_id=style_sheet_id, range=range, text=text
+        )
+
+        result = await self._command_sender.send_raw(
+            method=CSSCommand.SET_CONTAINER_QUERY_CONDITION_TEXT,
+            params=params.to_cdp_params(),
+            session_id=session_id,
+        )
+        return SetContainerQueryConditionTextResult.from_cdp(result)
 
     async def set_supports_text(
         self,

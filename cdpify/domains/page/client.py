@@ -74,6 +74,9 @@ from .commands import (
     SetTouchEmulationEnabledParams,
     SetWebLifecycleStateParams,
     StartScreencastParams,
+    StartScreenRecordingParams,
+    StartScreenRecordingResult,
+    StopScreenRecordingResult,
 )
 from .types import (
     CompilationCacheParams,
@@ -255,6 +258,7 @@ class PageClient:
         frame_id: FrameId,
         world_name: str | None = None,
         grant_univeral_access: bool | None = None,
+        content_security_policy: str | None = None,
         session_id: str | None = None,
     ) -> CreateIsolatedWorldResult:
         """
@@ -264,6 +268,7 @@ class PageClient:
             frame_id=frame_id,
             world_name=world_name,
             grant_univeral_access=grant_univeral_access,
+            content_security_policy=content_security_policy,
         )
 
         result = await self._command_sender.send_raw(
@@ -1010,6 +1015,8 @@ class PageClient:
         max_width: int | None = None,
         max_height: int | None = None,
         every_nth_frame: int | None = None,
+        max_frames_in_flight: int | None = None,
+        send_last_frame: bool | None = None,
         session_id: str | None = None,
     ) -> dict[str, Any]:
         """
@@ -1021,6 +1028,8 @@ class PageClient:
             max_width=max_width,
             max_height=max_height,
             every_nth_frame=every_nth_frame,
+            max_frames_in_flight=max_frames_in_flight,
+            send_last_frame=send_last_frame,
         )
 
         result = await self._command_sender.send_raw(
@@ -1029,6 +1038,46 @@ class PageClient:
             session_id=session_id,
         )
         return result
+
+    async def start_screen_recording(
+        self,
+        *,
+        audio: bool | None = None,
+        max_width: int | None = None,
+        max_height: int | None = None,
+        frame_rate: int | None = None,
+        session_id: str | None = None,
+    ) -> StartScreenRecordingResult:
+        """
+        Starts screencast video recording.
+        """
+        params = StartScreenRecordingParams(
+            audio=audio,
+            max_width=max_width,
+            max_height=max_height,
+            frame_rate=frame_rate,
+        )
+
+        result = await self._command_sender.send_raw(
+            method=PageCommand.START_SCREEN_RECORDING,
+            params=params.to_cdp_params(),
+            session_id=session_id,
+        )
+        return StartScreenRecordingResult.from_cdp(result)
+
+    async def stop_screen_recording(
+        self,
+        session_id: str | None = None,
+    ) -> StopScreenRecordingResult:
+        """
+        Stops screencast video recording.
+        """
+        result = await self._command_sender.send_raw(
+            method=PageCommand.STOP_SCREEN_RECORDING,
+            params=None,
+            session_id=session_id,
+        )
+        return StopScreenRecordingResult.from_cdp(result)
 
     async def stop_loading(
         self,

@@ -20,6 +20,7 @@ from .commands import (
     DOMCommand,
     EnableParams,
     FocusParams,
+    ForceShowInterestParams,
     ForceShowPopoverParams,
     ForceShowPopoverResult,
     GetAnchorElementParams,
@@ -1158,13 +1159,16 @@ class DOMClient:
         *,
         node_id: NodeId,
         enable: bool,
+        invoker_node_id: BackendNodeId | None = None,
         session_id: str | None = None,
     ) -> ForceShowPopoverResult:
         """
         When enabling, this API force-opens the popover identified by nodeId and keeps
         it open until disabled.
         """
-        params = ForceShowPopoverParams(node_id=node_id, enable=enable)
+        params = ForceShowPopoverParams(
+            node_id=node_id, enable=enable, invoker_node_id=invoker_node_id
+        )
 
         result = await self._command_sender.send_raw(
             method=DOMCommand.FORCE_SHOW_POPOVER,
@@ -1172,3 +1176,23 @@ class DOMClient:
             session_id=session_id,
         )
         return ForceShowPopoverResult.from_cdp(result)
+
+    async def force_show_interest(
+        self,
+        *,
+        node_id: NodeId,
+        enable: bool,
+        session_id: str | None = None,
+    ) -> dict[str, Any]:
+        """
+        When enabling, this API forces an element to gain interest in its target,
+        keeping interest active until disabled.
+        """
+        params = ForceShowInterestParams(node_id=node_id, enable=enable)
+
+        result = await self._command_sender.send_raw(
+            method=DOMCommand.FORCE_SHOW_INTEREST,
+            params=params.to_cdp_params(),
+            session_id=session_id,
+        )
+        return result

@@ -44,6 +44,9 @@ class EmulationCommand(StrEnum):
         "Emulation.setDefaultBackgroundColorOverride"
     )
     SET_SAFE_AREA_INSETS_OVERRIDE = "Emulation.setSafeAreaInsetsOverride"
+    SET_VIRTUAL_KEYBOARD_GEOMETRY_OVERRIDE = (
+        "Emulation.setVirtualKeyboardGeometryOverride"
+    )
     SET_DEVICE_METRICS_OVERRIDE = "Emulation.setDeviceMetricsOverride"
     SET_DEVICE_POSTURE_OVERRIDE = "Emulation.setDevicePostureOverride"
     CLEAR_DEVICE_POSTURE_OVERRIDE = "Emulation.clearDevicePostureOverride"
@@ -61,7 +64,6 @@ class EmulationCommand(StrEnum):
     SET_SENSOR_OVERRIDE_READINGS = "Emulation.setSensorOverrideReadings"
     SET_PRESSURE_SOURCE_OVERRIDE_ENABLED = "Emulation.setPressureSourceOverrideEnabled"
     SET_PRESSURE_STATE_OVERRIDE = "Emulation.setPressureStateOverride"
-    SET_PRESSURE_DATA_OVERRIDE = "Emulation.setPressureDataOverride"
     SET_IDLE_OVERRIDE = "Emulation.setIdleOverride"
     CLEAR_IDLE_OVERRIDE = "Emulation.clearIdleOverride"
     SET_NAVIGATOR_OVERRIDES = "Emulation.setNavigatorOverrides"
@@ -75,6 +77,7 @@ class EmulationCommand(StrEnum):
     SET_DISABLED_IMAGE_TYPES = "Emulation.setDisabledImageTypes"
     SET_DATA_SAVER_OVERRIDE = "Emulation.setDataSaverOverride"
     SET_HARDWARE_CONCURRENCY_OVERRIDE = "Emulation.setHardwareConcurrencyOverride"
+    SET_CPU_PERFORMANCE_OVERRIDE = "Emulation.setCPUPerformanceOverride"
     SET_USER_AGENT_OVERRIDE = "Emulation.setUserAgentOverride"
     SET_AUTOMATION_OVERRIDE = "Emulation.setAutomationOverride"
     SET_SMALL_VIEWPORT_HEIGHT_DIFFERENCE_OVERRIDE = (
@@ -138,6 +141,20 @@ class SetSafeAreaInsetsOverrideParams(CDPModel):
     """
 
     insets: SafeAreaInsets
+
+
+@dataclass(kw_only=True, slots=True)
+class SetVirtualKeyboardGeometryOverrideParams(CDPModel):
+    """
+    Overrides virtual keyboard geometry in CSS pixels, relative to the top-level
+    viewport. The provided rect is used for navigator.virtualKeyboard.boundingRect,
+    geometrychange events, and env(keyboard-inset-*) values on the inspected frame. The
+    override applies independently of navigator.virtualKeyboard.overlaysContent so
+    clients can preview overlay geometry without mutating page state. Values are rounded
+    to the nearest CSS pixel. Omitting the rect clears the override.
+    """
+
+    keyboard_rect: dom.Rect | None = None
 
 
 @dataclass(kw_only=True, slots=True)
@@ -307,27 +324,13 @@ class SetPressureSourceOverrideEnabledParams(CDPModel):
 @dataclass(kw_only=True, slots=True)
 class SetPressureStateOverrideParams(CDPModel):
     """
-    TODO: OBSOLETE: To remove when setPressureDataOverride is merged. Provides a given
-    pressure state that will be processed and eventually be delivered to
-    PressureObserver users. |source| must have been previously overridden by
+    Provides a given pressure state that will be processed and eventually be delivered
+    to PressureObserver users. |source| must have been previously overridden by
     setPressureSourceOverrideEnabled.
     """
 
     source: PressureSource
     state: PressureState
-
-
-@dataclass(kw_only=True, slots=True)
-class SetPressureDataOverrideParams(CDPModel):
-    """
-    Provides a given pressure data set that will be processed and eventually be
-    delivered to PressureObserver users. |source| must have been previously overridden
-    by setPressureSourceOverrideEnabled.
-    """
-
-    source: PressureSource
-    state: PressureState
-    own_contribution_estimate: float | None = None
 
 
 @dataclass(kw_only=True, slots=True)
@@ -443,6 +446,15 @@ class SetDataSaverOverrideParams(CDPModel):
 @dataclass(kw_only=True, slots=True)
 class SetHardwareConcurrencyOverrideParams(CDPModel):
     hardware_concurrency: int
+
+
+@dataclass(kw_only=True, slots=True)
+class SetCPUPerformanceOverrideParams(CDPModel):
+    """
+    Overrides the value of navigator.cpuPerformance
+    """
+
+    performance_tier: Literal["unknown", "low", "mid", "high", "ultra"] | None = None
 
 
 @dataclass(kw_only=True, slots=True)

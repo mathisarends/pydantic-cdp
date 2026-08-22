@@ -7,7 +7,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Literal
 
-from cdpify.domains import network, target
+from cdpify.domains import network
 from cdpify.shared.models import CDPModel
 
 SerializedStorageKey = str
@@ -24,8 +24,6 @@ type StorageType = Literal[
     "websql",
     "service_workers",
     "cache_storage",
-    "interest_groups",
-    "shared_storage",
     "storage_buckets",
     "all",
     "other",
@@ -51,150 +49,6 @@ class TrustTokens(CDPModel):
 
     issuer_origin: str
     count: float
-
-
-"""
-Protected audience interest group auction identifier.
-"""
-InterestGroupAuctionId = str
-
-"""
-Enum of interest group access types.
-"""
-type InterestGroupAccessType = Literal[
-    "join",
-    "leave",
-    "update",
-    "loaded",
-    "bid",
-    "win",
-    "additionalBid",
-    "additionalBidWin",
-    "topLevelBid",
-    "topLevelAdditionalBid",
-    "clear",
-]
-
-"""
-Enum of auction events.
-"""
-type InterestGroupAuctionEventType = Literal["started", "configResolved"]
-
-"""
-Enum of network fetches auctions can do.
-"""
-type InterestGroupAuctionFetchType = Literal[
-    "bidderJs", "bidderWasm", "sellerJs", "bidderTrustedSignals", "sellerTrustedSignals"
-]
-
-"""
-Enum of shared storage access scopes.
-"""
-type SharedStorageAccessScope = Literal[
-    "window", "sharedStorageWorklet", "protectedAudienceWorklet", "header"
-]
-
-"""
-Enum of shared storage access methods.
-"""
-type SharedStorageAccessMethod = Literal[
-    "addModule",
-    "createWorklet",
-    "selectURL",
-    "run",
-    "batchUpdate",
-    "set",
-    "append",
-    "delete",
-    "clear",
-    "get",
-    "keys",
-    "values",
-    "entries",
-    "length",
-    "remainingBudget",
-]
-
-
-@dataclass(kw_only=True, slots=True)
-class SharedStorageEntry(CDPModel):
-    """
-    Struct for a single key-value pair in an origin's shared storage.
-    """
-
-    key: str
-    value: str
-
-
-@dataclass(kw_only=True, slots=True)
-class SharedStorageMetadata(CDPModel):
-    """
-    Details for an origin's shared storage.
-    """
-
-    creation_time: network.TimeSinceEpoch
-    length: int
-    remaining_budget: float
-    bytes_used: int
-
-
-@dataclass(kw_only=True, slots=True)
-class SharedStoragePrivateAggregationConfig(CDPModel):
-    """
-    Represents a dictionary object passed in as privateAggregationConfig to run or
-    selectURL.
-    """
-
-    aggregation_coordinator_origin: str | None = None
-    context_id: str | None = None
-    filtering_id_max_bytes: int
-    max_contributions: int | None = None
-
-
-@dataclass(kw_only=True, slots=True)
-class SharedStorageReportingMetadata(CDPModel):
-    """
-    Pair of reporting metadata details for a candidate URL for `selectURL()`.
-    """
-
-    event_type: str
-    reporting_url: str
-
-
-@dataclass(kw_only=True, slots=True)
-class SharedStorageUrlWithMetadata(CDPModel):
-    """
-    Bundles a candidate URL with its reporting metadata.
-    """
-
-    url: str
-    reporting_metadata: list[SharedStorageReportingMetadata]
-
-
-@dataclass(kw_only=True, slots=True)
-class SharedStorageAccessParams(CDPModel):
-    """
-    Bundles the parameters for shared storage access events whose presence/absence can
-    vary according to SharedStorageAccessType.
-    """
-
-    script_source_url: str | None = None
-    data_origin: str | None = None
-    operation_name: str | None = None
-    operation_id: str | None = None
-    keep_alive: bool | None = None
-    private_aggregation_config: SharedStoragePrivateAggregationConfig | None = None
-    serialized_data: str | None = None
-    urls_with_metadata: list[SharedStorageUrlWithMetadata] | None = None
-    urn_uuid: str | None = None
-    key: str | None = None
-    value: str | None = None
-    ignore_if_present: bool | None = None
-    worklet_ordinal: int | None = None
-    worklet_target_id: target.TargetID | None = None
-    with_lock: str | None = None
-    batch_update_id: str | None = None
-    batch_size: int | None = None
 
 
 type StorageBucketsDurability = Literal["relaxed", "strict"]

@@ -14,6 +14,7 @@ from cdpify.shared.models import CDPModel
 from .types import (
     ColorFormat,
     ContainerQueryHighlightConfig,
+    DisplayCutoutConfig,
     FlexNodeHighlightConfig,
     GridNodeHighlightConfig,
     HighlightConfig,
@@ -58,6 +59,7 @@ class OverlayCommand(StrEnum):
     SET_SHOW_WEB_VITALS = "Overlay.setShowWebVitals"
     SET_SHOW_VIEWPORT_SIZE_ON_RESIZE = "Overlay.setShowViewportSizeOnResize"
     SET_SHOW_HINGE = "Overlay.setShowHinge"
+    SET_SHOW_DISPLAY_CUTOUT = "Overlay.setShowDisplayCutout"
     SET_SHOW_ISOLATED_ELEMENTS = "Overlay.setShowIsolatedElements"
     SET_SHOW_WINDOW_CONTROLS_OVERLAY = "Overlay.setShowWindowControlsOverlay"
 
@@ -311,6 +313,15 @@ class SetShowHingeParams(CDPModel):
     """
 
     hinge_config: HingeConfig | None = None
+
+
+@dataclass(kw_only=True, slots=True)
+class SetShowDisplayCutoutParams(CDPModel):
+    """
+    Add a display cutout overlay.
+    """
+
+    display_cutout_config: DisplayCutoutConfig | None = None
 
 
 @dataclass(kw_only=True, slots=True)

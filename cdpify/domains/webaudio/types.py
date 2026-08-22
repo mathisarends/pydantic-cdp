@@ -75,6 +75,7 @@ class BaseAudioContext(CDPModel):
     callback_buffer_size: float
     max_output_channel_count: float
     sample_rate: float
+    render_quantum_size: float
 
 
 @dataclass(kw_only=True, slots=True)

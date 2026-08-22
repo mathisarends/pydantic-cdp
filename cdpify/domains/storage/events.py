@@ -6,19 +6,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import StrEnum
-from typing import Any
 
-from cdpify.domains import network, page, target
 from cdpify.shared.models import CDPEvent
 
 from .types import (
-    InterestGroupAccessType,
-    InterestGroupAuctionEventType,
-    InterestGroupAuctionFetchType,
-    InterestGroupAuctionId,
-    SharedStorageAccessMethod,
-    SharedStorageAccessParams,
-    SharedStorageAccessScope,
     StorageBucketInfo,
 )
 
@@ -28,15 +19,6 @@ class StorageEvent(StrEnum):
     CACHE_STORAGE_LIST_UPDATED = "Storage.cacheStorageListUpdated"
     INDEXED_DB_CONTENT_UPDATED = "Storage.indexedDBContentUpdated"
     INDEXED_DB_LIST_UPDATED = "Storage.indexedDBListUpdated"
-    INTEREST_GROUP_ACCESSED = "Storage.interestGroupAccessed"
-    INTEREST_GROUP_AUCTION_EVENT_OCCURRED = "Storage.interestGroupAuctionEventOccurred"
-    INTEREST_GROUP_AUCTION_NETWORK_REQUEST_CREATED = (
-        "Storage.interestGroupAuctionNetworkRequestCreated"
-    )
-    SHARED_STORAGE_ACCESSED = "Storage.sharedStorageAccessed"
-    SHARED_STORAGE_WORKLET_OPERATION_EXECUTION_FINISHED = (
-        "Storage.sharedStorageWorkletOperationExecutionFinished"
-    )
     STORAGE_BUCKET_CREATED_OR_UPDATED = "Storage.storageBucketCreatedOrUpdated"
     STORAGE_BUCKET_DELETED = "Storage.storageBucketDeleted"
 
@@ -86,82 +68,6 @@ class IndexedDBListUpdatedEvent(CDPEvent):
     origin: str
     storage_key: str
     bucket_id: str
-
-
-@dataclass(kw_only=True, slots=True)
-class InterestGroupAccessedEvent(CDPEvent):
-    """
-    One of the interest groups was accessed. Note that these events are global to all
-    targets sharing an interest group store.
-    """
-
-    access_time: network.TimeSinceEpoch
-    type: InterestGroupAccessType
-    owner_origin: str
-    name: str
-    component_seller_origin: str | None = None
-    bid: float | None = None
-    bid_currency: str | None = None
-    unique_auction_id: InterestGroupAuctionId | None = None
-
-
-@dataclass(kw_only=True, slots=True)
-class InterestGroupAuctionEventOccurredEvent(CDPEvent):
-    """
-    An auction involving interest groups is taking place. These events are
-    target-specific.
-    """
-
-    event_time: network.TimeSinceEpoch
-    type: InterestGroupAuctionEventType
-    unique_auction_id: InterestGroupAuctionId
-    parent_auction_id: InterestGroupAuctionId | None = None
-    auction_config: dict[str, Any] | None = None
-
-
-@dataclass(kw_only=True, slots=True)
-class InterestGroupAuctionNetworkRequestCreatedEvent(CDPEvent):
-    """
-    Specifies which auctions a particular network fetch may be related to, and in what
-    role. Note that it is not ordered with respect to Network.requestWillBeSent (but
-    will happen before loadingFinished loadingFailed).
-    """
-
-    type: InterestGroupAuctionFetchType
-    request_id: network.RequestId
-    auctions: list[InterestGroupAuctionId]
-
-
-@dataclass(kw_only=True, slots=True)
-class SharedStorageAccessedEvent(CDPEvent):
-    """
-    Shared storage was accessed by the associated page. The following parameters are
-    included in all events.
-    """
-
-    access_time: network.TimeSinceEpoch
-    scope: SharedStorageAccessScope
-    method: SharedStorageAccessMethod
-    main_frame_id: page.FrameId
-    owner_origin: str
-    owner_site: str
-    params: SharedStorageAccessParams
-
-
-@dataclass(kw_only=True, slots=True)
-class SharedStorageWorkletOperationExecutionFinishedEvent(CDPEvent):
-    """
-    A shared storage run or selectURL operation finished its execution. The following
-    parameters are included in all events.
-    """
-
-    finished_time: network.TimeSinceEpoch
-    execution_time: int
-    method: SharedStorageAccessMethod
-    operation_id: str
-    worklet_target_id: target.TargetID
-    main_frame_id: page.FrameId
-    owner_origin: str
 
 
 @dataclass(kw_only=True, slots=True)

@@ -6,7 +6,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import StrEnum
-from typing import Any
 
 from cdpify.domains import browser, network, page
 from cdpify.shared.models import CDPModel
@@ -14,8 +13,6 @@ from cdpify.shared.models import CDPModel
 from .types import (
     RelatedWebsiteSet,
     SerializedStorageKey,
-    SharedStorageEntry,
-    SharedStorageMetadata,
     StorageBucket,
     TrustTokens,
     UsageForType,
@@ -42,21 +39,10 @@ class StorageCommand(StrEnum):
     UNTRACK_INDEXED_DB_FOR_STORAGE_KEY = "Storage.untrackIndexedDBForStorageKey"
     GET_TRUST_TOKENS = "Storage.getTrustTokens"
     CLEAR_TRUST_TOKENS = "Storage.clearTrustTokens"
-    GET_INTEREST_GROUP_DETAILS = "Storage.getInterestGroupDetails"
-    SET_INTEREST_GROUP_TRACKING = "Storage.setInterestGroupTracking"
-    SET_INTEREST_GROUP_AUCTION_TRACKING = "Storage.setInterestGroupAuctionTracking"
-    GET_SHARED_STORAGE_METADATA = "Storage.getSharedStorageMetadata"
-    GET_SHARED_STORAGE_ENTRIES = "Storage.getSharedStorageEntries"
-    SET_SHARED_STORAGE_ENTRY = "Storage.setSharedStorageEntry"
-    DELETE_SHARED_STORAGE_ENTRY = "Storage.deleteSharedStorageEntry"
-    CLEAR_SHARED_STORAGE_ENTRIES = "Storage.clearSharedStorageEntries"
-    RESET_SHARED_STORAGE_BUDGET = "Storage.resetSharedStorageBudget"
-    SET_SHARED_STORAGE_TRACKING = "Storage.setSharedStorageTracking"
     SET_STORAGE_BUCKET_TRACKING = "Storage.setStorageBucketTracking"
     DELETE_STORAGE_BUCKET = "Storage.deleteStorageBucket"
     RUN_BOUNCE_TRACKING_MITIGATIONS = "Storage.runBounceTrackingMitigations"
     GET_RELATED_WEBSITE_SETS = "Storage.getRelatedWebsiteSets"
-    SET_PROTECTED_AUDIENCE_K_ANONYMITY = "Storage.setProtectedAudienceKAnonymity"
 
 
 @dataclass(kw_only=True, slots=True)
@@ -263,117 +249,6 @@ class ClearTrustTokensResult(CDPModel):
 
 
 @dataclass(kw_only=True, slots=True)
-class GetInterestGroupDetailsParams(CDPModel):
-    """
-    Gets details for a named interest group.
-    """
-
-    owner_origin: str
-    name: str
-
-
-@dataclass(kw_only=True, slots=True)
-class GetInterestGroupDetailsResult(CDPModel):
-    details: dict[str, Any]
-
-
-@dataclass(kw_only=True, slots=True)
-class SetInterestGroupTrackingParams(CDPModel):
-    """
-    Enables/Disables issuing of interestGroupAccessed events.
-    """
-
-    enable: bool
-
-
-@dataclass(kw_only=True, slots=True)
-class SetInterestGroupAuctionTrackingParams(CDPModel):
-    """
-    Enables/Disables issuing of interestGroupAuctionEventOccurred and
-    interestGroupAuctionNetworkRequestCreated.
-    """
-
-    enable: bool
-
-
-@dataclass(kw_only=True, slots=True)
-class GetSharedStorageMetadataParams(CDPModel):
-    """
-    Gets metadata for an origin's shared storage.
-    """
-
-    owner_origin: str
-
-
-@dataclass(kw_only=True, slots=True)
-class GetSharedStorageMetadataResult(CDPModel):
-    metadata: SharedStorageMetadata
-
-
-@dataclass(kw_only=True, slots=True)
-class GetSharedStorageEntriesParams(CDPModel):
-    """
-    Gets the entries in an given origin's shared storage.
-    """
-
-    owner_origin: str
-
-
-@dataclass(kw_only=True, slots=True)
-class GetSharedStorageEntriesResult(CDPModel):
-    entries: list[SharedStorageEntry]
-
-
-@dataclass(kw_only=True, slots=True)
-class SetSharedStorageEntryParams(CDPModel):
-    """
-    Sets entry with `key` and `value` for a given origin's shared storage.
-    """
-
-    owner_origin: str
-    key: str
-    value: str
-    ignore_if_present: bool | None = None
-
-
-@dataclass(kw_only=True, slots=True)
-class DeleteSharedStorageEntryParams(CDPModel):
-    """
-    Deletes entry for `key` (if it exists) for a given origin's shared storage.
-    """
-
-    owner_origin: str
-    key: str
-
-
-@dataclass(kw_only=True, slots=True)
-class ClearSharedStorageEntriesParams(CDPModel):
-    """
-    Clears all entries for a given origin's shared storage.
-    """
-
-    owner_origin: str
-
-
-@dataclass(kw_only=True, slots=True)
-class ResetSharedStorageBudgetParams(CDPModel):
-    """
-    Resets the budget for `ownerOrigin` by clearing all budget withdrawals.
-    """
-
-    owner_origin: str
-
-
-@dataclass(kw_only=True, slots=True)
-class SetSharedStorageTrackingParams(CDPModel):
-    """
-    Enables/disables issuing of sharedStorageAccessed events.
-    """
-
-    enable: bool
-
-
-@dataclass(kw_only=True, slots=True)
 class SetStorageBucketTrackingParams(CDPModel):
     """
     Set tracking for a storage key's buckets.
@@ -400,10 +275,3 @@ class RunBounceTrackingMitigationsResult(CDPModel):
 @dataclass(kw_only=True, slots=True)
 class GetRelatedWebsiteSetsResult(CDPModel):
     sets: list[RelatedWebsiteSet]
-
-
-@dataclass(kw_only=True, slots=True)
-class SetProtectedAudienceKAnonymityParams(CDPModel):
-    owner: str
-    name: str
-    hashes: list[str]

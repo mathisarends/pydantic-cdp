@@ -34,6 +34,61 @@ type ServiceWorkerVersionStatus = Literal[
 
 
 @dataclass(kw_only=True, slots=True)
+class ServiceWorkerRouterCondition(CDPModel):
+    """
+    Mostly corresponds to `RouterCondition` in ServiceWorker spec
+    (https://www.w3.org/TR/service-workers/#dictdef-routercondition) while this
+    currently lacks support for the nested conditions ("or" and "not").
+    TODO(crbug.com/540469610): Support recursive conditions.
+    """
+
+    url_pattern: str | None = None
+    request_method: str | None = None
+    request_mode: str | None = None
+    request_destination: str | None = None
+    running_status: ServiceWorkerVersionRunningStatus | None = None
+
+
+type ServiceWorkerRouterSourceType = Literal[
+    "cache",
+    "fetchEvent",
+    "network",
+    "raceNetworkAndFetchHandler",
+    "raceNetworkAndCache",
+    "sourceDict",
+]
+
+
+@dataclass(kw_only=True, slots=True)
+class ServiceWorkerRouterSourceDict(CDPModel):
+    """
+    https://www.w3.org/TR/service-workers/#dictdef-routersourcedict
+    """
+
+    cache_name: str
+
+
+@dataclass(kw_only=True, slots=True)
+class ServiceWorkerRouterSource(CDPModel):
+    """
+    Corresponds to `RouterSource` in the spec while the representation is different as
+    follows. (https://www.w3.org/TR/service-workers/#typedefdef-routersource) -
+    `RouterSourceEnum`: `type` equals `cache`, `sourceDict` is null. -
+    `RouterSourceDict`: `type` equals `sourceDict`, `sourceDict` has valid value.
+    """
+
+    type: ServiceWorkerRouterSourceType
+    source_dict: ServiceWorkerRouterSourceDict | None = None
+
+
+@dataclass(kw_only=True, slots=True)
+class ServiceWorkerRouterRule(CDPModel):
+    condition: ServiceWorkerRouterCondition
+    source: ServiceWorkerRouterSource
+    id: int
+
+
+@dataclass(kw_only=True, slots=True)
 class ServiceWorkerVersion(CDPModel):
     """
     ServiceWorker version.
@@ -49,6 +104,7 @@ class ServiceWorkerVersion(CDPModel):
     controlled_clients: list[target.TargetID] | None = None
     target_id: target.TargetID | None = None
     router_rules: str | None = None
+    typed_router_rules: list[ServiceWorkerRouterRule] | None = None
 
 
 @dataclass(kw_only=True, slots=True)

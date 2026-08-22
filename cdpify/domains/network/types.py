@@ -47,11 +47,6 @@ requests that are part of a network request.
 RequestId = str
 
 """
-Unique intercepted request identifier.
-"""
-InterceptionId = str
-
-"""
 Network level fetch failure reason.
 """
 type ErrorReason = Literal[
@@ -562,10 +557,6 @@ request.
 type CookieExemptionReason = Literal[
     "None",
     "UserSetting",
-    "TPCDMetadata",
-    "TPCDDeprecationTrial",
-    "TopLevelTPCDDeprecationTrial",
-    "TPCDHeuristics",
     "EnterprisePolicy",
     "StorageAccess",
     "TopLevelStorageAccess",
@@ -654,24 +645,6 @@ class AuthChallengeResponse(CDPModel):
     password: str | None = None
 
 
-"""
-Stages of the interception to begin intercepting. Request will intercept before the
-request is sent. Response will intercept after the response is received.
-"""
-type InterceptionStage = Literal["Request", "HeadersReceived"]
-
-
-@dataclass(kw_only=True, slots=True)
-class RequestPattern(CDPModel):
-    """
-    Request pattern for interception.
-    """
-
-    url_pattern: str | None = None
-    resource_type: ResourceType | None = None
-    interception_stage: InterceptionStage | None = None
-
-
 @dataclass(kw_only=True, slots=True)
 class SignedExchangeSignature(CDPModel):
     """
@@ -739,12 +712,6 @@ class SignedExchangeInfo(CDPModel):
     header: SignedExchangeHeader | None = None
     security_details: SecurityDetails | None = None
     errors: list[SignedExchangeError] | None = None
-
-
-"""
-List of content encodings supported by the backend.
-"""
-type ContentEncoding = Literal["deflate", "gzip", "br", "zstd"]
 
 
 @dataclass(kw_only=True, slots=True)
@@ -1025,11 +992,14 @@ DeviceBoundSessionEventId = str
 
 """
 A fetch result for a device bound session creation or refresh.
+LINT.IfChange(DeviceBoundSessionFetchResult)
 """
 type DeviceBoundSessionFetchResult = Literal[
     "Success",
-    "KeyError",
+    "SigningKeyGenerationError",
+    "AttestationKeyGenerationError",
     "SigningError",
+    "TransientSigningError",
     "ServerRequestedTermination",
     "InvalidSessionId",
     "InvalidChallenge",
@@ -1095,6 +1065,12 @@ type DeviceBoundSessionFetchResult = Literal[
     "InvalidFederatedSessionProviderFailedToRestoreKey",
     "FailedToUnwrapKey",
     "SessionDeletedDuringRefresh",
+    "CrossOriginRegistrationSiteNotIncluded",
+    "InvalidPreProvisionedKeyInitiatorMissing",
+    "PreProvisionedKeyAccessNotGranted",
+    "PreProvisionedKeyNotFound",
+    "AttestationCertificationError",
+    "AttestationSigningError",
 ]
 
 
@@ -1129,13 +1105,14 @@ class RefreshEventDetails(CDPModel):
 
     refresh_result: Literal[
         "Refreshed",
-        "RefreshedAsWaiter",
         "InitializedService",
         "Unreachable",
         "ServerError",
-        "RefreshQuotaExceeded",
         "FatalError",
         "SigningQuotaExceeded",
+        "RefreshedAsWaiter",
+        "TransientSigningError",
+        "InScopeRefreshNotYetNeeded",
     ]
     fetch_result: DeviceBoundSessionFetchResult | None = None
     new_session: DeviceBoundSession | None = None

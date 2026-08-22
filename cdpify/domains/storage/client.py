@@ -13,20 +13,12 @@ from .commands import (
     ClearCookiesParams,
     ClearDataForOriginParams,
     ClearDataForStorageKeyParams,
-    ClearSharedStorageEntriesParams,
     ClearTrustTokensParams,
     ClearTrustTokensResult,
-    DeleteSharedStorageEntryParams,
     DeleteStorageBucketParams,
     GetCookiesParams,
     GetCookiesResult,
-    GetInterestGroupDetailsParams,
-    GetInterestGroupDetailsResult,
     GetRelatedWebsiteSetsResult,
-    GetSharedStorageEntriesParams,
-    GetSharedStorageEntriesResult,
-    GetSharedStorageMetadataParams,
-    GetSharedStorageMetadataResult,
     GetStorageKeyForFrameParams,
     GetStorageKeyForFrameResult,
     GetStorageKeyParams,
@@ -35,14 +27,8 @@ from .commands import (
     GetUsageAndQuotaParams,
     GetUsageAndQuotaResult,
     OverrideQuotaForOriginParams,
-    ResetSharedStorageBudgetParams,
     RunBounceTrackingMitigationsResult,
     SetCookiesParams,
-    SetInterestGroupAuctionTrackingParams,
-    SetInterestGroupTrackingParams,
-    SetProtectedAudienceKAnonymityParams,
-    SetSharedStorageEntryParams,
-    SetSharedStorageTrackingParams,
     SetStorageBucketTrackingParams,
     StorageCommand,
     TrackCacheStorageForOriginParams,
@@ -419,197 +405,6 @@ class StorageClient:
         )
         return ClearTrustTokensResult.from_cdp(result)
 
-    async def get_interest_group_details(
-        self,
-        *,
-        owner_origin: str,
-        name: str,
-        session_id: str | None = None,
-    ) -> GetInterestGroupDetailsResult:
-        """
-        Gets details for a named interest group.
-        """
-        params = GetInterestGroupDetailsParams(owner_origin=owner_origin, name=name)
-
-        result = await self._command_sender.send_raw(
-            method=StorageCommand.GET_INTEREST_GROUP_DETAILS,
-            params=params.to_cdp_params(),
-            session_id=session_id,
-        )
-        return GetInterestGroupDetailsResult.from_cdp(result)
-
-    async def set_interest_group_tracking(
-        self,
-        *,
-        enable: bool,
-        session_id: str | None = None,
-    ) -> dict[str, Any]:
-        """
-        Enables/Disables issuing of interestGroupAccessed events.
-        """
-        params = SetInterestGroupTrackingParams(enable=enable)
-
-        result = await self._command_sender.send_raw(
-            method=StorageCommand.SET_INTEREST_GROUP_TRACKING,
-            params=params.to_cdp_params(),
-            session_id=session_id,
-        )
-        return result
-
-    async def set_interest_group_auction_tracking(
-        self,
-        *,
-        enable: bool,
-        session_id: str | None = None,
-    ) -> dict[str, Any]:
-        """
-        Enables/Disables issuing of interestGroupAuctionEventOccurred and
-        interestGroupAuctionNetworkRequestCreated.
-        """
-        params = SetInterestGroupAuctionTrackingParams(enable=enable)
-
-        result = await self._command_sender.send_raw(
-            method=StorageCommand.SET_INTEREST_GROUP_AUCTION_TRACKING,
-            params=params.to_cdp_params(),
-            session_id=session_id,
-        )
-        return result
-
-    async def get_shared_storage_metadata(
-        self,
-        *,
-        owner_origin: str,
-        session_id: str | None = None,
-    ) -> GetSharedStorageMetadataResult:
-        """
-        Gets metadata for an origin's shared storage.
-        """
-        params = GetSharedStorageMetadataParams(owner_origin=owner_origin)
-
-        result = await self._command_sender.send_raw(
-            method=StorageCommand.GET_SHARED_STORAGE_METADATA,
-            params=params.to_cdp_params(),
-            session_id=session_id,
-        )
-        return GetSharedStorageMetadataResult.from_cdp(result)
-
-    async def get_shared_storage_entries(
-        self,
-        *,
-        owner_origin: str,
-        session_id: str | None = None,
-    ) -> GetSharedStorageEntriesResult:
-        """
-        Gets the entries in an given origin's shared storage.
-        """
-        params = GetSharedStorageEntriesParams(owner_origin=owner_origin)
-
-        result = await self._command_sender.send_raw(
-            method=StorageCommand.GET_SHARED_STORAGE_ENTRIES,
-            params=params.to_cdp_params(),
-            session_id=session_id,
-        )
-        return GetSharedStorageEntriesResult.from_cdp(result)
-
-    async def set_shared_storage_entry(
-        self,
-        *,
-        owner_origin: str,
-        key: str,
-        value: str,
-        ignore_if_present: bool | None = None,
-        session_id: str | None = None,
-    ) -> dict[str, Any]:
-        """
-        Sets entry with `key` and `value` for a given origin's shared storage.
-        """
-        params = SetSharedStorageEntryParams(
-            owner_origin=owner_origin,
-            key=key,
-            value=value,
-            ignore_if_present=ignore_if_present,
-        )
-
-        result = await self._command_sender.send_raw(
-            method=StorageCommand.SET_SHARED_STORAGE_ENTRY,
-            params=params.to_cdp_params(),
-            session_id=session_id,
-        )
-        return result
-
-    async def delete_shared_storage_entry(
-        self,
-        *,
-        owner_origin: str,
-        key: str,
-        session_id: str | None = None,
-    ) -> dict[str, Any]:
-        """
-        Deletes entry for `key` (if it exists) for a given origin's shared storage.
-        """
-        params = DeleteSharedStorageEntryParams(owner_origin=owner_origin, key=key)
-
-        result = await self._command_sender.send_raw(
-            method=StorageCommand.DELETE_SHARED_STORAGE_ENTRY,
-            params=params.to_cdp_params(),
-            session_id=session_id,
-        )
-        return result
-
-    async def clear_shared_storage_entries(
-        self,
-        *,
-        owner_origin: str,
-        session_id: str | None = None,
-    ) -> dict[str, Any]:
-        """
-        Clears all entries for a given origin's shared storage.
-        """
-        params = ClearSharedStorageEntriesParams(owner_origin=owner_origin)
-
-        result = await self._command_sender.send_raw(
-            method=StorageCommand.CLEAR_SHARED_STORAGE_ENTRIES,
-            params=params.to_cdp_params(),
-            session_id=session_id,
-        )
-        return result
-
-    async def reset_shared_storage_budget(
-        self,
-        *,
-        owner_origin: str,
-        session_id: str | None = None,
-    ) -> dict[str, Any]:
-        """
-        Resets the budget for `ownerOrigin` by clearing all budget withdrawals.
-        """
-        params = ResetSharedStorageBudgetParams(owner_origin=owner_origin)
-
-        result = await self._command_sender.send_raw(
-            method=StorageCommand.RESET_SHARED_STORAGE_BUDGET,
-            params=params.to_cdp_params(),
-            session_id=session_id,
-        )
-        return result
-
-    async def set_shared_storage_tracking(
-        self,
-        *,
-        enable: bool,
-        session_id: str | None = None,
-    ) -> dict[str, Any]:
-        """
-        Enables/disables issuing of sharedStorageAccessed events.
-        """
-        params = SetSharedStorageTrackingParams(enable=enable)
-
-        result = await self._command_sender.send_raw(
-            method=StorageCommand.SET_SHARED_STORAGE_TRACKING,
-            params=params.to_cdp_params(),
-            session_id=session_id,
-        )
-        return result
-
     async def set_storage_bucket_tracking(
         self,
         *,
@@ -676,22 +471,3 @@ class StorageClient:
             session_id=session_id,
         )
         return GetRelatedWebsiteSetsResult.from_cdp(result)
-
-    async def set_protected_audience_k_anonymity(
-        self,
-        *,
-        owner: str,
-        name: str,
-        hashes: list[str],
-        session_id: str | None = None,
-    ) -> dict[str, Any]:
-        params = SetProtectedAudienceKAnonymityParams(
-            owner=owner, name=name, hashes=hashes
-        )
-
-        result = await self._command_sender.send_raw(
-            method=StorageCommand.SET_PROTECTED_AUDIENCE_K_ANONYMITY,
-            params=params.to_cdp_params(),
-            session_id=session_id,
-        )
-        return result

@@ -123,6 +123,8 @@ class TracingClient:
         trace_config: TraceConfig | None = None,
         perfetto_config: str | None = None,
         tracing_backend: TracingBackend | None = None,
+        screenshot_max_size: int | None = None,
+        screenshot_max_count: int | None = None,
         session_id: str | None = None,
     ) -> dict[str, Any]:
         """
@@ -138,6 +140,8 @@ class TracingClient:
             trace_config=trace_config,
             perfetto_config=perfetto_config,
             tracing_backend=tracing_backend,
+            screenshot_max_size=screenshot_max_size,
+            screenshot_max_count=screenshot_max_count,
         )
 
         result = await self._command_sender.send_raw(

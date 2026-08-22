@@ -172,6 +172,29 @@ class HingeConfig(CDPModel):
     outline_color: dom.RGBA | None = None
 
 
+"""
+Supported display cutout shapes.
+"""
+type DisplayCutoutShape = Literal["pill", "notch", "circle", "rectangle"]
+
+
+@dataclass(kw_only=True, slots=True)
+class DisplayCutoutConfig(CDPModel):
+    """
+    Configuration for a display cutout.
+    """
+
+    rect: dom.Rect
+    shape: DisplayCutoutShape
+    border_radius: int | None = None
+    upper_radius: int | None = None
+    lower_radius: int | None = None
+    cx: int | None = None
+    cy: int | None = None
+    radius: int | None = None
+    content_color: dom.RGBA | None = None
+
+
 @dataclass(kw_only=True, slots=True)
 class WindowControlsOverlayConfig(CDPModel):
     """

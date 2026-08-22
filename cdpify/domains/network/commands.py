@@ -7,14 +7,12 @@ from __future__ import annotations
 from dataclasses import dataclass
 from enum import StrEnum
 
-from cdpify.domains import debugger, emulation, io, page
+from cdpify.domains import debugger, emulation, page
 from cdpify.shared.models import CDPModel
 
 from .types import (
-    AuthChallengeResponse,
     BlockPattern,
     ConnectionType,
-    ContentEncoding,
     Cookie,
     CookieParam,
     CookiePartitionKey,
@@ -22,28 +20,22 @@ from .types import (
     CookieSameSite,
     CookieSourceScheme,
     DeviceBoundSessionKey,
-    ErrorReason,
     Headers,
-    InterceptionId,
     LoadNetworkResourceOptions,
     LoadNetworkResourcePageResult,
     NetworkConditions,
     RequestId,
-    RequestPattern,
     SecurityIsolationStatus,
     TimeSinceEpoch,
 )
 
 
 class NetworkCommand(StrEnum):
-    SET_ACCEPTED_ENCODINGS = "Network.setAcceptedEncodings"
-    CLEAR_ACCEPTED_ENCODINGS_OVERRIDE = "Network.clearAcceptedEncodingsOverride"
     CAN_CLEAR_BROWSER_CACHE = "Network.canClearBrowserCache"
     CAN_CLEAR_BROWSER_COOKIES = "Network.canClearBrowserCookies"
     CAN_EMULATE_NETWORK_CONDITIONS = "Network.canEmulateNetworkConditions"
     CLEAR_BROWSER_CACHE = "Network.clearBrowserCache"
     CLEAR_BROWSER_COOKIES = "Network.clearBrowserCookies"
-    CONTINUE_INTERCEPTED_REQUEST = "Network.continueInterceptedRequest"
     DELETE_COOKIES = "Network.deleteCookies"
     DISABLE = "Network.disable"
     EMULATE_NETWORK_CONDITIONS = "Network.emulateNetworkConditions"
@@ -56,10 +48,6 @@ class NetworkCommand(StrEnum):
     GET_COOKIES = "Network.getCookies"
     GET_RESPONSE_BODY = "Network.getResponseBody"
     GET_REQUEST_POST_DATA = "Network.getRequestPostData"
-    GET_RESPONSE_BODY_FOR_INTERCEPTION = "Network.getResponseBodyForInterception"
-    TAKE_RESPONSE_BODY_FOR_INTERCEPTION_AS_STREAM = (
-        "Network.takeResponseBodyForInterceptionAsStream"
-    )
     REPLAY_XHR = "Network.replayXHR"
     SEARCH_IN_RESPONSE_BODY = "Network.searchInResponseBody"
     SET_BLOCKED_UR_LS = "Network.setBlockedURLs"
@@ -69,7 +57,6 @@ class NetworkCommand(StrEnum):
     SET_COOKIES = "Network.setCookies"
     SET_EXTRA_HTTP_HEADERS = "Network.setExtraHTTPHeaders"
     SET_ATTACH_DEBUG_STACK = "Network.setAttachDebugStack"
-    SET_REQUEST_INTERCEPTION = "Network.setRequestInterception"
     SET_USER_AGENT_OVERRIDE = "Network.setUserAgentOverride"
     STREAM_RESOURCE_CONTENT = "Network.streamResourceContent"
     GET_SECURITY_ISOLATION_STATUS = "Network.getSecurityIsolationStatus"
@@ -79,16 +66,6 @@ class NetworkCommand(StrEnum):
     FETCH_SCHEMEFUL_SITE = "Network.fetchSchemefulSite"
     LOAD_NETWORK_RESOURCE = "Network.loadNetworkResource"
     SET_COOKIE_CONTROLS = "Network.setCookieControls"
-
-
-@dataclass(kw_only=True, slots=True)
-class SetAcceptedEncodingsParams(CDPModel):
-    """
-    Sets a list of content encodings that will be accepted. Empty list means no
-    encoding is accepted.
-    """
-
-    encodings: list[ContentEncoding]
 
 
 @dataclass(kw_only=True, slots=True)
@@ -104,27 +81,6 @@ class CanClearBrowserCookiesResult(CDPModel):
 @dataclass(kw_only=True, slots=True)
 class CanEmulateNetworkConditionsResult(CDPModel):
     result: bool
-
-
-@dataclass(kw_only=True, slots=True)
-class ContinueInterceptedRequestParams(CDPModel):
-    """
-    Response to Network.requestIntercepted which either modifies the request to
-    continue with any modifications, or blocks it, or completes it with the provided
-    response bytes. If a network fetch occurs as a result which encounters a redirect an
-    additional Network.requestIntercepted event will be sent with the same
-    InterceptionId. Deprecated, use Fetch.continueRequest, Fetch.fulfillRequest and
-    Fetch.failRequest instead.
-    """
-
-    interception_id: InterceptionId
-    error_reason: ErrorReason | None = None
-    raw_response: str | None = None
-    url: str | None = None
-    method: str | None = None
-    post_data: str | None = None
-    headers: Headers | None = None
-    auth_challenge_response: AuthChallengeResponse | None = None
 
 
 @dataclass(kw_only=True, slots=True)
@@ -282,38 +238,6 @@ class GetRequestPostDataResult(CDPModel):
 
 
 @dataclass(kw_only=True, slots=True)
-class GetResponseBodyForInterceptionParams(CDPModel):
-    """
-    Returns content served for the given currently intercepted request.
-    """
-
-    interception_id: InterceptionId
-
-
-@dataclass(kw_only=True, slots=True)
-class GetResponseBodyForInterceptionResult(CDPModel):
-    body: str
-    base64_encoded: bool
-
-
-@dataclass(kw_only=True, slots=True)
-class TakeResponseBodyForInterceptionAsStreamParams(CDPModel):
-    """
-    Returns a handle to the stream representing the response body. Note that after this
-    command, the intercepted request can't be continued as is -- you either need to
-    cancel it or to provide the response body. The stream only supports sequential read,
-    IO.read will fail if the position is specified.
-    """
-
-    interception_id: InterceptionId
-
-
-@dataclass(kw_only=True, slots=True)
-class TakeResponseBodyForInterceptionAsStreamResult(CDPModel):
-    stream: io.StreamHandle
-
-
-@dataclass(kw_only=True, slots=True)
 class ReplayXHRParams(CDPModel):
     """
     This method sends a new XMLHttpRequest which is identical to the original one. The
@@ -422,16 +346,6 @@ class SetAttachDebugStackParams(CDPModel):
     """
 
     enabled: bool
-
-
-@dataclass(kw_only=True, slots=True)
-class SetRequestInterceptionParams(CDPModel):
-    """
-    Sets the requests to intercept that match the provided patterns and optionally
-    resource types. Deprecated, please use Fetch.enable instead.
-    """
-
-    patterns: list[RequestPattern]
 
 
 @dataclass(kw_only=True, slots=True)

@@ -73,6 +73,7 @@ class CSSCommand(StrEnum):
     SET_KEYFRAME_KEY = "CSS.setKeyframeKey"
     SET_MEDIA_TEXT = "CSS.setMediaText"
     SET_CONTAINER_QUERY_TEXT = "CSS.setContainerQueryText"
+    SET_CONTAINER_QUERY_CONDITION_TEXT = "CSS.setContainerQueryConditionText"
     SET_SUPPORTS_TEXT = "CSS.setSupportsText"
     SET_NAVIGATION_TEXT = "CSS.setNavigationText"
     SET_SCOPE_TEXT = "CSS.setScopeText"
@@ -445,7 +446,8 @@ class SetMediaTextResult(CDPModel):
 @dataclass(kw_only=True, slots=True)
 class SetContainerQueryTextParams(CDPModel):
     """
-    Modifies the expression of a container query.
+    Modifies the expression of a container query. Deprecated. Use
+    setContainerQueryConditionText instead.
     """
 
     style_sheet_id: dom.StyleSheetId
@@ -455,6 +457,18 @@ class SetContainerQueryTextParams(CDPModel):
 
 @dataclass(kw_only=True, slots=True)
 class SetContainerQueryTextResult(CDPModel):
+    container_query: CSSContainerQuery
+
+
+@dataclass(kw_only=True, slots=True)
+class SetContainerQueryConditionTextParams(CDPModel):
+    style_sheet_id: dom.StyleSheetId
+    range: SourceRange
+    text: str
+
+
+@dataclass(kw_only=True, slots=True)
+class SetContainerQueryConditionTextResult(CDPModel):
     container_query: CSSContainerQuery
 
 

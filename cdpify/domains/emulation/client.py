@@ -20,6 +20,7 @@ from .commands import (
     RemoveScreenParams,
     SetAutoDarkModeOverrideParams,
     SetAutomationOverrideParams,
+    SetCPUPerformanceOverrideParams,
     SetCPUThrottlingRateParams,
     SetDataSaverOverrideParams,
     SetDefaultBackgroundColorOverrideParams,
@@ -39,7 +40,6 @@ from .commands import (
     SetLocaleOverrideParams,
     SetNavigatorOverridesParams,
     SetPageScaleFactorParams,
-    SetPressureDataOverrideParams,
     SetPressureSourceOverrideEnabledParams,
     SetPressureStateOverrideParams,
     SetPrimaryScreenParams,
@@ -52,6 +52,7 @@ from .commands import (
     SetTimezoneOverrideParams,
     SetTouchEmulationEnabledParams,
     SetUserAgentOverrideParams,
+    SetVirtualKeyboardGeometryOverrideParams,
     SetVirtualTimePolicyParams,
     SetVirtualTimePolicyResult,
     SetVisibleSizeParams,
@@ -230,6 +231,29 @@ class EmulationClient:
 
         result = await self._command_sender.send_raw(
             method=EmulationCommand.SET_SAFE_AREA_INSETS_OVERRIDE,
+            params=params.to_cdp_params(),
+            session_id=session_id,
+        )
+        return result
+
+    async def set_virtual_keyboard_geometry_override(
+        self,
+        *,
+        keyboard_rect: dom.Rect | None = None,
+        session_id: str | None = None,
+    ) -> dict[str, Any]:
+        """
+        Overrides virtual keyboard geometry in CSS pixels, relative to the top-level
+        viewport. The provided rect is used for navigator.virtualKeyboard.boundingRect,
+        geometrychange events, and env(keyboard-inset-*) values on the inspected frame.
+        The override applies independently of navigator.virtualKeyboard.overlaysContent
+        so clients can preview overlay geometry without mutating page state. Values are
+        rounded to the nearest CSS pixel. Omitting the rect clears the override.
+        """
+        params = SetVirtualKeyboardGeometryOverrideParams(keyboard_rect=keyboard_rect)
+
+        result = await self._command_sender.send_raw(
+            method=EmulationCommand.SET_VIRTUAL_KEYBOARD_GEOMETRY_OVERRIDE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
@@ -595,41 +619,14 @@ class EmulationClient:
         session_id: str | None = None,
     ) -> dict[str, Any]:
         """
-        TODO: OBSOLETE: To remove when setPressureDataOverride is merged. Provides a
-        given pressure state that will be processed and eventually be delivered to
-        PressureObserver users. |source| must have been previously overridden by
-        setPressureSourceOverrideEnabled.
+        Provides a given pressure state that will be processed and eventually be
+        delivered to PressureObserver users. |source| must have been previously
+        overridden by setPressureSourceOverrideEnabled.
         """
         params = SetPressureStateOverrideParams(source=source, state=state)
 
         result = await self._command_sender.send_raw(
             method=EmulationCommand.SET_PRESSURE_STATE_OVERRIDE,
-            params=params.to_cdp_params(),
-            session_id=session_id,
-        )
-        return result
-
-    async def set_pressure_data_override(
-        self,
-        *,
-        source: PressureSource,
-        state: PressureState,
-        own_contribution_estimate: float | None = None,
-        session_id: str | None = None,
-    ) -> dict[str, Any]:
-        """
-        Provides a given pressure data set that will be processed and eventually be
-        delivered to PressureObserver users. |source| must have been previously
-        overridden by setPressureSourceOverrideEnabled.
-        """
-        params = SetPressureDataOverrideParams(
-            source=source,
-            state=state,
-            own_contribution_estimate=own_contribution_estimate,
-        )
-
-        result = await self._command_sender.send_raw(
-            method=EmulationCommand.SET_PRESSURE_DATA_OVERRIDE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )
@@ -877,6 +874,25 @@ class EmulationClient:
 
         result = await self._command_sender.send_raw(
             method=EmulationCommand.SET_HARDWARE_CONCURRENCY_OVERRIDE,
+            params=params.to_cdp_params(),
+            session_id=session_id,
+        )
+        return result
+
+    async def set_cpu_performance_override(
+        self,
+        *,
+        performance_tier: Literal["unknown", "low", "mid", "high", "ultra"]
+        | None = None,
+        session_id: str | None = None,
+    ) -> dict[str, Any]:
+        """
+        Overrides the value of navigator.cpuPerformance
+        """
+        params = SetCPUPerformanceOverrideParams(performance_tier=performance_tier)
+
+        result = await self._command_sender.send_raw(
+            method=EmulationCommand.SET_CPU_PERFORMANCE_OVERRIDE,
             params=params.to_cdp_params(),
             session_id=session_id,
         )

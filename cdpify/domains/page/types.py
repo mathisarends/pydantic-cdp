@@ -66,7 +66,6 @@ type PermissionsPolicyFeature = Literal[
     "all-screens-capture",
     "ambient-light-sensor",
     "aria-notify",
-    "attribution-reporting",
     "autofill",
     "autoplay",
     "bluetooth",
@@ -109,7 +108,6 @@ type PermissionsPolicyFeature = Literal[
     "digital-credentials-get",
     "direct-sockets",
     "direct-sockets-multicast",
-    "direct-sockets-private",
     "display-capture",
     "document-domain",
     "encrypted-media",
@@ -125,7 +123,6 @@ type PermissionsPolicyFeature = Literal[
     "identity-credentials-get",
     "idle-detection",
     "interest-cohort",
-    "join-ad-interest-group",
     "keyboard-map",
     "language-detector",
     "language-model",
@@ -142,14 +139,11 @@ type PermissionsPolicyFeature = Literal[
     "otp-credentials",
     "payment",
     "picture-in-picture",
-    "private-aggregation",
     "private-state-token-issuance",
     "private-state-token-redemption",
     "publickey-credentials-create",
     "publickey-credentials-get",
-    "record-ad-auction-events",
     "rewriter",
-    "run-ad-auction",
     "screen-wake-lock",
     "serial",
     "shared-storage",
@@ -167,6 +161,7 @@ type PermissionsPolicyFeature = Literal[
     "usb-unrestricted",
     "vertical-scroll",
     "web-app-installation",
+    "webnn",
     "web-printing",
     "web-share",
     "window-management",
@@ -541,7 +536,6 @@ class FileFilter(CDPModel):
 class FileHandler(CDPModel):
     action: str
     name: str
-    icons: list[ImageResource] | None = None
     accepts: list[FileFilter] | None = None
     launch_type: str
 
@@ -783,6 +777,7 @@ type BackForwardCacheNotRestoredReason = Literal[
     "EmbedderExtensionMessagingForOpenPort",
     "EmbedderExtensionSentMessageToCachedFrame",
     "EmbedderExtensionFrame",
+    "EmbedderPrivilegedWebContents",
     "RequestedByWebViewClient",
     "PostMessageByWebViewClient",
     "CacheControlNoStoreDeviceBoundSessionTerminated",

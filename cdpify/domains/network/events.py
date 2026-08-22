@@ -13,7 +13,6 @@ from cdpify.shared.models import CDPEvent
 
 from .types import (
     AssociatedCookie,
-    AuthChallenge,
     BlockedReason,
     BlockedSetCookieWithReason,
     ChallengeEventDetails,
@@ -32,7 +31,6 @@ from .types import (
     ExemptedSetCookieWithReason,
     Headers,
     Initiator,
-    InterceptionId,
     IPAddressSpace,
     LoaderId,
     MonotonicTime,
@@ -60,7 +58,6 @@ class NetworkEvent(StrEnum):
     EVENT_SOURCE_MESSAGE_RECEIVED = "Network.eventSourceMessageReceived"
     LOADING_FAILED = "Network.loadingFailed"
     LOADING_FINISHED = "Network.loadingFinished"
-    REQUEST_INTERCEPTED = "Network.requestIntercepted"
     REQUEST_SERVED_FROM_CACHE = "Network.requestServedFromCache"
     REQUEST_WILL_BE_SENT = "Network.requestWillBeSent"
     RESOURCE_CHANGED_PRIORITY = "Network.resourceChangedPriority"
@@ -158,27 +155,6 @@ class LoadingFinishedEvent(CDPEvent):
     request_id: RequestId
     timestamp: MonotonicTime
     encoded_data_length: float
-
-
-@dataclass(kw_only=True, slots=True)
-class RequestInterceptedEvent(CDPEvent):
-    """
-    Details of an intercepted HTTP request, which must be either allowed, blocked,
-    modified or mocked. Deprecated, use Fetch.requestPaused instead.
-    """
-
-    interception_id: InterceptionId
-    request: Request
-    frame_id: page.FrameId
-    resource_type: ResourceType
-    is_navigation_request: bool
-    is_download: bool | None = None
-    redirect_url: str | None = None
-    auth_challenge: AuthChallenge | None = None
-    response_error_reason: ErrorReason | None = None
-    response_status_code: int | None = None
-    response_headers: Headers | None = None
-    request_id: RequestId | None = None
 
 
 @dataclass(kw_only=True, slots=True)
@@ -391,7 +367,7 @@ class DirectTCPSocketAbortedEvent(CDPEvent):
     """
 
     identifier: RequestId
-    error_message: str
+    error_message: ErrorReason
     timestamp: MonotonicTime
 
 
@@ -472,7 +448,7 @@ class DirectUDPSocketAbortedEvent(CDPEvent):
     """
 
     identifier: RequestId
-    error_message: str
+    error_message: ErrorReason
     timestamp: MonotonicTime
 
 

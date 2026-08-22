@@ -139,6 +139,7 @@ class DebuggerClient:
         generate_preview: bool | None = None,
         throw_on_side_effect: bool | None = None,
         timeout: runtime.TimeDelta | None = None,
+        scope_number: int | None = None,
         session_id: str | None = None,
     ) -> EvaluateOnCallFrameResult:
         """
@@ -154,6 +155,7 @@ class DebuggerClient:
             generate_preview=generate_preview,
             throw_on_side_effect=throw_on_side_effect,
             timeout=timeout,
+            scope_number=scope_number,
         )
 
         result = await self._command_sender.send_raw(
@@ -633,6 +635,7 @@ class DebuggerClient:
         )
         return result
 
+    @deprecated()
     async def set_script_source(
         self,
         *,
@@ -643,11 +646,8 @@ class DebuggerClient:
         session_id: str | None = None,
     ) -> SetScriptSourceResult:
         """
-        Edits JavaScript source live. In general, functions that are currently on the
-        stack can not be edited with a single exception: If the edited function is the
-        top-most stack frame and that is the only activation of that function on the
-        stack. In this case the live edit will be successful and a
-        `Debugger.restartFrame` for the top-most function is automatically triggered.
+        Live edit is no longer supported and this command always fails with a "no
+        longer available" error.
         """
         params = SetScriptSourceParams(
             script_id=script_id,

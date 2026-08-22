@@ -19,7 +19,6 @@ from .types import (
     PermissionDescriptor,
     PermissionSetting,
     PermissionType,
-    PrivacySandboxAPI,
     WindowID,
 )
 
@@ -46,9 +45,8 @@ class BrowserCommand(StrEnum):
     ADD_PRIVACY_SANDBOX_ENROLLMENT_OVERRIDE = (
         "Browser.addPrivacySandboxEnrollmentOverride"
     )
-    ADD_PRIVACY_SANDBOX_COORDINATOR_KEY_CONFIG = (
-        "Browser.addPrivacySandboxCoordinatorKeyConfig"
-    )
+    GET_GLOBAL_PRIVACY_CONTROL = "Browser.getGlobalPrivacyControl"
+    SET_GLOBAL_PRIVACY_CONTROL = "Browser.setGlobalPrivacyControl"
 
 
 @dataclass(kw_only=True, slots=True)
@@ -231,15 +229,20 @@ class AddPrivacySandboxEnrollmentOverrideParams(CDPModel):
 
 
 @dataclass(kw_only=True, slots=True)
-class AddPrivacySandboxCoordinatorKeyConfigParams(CDPModel):
+class GetGlobalPrivacyControlResult(CDPModel):
+    gpc: bool
+
+
+@dataclass(kw_only=True, slots=True)
+class SetGlobalPrivacyControlParams(CDPModel):
     """
-    Configures encryption keys used with a given privacy sandbox API to talk to a
-    trusted coordinator. Since this is intended for test automation only,
-    coordinatorOrigin must be a .test domain. No existing coordinator configuration for
-    the origin may exist.
+    Sets and then gets the current globally-applied privacy control status See
+    https://www.w3.org/TR/gpc/#set-global-privacy-control
     """
 
-    api: PrivacySandboxAPI
-    coordinator_origin: str
-    key_config: str
-    browser_context_id: BrowserContextID | None = None
+    gpc: bool
+
+
+@dataclass(kw_only=True, slots=True)
+class SetGlobalPrivacyControlResult(CDPModel):
+    gpc: bool

@@ -81,8 +81,11 @@ type PseudoType = Literal[
     "file-selector-button",
     "details-content",
     "picker",
+    "select-listbox",
     "permission-icon",
     "overscroll-area-parent",
+    "overscroll-backdrop",
+    "skeleton",
 ]
 
 """

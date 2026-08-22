@@ -6,12 +6,12 @@
 
 from .client import BrowserClient
 from .commands import (
-    AddPrivacySandboxCoordinatorKeyConfigParams,
     AddPrivacySandboxEnrollmentOverrideParams,
     BrowserCommand,
     CancelDownloadParams,
     ExecuteBrowserCommandParams,
     GetBrowserCommandLineResult,
+    GetGlobalPrivacyControlResult,
     GetHistogramParams,
     GetHistogramResult,
     GetHistogramsParams,
@@ -26,6 +26,8 @@ from .commands import (
     SetContentsSizeParams,
     SetDockTileParams,
     SetDownloadBehaviorParams,
+    SetGlobalPrivacyControlParams,
+    SetGlobalPrivacyControlResult,
     SetPermissionParams,
     SetWindowBoundsParams,
 )
@@ -39,13 +41,11 @@ from .types import (
     PermissionDescriptor,
     PermissionSetting,
     PermissionType,
-    PrivacySandboxAPI,
     WindowID,
     WindowState,
 )
 
 __all__ = [
-    "AddPrivacySandboxCoordinatorKeyConfigParams",
     "AddPrivacySandboxEnrollmentOverrideParams",
     "Bounds",
     "BrowserClient",
@@ -59,6 +59,7 @@ __all__ = [
     "DownloadWillBeginEvent",
     "ExecuteBrowserCommandParams",
     "GetBrowserCommandLineResult",
+    "GetGlobalPrivacyControlResult",
     "GetHistogramParams",
     "GetHistogramResult",
     "GetHistogramsParams",
@@ -73,11 +74,12 @@ __all__ = [
     "PermissionDescriptor",
     "PermissionSetting",
     "PermissionType",
-    "PrivacySandboxAPI",
     "ResetPermissionsParams",
     "SetContentsSizeParams",
     "SetDockTileParams",
     "SetDownloadBehaviorParams",
+    "SetGlobalPrivacyControlParams",
+    "SetGlobalPrivacyControlResult",
     "SetPermissionParams",
     "SetWindowBoundsParams",
     "WindowID",
