@@ -19,7 +19,7 @@ from .types import (
 )
 
 
-class DeviceAccessClient:
+class DeviceAccess:
     def __init__(self, command_sender: CDPCommandSender) -> None:
         self._command_sender = command_sender
 

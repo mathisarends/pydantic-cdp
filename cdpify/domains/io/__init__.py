@@ -4,7 +4,7 @@
 
 """CDP IO Domain."""
 
-from .client import IOClient
+from .client import IO
 from .commands import (
     CloseParams,
     IOCommand,
@@ -17,7 +17,7 @@ from .types import StreamHandle
 
 __all__ = [
     "CloseParams",
-    "IOClient",
+    "IO",
     "IOCommand",
     "ReadParams",
     "ReadResult",

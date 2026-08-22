@@ -32,7 +32,7 @@ if TYPE_CHECKING:
     from cdpify.domains import dom, runtime
 
 
-class DOMDebuggerClient:
+class DOMDebugger:
     def __init__(self, command_sender: CDPCommandSender) -> None:
         self._command_sender = command_sender
 

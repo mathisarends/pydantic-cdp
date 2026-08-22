@@ -4,7 +4,7 @@
 
 """CDP Input Domain."""
 
-from .client import InputClient
+from .client import Input
 from .commands import (
     DispatchDragEventParams,
     DispatchKeyEventParams,
@@ -41,7 +41,7 @@ __all__ = [
     "EmulateTouchFromMouseEventParams",
     "GestureSourceType",
     "ImeSetCompositionParams",
-    "InputClient",
+    "Input",
     "InputCommand",
     "InputEvent",
     "InsertTextParams",

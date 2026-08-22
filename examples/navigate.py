@@ -2,7 +2,7 @@ import asyncio
 import json
 from urllib.request import urlopen
 
-from cdpify import CDPClient
+from cdpify import Client
 
 
 def get_ws_url() -> str:
@@ -21,7 +21,7 @@ async def test_basic():
     ws_url = get_ws_url()
     print(f"Connecting to: {ws_url}")
 
-    async with CDPClient(ws_url) as client:
+    async with Client(ws_url) as client:
         result = await client.page.navigate(url="https://example.com")
 
         print(f"Navigation Result: {result}")

@@ -4,7 +4,7 @@
 
 """CDP Security Domain."""
 
-from .client import SecurityClient
+from .client import Security
 from .commands import (
     HandleCertificateErrorParams,
     SecurityCommand,
@@ -40,7 +40,7 @@ __all__ = [
     "MixedContentType",
     "SafetyTipInfo",
     "SafetyTipStatus",
-    "SecurityClient",
+    "Security",
     "SecurityCommand",
     "SecurityEvent",
     "SecurityState",

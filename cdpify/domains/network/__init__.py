@@ -4,7 +4,7 @@
 
 """CDP Network Domain."""
 
-from .client import NetworkClient
+from .client import Network
 from .commands import (
     CanClearBrowserCacheResult,
     CanClearBrowserCookiesResult,
@@ -293,7 +293,7 @@ __all__ = [
     "LoadingFinishedEvent",
     "LocalNetworkAccessRequestPolicy",
     "MonotonicTime",
-    "NetworkClient",
+    "Network",
     "NetworkCommand",
     "NetworkConditions",
     "NetworkEvent",

@@ -3,7 +3,7 @@ import json
 import logging
 from urllib.request import urlopen
 
-from cdpify import CDPClient
+from cdpify import Client
 from cdpify.domains.network.events import (
     LoadingFailedEvent,
     LoadingFinishedEvent,
@@ -29,7 +29,7 @@ def get_ws_url() -> str:
     return pages[0]["webSocketDebuggerUrl"]
 
 
-async def monitor_requests(client: CDPClient) -> None:
+async def monitor_requests(client: Client) -> None:
     async for event in client.listen(
         event_name=NetworkEvent.REQUEST_WILL_BE_SENT,
         event_type=RequestWillBeSentEvent,
@@ -39,7 +39,7 @@ async def monitor_requests(client: CDPClient) -> None:
         print(f"📤 Request: {method} {url}")
 
 
-async def monitor_responses(client: CDPClient) -> None:
+async def monitor_responses(client: Client) -> None:
     async for event in client.listen(
         event_name=NetworkEvent.RESPONSE_RECEIVED,
         event_type=ResponseReceivedEvent,
@@ -50,7 +50,7 @@ async def monitor_responses(client: CDPClient) -> None:
         print(f"📥 Response: {status} {url} ({mime_type})")
 
 
-async def monitor_loading_finished(client: CDPClient) -> None:
+async def monitor_loading_finished(client: Client) -> None:
     async for event in client.listen(
         event_name=NetworkEvent.LOADING_FINISHED,
         event_type=LoadingFinishedEvent,
@@ -59,7 +59,7 @@ async def monitor_loading_finished(client: CDPClient) -> None:
         print(f"✓ Loading finished: {request_id}")
 
 
-async def monitor_loading_failed(client: CDPClient) -> None:
+async def monitor_loading_failed(client: Client) -> None:
     async for event in client.listen(
         event_name=NetworkEvent.LOADING_FAILED,
         event_type=LoadingFailedEvent,
@@ -73,7 +73,7 @@ async def main() -> None:
     ws_url = get_ws_url()
     print(f"Connecting to: {ws_url}\n")
 
-    async with CDPClient(ws_url) as client:
+    async with Client(ws_url) as client:
         await client.network.enable()
 
         print("🌐 Network monitoring started...")

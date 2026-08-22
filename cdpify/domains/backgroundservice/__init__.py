@@ -4,7 +4,7 @@
 
 """CDP BackgroundService Domain."""
 
-from .client import BackgroundServiceClient
+from .client import BackgroundService
 from .commands import (
     BackgroundServiceCommand,
     ClearEventsParams,
@@ -22,7 +22,7 @@ from .events import (
 from .types import BackgroundServiceEvent, EventMetadata, ServiceName
 
 __all__ = [
-    "BackgroundServiceClient",
+    "BackgroundService",
     "BackgroundServiceCommand",
     "BackgroundServiceEvent",
     "BackgroundServiceEventName",

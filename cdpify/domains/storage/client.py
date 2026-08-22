@@ -48,7 +48,7 @@ if TYPE_CHECKING:
     from cdpify.domains import browser, network, page
 
 
-class StorageClient:
+class Storage:
     def __init__(self, command_sender: CDPCommandSender) -> None:
         self._command_sender = command_sender
 

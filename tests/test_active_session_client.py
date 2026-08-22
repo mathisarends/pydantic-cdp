@@ -3,7 +3,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from cdpify import ActiveSessionCDPClient, CDPClient
+from cdpify import ActiveSessionCDPClient, Client
 from cdpify.shared.models import CDPEvent
 
 
@@ -14,7 +14,7 @@ class _Event(CDPEvent):
 
 @pytest.mark.asyncio
 async def test_routes_commands_to_active_session() -> None:
-    root_client = MagicMock(spec=CDPClient)
+    root_client = MagicMock(spec=Client)
     root_client.send_raw = AsyncMock(return_value={})
     client = ActiveSessionCDPClient(root_client)
 
@@ -31,7 +31,7 @@ async def test_routes_commands_to_active_session() -> None:
 
 @pytest.mark.asyncio
 async def test_explicit_session_overrides_active_session() -> None:
-    root_client = MagicMock(spec=CDPClient)
+    root_client = MagicMock(spec=Client)
     root_client.send_raw = AsyncMock(return_value={})
     client = ActiveSessionCDPClient(root_client)
     client.switch_to("active-session")
@@ -47,7 +47,7 @@ async def test_explicit_session_overrides_active_session() -> None:
 
 
 def test_uses_root_browser_and_target_domains() -> None:
-    root_client = MagicMock(spec=CDPClient)
+    root_client = MagicMock(spec=Client)
     client = ActiveSessionCDPClient(root_client)
 
     assert client.browser is root_client.browser
@@ -61,7 +61,7 @@ async def test_delegates_event_listening_to_root_client() -> None:
     async def event_stream():
         yield expected
 
-    root_client = MagicMock(spec=CDPClient)
+    root_client = MagicMock(spec=Client)
     root_client.listen.return_value = event_stream()
     client = ActiveSessionCDPClient(root_client)
 

@@ -82,7 +82,7 @@ if TYPE_CHECKING:
     from cdpify.domains import dom, network, page
 
 
-class EmulationClient:
+class Emulation:
     def __init__(self, command_sender: CDPCommandSender) -> None:
         self._command_sender = command_sender
 

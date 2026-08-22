@@ -19,7 +19,7 @@ if TYPE_CHECKING:
     from cdpify.domains import page
 
 
-class WebMCPClient:
+class WebMCP:
     def __init__(self, command_sender: CDPCommandSender) -> None:
         self._command_sender = command_sender
 

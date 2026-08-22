@@ -4,7 +4,7 @@
 
 """CDP PWA Domain."""
 
-from .client import PWAClient
+from .client import PWA
 from .commands import (
     ChangeAppUserSettingsParams,
     GetOsAppStateParams,
@@ -33,7 +33,7 @@ __all__ = [
     "LaunchParams",
     "LaunchResult",
     "OpenCurrentPageInAppParams",
-    "PWAClient",
+    "PWA",
     "PWACommand",
     "UninstallParams",
 ]

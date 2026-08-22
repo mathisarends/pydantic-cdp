@@ -20,7 +20,7 @@ from .types import (
 )
 
 
-class BackgroundServiceClient:
+class BackgroundService:
     def __init__(self, command_sender: CDPCommandSender) -> None:
         self._command_sender = command_sender
 

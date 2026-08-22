@@ -4,7 +4,7 @@
 
 """CDP SmartCardEmulation Domain."""
 
-from .client import SmartCardEmulationClient
+from .client import SmartCardEmulation
 from .commands import (
     ReportBeginTransactionResultParams,
     ReportConnectResultParams,
@@ -79,7 +79,7 @@ __all__ = [
     "ResultCode",
     "SetAttribRequestedEvent",
     "ShareMode",
-    "SmartCardEmulationClient",
+    "SmartCardEmulation",
     "SmartCardEmulationCommand",
     "SmartCardEmulationEvent",
     "StatusRequestedEvent",

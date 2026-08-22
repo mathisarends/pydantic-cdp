@@ -48,7 +48,7 @@ from .types import (
 )
 
 
-class RuntimeClient:
+class Runtime:
     def __init__(self, command_sender: CDPCommandSender) -> None:
         self._command_sender = command_sender
 

@@ -4,7 +4,7 @@
 
 """CDP SystemInfo Domain."""
 
-from .client import SystemInfoClient
+from .client import SystemInfo
 from .commands import (
     GetFeatureStateParams,
     GetFeatureStateResult,
@@ -34,7 +34,7 @@ __all__ = [
     "ProcessInfo",
     "Size",
     "SubsamplingFormat",
-    "SystemInfoClient",
+    "SystemInfo",
     "SystemInfoCommand",
     "VideoDecodeAcceleratorCapability",
     "VideoEncodeAcceleratorCapability",

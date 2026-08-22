@@ -49,7 +49,7 @@ if TYPE_CHECKING:
     from cdpify.domains import target
 
 
-class BrowserClient:
+class Browser:
     def __init__(self, command_sender: CDPCommandSender) -> None:
         self._command_sender = command_sender
 

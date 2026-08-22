@@ -4,7 +4,7 @@
 
 """CDP Runtime Domain."""
 
-from .client import RuntimeClient
+from .client import Runtime
 from .commands import (
     AddBindingParams,
     AwaitPromiseParams,
@@ -120,7 +120,7 @@ __all__ = [
     "RemoveBindingParams",
     "RunScriptParams",
     "RunScriptResult",
-    "RuntimeClient",
+    "Runtime",
     "RuntimeCommand",
     "RuntimeEvent",
     "ScriptId",

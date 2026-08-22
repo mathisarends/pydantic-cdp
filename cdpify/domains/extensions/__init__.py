@@ -4,7 +4,7 @@
 
 """CDP Extensions Domain."""
 
-from .client import ExtensionsClient
+from .client import Extensions
 from .commands import (
     ClearStorageItemsParams,
     ExtensionsCommand,
@@ -23,7 +23,7 @@ from .types import ExtensionInfo, StorageArea
 __all__ = [
     "ClearStorageItemsParams",
     "ExtensionInfo",
-    "ExtensionsClient",
+    "Extensions",
     "ExtensionsCommand",
     "GetExtensionsResult",
     "GetStorageItemsParams",

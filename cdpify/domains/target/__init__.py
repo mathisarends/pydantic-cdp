@@ -4,7 +4,7 @@
 
 """CDP Target Domain."""
 
-from .client import TargetClient
+from .client import Target
 from .commands import (
     ActivateTargetParams,
     AttachToBrowserTargetResult,
@@ -89,7 +89,7 @@ __all__ = [
     "SetAutoAttachParams",
     "SetDiscoverTargetsParams",
     "SetRemoteLocationsParams",
-    "TargetClient",
+    "Target",
     "TargetCommand",
     "TargetCrashedEvent",
     "TargetCreatedEvent",

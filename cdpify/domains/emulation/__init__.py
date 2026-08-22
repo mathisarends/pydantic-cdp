@@ -4,7 +4,7 @@
 
 """CDP Emulation Domain."""
 
-from .client import EmulationClient
+from .client import Emulation
 from .commands import (
     AddScreenParams,
     AddScreenResult,
@@ -91,7 +91,7 @@ __all__ = [
     "DevicePosture",
     "DisabledImageType",
     "DisplayFeature",
-    "EmulationClient",
+    "Emulation",
     "EmulationCommand",
     "EmulationEvent",
     "GetOverriddenSensorInformationParams",

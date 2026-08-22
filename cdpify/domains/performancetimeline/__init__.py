@@ -4,7 +4,7 @@
 
 """CDP PerformanceTimeline Domain."""
 
-from .client import PerformanceTimelineClient
+from .client import PerformanceTimeline
 from .commands import EnableParams, PerformanceTimelineCommand
 from .events import PerformanceTimelineEvent, TimelineEventAddedEvent
 from .types import (
@@ -19,7 +19,7 @@ __all__ = [
     "LargestContentfulPaint",
     "LayoutShift",
     "LayoutShiftAttribution",
-    "PerformanceTimelineClient",
+    "PerformanceTimeline",
     "PerformanceTimelineCommand",
     "PerformanceTimelineEvent",
     "TimelineEvent",

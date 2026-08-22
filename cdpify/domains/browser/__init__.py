@@ -4,7 +4,7 @@
 
 """CDP Browser Domain."""
 
-from .client import BrowserClient
+from .client import Browser
 from .commands import (
     AddPrivacySandboxEnrollmentOverrideParams,
     BrowserCommand,
@@ -48,7 +48,7 @@ from .types import (
 __all__ = [
     "AddPrivacySandboxEnrollmentOverrideParams",
     "Bounds",
-    "BrowserClient",
+    "Browser",
     "BrowserCommand",
     "BrowserCommandId",
     "BrowserContextID",

@@ -4,7 +4,7 @@
 
 """CDP Profiler Domain."""
 
-from .client import ProfilerClient
+from .client import Profiler
 from .commands import (
     GetBestEffortCoverageResult,
     ProfilerCommand,
@@ -39,7 +39,7 @@ __all__ = [
     "PreciseCoverageDeltaUpdateEvent",
     "Profile",
     "ProfileNode",
-    "ProfilerClient",
+    "Profiler",
     "ProfilerCommand",
     "ProfilerEvent",
     "ScriptCoverage",

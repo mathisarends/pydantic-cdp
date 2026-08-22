@@ -4,7 +4,7 @@
 
 """CDP LayerTree Domain."""
 
-from .client import LayerTreeClient
+from .client import LayerTree
 from .commands import (
     CompositingReasonsParams,
     CompositingReasonsResult,
@@ -38,7 +38,7 @@ __all__ = [
     "Layer",
     "LayerId",
     "LayerPaintedEvent",
-    "LayerTreeClient",
+    "LayerTree",
     "LayerTreeCommand",
     "LayerTreeDidChangeEvent",
     "LayerTreeEvent",

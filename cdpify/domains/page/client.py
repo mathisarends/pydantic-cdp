@@ -94,7 +94,7 @@ if TYPE_CHECKING:
     from cdpify.domains import emulation, network
 
 
-class PageClient:
+class Page:
     def __init__(self, command_sender: CDPCommandSender) -> None:
         self._command_sender = command_sender
 

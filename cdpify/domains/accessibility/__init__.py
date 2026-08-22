@@ -4,7 +4,7 @@
 
 """CDP Accessibility Domain."""
 
-from .client import AccessibilityClient
+from .client import Accessibility
 from .commands import (
     AccessibilityCommand,
     GetAXNodeAndAncestorsParams,
@@ -45,7 +45,7 @@ __all__ = [
     "AXValueSource",
     "AXValueSourceType",
     "AXValueType",
-    "AccessibilityClient",
+    "Accessibility",
     "AccessibilityCommand",
     "AccessibilityEvent",
     "GetAXNodeAndAncestorsParams",

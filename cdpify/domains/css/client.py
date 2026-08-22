@@ -83,7 +83,7 @@ if TYPE_CHECKING:
     from cdpify.domains import dom, page
 
 
-class CSSClient:
+class CSS:
     def __init__(self, command_sender: CDPCommandSender) -> None:
         self._command_sender = command_sender
 

@@ -20,7 +20,7 @@ from .types import (
 )
 
 
-class SecurityClient:
+class Security:
     def __init__(self, command_sender: CDPCommandSender) -> None:
         self._command_sender = command_sender
 

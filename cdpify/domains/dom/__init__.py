@@ -4,7 +4,7 @@
 
 """CDP DOM Domain."""
 
-from .client import DOMClient
+from .client import DOM
 from .commands import (
     CollectClassNamesFromSubtreeParams,
     CollectClassNamesFromSubtreeResult,
@@ -147,7 +147,7 @@ __all__ = [
     "CompatibilityMode",
     "CopyToParams",
     "CopyToResult",
-    "DOMClient",
+    "DOM",
     "DOMCommand",
     "DOMEvent",
     "DescribeNodeParams",

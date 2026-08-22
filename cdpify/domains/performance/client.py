@@ -17,7 +17,7 @@ from .commands import (
 )
 
 
-class PerformanceClient:
+class Performance:
     def __init__(self, command_sender: CDPCommandSender) -> None:
         self._command_sender = command_sender
 

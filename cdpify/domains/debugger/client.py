@@ -69,7 +69,7 @@ if TYPE_CHECKING:
     from cdpify.domains import runtime
 
 
-class DebuggerClient:
+class Debugger:
     def __init__(self, command_sender: CDPCommandSender) -> None:
         self._command_sender = command_sender
 

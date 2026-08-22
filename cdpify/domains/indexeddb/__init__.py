@@ -4,7 +4,7 @@
 
 """CDP IndexedDB Domain."""
 
-from .client import IndexedDBClient
+from .client import IndexedDB
 from .commands import (
     ClearObjectStoreParams,
     DeleteDatabaseParams,
@@ -37,7 +37,7 @@ __all__ = [
     "DeleteObjectStoreEntriesParams",
     "GetMetadataParams",
     "GetMetadataResult",
-    "IndexedDBClient",
+    "IndexedDB",
     "IndexedDBCommand",
     "Key",
     "KeyPath",

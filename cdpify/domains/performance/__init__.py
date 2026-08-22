@@ -4,7 +4,7 @@
 
 """CDP Performance Domain."""
 
-from .client import PerformanceClient
+from .client import Performance
 from .commands import (
     EnableParams,
     GetMetricsResult,
@@ -19,7 +19,7 @@ __all__ = [
     "GetMetricsResult",
     "Metric",
     "MetricsEvent",
-    "PerformanceClient",
+    "Performance",
     "PerformanceCommand",
     "PerformanceEvent",
     "SetTimeDomainParams",

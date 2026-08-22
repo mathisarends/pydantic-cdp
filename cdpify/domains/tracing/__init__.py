@@ -4,7 +4,7 @@
 
 """CDP Tracing Domain."""
 
-from .client import TracingClient
+from .client import Tracing
 from .commands import (
     GetCategoriesResult,
     GetTrackEventDescriptorResult,
@@ -43,8 +43,8 @@ __all__ = [
     "StreamCompression",
     "StreamFormat",
     "TraceConfig",
+    "Tracing",
     "TracingBackend",
-    "TracingClient",
     "TracingCommand",
     "TracingCompleteEvent",
     "TracingEvent",

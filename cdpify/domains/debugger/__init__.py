@@ -4,7 +4,7 @@
 
 """CDP Debugger Domain."""
 
-from .client import DebuggerClient
+from .client import Debugger
 from .commands import (
     ContinueToLocationParams,
     DebuggerCommand,
@@ -85,7 +85,7 @@ __all__ = [
     "CallFrameId",
     "ContinueToLocationParams",
     "DebugSymbols",
-    "DebuggerClient",
+    "Debugger",
     "DebuggerCommand",
     "DebuggerEvent",
     "DisassembleWasmModuleParams",

@@ -5,7 +5,7 @@ import logging
 from pathlib import Path
 from urllib.request import urlopen
 
-from cdpify import CDPClient
+from cdpify import Client
 from cdpify.domains.page.events import PageEvent, ScreencastFrameEvent
 
 logging.basicConfig(
@@ -39,7 +39,7 @@ async def main():
     ws_url = get_ws_url()
     print(f"Connecting to: {ws_url}\n")
 
-    async with CDPClient(ws_url) as client:
+    async with Client(ws_url) as client:
         await client.page.enable()
 
         print("🎬 Starting screencast...")

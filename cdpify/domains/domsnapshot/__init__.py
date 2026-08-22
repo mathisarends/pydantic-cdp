@@ -4,7 +4,7 @@
 
 """CDP DOMSnapshot Domain."""
 
-from .client import DOMSnapshotClient
+from .client import DOMSnapshot
 from .commands import (
     CaptureSnapshotParams,
     CaptureSnapshotResult,
@@ -36,7 +36,7 @@ __all__ = [
     "CaptureSnapshotResult",
     "ComputedStyle",
     "DOMNode",
-    "DOMSnapshotClient",
+    "DOMSnapshot",
     "DOMSnapshotCommand",
     "DocumentSnapshot",
     "GetSnapshotParams",

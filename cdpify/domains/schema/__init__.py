@@ -4,13 +4,13 @@
 
 """CDP Schema Domain."""
 
-from .client import SchemaClient
+from .client import Schema
 from .commands import GetDomainsResult, SchemaCommand
 from .types import Domain
 
 __all__ = [
     "Domain",
     "GetDomainsResult",
-    "SchemaClient",
+    "Schema",
     "SchemaCommand",
 ]

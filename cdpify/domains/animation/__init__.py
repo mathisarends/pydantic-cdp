@@ -4,7 +4,7 @@
 
 """CDP Animation Domain."""
 
-from .client import AnimationClient
+from .client import Animation
 from .commands import (
     AnimationCommand,
     GetCurrentTimeParams,
@@ -26,7 +26,9 @@ from .events import (
     AnimationUpdatedEvent,
 )
 from .types import (
-    Animation,
+    Animation as AnimationType,
+)
+from .types import (
     AnimationEffect,
     KeyframesRule,
     KeyframeStyle,
@@ -36,12 +38,12 @@ from .types import (
 __all__ = [
     "Animation",
     "AnimationCanceledEvent",
-    "AnimationClient",
     "AnimationCommand",
     "AnimationCreatedEvent",
     "AnimationEffect",
     "AnimationEvent",
     "AnimationStartedEvent",
+    "AnimationType",
     "AnimationUpdatedEvent",
     "GetCurrentTimeParams",
     "GetCurrentTimeResult",

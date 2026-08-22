@@ -16,7 +16,7 @@ from .types import (
 )
 
 
-class FileSystemClient:
+class FileSystem:
     def __init__(self, command_sender: CDPCommandSender) -> None:
         self._command_sender = command_sender
 

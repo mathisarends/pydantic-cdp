@@ -26,7 +26,7 @@ from .types import (
 )
 
 
-class TracingClient:
+class Tracing:
     def __init__(self, command_sender: CDPCommandSender) -> None:
         self._command_sender = command_sender
 

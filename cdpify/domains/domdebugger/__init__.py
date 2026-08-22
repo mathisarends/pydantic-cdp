@@ -4,7 +4,7 @@
 
 """CDP DOMDebugger Domain."""
 
-from .client import DOMDebuggerClient
+from .client import DOMDebugger
 from .commands import (
     DOMDebuggerCommand,
     GetEventListenersParams,
@@ -24,7 +24,7 @@ from .types import CSPViolationType, DOMBreakpointType, EventListener
 __all__ = [
     "CSPViolationType",
     "DOMBreakpointType",
-    "DOMDebuggerClient",
+    "DOMDebugger",
     "DOMDebuggerCommand",
     "EventListener",
     "GetEventListenersParams",

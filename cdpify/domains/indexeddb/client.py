@@ -30,7 +30,7 @@ if TYPE_CHECKING:
     from cdpify.domains import storage
 
 
-class IndexedDBClient:
+class IndexedDB:
     def __init__(self, command_sender: CDPCommandSender) -> None:
         self._command_sender = command_sender
 

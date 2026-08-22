@@ -4,7 +4,7 @@
 
 """CDP Storage Domain."""
 
-from .client import StorageClient
+from .client import Storage
 from .commands import (
     ClearCookiesParams,
     ClearDataForOriginParams,
@@ -83,12 +83,12 @@ __all__ = [
     "SerializedStorageKey",
     "SetCookiesParams",
     "SetStorageBucketTrackingParams",
+    "Storage",
     "StorageBucket",
     "StorageBucketCreatedOrUpdatedEvent",
     "StorageBucketDeletedEvent",
     "StorageBucketInfo",
     "StorageBucketsDurability",
-    "StorageClient",
     "StorageCommand",
     "StorageEvent",
     "StorageType",

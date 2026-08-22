@@ -4,7 +4,7 @@
 
 """CDP Overlay Domain."""
 
-from .client import OverlayClient
+from .client import Overlay
 from .commands import (
     GetGridHighlightObjectsForTestParams,
     GetGridHighlightObjectsForTestResult,
@@ -110,7 +110,7 @@ __all__ = [
     "IsolationModeHighlightConfig",
     "LineStyle",
     "NodeHighlightRequestedEvent",
-    "OverlayClient",
+    "Overlay",
     "OverlayCommand",
     "OverlayEvent",
     "ScreenshotRequestedEvent",

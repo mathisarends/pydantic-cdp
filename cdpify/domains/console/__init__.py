@@ -4,13 +4,13 @@
 
 """CDP Console Domain."""
 
-from .client import ConsoleClient
+from .client import Console
 from .commands import ConsoleCommand
 from .events import ConsoleEvent, MessageAddedEvent
 from .types import ConsoleMessage
 
 __all__ = [
-    "ConsoleClient",
+    "Console",
     "ConsoleCommand",
     "ConsoleEvent",
     "ConsoleMessage",

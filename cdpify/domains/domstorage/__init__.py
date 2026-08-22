@@ -4,7 +4,7 @@
 
 """CDP DOMStorage Domain."""
 
-from .client import DOMStorageClient
+from .client import DOMStorage
 from .commands import (
     ClearParams,
     DOMStorageCommand,
@@ -24,7 +24,7 @@ from .types import Item, SerializedStorageKey, StorageId
 
 __all__ = [
     "ClearParams",
-    "DOMStorageClient",
+    "DOMStorage",
     "DOMStorageCommand",
     "DOMStorageEvent",
     "DomStorageItemAddedEvent",

@@ -19,7 +19,7 @@ from .commands import (
 )
 
 
-class ProfilerClient:
+class Profiler:
     def __init__(self, command_sender: CDPCommandSender) -> None:
         self._command_sender = command_sender
 

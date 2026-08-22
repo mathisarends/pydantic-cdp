@@ -4,12 +4,12 @@
 
 """CDP CrashReportContext Domain."""
 
-from .client import CrashReportContextClient
+from .client import CrashReportContext
 from .commands import CrashReportContextCommand, GetEntriesResult
 from .types import CrashReportContextEntry
 
 __all__ = [
-    "CrashReportContextClient",
+    "CrashReportContext",
     "CrashReportContextCommand",
     "CrashReportContextEntry",
     "GetEntriesResult",

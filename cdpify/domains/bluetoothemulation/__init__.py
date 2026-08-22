@@ -4,7 +4,7 @@
 
 """CDP BluetoothEmulation Domain."""
 
-from .client import BluetoothEmulationClient
+from .client import BluetoothEmulation
 from .commands import (
     AddCharacteristicParams,
     AddCharacteristicResult,
@@ -50,7 +50,7 @@ __all__ = [
     "AddDescriptorResult",
     "AddServiceParams",
     "AddServiceResult",
-    "BluetoothEmulationClient",
+    "BluetoothEmulation",
     "BluetoothEmulationCommand",
     "BluetoothEmulationEvent",
     "CentralState",

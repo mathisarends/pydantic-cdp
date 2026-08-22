@@ -18,7 +18,7 @@ from .commands import (
 )
 
 
-class CastClient:
+class Cast:
     def __init__(self, command_sender: CDPCommandSender) -> None:
         self._command_sender = command_sender
 

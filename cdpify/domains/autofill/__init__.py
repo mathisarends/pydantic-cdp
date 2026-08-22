@@ -4,7 +4,7 @@
 
 """CDP Autofill Domain."""
 
-from .client import AutofillClient
+from .client import Autofill
 from .commands import AutofillCommand, SetAddressesParams, TriggerParams
 from .events import AddressFormFilledEvent, AutofillEvent
 from .types import (
@@ -23,7 +23,7 @@ __all__ = [
     "AddressFields",
     "AddressFormFilledEvent",
     "AddressUI",
-    "AutofillClient",
+    "Autofill",
     "AutofillCommand",
     "AutofillEvent",
     "CreditCard",

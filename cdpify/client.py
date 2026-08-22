@@ -7,7 +7,7 @@ from typing import Any, Self
 import websockets
 from websockets.asyncio.client import ClientConnection, connect
 
-from cdpify.domains import BrowserClient, CDPDomains, TargetClient
+from cdpify.domains import Browser, CDPDomains, Target
 from cdpify.events import EventDispatcher, RawCDPEvent
 from cdpify.exceptions import (
     CDPCommandException,
@@ -19,7 +19,7 @@ from cdpify.shared.models import CDPEvent
 logger = logging.getLogger(__name__)
 
 
-class CDPClient(CDPDomains):
+class Client(CDPDomains):
     def __init__(
         self,
         url: str,
@@ -245,7 +245,7 @@ class CDPClient(CDPDomains):
 class ActiveSessionCDPClient(CDPDomains):
     """CDP client view that routes commands to the active target session."""
 
-    def __init__(self, root_client: CDPClient) -> None:
+    def __init__(self, root_client: Client) -> None:
         self._root_client = root_client
         self._session_id: str | None = None
 
@@ -256,11 +256,11 @@ class ActiveSessionCDPClient(CDPDomains):
     # Browser and Target are browser-scoped domains. Delegate them to the root
     # client so their commands are not routed through the active target session.
     @property
-    def browser(self) -> BrowserClient:
+    def browser(self) -> Browser:
         return self._root_client.browser
 
     @property
-    def target(self) -> TargetClient:
+    def target(self) -> Target:
         return self._root_client.target
 
     def switch_to(self, session_id: str | None) -> None:

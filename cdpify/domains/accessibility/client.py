@@ -31,7 +31,7 @@ if TYPE_CHECKING:
     from cdpify.domains import dom, page, runtime
 
 
-class AccessibilityClient:
+class Accessibility:
     def __init__(self, command_sender: CDPCommandSender) -> None:
         self._command_sender = command_sender
 

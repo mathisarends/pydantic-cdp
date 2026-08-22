@@ -5,7 +5,7 @@ from unittest.mock import AsyncMock
 
 import pytest
 
-from cdpify.client import CDPClient
+from cdpify.client import Client
 from cdpify.events import RawCDPEvent
 from cdpify.exceptions import (
     CDPCommandException,
@@ -33,7 +33,7 @@ class _EventModel(CDPEvent):
 
 
 def test_domain_clients_are_cached() -> None:
-    client = CDPClient("ws://example")
+    client = Client("ws://example")
     properties = [
         "accessibility",
         "animation",
@@ -86,7 +86,7 @@ def test_domain_clients_are_cached() -> None:
 
 @pytest.mark.asyncio
 async def test_handle_response_sets_result_and_command_error() -> None:
-    client = CDPClient("ws://example")
+    client = Client("ws://example")
     ok_future = client._create_pending_request(1)
     err_future = client._create_pending_request(2)
 
@@ -100,7 +100,7 @@ async def test_handle_response_sets_result_and_command_error() -> None:
 
 @pytest.mark.asyncio
 async def test_handle_event_dispatches_payload_and_session_metadata() -> None:
-    client = CDPClient("ws://example")
+    client = Client("ws://example")
     client._events.dispatch = AsyncMock(return_value=True)  # type: ignore[method-assign]
 
     await client._handle_event(
@@ -119,7 +119,7 @@ async def test_handle_event_dispatches_payload_and_session_metadata() -> None:
 
 @pytest.mark.asyncio
 async def test_listen_yields_typed_events_and_unregisters_handler() -> None:
-    client = CDPClient("ws://example")
+    client = Client("ws://example")
     stream = client.listen("Test.event", _EventModel, timeout=1.0)
 
     next_event_task = asyncio.create_task(anext(stream))
@@ -143,7 +143,7 @@ async def test_listen_yields_typed_events_and_unregisters_handler() -> None:
 
 @pytest.mark.asyncio
 async def test_send_serializes_payload_as_json() -> None:
-    client = CDPClient("ws://example")
+    client = Client("ws://example")
     client._ws = _FakeWebSocket()  # type: ignore[assignment]
 
     await client._send(
@@ -159,7 +159,7 @@ async def test_send_serializes_payload_as_json() -> None:
 
 @pytest.mark.asyncio
 async def test_await_response_raises_timeout_exception() -> None:
-    client = CDPClient("ws://example")
+    client = Client("ws://example")
     unresolved: asyncio.Future[dict[str, object]] = asyncio.Future()
 
     with pytest.raises(CDPTimeoutException):
@@ -168,7 +168,7 @@ async def test_await_response_raises_timeout_exception() -> None:
 
 @pytest.mark.asyncio
 async def test_send_raw_requires_connection() -> None:
-    client = CDPClient("ws://example")
+    client = Client("ws://example")
 
     with pytest.raises(CDPConnectionException):
         await client.send_raw("Runtime.enable")
@@ -176,7 +176,7 @@ async def test_send_raw_requires_connection() -> None:
 
 @pytest.mark.asyncio
 async def test_send_raw_removes_pending_request_after_failure() -> None:
-    client = CDPClient("ws://example")
+    client = Client("ws://example")
     client._ws = _FakeWebSocket()  # type: ignore[assignment]
     client._send = AsyncMock()  # type: ignore[method-assign]
     client._await_response = AsyncMock(side_effect=CDPTimeoutException("timeout"))  # type: ignore[method-assign]
@@ -189,7 +189,7 @@ async def test_send_raw_removes_pending_request_after_failure() -> None:
 
 @pytest.mark.asyncio
 async def test_disconnect_cancels_pending_requests_and_closes_websocket() -> None:
-    client = CDPClient("ws://example")
+    client = Client("ws://example")
     ws = _FakeWebSocket()
     client._ws = ws  # type: ignore[assignment]
     pending = client._create_pending_request(1)
@@ -207,7 +207,7 @@ async def test_disconnect_cancels_pending_requests_and_closes_websocket() -> Non
 async def test_process_message_warns_for_unknown_payload(
     caplog: pytest.LogCaptureFixture,
 ) -> None:
-    client = CDPClient("ws://example")
+    client = Client("ws://example")
 
     with caplog.at_level("WARNING"):
         await client._process_message(json.dumps({"foo": "bar"}))

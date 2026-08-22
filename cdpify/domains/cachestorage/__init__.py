@@ -4,7 +4,7 @@
 
 """CDP CacheStorage Domain."""
 
-from .client import CacheStorageClient
+from .client import CacheStorage
 from .commands import (
     CacheStorageCommand,
     DeleteCacheParams,
@@ -28,7 +28,7 @@ from .types import (
 __all__ = [
     "Cache",
     "CacheId",
-    "CacheStorageClient",
+    "CacheStorage",
     "CacheStorageCommand",
     "CachedResponse",
     "CachedResponseType",

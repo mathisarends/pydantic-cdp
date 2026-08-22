@@ -48,7 +48,7 @@ import asyncio
 import json
 from urllib.request import urlopen
 
-from cdpify import CDPClient
+from cdpify import Client
 
 
 def get_websocket_url() -> str:
@@ -59,7 +59,7 @@ def get_websocket_url() -> str:
 async def main() -> None:
     ws_url = get_websocket_url()
 
-    async with CDPClient(ws_url) as client:
+    async with Client(ws_url) as client:
         await client.page.navigate(url="https://example.com")
 
         result = await client.runtime.evaluate(
@@ -72,13 +72,13 @@ async def main() -> None:
 asyncio.run(main())
 ```
 
-Domain clients are available as lazy properties on `CDPClient`. Parameters use
+Domains are available as lazy properties on `Client`. Parameters use
 Python's `snake_case`; `cdpify` handles conversion to and from CDP's wire format.
 
 ## Supported domains
 
 The generated client currently includes all 58 domains from the bundled CDP
-specifications. Each domain is available as a lazy property on `CDPClient` and
+specifications. Each domain is available as a lazy property on `Client` and
 `ActiveSessionCDPClient`:
 
 | CDP domain | Python accessor | CDP domain | Python accessor |
@@ -139,10 +139,10 @@ includes `cdp_session_id`, which is useful when working with multiple targets.
 to the selected target session:
 
 ```python
-from cdpify import ActiveSessionCDPClient, CDPClient
+from cdpify import ActiveSessionCDPClient, Client
 
 
-async with CDPClient(browser_ws_url) as root_client:
+async with Client(browser_ws_url) as root_client:
     session = ActiveSessionCDPClient(root_client)
     session.switch_to("session-id")
 
@@ -156,7 +156,7 @@ also pass `session_id` explicitly to generated commands or to `send_raw()`.
 ## Configuration
 
 ```python
-client = CDPClient(
+client = Client(
     url="ws://localhost:9222/devtools/browser/...",
     additional_headers={"Authorization": "Bearer token"},
     max_frame_size=100 * 1024 * 1024,

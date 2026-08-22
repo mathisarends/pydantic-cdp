@@ -23,7 +23,7 @@ from .commands import (
 )
 
 
-class AnimationClient:
+class Animation:
     def __init__(self, command_sender: CDPCommandSender) -> None:
         self._command_sender = command_sender
 

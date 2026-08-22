@@ -19,7 +19,7 @@ if TYPE_CHECKING:
     from cdpify.domains import network
 
 
-class AuditsClient:
+class Audits:
     def __init__(self, command_sender: CDPCommandSender) -> None:
         self._command_sender = command_sender
 

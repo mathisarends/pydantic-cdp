@@ -4,7 +4,7 @@
 
 """CDP WebAudio Domain."""
 
-from .client import WebAudioClient
+from .client import WebAudio
 from .commands import GetRealtimeDataParams, GetRealtimeDataResult, WebAudioCommand
 from .events import (
     AudioListenerCreatedEvent,
@@ -67,7 +67,7 @@ __all__ = [
     "NodesConnectedEvent",
     "NodesDisconnectedEvent",
     "ParamType",
-    "WebAudioClient",
+    "WebAudio",
     "WebAudioCommand",
     "WebAudioEvent",
 ]

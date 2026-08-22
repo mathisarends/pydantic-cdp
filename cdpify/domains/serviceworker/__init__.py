@@ -4,7 +4,7 @@
 
 """CDP ServiceWorker Domain."""
 
-from .client import ServiceWorkerClient
+from .client import ServiceWorker
 from .commands import (
     DeliverPushMessageParams,
     DispatchPeriodicSyncEventParams,
@@ -42,7 +42,7 @@ __all__ = [
     "DispatchPeriodicSyncEventParams",
     "DispatchSyncEventParams",
     "RegistrationID",
-    "ServiceWorkerClient",
+    "ServiceWorker",
     "ServiceWorkerCommand",
     "ServiceWorkerErrorMessage",
     "ServiceWorkerEvent",

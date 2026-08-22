@@ -4,7 +4,7 @@
 
 """CDP Audits Domain."""
 
-from .client import AuditsClient
+from .client import Audits
 from .commands import (
     AuditsCommand,
     CheckFormsIssuesResult,
@@ -86,7 +86,7 @@ __all__ = [
     "AffectedCookie",
     "AffectedFrame",
     "AffectedRequest",
-    "AuditsClient",
+    "Audits",
     "AuditsCommand",
     "AuditsEvent",
     "BlockedByResponseIssueDetails",

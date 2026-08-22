@@ -4,7 +4,7 @@
 
 """CDP HeapProfiler Domain."""
 
-from .client import HeapProfilerClient
+from .client import HeapProfiler
 from .commands import (
     AddInspectedHeapObjectParams,
     GetHeapObjectIdParams,
@@ -42,7 +42,7 @@ __all__ = [
     "GetObjectByHeapObjectIdParams",
     "GetObjectByHeapObjectIdResult",
     "GetSamplingProfileResult",
-    "HeapProfilerClient",
+    "HeapProfiler",
     "HeapProfilerCommand",
     "HeapProfilerEvent",
     "HeapSnapshotObjectId",

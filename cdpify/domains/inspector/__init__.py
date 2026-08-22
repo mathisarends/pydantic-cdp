@@ -4,7 +4,7 @@
 
 """CDP Inspector Domain."""
 
-from .client import InspectorClient
+from .client import Inspector
 from .commands import InspectorCommand
 from .events import (
     DetachedEvent,
@@ -16,7 +16,7 @@ from .events import (
 
 __all__ = [
     "DetachedEvent",
-    "InspectorClient",
+    "Inspector",
     "InspectorCommand",
     "InspectorEvent",
     "TargetCrashedEvent",

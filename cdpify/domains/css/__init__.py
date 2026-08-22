@@ -4,7 +4,7 @@
 
 """CDP CSS Domain."""
 
-from .client import CSSClient
+from .client import CSS
 from .commands import (
     AddRuleParams,
     AddRuleResult,
@@ -130,9 +130,9 @@ from .types import (
 __all__ = [
     "AddRuleParams",
     "AddRuleResult",
+    "CSS",
     "CSSAnimationStyle",
     "CSSAtRule",
-    "CSSClient",
     "CSSCommand",
     "CSSComputedStyleProperty",
     "CSSContainerQuery",

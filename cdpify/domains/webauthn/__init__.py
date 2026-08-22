@@ -4,7 +4,7 @@
 
 """CDP WebAuthn Domain."""
 
-from .client import WebAuthnClient
+from .client import WebAuthn
 from .commands import (
     AddCredentialParams,
     AddVirtualAuthenticatorParams,
@@ -65,7 +65,7 @@ __all__ = [
     "SetResponseOverrideBitsParams",
     "SetUserVerifiedParams",
     "VirtualAuthenticatorOptions",
-    "WebAuthnClient",
+    "WebAuthn",
     "WebAuthnCommand",
     "WebAuthnEvent",
 ]

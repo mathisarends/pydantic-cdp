@@ -4,7 +4,7 @@
 
 """CDP Fetch Domain."""
 
-from .client import FetchClient
+from .client import Fetch
 from .commands import (
     ContinueRequestParams,
     ContinueResponseParams,
@@ -37,7 +37,7 @@ __all__ = [
     "ContinueWithAuthParams",
     "EnableParams",
     "FailRequestParams",
-    "FetchClient",
+    "Fetch",
     "FetchCommand",
     "FetchEvent",
     "FulfillRequestParams",

@@ -18,7 +18,7 @@ from .types import (
 )
 
 
-class WebAudioClient:
+class WebAudio:
     def __init__(self, command_sender: CDPCommandSender) -> None:
         self._command_sender = command_sender
 

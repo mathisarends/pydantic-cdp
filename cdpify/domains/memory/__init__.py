@@ -4,7 +4,7 @@
 
 """CDP Memory Domain."""
 
-from .client import MemoryClient
+from .client import Memory
 from .commands import (
     GetAllTimeSamplingProfileResult,
     GetBrowserSamplingProfileResult,
@@ -31,7 +31,7 @@ __all__ = [
     "GetDOMCountersForLeakDetectionResult",
     "GetDOMCountersResult",
     "GetSamplingProfileResult",
-    "MemoryClient",
+    "Memory",
     "MemoryCommand",
     "Module",
     "PressureLevel",

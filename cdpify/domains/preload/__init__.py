@@ -4,7 +4,7 @@
 
 """CDP Preload Domain."""
 
-from .client import PreloadClient
+from .client import Preload
 from .commands import PreloadCommand
 from .events import (
     PrefetchStatusUpdatedEvent,
@@ -33,7 +33,7 @@ from .types import (
 __all__ = [
     "PrefetchStatus",
     "PrefetchStatusUpdatedEvent",
-    "PreloadClient",
+    "Preload",
     "PreloadCommand",
     "PreloadEnabledStateUpdatedEvent",
     "PreloadEvent",

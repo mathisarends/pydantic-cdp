@@ -63,7 +63,7 @@ if TYPE_CHECKING:
     from cdpify.domains import dom, page, runtime
 
 
-class OverlayClient:
+class Overlay:
     def __init__(self, command_sender: CDPCommandSender) -> None:
         self._command_sender = command_sender
 

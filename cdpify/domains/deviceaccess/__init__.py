@@ -4,14 +4,14 @@
 
 """CDP DeviceAccess Domain."""
 
-from .client import DeviceAccessClient
+from .client import DeviceAccess
 from .commands import CancelPromptParams, DeviceAccessCommand, SelectPromptParams
 from .events import DeviceAccessEvent, DeviceRequestPromptedEvent
 from .types import DeviceId, PromptDevice, RequestId
 
 __all__ = [
     "CancelPromptParams",
-    "DeviceAccessClient",
+    "DeviceAccess",
     "DeviceAccessCommand",
     "DeviceAccessEvent",
     "DeviceId",

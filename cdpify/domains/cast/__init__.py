@@ -4,7 +4,7 @@
 
 """CDP Cast Domain."""
 
-from .client import CastClient
+from .client import Cast
 from .commands import (
     CastCommand,
     EnableParams,
@@ -17,7 +17,7 @@ from .events import CastEvent, IssueUpdatedEvent, SinksUpdatedEvent
 from .types import Sink
 
 __all__ = [
-    "CastClient",
+    "Cast",
     "CastCommand",
     "CastEvent",
     "EnableParams",

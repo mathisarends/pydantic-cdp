@@ -24,7 +24,7 @@ from .types import (
 )
 
 
-class MemoryClient:
+class Memory:
     def __init__(self, command_sender: CDPCommandSender) -> None:
         self._command_sender = command_sender
 

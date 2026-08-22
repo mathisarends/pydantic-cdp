@@ -4,7 +4,7 @@
 
 """CDP WebMCP Domain."""
 
-from .client import WebMCPClient
+from .client import WebMCP
 from .commands import (
     CancelInvocationParams,
     InvokeToolParams,
@@ -37,7 +37,7 @@ __all__ = [
     "ToolRespondedEvent",
     "ToolsAddedEvent",
     "ToolsRemovedEvent",
-    "WebMCPClient",
+    "WebMCP",
     "WebMCPCommand",
     "WebMCPEvent",
 ]

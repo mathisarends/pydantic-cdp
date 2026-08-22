@@ -39,7 +39,7 @@ from .types import (
 )
 
 
-class BluetoothEmulationClient:
+class BluetoothEmulation:
     def __init__(self, command_sender: CDPCommandSender) -> None:
         self._command_sender = command_sender
 

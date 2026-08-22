@@ -4,7 +4,7 @@
 
 """CDP FedCm Domain."""
 
-from .client import FedCmClient
+from .client import FedCm
 from .commands import (
     ClickDialogButtonParams,
     DismissDialogParams,
@@ -32,7 +32,7 @@ __all__ = [
     "DialogType",
     "DismissDialogParams",
     "EnableParams",
-    "FedCmClient",
+    "FedCm",
     "FedCmCommand",
     "FedCmEvent",
     "LoginState",

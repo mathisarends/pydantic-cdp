@@ -21,7 +21,7 @@ from .types import (
 )
 
 
-class DOMStorageClient:
+class DOMStorage:
     def __init__(self, command_sender: CDPCommandSender) -> None:
         self._command_sender = command_sender
 

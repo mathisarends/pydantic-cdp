@@ -4,7 +4,7 @@
 
 """CDP FileSystem Domain."""
 
-from .client import FileSystemClient
+from .client import FileSystem
 from .commands import FileSystemCommand, GetDirectoryParams, GetDirectoryResult
 from .types import BucketFileSystemLocator, Directory, File
 
@@ -12,7 +12,7 @@ __all__ = [
     "BucketFileSystemLocator",
     "Directory",
     "File",
-    "FileSystemClient",
+    "FileSystem",
     "FileSystemCommand",
     "GetDirectoryParams",
     "GetDirectoryResult",

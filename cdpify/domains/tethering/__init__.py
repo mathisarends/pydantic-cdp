@@ -4,14 +4,14 @@
 
 """CDP Tethering Domain."""
 
-from .client import TetheringClient
+from .client import Tethering
 from .commands import BindParams, TetheringCommand, UnbindParams
 from .events import AcceptedEvent, TetheringEvent
 
 __all__ = [
     "AcceptedEvent",
     "BindParams",
-    "TetheringClient",
+    "Tethering",
     "TetheringCommand",
     "TetheringEvent",
     "UnbindParams",

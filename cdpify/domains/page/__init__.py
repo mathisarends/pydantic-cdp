@@ -4,7 +4,7 @@
 
 """CDP Page Domain."""
 
-from .client import PageClient
+from .client import Page
 from .commands import (
     AddCompilationCacheParams,
     AddScriptToEvaluateOnLoadParams,
@@ -267,7 +267,7 @@ __all__ = [
     "OriginTrialTokenStatus",
     "OriginTrialTokenWithStatus",
     "OriginTrialUsageRestriction",
-    "PageClient",
+    "Page",
     "PageCommand",
     "PageEvent",
     "PermissionsPolicyBlockLocator",
