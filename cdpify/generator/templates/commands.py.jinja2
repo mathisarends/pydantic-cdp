@@ -1,0 +1,46 @@
+{{ header }}
+
+from __future__ import annotations
+{% if typing_names %}
+
+from typing import {{ typing_names | join(", ") }}
+{% endif %}
+
+from dataclasses import dataclass
+from enum import StrEnum
+
+from cdpify.shared.models import CDPModel
+{% if local_type_names %}
+
+from .types import (
+{% for name in local_type_names %}
+    {{ name }},
+{% endfor %}
+)
+{% endif %}
+{% for module in cross_domain_modules %}
+from cdpify.domains import {{ module }}
+{% endfor %}
+{% if command_members %}
+
+class {{ domain_name }}Command(StrEnum):
+{% for member in command_members %}
+    {{ member.name }} = "{{ member.value }}"
+{% endfor %}
+{% endif %}
+{% if models %}
+{% for model in models %}
+
+@dataclass(kw_only=True, slots=True)
+class {{ model.name }}({{ model.base }}):
+{% if model.docstring %}
+{{ model.docstring }}
+{% endif %}
+{% for field in model.fields %}
+    {{ field.name }}: {{ field.annotation }}{% if field.optional %} | None = None{% endif %}
+{% endfor %}
+{% endfor %}
+{% else %}
+
+# No commands defined
+{% endif %}

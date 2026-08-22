@@ -1,0 +1,48 @@
+{{ header }}
+
+from __future__ import annotations
+{% if models %}
+{% if typing_names %}
+
+from typing import {{ typing_names | join(", ") }}
+{% endif %}
+
+from dataclasses import dataclass
+from enum import StrEnum
+
+from cdpify.shared.models import CDPEvent
+{% if local_type_names %}
+
+from .types import (
+{% for item in local_type_names %}
+    {{ item[0] }}{% if item[1] %} as {{ item[1] }}{% endif %},
+{% endfor %}
+)
+{% endif %}
+{% for module in cross_domain_modules %}
+from cdpify.domains import {{ module }}
+{% endfor %}
+
+class {{ domain_name }}Event(StrEnum):
+{% for member in event_members %}
+    {{ member.name }} = "{{ member.value }}"
+{% endfor %}
+{% for model in models %}
+
+@dataclass(kw_only=True, slots=True)
+class {{ model.name }}({{ model.base }}):
+{% if model.docstring %}
+{{ model.docstring }}
+{% endif %}
+{% if model.fields %}
+{% for field in model.fields %}
+    {{ field.name }}: {{ field.annotation }}{% if field.optional %} | None = None{% endif %}
+{% endfor %}
+{% else %}
+    pass
+{% endif %}
+{% endfor %}
+{% else %}
+
+# No events defined
+{% endif %}

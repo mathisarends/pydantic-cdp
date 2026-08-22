@@ -1,0 +1,13 @@
+{{ header }}
+
+from .accessors import CDPDomains
+{% for domain in domains %}
+from .{{ domain.module }} import {{ domain.name }}Client
+{% endfor %}
+
+__all__ = [
+    "CDPDomains",
+{% for domain in domains %}
+    "{{ domain.name }}Client",
+{% endfor %}
+]

@@ -1,0 +1,26 @@
+{% macro render_import(block) %}
+{% if block.names | length <= 3 %}
+from .{{ block.module }} import {{ block.names | join(", ") }}
+{% else %}
+from .{{ block.module }} import (
+{% for name in block.names %}
+    {{ name }},
+{% endfor %}
+)
+{% endif %}
+{% endmacro %}
+{{ header }}
+
+"""CDP {{ domain_name }} Domain."""
+{% for block in import_blocks %}
+
+{{ render_import(block) | trim }}
+{% endfor %}
+
+from .client import {{ client_name }}
+
+__all__ = [
+{% for name in exports %}
+    "{{ name }}",
+{% endfor %}
+]

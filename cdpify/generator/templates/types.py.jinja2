@@ -1,0 +1,37 @@
+{{ header }}
+
+from __future__ import annotations
+{% if typing_names %}
+
+from typing import {{ typing_names | join(", ") }}
+{% endif %}
+
+from dataclasses import dataclass
+
+from cdpify.shared.models import CDPModel
+{% for module in cross_domain_modules %}
+from cdpify.domains import {{ module }}
+{% endfor %}
+{% if definitions %}
+{% for definition in definitions %}
+
+{% if definition.kind == "object" %}
+@dataclass(kw_only=True, slots=True)
+class {{ definition.name }}(CDPModel):
+{% if definition.docstring %}
+{{ definition.docstring }}
+{% endif %}
+{% for field in definition.fields %}
+    {{ field.name }}: {{ field.annotation }}{% if field.optional %} | None = None{% endif %}
+{% endfor %}
+{% else %}
+{% if definition.docstring %}
+{{ definition.docstring }}
+{% endif %}
+{% if definition.kind == "enum" %}type {% endif %}{{ definition.name }} = {{ definition.annotation }}
+{% endif %}
+{% endfor %}
+{% else %}
+
+# No types defined
+{% endif %}

@@ -1,0 +1,69 @@
+{{ header }}
+
+from __future__ import annotations
+{% if typing_names %}
+
+from typing import {{ typing_names | join(", ") }}
+{% endif %}
+
+from cdpify.shared.command_sender import CDPCommandSender
+{% if has_deprecated %}
+from cdpify.shared.decorators import deprecated
+{% endif %}
+{% if command_imports %}
+
+from .commands import (
+{% for name in command_imports %}
+    {{ name }},
+{% endfor %}
+)
+{% endif %}
+{% if local_type_names %}
+from .types import (
+{% for name in local_type_names %}
+    {{ name }},
+{% endfor %}
+)
+{% endif %}
+{% if cross_domain_modules %}
+
+if TYPE_CHECKING:
+    from cdpify.domains import {{ cross_domain_modules | join(", ") }}
+{% endif %}
+
+class {{ domain_name }}Client:
+    def __init__(self, command_sender: CDPCommandSender) -> None:
+        self._command_sender = command_sender
+{% for method in methods %}
+
+{% if method.deprecated %}
+    @deprecated()
+{% endif %}
+    async def {{ method.name }}(
+        self,
+{% if method.parameters %}
+        *,
+{% for parameter in method.parameters %}
+        {{ parameter.name }}: {{ parameter.annotation }}{% if parameter.optional %} | None = None{% endif %},
+{% endfor %}
+{% endif %}
+        session_id: str | None = None,
+    ) -> {{ method.return_type }}:
+{% if method.docstring %}
+{{ method.docstring }}
+{% endif %}
+{% if method.params_model %}
+        params = {{ method.params_model }}({{ method.constructor_args }})
+
+{% endif %}
+        result = await self._command_sender.send_raw(
+            method={{ domain_name }}Command.{{ method.command_member }},
+            params={% if method.params_model %}params.to_cdp_params(){% else %}None{% endif %},
+            session_id=session_id,
+        )
+{% if method.result_model %}
+        return {{ method.result_model }}.from_cdp(result)
+{% else %}
+        return result
+{% endif %}
+{% endfor %}
