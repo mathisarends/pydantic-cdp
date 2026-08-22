@@ -1,6 +1,7 @@
 import logging
 import shutil
 import subprocess
+from collections.abc import Callable
 from pathlib import Path
 
 from cdpify.generator.generators import (
@@ -26,6 +27,14 @@ _GENERATORS: tuple[BaseGenerator, ...] = (
     ClientGenerator(),
     InitGenerator(),
 )
+
+# A generator is skipped entirely for a domain that has nothing for it to
+# render, instead of emitting a placeholder file like "# No types defined".
+_HAS_CONTENT: dict[type[BaseGenerator], Callable[[Domain], bool]] = {
+    TypesGenerator: lambda d: bool(d.types),
+    CommandsGenerator: lambda d: bool(d.commands),
+    EventsGenerator: lambda d: bool(d.events),
+}
 
 _DOMAIN_ACCESSORS_GENERATOR = DomainAccessorsGenerator()
 
@@ -68,6 +77,9 @@ def _generate_domain(domain: Domain) -> None:
     )
 
     for generator in _GENERATORS:
+        has_content = _HAS_CONTENT.get(type(generator))
+        if has_content and not has_content(domain):
+            continue
         (domain_dir / generator.filename).write_text(generator.generate(domain))
 
 
