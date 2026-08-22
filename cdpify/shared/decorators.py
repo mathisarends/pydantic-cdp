@@ -1,15 +1,12 @@
 import functools
 import inspect
 import logging
-from typing import Callable, ParamSpec, TypeVar
-
-P = ParamSpec("P")
-T = TypeVar("T")
+from collections.abc import Callable
 
 logger = logging.getLogger(__name__)
 
 
-def deprecated() -> Callable[[Callable[P, T]], Callable[P, T]]:
+def deprecated[**P, T]() -> Callable[[Callable[P, T]], Callable[P, T]]:
     def decorator(func: Callable[P, T]) -> Callable[P, T]:
         @functools.wraps(func)
         async def async_wrapper(*args: P.args, **kwargs: P.kwargs) -> T:
