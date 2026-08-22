@@ -1,11 +1,9 @@
-from cdpify.generator.generators.accessors import DomainAccessorsGenerator
+from cdpify.generator.generators import accessors
 from cdpify.generator.schemas import Domain
 
 
 def test_generates_typed_cached_domain_accessors() -> None:
-    output = DomainAccessorsGenerator().generate(
-        [Domain(domain="Page"), Domain(domain="DOMStorage")]
-    )
+    output = accessors.generate([Domain(domain="Page"), Domain(domain="DOMStorage")])
 
     assert "class CDPDomains(CDPCommandSender):" in output
     assert "from .page import PageClient" in output

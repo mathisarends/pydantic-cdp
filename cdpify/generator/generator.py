@@ -4,42 +4,29 @@ import subprocess
 from collections.abc import Callable
 from pathlib import Path
 
-from cdpify.generator.generators import (
-    BaseGenerator,
-    ClientGenerator,
-    CommandsGenerator,
-    DomainAccessorsGenerator,
-    EventsGenerator,
-    InitGenerator,
-    TypesGenerator,
-)
-from cdpify.generator.generators.base import HEADER
-from cdpify.generator.generators.utils import to_snake_case
-from cdpify.generator.generators.views import DomainView
-from cdpify.generator.rendering import render_template
+from cdpify.generator.generators import accessors, client, commands, events, init, types
 from cdpify.generator.schemas import Domain
 
 logger = logging.getLogger(__name__)
 
 _CDP_DIR = Path(__file__).parent.parent / "domains"
 
-_GENERATORS: tuple[BaseGenerator, ...] = (
-    TypesGenerator(),
-    CommandsGenerator(),
-    EventsGenerator(),
-    ClientGenerator(),
-    InitGenerator(),
-)
+type DomainRenderer = Callable[[Domain], str]
+type ContentPredicate = Callable[[Domain], bool]
 
-# A generator is skipped entirely for a domain that has nothing for it to
-# render, instead of emitting a placeholder file like "# No types defined".
-_HAS_CONTENT: dict[type[BaseGenerator], Callable[[Domain], bool]] = {
-    TypesGenerator: lambda d: bool(d.types),
-    CommandsGenerator: lambda d: bool(d.commands),
-    EventsGenerator: lambda d: bool(d.events),
+
+def _always(_: Domain) -> bool:
+    return True
+
+
+# Empty types, commands, and events modules are omitted entirely.
+_GENERATORS: dict[str, tuple[DomainRenderer, ContentPredicate]] = {
+    "types.py": (types.generate, lambda domain: bool(domain.types)),
+    "commands.py": (commands.generate, lambda domain: bool(domain.commands)),
+    "events.py": (events.generate, lambda domain: bool(domain.events)),
+    "client.py": (client.generate, _always),
+    "__init__.py": (init.generate, _always),
 }
-
-_DOMAIN_ACCESSORS_GENERATOR = DomainAccessorsGenerator()
 
 _RUFF_COMMANDS: tuple[list[str], ...] = (
     ["ruff", "format", str(_CDP_DIR)],
@@ -54,10 +41,10 @@ def generate_all_domains(domains: list[Domain]) -> None:
     for domain in domains:
         _generate_domain(domain)
 
-    (_CDP_DIR / _DOMAIN_ACCESSORS_GENERATOR.filename).write_text(
-        _DOMAIN_ACCESSORS_GENERATOR.generate(domains), encoding="utf-8"
+    (_CDP_DIR / "accessors.py").write_text(
+        accessors.generate(domains), encoding="utf-8"
     )
-    (_CDP_DIR / "__init__.py").write_text(_build_root_init(domains), encoding="utf-8")
+    (_CDP_DIR / "__init__.py").write_text(init.generate_root(domains), encoding="utf-8")
     _format_with_ruff()
 
     logger.info("\n✅ Generation complete!")
@@ -79,28 +66,10 @@ def _generate_domain(domain: Domain) -> None:
         f"{len(domain.events)} events)"
     )
 
-    for generator in _GENERATORS:
-        has_content = _HAS_CONTENT.get(type(generator))
-        if has_content and not has_content(domain):
+    for filename, (render, has_content) in _GENERATORS.items():
+        if not has_content(domain):
             continue
-        (domain_dir / generator.filename).write_text(
-            generator.generate(domain), encoding="utf-8"
-        )
-
-
-def _build_root_init(domains: list[Domain]) -> str:
-    return render_template(
-        "root_init.py.jinja2",
-        header=HEADER,
-        domains=tuple(
-            DomainView(
-                name=domain.domain,
-                module=domain.domain.lower(),
-                property_name=to_snake_case(domain.domain),
-            )
-            for domain in domains
-        ),
-    )
+        (domain_dir / filename).write_text(render(domain), encoding="utf-8")
 
 
 def _format_with_ruff() -> None:

@@ -1,17 +1,3 @@
-from .accessors import DomainAccessorsGenerator
-from .base import BaseGenerator
-from .client import ClientGenerator
-from .commands import CommandsGenerator
-from .events import EventsGenerator
-from .init import InitGenerator
-from .types import TypesGenerator
+from . import accessors, client, commands, events, init, types
 
-__all__ = [
-    "BaseGenerator",
-    "DomainAccessorsGenerator",
-    "CommandsGenerator",
-    "EventsGenerator",
-    "ClientGenerator",
-    "TypesGenerator",
-    "InitGenerator",
-]
+__all__ = ["accessors", "client", "commands", "events", "init", "types"]

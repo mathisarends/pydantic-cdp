@@ -1,30 +1,26 @@
+from collections.abc import Callable
+
 import pytest
 
-from cdpify.generator.generators import (
-    ClientGenerator,
-    CommandsGenerator,
-    EventsGenerator,
-    InitGenerator,
-    TypesGenerator,
-)
-from cdpify.generator.generators.base import BaseGenerator
+from cdpify.generator.generators import client, commands, events, init, types
 from cdpify.generator.schemas import Domain
 
 
 @pytest.mark.parametrize(
-    "generator",
+    ("filename", "render"),
     [
-        TypesGenerator(),
-        CommandsGenerator(),
-        EventsGenerator(),
-        ClientGenerator(),
-        InitGenerator(),
+        ("types.py", types.generate),
+        ("commands.py", commands.generate),
+        ("events.py", events.generate),
+        ("client.py", client.generate),
+        ("__init__.py", init.generate),
     ],
-    ids=lambda generator: generator.filename,
 )
 def test_generated_domain_modules_compile(
-    generator: BaseGenerator, simple_domain: Domain
+    filename: str,
+    render: Callable[[Domain], str],
+    simple_domain: Domain,
 ) -> None:
-    source = generator.generate(simple_domain)
+    source = render(simple_domain)
 
-    compile(source, generator.filename, "exec")
+    compile(source, filename, "exec")

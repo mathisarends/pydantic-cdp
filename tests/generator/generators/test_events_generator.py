@@ -1,9 +1,9 @@
-from cdpify.generator.generators.events import EventsGenerator
+from cdpify.generator.generators import events
 from cdpify.generator.schemas import Domain, Event, Parameter, TypeDefinition
 
 
 def test_renders_event_enum(simple_domain: Domain) -> None:
-    output = EventsGenerator().generate(simple_domain)
+    output = events.generate(simple_domain)
 
     assert "class SampleEvent(StrEnum):" in output
     assert 'NODE_ADDED = "Sample.nodeAdded"' in output
@@ -11,7 +11,7 @@ def test_renders_event_enum(simple_domain: Domain) -> None:
 
 
 def test_renders_event_models(simple_domain: Domain) -> None:
-    output = EventsGenerator().generate(simple_domain)
+    output = events.generate(simple_domain)
 
     assert "@dataclass(kw_only=True, slots=True)" in output
     assert "from cdpify.shared.models import CDPEvent" in output
@@ -21,7 +21,7 @@ def test_renders_event_models(simple_domain: Domain) -> None:
 
 
 def test_event_without_parameters_uses_pass(simple_domain: Domain) -> None:
-    output = EventsGenerator().generate(simple_domain)
+    output = events.generate(simple_domain)
 
     assert "class ClearedEvent(CDPEvent):" in output
     cleared_section = output.split("class ClearedEvent(CDPEvent):")[1].splitlines()
@@ -29,12 +29,12 @@ def test_event_without_parameters_uses_pass(simple_domain: Domain) -> None:
 
 
 def test_includes_event_descriptions(simple_domain: Domain) -> None:
-    output = EventsGenerator().generate(simple_domain)
+    output = events.generate(simple_domain)
     assert "Fired when a node is added." in output
 
 
 def test_empty_domain_marker(empty_domain: Domain) -> None:
-    output = EventsGenerator().generate(empty_domain)
+    output = events.generate(empty_domain)
     assert "# No events defined" in output
 
 
@@ -54,7 +54,7 @@ def test_aliases_local_type_when_name_collides_with_event_enum() -> None:
         ],
     )
 
-    output = EventsGenerator().generate(domain)
+    output = events.generate(domain)
 
     assert "PageEvent as PageEventType" in output
     assert "kind: PageEventType" in output
@@ -72,7 +72,7 @@ def test_cross_domain_ref_uses_runtime_import() -> None:
         ],
     )
 
-    output = EventsGenerator().generate(domain)
+    output = events.generate(domain)
 
     assert "from cdpify.domains import dom" in output
     assert "target: dom.NodeId" in output
@@ -95,7 +95,7 @@ def test_optional_override_for_request_will_be_sent() -> None:
         ],
     )
 
-    output = EventsGenerator().generate(domain)
+    output = events.generate(domain)
 
     assert "document_url: str | None = None" in output
     assert "request_id: str\n" in output or "request_id: str" in output

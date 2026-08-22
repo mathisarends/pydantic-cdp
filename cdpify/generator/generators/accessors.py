@@ -1,23 +1,20 @@
-from cdpify.generator.generators.base import BaseGenerator
+from cdpify.generator.generators.constants import HEADER
 from cdpify.generator.generators.utils import to_snake_case
 from cdpify.generator.generators.views import DomainView
 from cdpify.generator.rendering import render_template
 from cdpify.generator.schemas import Domain
 
 
-class DomainAccessorsGenerator(BaseGenerator):
-    filename = "accessors.py"
-
-    def generate(self, domains: list[Domain]) -> str:
-        return render_template(
-            "accessors.py.jinja2",
-            header=self.HEADER,
-            domains=tuple(
-                DomainView(
-                    name=domain.domain,
-                    module=domain.domain.lower(),
-                    property_name=to_snake_case(domain.domain),
-                )
-                for domain in domains
-            ),
-        )
+def generate(domains: list[Domain]) -> str:
+    return render_template(
+        "accessors.py.jinja2",
+        header=HEADER,
+        domains=tuple(
+            DomainView(
+                name=domain.domain,
+                module=domain.domain.lower(),
+                property_name=to_snake_case(domain.domain),
+            )
+            for domain in domains
+        ),
+    )

@@ -1,9 +1,9 @@
-from cdpify.generator.generators.client import ClientGenerator
+from cdpify.generator.generators import client
 from cdpify.generator.schemas import Command, Domain, Parameter
 
 
 def test_renders_client_class(simple_domain: Domain) -> None:
-    output = ClientGenerator().generate(simple_domain)
+    output = client.generate(simple_domain)
 
     assert "class SampleClient:" in output
     assert "def __init__(self, command_sender: CDPCommandSender) -> None:" in output
@@ -11,14 +11,14 @@ def test_renders_client_class(simple_domain: Domain) -> None:
 
 
 def test_depends_on_command_transport_abstraction(simple_domain: Domain) -> None:
-    output = ClientGenerator().generate(simple_domain)
+    output = client.generate(simple_domain)
 
     assert "from cdpify.shared.command_sender import CDPCommandSender" in output
     assert "from cdpify.client import CDPClient" not in output
 
 
 def test_method_with_params(simple_domain: Domain) -> None:
-    output = ClientGenerator().generate(simple_domain)
+    output = client.generate(simple_domain)
 
     assert "async def get_node(" in output
     assert "node_id: NodeId," in output
@@ -32,7 +32,7 @@ def test_method_with_params(simple_domain: Domain) -> None:
 
 
 def test_method_without_params_or_returns(simple_domain: Domain) -> None:
-    output = ClientGenerator().generate(simple_domain)
+    output = client.generate(simple_domain)
 
     assert "async def clear(" in output
     # No return type → dict[str, Any]
@@ -44,7 +44,7 @@ def test_method_without_params_or_returns(simple_domain: Domain) -> None:
 
 
 def test_deprecated_command_gets_decorator(simple_domain: Domain) -> None:
-    output = ClientGenerator().generate(simple_domain)
+    output = client.generate(simple_domain)
 
     assert "from cdpify.shared.decorators import deprecated" in output
     legacy_block = output.split("async def legacy_op")[0]
@@ -58,7 +58,7 @@ def test_no_deprecated_import_when_no_deprecated_commands() -> None:
         commands=[Command(name="op", parameters=[Parameter(name="x", type="string")])],
     )
 
-    output = ClientGenerator().generate(domain)
+    output = client.generate(domain)
     assert "from cdpify.shared.decorators import deprecated" not in output
 
 
@@ -75,7 +75,7 @@ def test_session_id_collision_renames_param() -> None:
         ],
     )
 
-    output = ClientGenerator().generate(domain)
+    output = client.generate(domain)
 
     assert "attach_to_target_session_id: str," in output
     assert "session_id: str | None = None," in output
@@ -92,7 +92,7 @@ def test_cross_domain_param_resolved_via_type_checking() -> None:
         ],
     )
 
-    output = ClientGenerator().generate(domain)
+    output = client.generate(domain)
 
     assert "if TYPE_CHECKING:" in output
     assert "from cdpify.domains import dom" in output
@@ -100,7 +100,7 @@ def test_cross_domain_param_resolved_via_type_checking() -> None:
 
 
 def test_command_imports_include_enum_and_classes(simple_domain: Domain) -> None:
-    output = ClientGenerator().generate(simple_domain)
+    output = client.generate(simple_domain)
 
     imports_section = output.split("from .commands import (")[1].split(")")[0]
     assert "SampleCommand" in imports_section
@@ -110,7 +110,7 @@ def test_command_imports_include_enum_and_classes(simple_domain: Domain) -> None
 
 
 def test_kw_only_marker_appears_when_command_has_params(simple_domain: Domain) -> None:
-    output = ClientGenerator().generate(simple_domain)
+    output = client.generate(simple_domain)
 
     # Methods with params should have the `*` separator
     get_node_block = output.split("async def get_node(")[1].split(") ->")[0]
