@@ -120,6 +120,7 @@ type PermissionsPolicyFeature = Literal[
     "gamepad",
     "geolocation",
     "gyroscope",
+    "haptics",
     "hid",
     "identity-credentials-get",
     "idle-detection",

@@ -250,6 +250,7 @@ class Emulation:
         device_posture: DevicePosture | None = None,
         scrollbar_type: Literal["overlay", "default"] | None = None,
         screen_orientation_lock_emulation: bool | None = None,
+        viewport_meta: Literal["enable", "default"] | None = None,
     ) -> None:
         """
         Overrides the values of device screen dimensions (window.screen.width,
@@ -273,6 +274,7 @@ class Emulation:
             device_posture=device_posture,
             scrollbar_type=scrollbar_type,
             screen_orientation_lock_emulation=screen_orientation_lock_emulation,
+            viewport_meta=viewport_meta,
         )
 
         await self._executor.execute(

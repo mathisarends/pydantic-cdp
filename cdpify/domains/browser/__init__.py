@@ -5,6 +5,7 @@
 """CDP Browser Domain."""
 
 from .commands import (
+    AddMockCameraParams,
     AddPrivacySandboxEnrollmentOverrideParams,
     BrowserCommand,
     CancelDownloadParams,
@@ -46,6 +47,7 @@ from .types import (
 )
 
 __all__ = [
+    "AddMockCameraParams",
     "AddPrivacySandboxEnrollmentOverrideParams",
     "Bounds",
     "Browser",

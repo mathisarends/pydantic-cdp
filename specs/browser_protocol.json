@@ -2131,7 +2131,8 @@
             "TokenVerificationKbInvalidNonce",
             "TokenVerificationKbInvalidSdHash",
             "TokenVerificationKbMissingCnf",
-            "TokenVerificationKbSignatureFailed"
+            "TokenVerificationKbSignatureFailed",
+            "CrossOriginIframeNotSupported"
           ]
         },
         {
@@ -4033,6 +4034,18 @@
               "items": {
                 "type": "string"
               }
+            }
+          ]
+        },
+        {
+          "name": "addMockCamera",
+          "description": "Adds or updates a mock camera in the shared video capture device list for\ntest automation. The mock camera is not scoped to a particular page or\nframe and is removed when the DevTools session that created it disconnects.",
+          "experimental": true,
+          "parameters": [
+            {
+              "name": "deviceId",
+              "description": "Required non-empty identifier for the mock camera. This is mapped to an\ninternal virtual-device identifier and is not the MediaDeviceInfo.deviceId\nexposed to the page.",
+              "type": "string"
             }
           ]
         },
@@ -11465,6 +11478,17 @@
               "experimental": true,
               "optional": true,
               "type": "boolean"
+            },
+            {
+              "name": "viewportMeta",
+              "description": "Viewport meta tag behavior. Default: `default`. Note: if `mobile` is `true`,\nthe viewport meta tag is always enabled.",
+              "experimental": true,
+              "optional": true,
+              "type": "string",
+              "enum": [
+                "enable",
+                "default"
+              ]
             }
           ]
         },
@@ -21846,6 +21870,7 @@
             "gamepad",
             "geolocation",
             "gyroscope",
+            "haptics",
             "hid",
             "identity-credentials-get",
             "idle-detection",
@@ -30112,7 +30137,7 @@
             {
               "name": "signCount",
               "description": "Signature counter. Must be equal to or greater than -1.\nIf -1, the credential won't have an associated signature counter, and\nevery assertion operation will report a value of 0.\nSee https://w3c.github.io/webauthn/#signature-counter",
-              "type": "integer"
+              "type": "number"
             },
             {
               "name": "largeBlob",
@@ -30380,7 +30405,7 @@
               "name": "signCount",
               "description": "Must be equal to or greater than -1.\nIf -1, the signature counter is removed from the credential, and every\nassertion operation will report a value of 0.\nSee https://w3c.github.io/webauthn/#signature-counter",
               "optional": true,
-              "type": "integer"
+              "type": "number"
             }
           ]
         }

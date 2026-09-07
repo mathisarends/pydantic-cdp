@@ -705,6 +705,7 @@ type EmailVerificationRequestIssueReason = Literal[
     "TokenVerificationKbInvalidSdHash",
     "TokenVerificationKbMissingCnf",
     "TokenVerificationKbSignatureFailed",
+    "CrossOriginIframeNotSupported",
 ]
 
 
